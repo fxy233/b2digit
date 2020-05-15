@@ -60,8 +60,7 @@
                 @Html.DisplayFor(modelItem => item.MonthlyCost)
             </td>
             <td>
-                @*@Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.ID }) |*@
+                @Html.ActionLink("Modifier", "EditConsultant", new { id = item.ID }) |
                 @Html.ActionLink("Supprimer", "DeleteConsultant", new { id = item.ID }, new { @class = "btn btn-primary btn-large", onclick = "return ConfirmationDialog()" })
             </td>
         </tr>

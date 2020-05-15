@@ -2,6 +2,7 @@
 using Projet_pilate.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -167,6 +168,63 @@ namespace Projet_pilate.Controllers
 
             return RedirectToAction("ProfitCenterList", "ProfitCenter");
         }
+
+
+        [Route("ProfitCenter/DeleteProfitCenter", Name = "DeleteProfitCenter")]
+        public ActionResult DeleteProfitCenter(int id)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var profitCenters = db.profitCenters.ToList();
+            List<DetailProfitCenterViewModel> models = new List<DetailProfitCenterViewModel>();
+            var companyToDelete = profitCenters.Single(c => c.ProfitCenterID == id);
+            db.profitCenters.Remove(companyToDelete);
+
+
+            foreach (var profitCenter in profitCenters)
+            {
+                try
+                {
+                    DetailProfitCenterViewModel model = new DetailProfitCenterViewModel();
+                    model.ID = profitCenter.ProfitCenterID;
+                    model.Name = profitCenter.Name;
+                    model.Owner = profitCenter.Owner;
+
+                    if (profitCenter.PartOwner == null)
+                    {
+                        model.PartOwner = "Aucun";
+                    }
+                    else
+                    {
+                        model.PartOwner = profitCenter.PartOwner;
+                    }
+
+                    if (profitCenter.FatherProfitCenter == null)
+                    {
+                        model.FatherProfitCenter = "Aucun";
+                    }
+                    else
+                    {
+                        model.FatherProfitCenter = profitCenter.FatherProfitCenter.Name;
+                    }
+
+                    models.Add(model);
+                }
+                catch (Exception) { }
+            }
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                string message = "Un consultant ou une mission est déjà affecté(e) à ce centre de profit !";
+                ModelState.AddModelError(string.Empty, message);
+                return View("ProfitCenterList", models);
+            }
+
+            return RedirectToAction("ProfitCenterList", "ProfitCenter");
+        }
+
     }
 }
 

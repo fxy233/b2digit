@@ -16,19 +16,17 @@ namespace Projet_pilate.Entities
         [MaxLength(128)]
         public string UserID { get; set; }
 
-        [Index("Consultant_Unique_Index", IsUnique = true, Order = 1)]
         [MaxLength(50)]
         public string FirstName { get; set; }
 
-        [Index("Consultant_Unique_Index", IsUnique = true, Order = 2)]
         [MaxLength(50)]
         public string LastName { get; set; }
 
-        [Index("Consultant_Unique_Index", IsUnique = true, Order = 3)]
+        [Index("Consultant_Unique_Index", IsUnique = true)]
         [MaxLength(256)]
         public string Email { get; set; }
 
-        [Index("Consultant_Unique_Index", IsUnique = true, Order = 4)]
+
         [MaxLength(50)]
         public string Status { get; set; }
 

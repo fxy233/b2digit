@@ -138,4 +138,57 @@ namespace Projet_pilate.Models
 
         public List<string> ProfitCenters { get; set; }
     }
+
+    public class UpdateConsultantViewModel
+    {
+        public int ID { get; set; }
+
+
+        [Required]
+        [Display(Name = "Prénom")]
+        public string FirstName { get; set; }
+
+
+        [Required]
+        [Display(Name = "Nom")]
+        public string LastName { get; set; }
+
+
+        [Required]
+        [Display(Name = "Courrier électronique")]
+        public string Email { get; set; }
+
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Date d'entrée")]
+        public DateTime EntryDate { get; set; }
+
+        [Display(Name = "Statut")]
+        public string Status { get; set; }
+
+     
+        [DataType(DataType.Currency)]
+        [Display(Name = "Coût")]
+        public double Cost { get; set; }
+
+        [DataType(DataType.Currency)]
+        [Display(Name = "Repas")]
+        public double MealCost { get; set; }
+
+        [DataType(DataType.Currency)]
+        [Display(Name = "Forfait déplacement")]
+        public double TravelPackage { get; set; }
+
+        [DataType(DataType.Currency)]
+        [Display(Name = "Coût exceptionnel")]
+        public double ExceptionalCost { get; set; }
+
+
+        public string SubsidiaryName { get; set; }
+        public string ProfitCenterName { get; set; }
+
+        public List<string> Subsidiaries { get; set; }
+        public List<string> ProfitCenters { get; set; }
+       
+    }
 }

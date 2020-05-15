@@ -166,7 +166,7 @@ namespace Projet_pilate.Controllers
                 model.Subsidiaries = subsidiariesNames;
                 ViewData["Subsidiary"] = SubsidiaryName;
 
-                string message = "Ce manager existe déjà !";
+                string message = "Un manager ayant la même adresse email existe déjà!";
                 ModelState.AddModelError(string.Empty, message);
                 return View(model);
             }
@@ -221,7 +221,24 @@ namespace Projet_pilate.Controllers
             string SubsidiaryName = Request.Form["Subsidiary"].ToString();
             ApplicationDbContext db = new ApplicationDbContext();
             var manager = db.Managers.SingleOrDefault(m => m.ManagerID == model.ID);
-            var subsidiary = db.Subsidiaries.Single(s => s.Name == SubsidiaryName);
+            var NewSubsidiary = db.Subsidiaries.Single(s => s.Name == SubsidiaryName);
+
+            if (!ModelState.IsValid)
+            {
+
+                SubsidiaryName = Request.Form["Subsidiary"].ToString();
+                var subsidiaries = db.Subsidiaries.ToList();
+                List<string> subsidiariesNames = new List<string>();
+                foreach (var sub in subsidiaries)
+                {
+                    subsidiariesNames.Add(sub.Name);
+                }
+                model.Subsidiaries = subsidiariesNames;
+                ViewData["Subsidiary"] = SubsidiaryName;
+
+                return View(model);
+
+            }
 
 
             manager.FirstName = model.FirstName;
@@ -234,6 +251,9 @@ namespace Projet_pilate.Controllers
             manager.MonthlyCost = model.Cost;
 
 
+            var currentSubsidiary = manager.Subsidiary;
+            currentSubsidiary.Managers.Remove(manager);
+            NewSubsidiary.Managers.Add(manager);
 
             try
             {
@@ -257,16 +277,6 @@ namespace Projet_pilate.Controllers
                 return View(model);
             }
 
-
-            //var subsidiaries = db.Subsidiaries.ToList();
-            //List<string> subsidiariesNames = new List<string>();
-
-            //foreach (var sub in subsidiaries)
-            //{
-            //    subsidiariesNames.Add(sub.Name);
-            //}
-
-            //model.Subsidiaries = subsidiariesNames;
 
             return RedirectToAction("ManagerList", "admin");
         }
@@ -510,6 +520,184 @@ namespace Projet_pilate.Controllers
 
 
 
+        // GET: /Admin/EditManager
+        [Route("Admin/EditConsultant", Name = "EditConsultant")]
+        public ActionResult EditConsultant(int id)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var consultant = db.Consultants.Single(m => m.ConsultantID == id);
+
+
+            UpdateConsultantViewModel model = new UpdateConsultantViewModel()
+            {
+                ID = consultant.ConsultantID,
+                FirstName = consultant.FirstName,
+                LastName = consultant.LastName,
+                Email = consultant.Email,
+                EntryDate = consultant.EntryDate,
+                MealCost = consultant.MealCost,
+                TravelPackage = consultant.TravelPackage,
+                ExceptionalCost = consultant.ExceptionalCost,
+                SubsidiaryName = consultant.Subsidiary.Name,
+                ProfitCenterName = consultant.ProfitCenter.Name,
+                Status = consultant.Status,
+      
+            };
+
+            if (consultant.Status == "Sous-Traitant")
+            {
+                model.Cost = consultant.DailyCost;
+            }
+            else
+            {
+                model.Cost = consultant.MonthlyCost;
+            }
+
+            var subsidiaries = db.Subsidiaries.ToList();
+            List<string> subsidiariesNames = new List<string>();
+
+            foreach (var sub in subsidiaries)
+            {
+                subsidiariesNames.Add(sub.Name);
+            }
+            model.Subsidiaries = subsidiariesNames;
+
+
+            var profitCenters = db.profitCenters.ToList();
+            List<string> profitCentersNames = new List<string>();
+
+            foreach (var profit in profitCenters)
+            {
+                profitCentersNames.Add(profit.Name);
+            }
+            model.ProfitCenters = profitCentersNames;
+
+
+
+            return View(model);
+        }
+
+
+        // POST: /Admin/EditConsultant
+        [HttpPost]
+        [Route("Admin/EditConsultant")]
+        public ActionResult EditConsultant(UpdateConsultantViewModel model)
+        {
+            string SubsidiaryName;
+            string ProfitCenterName;
+            ProfitCenter newProfitCenter;
+            Subsidiary newSubsidiary;
+            DateTime? nullDateTime = null;
+            ApplicationDbContext db = new ApplicationDbContext();
+            string selectedTypeCost;
+
+            Consultant consultant = db.Consultants.SingleOrDefault(m => m.ConsultantID == model.ID);
+
+
+            if (!ModelState.IsValid)
+            {
+                selectedTypeCost = Request.Form["CostType"].ToString();
+                SubsidiaryName = Request.Form["Subsidiary"].ToString();
+                ProfitCenterName = Request.Form["ProfitCenter"].ToString();
+                var profitCenters = db.profitCenters.ToList();
+                var subsidiaries = db.Subsidiaries.ToList();
+                List<string> profitCenterNames = new List<string>();
+                List<string> subsidiariesNames = new List<string>();
+
+                foreach (var profit in profitCenters)
+                {
+                    profitCenterNames.Add(profit.Name);
+                }
+                model.ProfitCenters = profitCenterNames;
+
+                foreach (var sub in subsidiaries)
+                {
+                    subsidiariesNames.Add(sub.Name);
+                }
+                model.Subsidiaries = subsidiariesNames;
+
+
+                ViewData["Subsidiary"] = SubsidiaryName;
+                ViewData["ProfitCenter"] = ProfitCenterName;
+                ViewData["CostType"] = selectedTypeCost;
+
+                return View(model);
+            }
+
+
+
+            selectedTypeCost = Request.Form["CostType"].ToString();
+            SubsidiaryName = Request.Form["Subsidiary"].ToString();
+            ProfitCenterName = Request.Form["ProfitCenter"].ToString();
+            newProfitCenter = db.profitCenters.Single(s => s.Name == ProfitCenterName);
+            newSubsidiary = db.Subsidiaries.Single(s => s.Name == SubsidiaryName);
+
+            consultant.FirstName = model.FirstName;
+            consultant.LastName = model.LastName;
+            consultant.Email = model.Email;
+            consultant.EntryDate = model.EntryDate;
+            consultant.DateOfDeparture = nullDateTime;
+            consultant.Status = Request.Form["Status"].ToString();
+            consultant.MealCost = model.MealCost;
+            consultant.TravelPackage = model.TravelPackage;
+            consultant.ExceptionalCost = model.ExceptionalCost;
+
+            if (selectedTypeCost == "MonthlyCost")
+            {
+                consultant.MonthlyCost = model.Cost;
+                consultant.DailyCost = 0;
+            }
+            else
+            {
+                consultant.DailyCost = model.Cost;
+                consultant.MonthlyCost = 0;
+            }
+
+            var currentProfitCenter = consultant.ProfitCenter;
+            currentProfitCenter.Consultants.Remove(consultant);
+            newProfitCenter.Consultants.Add(consultant);
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                selectedTypeCost = Request.Form["CostType"].ToString();
+                SubsidiaryName = Request.Form["Subsidiary"].ToString();
+                ProfitCenterName = Request.Form["ProfitCenter"].ToString();
+                var profitCenters = db.profitCenters.ToList();
+                var subsidiaries = db.Subsidiaries.ToList();
+                List<string> profitCenterNames = new List<string>();
+                List<string> subsidiariesNames = new List<string>();
+
+                foreach (var profit in profitCenters)
+                {
+                    profitCenterNames.Add(profit.Name);
+                }
+                model.ProfitCenters = profitCenterNames;
+
+                foreach (var sub in subsidiaries)
+                {
+                    subsidiariesNames.Add(sub.Name);
+                }
+                model.Subsidiaries = subsidiariesNames;
+
+                ViewData["Subsidiary"] = SubsidiaryName;
+                ViewData["ProfitCenter"] = ProfitCenterName;
+                ViewData["CostType"] = selectedTypeCost;
+
+
+                string message = "Un consultant ayant la même adresse email existe déjà";
+                ModelState.AddModelError(string.Empty, message);
+                return View(model);
+            }
+
+
+            return RedirectToAction("ConsultantList", "admin");
+        }
+
+
         [AllowAnonymous]
         public ActionResult DeleteConsultant(int id)
         {
@@ -577,43 +765,4 @@ namespace Projet_pilate.Controllers
 }
 
 
-
-//[AllowAnonymous]
-//public ActionResult DeleteManager(int id)
-//{
-//    ApplicationDbContext db = new ApplicationDbContext();
-//    var managers = db.Managers.ToList();
-//    List<DetailManagerViewModel> models = new List<DetailManagerViewModel>();
-//    var managerToDelete = managers.SingleOrDefault(c => c.ManagerID == id);
-//    managers.Remove(managerToDelete);
-//    db.Entry(managerToDelete).State = EntityState.Deleted;
-
-//    foreach (var manager in managers)
-//    {
-//        DetailManagerViewModel model = new DetailManagerViewModel()
-//        {
-//            ID = manager.ManagerID,
-//            FirstName = manager.FirstName,
-//            LastName = manager.LastName,
-//            Email = manager.Email,
-//            EntryDate = manager.EntryDate,
-//            Subsidiary = manager.Subsidiary.Name,
-//            MonthlyCost = manager.MonthlyCost,
-//        };
-//        models.Add(model);
-//    }
-
-//    try
-//    {
-//        db.SaveChanges();
-//    }
-//    catch (Exception)
-//    {
-//        string message = "Ce manager ne peut être supprimé car il a déjà contracté un contrat avec un client !";
-//        ModelState.AddModelError(string.Empty, message);
-//        return View("ManagerList", models);
-//    }
-
-//    return RedirectToAction("ManagerList", "admin");
-//}
 

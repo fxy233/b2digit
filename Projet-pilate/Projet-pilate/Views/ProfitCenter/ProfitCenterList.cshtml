@@ -78,10 +78,21 @@
 
             <td>
                 @*@Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-                    @Html.ActionLink("Details", "Details", new { id=item.ID }) |
-                    @Html.ActionLink("Delete", "Delete", new { id=item.ID })*@
+                    @Html.ActionLink("Details", "Details", new { id=item.ID }) |*@
+                @Html.ActionLink("Supprimer", "DeleteProfitCenter", new { id = item.ID })
             </td>
         </tr>
     }
 
 </table>
+
+@Html.Raw(HttpUtility.HtmlDecode((Html.ValidationSummary(false, "", new { @class = "exception" })).ToHtmlString()))
+
+<script>
+    function ConfirmationDialog() {
+        if (confirm("Etes vous certain de votre choix ?"))
+            return true;
+        else
+            return false;
+    }
+</script>
