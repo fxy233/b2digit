@@ -1,0 +1,548 @@
+﻿@model Projet_pilate.Models.RegisterActivityViewModel
+@{
+    ViewBag.Title = "CRA";
+}
+
+@*<h2>Période concernée: [ @ViewBag.moisActuel ] </h2>*@
+
+@*@if (@ViewBag.moisActuel == "avril" || "août" || "octobre")*@
+@if (Model.MoisActivation.StartsWith("avril") || Model.MoisActivation.StartsWith("août") || Model.MoisActivation.StartsWith("octobre"))
+{
+
+    <h2>CRA du mois d'@Model.MoisActivation @DateTime.Now.Year de @ViewBag.nom</h2>
+}
+else
+{
+    <h2>CRA du mois de @Model.MoisActivation @DateTime.Now.Year de @ViewBag.nom</h2>
+    <br />
+}
+
+
+<style>
+    .weekend {
+        background-color: lightblue;
+    }
+
+    .ferie {
+        background-color: lightblue;
+    }
+</style>
+
+<section class="container">
+    @using (Html.BeginForm("CRA", "Consultant", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead style="background-color:black; color:white">
+                            <tr>
+                                <th></th>
+                                <th> Inter-Contrat </th>
+                                <th> Congés</th>
+                                <th> Formation</th>
+                                <th> Maladie</th>
+                                @if (Model.MissionsList != null)
+                                {
+                                    foreach (var item in Model.MissionsList)
+                                    {
+                                        <th>@item</th>
+                                    }
+                                }
+
+                            </tr>
+                            <tr>
+                                <th>Jours</th>
+                                <th>AM - PM</th>
+                                <th>AM - PM</th>
+                                <th>AM - PM</th>
+                                <th>AM - PM</th>
+                                @if (Model.MissionsList != null)
+                                {
+                                    foreach (var item in Model.MissionsList)
+                                    {
+                                        <th>AM - PM</th>
+                                    }
+                                }
+
+                            </tr>
+                        </thead>
+
+                        @foreach (var dt in Model.Dates)
+                        {
+                            <input type="hidden" name="jours" value="@dt.Day">
+                            <input type="hidden" name="date" value="@dt">
+                            <tr class="@dt.DayOfWeek jour">
+                                <th>@dt.Date.ToString("D")</th>
+                                <td class="colonnes">
+                                    <input class="am@(dt.Day)" type="checkbox" name="matin" value="ic-@(dt.Day)">
+                                    <input class="pm@(dt.Day)" type="checkbox" name="apres-midi" value="ic-@(dt.Day)">
+                                </td>
+                                <td class="colonnes">
+                                    <input class="am@(dt.Day)" type="checkbox" name="matin" value="conge-@(dt.Day)">
+                                    <input class="pm@(dt.Day)" type="checkbox" name="apres-midi" value="conge-@(dt.Day)">
+                                </td>
+                                <td class="colonnes">
+                                    <input class="am@(dt.Day)" type="checkbox" name="matin" value="formation-@(dt.Day)">
+                                    <input class="pm@(dt.Day)" type="checkbox" name="apres-midi" value="formation-@(dt.Day)">
+                                </td>
+                                <td class="colonnes">
+                                    <input class="am@(dt.Day)" type="checkbox" name="matin" value="maladie-@(dt.Day)">
+                                    <input class="pm@(dt.Day)" type="checkbox" name="apres-midi" value="maladie-@(dt.Day)">
+                                </td>
+                                @if (Model.MissionsList != null)
+                                {
+                                    foreach (var item in Model.MissionsList)
+                                    {
+                                        <td class="colonnes">
+                                            <input class="am@(dt.Day)" type="checkbox" name="matin" value="@(item)-@(dt.Day)">
+                                            <input class="pm@(dt.Day)" type="checkbox" name="apres-midi" value="@(item)-@(dt.Day)">
+                                        </td>
+                                    }
+                                }
+                            </tr>
+                        }
+
+                    </table>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="flex-container" style="height: 500px; width:400px">
+
+                    <div class="card">
+                        <div class="thumbnail" style="height: 150px; text-align:center">
+                            <h4 class="caption"> <strong>Niveau de satisfaction de 1 à 5</strong></h4>
+                            <div class="input-group" id="center-div" style="width:250px">
+                                <span>
+                                    <input class="satisfaction" type="checkbox" name="satisfaction" value="1">
+                                    <label for="satisfaction" style="margin: 10px">1</label>
+                                </span>
+                                <span>
+                                    <input class="satisfaction" type="checkbox" name="satisfaction" value="2">
+                                    <label for="satisfaction" style="margin: 10px">2</label>
+                                </span>
+                                <span>
+                                    <input class="satisfaction" type="checkbox" name="satisfaction" value="3">
+                                    <label for="satisfaction" style="margin: 10px">3</label>
+                                </span>
+                                <span>
+                                    <input class="satisfaction" type="checkbox" name="satisfaction" value="4">
+                                    <label for="satisfaction" style="margin: 10px">4</label>
+                                </span>
+                                <span>
+                                    <input class="satisfaction" type="checkbox" name="satisfaction" value="5" checked>
+                                    <label for="satisfaction" style="margin: 10px">5</label>
+                                </span>
+                            </div>
+                            <div>
+                                <small class="text-muted">5 : Très satisfait</small>
+                                <br />
+                                <small class="text-muted">1 : Pas satisfait</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="commentaire"><strong>Commentaires</strong></label>
+                        <textarea class="form-control" id="comment" name="commentaire" rows="3"></textarea>
+                    </div>
+
+                    <input type="hidden" name="moisConcerne" value="@ViewData["moisActif"]" />
+
+                    <div>
+                        <input type="submit" class="btn btn-primary" value="Enregistrer" id="valider" />
+                    </div>
+                    <div>
+                        <input type="submit" class="btn btn-primary" value="Save" id="save" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</section>
+
+<div class="form-group">
+    <div class="col-md-offset-2 col-md-10">
+        <input type="button" value="Activer" class="btn btn-default" data-toggle="modal" data-target="#myModal" id="boutonModal" />
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Information manquante</h4>
+            </div>
+            <div class="modal-body">
+                Vous devez renseigner au mois 2 activités (matin/après-midi) pour chaque jour ouvré !
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-default" id="validation">Oui</button>*@
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link href="~/Content/Site.css" rel="stylesheet" />
+
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+
+<script>
+
+    var boutonModal = document.getElementById("boutonModal").style.display = "none";
+
+    $("#save").hide();
+
+    function getNbJours(date) {
+        return new Date(date.getFullYear(), date.getMonth() + 1, -1).getDate() + 1;
+    }
+
+    var today = new Date();
+
+    var nbJours = getNbJours(today);
+
+    var tabJours = [];
+
+    for (let index = 1; index < nbJours + 1; index++) {
+        var am = "am" + index;
+        var pm = "pm" + index;
+        tabJours.push(am);
+        tabJours.push(pm);
+    }
+
+
+    tabJours.forEach(elements => {
+
+        var elements = document.getElementsByClassName(`${elements}`);
+
+        // Créer boucle foreach:
+        //foreach item in elements ... item.addEventListener ... if item.checked foreach index in elements
+        // if index != item ... index.checked = false;
+
+
+        var checkboxs = Array.from(elements);
+        checkboxs.forEach(checkbox => {
+
+            checkbox.addEventListener("change", function () {
+
+                if (checkbox.checked) {
+
+                    checkboxs.forEach(item => {
+
+                        if (item != checkbox) {
+
+                            item.checked = false;
+                        }
+
+                    });
+                }
+            });
+
+        });
+
+    });
+
+
+    var satisfaction = document.getElementsByClassName("satisfaction");
+
+    var tabSatisfactions = Array.from(satisfaction);
+
+    tabSatisfactions.forEach(input => {
+
+        input.addEventListener("change", function () {
+
+            if (input.checked) {
+
+                tabSatisfactions.forEach(item => {
+
+                    if (item != input) {
+
+                        item.checked = false;
+                    }
+
+                });
+            }
+        });
+
+    });
+
+
+
+
+
+    //var samedi = document.getElementsByClassName("Saturday");
+    //var dimanche = document.getElementsByClassName("Sunday");
+
+
+
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
+    var dateActuelle = new Date();
+
+    var an = dateActuelle.getFullYear()
+
+
+    var G = an % 19
+    var C = Math.floor(an / 100)
+    var H = (C - Math.floor(C / 4) - Math.floor((8 * C + 13) / 25) + 19 * G + 15) % 30
+    var I = H - Math.floor(H / 28) * (1 - Math.floor(H / 28) * Math.floor(29 / (H + 1)) * Math.floor((21 - G) / 11))
+    var J = (an * 1 + Math.floor(an / 4) + I + 2 - C + Math.floor(C / 4)) % 7
+    var L = I - J
+
+    var JourAn = new Date(an, "00", "01").toLocaleDateString(undefined, options);
+    var FeteTravail = new Date(an, "04", "01").toLocaleDateString(undefined, options);
+    var Victoire1945 = new Date(an, "04", "08").toLocaleDateString(undefined, options);
+    var FeteNationale = new Date(an, "06", "14").toLocaleDateString(undefined, options);
+    var Assomption = new Date(an, "07", "15").toLocaleDateString(undefined, options);
+    var Toussaint = new Date(an, "10", "01").toLocaleDateString(undefined, options);
+    var Armistice = new Date(an, "10", "11").toLocaleDateString(undefined, options);
+    var Noel = new Date(an, "11", "25").toLocaleDateString(undefined, options);
+
+    var MoisPaques = 3 + Math.floor((L + 40) / 44)
+    var JourPaques = L + 28 - 31 * Math.floor(MoisPaques / 4)
+    var Paques = new Date(an, MoisPaques - 1, JourPaques)
+
+    var LundiPaques = new Date(an, MoisPaques - 1, JourPaques + 1).toLocaleDateString(undefined, options);
+    var Ascension = new Date(an, MoisPaques - 1, JourPaques + 39).toLocaleDateString(undefined, options);
+    var Pentecote = new Date(an, MoisPaques - 1, JourPaques + 49).toLocaleDateString(undefined, options);
+    var LundiPentecote = new Date(an, MoisPaques - 1, JourPaques + 50).toLocaleDateString(undefined, options);
+
+
+    var colonnes = document.getElementsByClassName("colonnes");
+    console.log(colonnes);
+
+    var tabColonne = Array.from(colonnes);
+
+    console.log(tabColonne);
+
+    var cible = colonnes[0].previousSibling.previousSibling.textContent;
+
+
+
+
+
+    var joursFeries = new Array(JourAn, FeteTravail, Victoire1945, FeteNationale, Assomption, Toussaint, Armistice, Noel,
+        LundiPaques, Ascension, Pentecote, LundiPentecote);
+
+
+    function estFerie(params) {
+
+        joursFeries.forEach(element => {
+
+            var journee = params.previousSibling.previousSibling.textContent;
+            var parent = params.parentElement;
+
+            //console.log(parent);
+
+            if (journee === element) {
+                parent.childNodes[3].childNodes[1].checked = false;
+                parent.childNodes[3].childNodes[3].checked = false;
+                parent.childNodes[5].childNodes[1].checked = false;
+                parent.childNodes[5].childNodes[3].checked = false;
+                parent.childNodes[7].childNodes[1].checked = false;
+                parent.childNodes[7].childNodes[3].checked = false;
+                parent.childNodes[9].childNodes[1].checked = false;
+                parent.childNodes[9].childNodes[3].checked = false;
+                //parent.childNodes[11].childNodes[1].checked = false;
+                //parent.childNodes[11].childNodes[3].checked = false;
+
+
+                parent.classList.add("ferie");
+
+                console.log(params.childNodes[1]);
+                console.log(params.childNodes[3]);
+                console.log(parent)
+                console.log(parent.childNodes[3].childNodes[1])
+
+            }
+
+        });
+
+    }
+
+
+
+    //var DayOfWeek = new Array("Wednesday", "Thursday", "Friday", "Monday", "Tuesday");
+
+    //DayOfWeek.forEach(elements => {
+
+    //    var elements = document.getElementsByClassName(`${elements}`);
+
+    //    var tableau = Array.from(elements);
+
+    //    tableau.forEach(item => {
+
+    //        item.childNodes[11].childNodes[1].checked = true;
+    //        item.childNodes[11].childNodes[3].checked = true;
+
+    //    });
+    //});
+
+    tabColonne.forEach(element => {
+
+        estFerie(element)
+
+    });
+
+
+    var samedi = document.getElementsByClassName("Saturday");
+    var dimanche = document.getElementsByClassName("Sunday");
+
+
+    tabJours.forEach(item => {
+
+        var item = document.getElementsByClassName(`${item}`);
+
+        for (let index = 0; index < dimanche.length; index++) {
+
+            if (dimanche[index]) {
+
+                dimanche[index].classList.add("weekend");
+
+                dimanche[index].childNodes[3].childNodes[1].checked = false;
+                dimanche[index].childNodes[3].childNodes[3].checked = false;
+                dimanche[index].childNodes[5].childNodes[1].checked = false;
+                dimanche[index].childNodes[5].childNodes[3].checked = false;
+                dimanche[index].childNodes[7].childNodes[1].checked = false;
+                dimanche[index].childNodes[7].childNodes[3].checked = false;
+                dimanche[index].childNodes[9].childNodes[1].checked = false;
+                dimanche[index].childNodes[9].childNodes[3].checked = false;
+
+
+            }
+        }
+
+        for (let index = 0; index < samedi.length; index++) {
+
+            if (samedi[index]) {
+
+                samedi[index].classList.add("weekend");
+
+
+                samedi[index].childNodes[3].childNodes[1].checked = false;
+                samedi[index].childNodes[3].childNodes[3].checked = false;
+                samedi[index].childNodes[5].childNodes[1].checked = false;
+                samedi[index].childNodes[5].childNodes[3].checked = false;
+                samedi[index].childNodes[7].childNodes[1].checked = false;
+                samedi[index].childNodes[7].childNodes[3].checked = false;
+                samedi[index].childNodes[9].childNodes[1].checked = false;
+                samedi[index].childNodes[9].childNodes[3].checked = false;
+
+
+            }
+        }
+
+
+    });
+
+
+    //var DayOfWeek = new Array("Wednesday", "Thursday", "Friday", "Monday", "Tuesday");
+
+    //DayOfWeek.forEach(elements => {
+
+    //    var elements = document.getElementsByClassName(`${elements}`);
+
+    //    var tableau = Array.from(elements);
+
+    //    tableau.forEach(item => {
+
+    //        item.childNodes[11].childNodes[1].checked = true;
+    //        item.childNodes[11].childNodes[3].checked = true;
+
+    //    });
+    //});
+
+     //////
+    var valider = document.getElementById("valider");
+
+    var jour = document.querySelectorAll('.jour');
+    console.log(jour);
+
+    var tabDays = Array.from(jour);
+
+    console.log(tabDays[0].classList);
+    console.log(tabDays[1].classList);
+    //console.log(tabDays[0].classList[0]);
+    //console.log(tabDays[1].classList[0]);
+    console.log(tabDays[0].classList[2]);
+
+    if (tabDays[0].classList[0] != "Saturday" && tabDays[0].classList[0] != "Sunday" && tabDays[0].classList[2] != "ferie") {
+
+        console.log("Hello !");
+    }
+
+
+
+
+    var errors = 0;
+
+
+    valider.addEventListener("click", function (event) {
+
+        tabDays.forEach(element => {
+
+            if (element.classList[0] != "Saturday" && element.classList[0] != "Sunday" && element.classList[2] != "ferie") {
+
+
+                var activites = element.children;
+                var tabActivites = Array.from(activites);
+
+                //Compteur calculant le nombre de checkboxes cochées
+                var matinCochee = 0;
+                var apremCochee = 0;
+
+                tabActivites.forEach(element => {
+
+                    if (element != tabActivites[0]) {
+
+                        if (element.children[0].checked == true) {
+
+                            matinCochee++;
+                        }
+                        if (element.children[1].checked == true) {
+
+                            apremCochee++;
+
+                        }
+                    }
+
+                });
+
+                if (matinCochee < 1) {
+
+                    errors++;
+
+                } else if (apremCochee < 1) {
+
+                    errors++;
+                }
+
+            }
+
+        });
+
+
+        if (errors > 0) {
+
+            event.preventDefault();
+
+
+            $("#boutonModal").click();
+
+            errors = 0;
+        }
+
+    });
+
+
+    tabColonne.forEach(element => {
+
+        estFerie(element)
+
+    });
+
+</script>
+

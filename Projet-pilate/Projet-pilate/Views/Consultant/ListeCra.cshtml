@@ -1,0 +1,130 @@
+﻿@model IEnumerable<Projet_pilate.Models.ActivityViewModel>
+
+@{
+    ViewBag.Title = "ListeCra";
+}
+
+<h2>Liste des comptes rendu d'activité</h2>
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Month)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Satisfaction)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Comment)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ConsultantName)
+        </th>
+        @*<th>
+                @Html.DisplayNameFor(model => model.WorkedDays)
+            </th>*@
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Month)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Satisfaction)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ConsultantName)
+            </td>
+        <td>
+            @if (User.IsInRole("Super-Administrateur") || User.IsInRole("Administrateur") || User.IsInRole("Administrateur-ventes"))
+            {
+
+                @Html.ActionLink("Supprimer CRA", "DeleteCra", "Consultant", new { id = item.ID }, new { @class = "btn btn-primary btn-large supp" })
+                @Html.ActionLink("Supprimer CRA", "DeleteCra", "Consultant", new { id = item.ID }, new { @class = "btn btn-primary btn-large action" })
+               
+            }
+
+        </td>
+        </tr>
+    }
+</table>
+
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Vous êtes sur le point de supprimer un Cra</h4>
+            </div>
+            <div class="modal-body">
+                Êtes vous certain de votre choix ?
+            </div>
+            <div class="modal-footer">
+                <input type="submit" class="btn btn-default" value="valider" id="validation">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+
+<script>
+
+    var supp = document.querySelectorAll('.supp');
+    var action = document.querySelectorAll('.action')
+
+    action.forEach(element => {
+        element.style.visibility = "hidden";
+    });
+
+    supp.forEach(element => {
+        element.addEventListener('click', function (e) {
+            console.log(e.target);
+            console.log(element.nextElementSibling);
+
+             $('#myModal').modal('show');
+            e.preventDefault(e);
+        })
+
+         $('#validation').on('click', function () {
+             var href = element.nextElementSibling.getAttribute("href");
+             window.location.href = href;
+           });
+    });
+
+
+
+
+
+
+    //$(function () {
+
+    //    $('#action').hide();
+
+
+    //    $('#supp').on('click', function (e) {
+    //        $('#myModal').modal('show');
+    //        e.preventDefault();
+    //    });
+        
+    //        $('#validation').on('click', function () {
+    //             var href = $('#action').attr("href");
+    //            window.location.href = href;
+    //        });
+
+    //});
+
+     
+
+</script>

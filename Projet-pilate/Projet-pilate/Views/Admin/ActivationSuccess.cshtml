@@ -1,0 +1,18 @@
+﻿@model Projet_pilate.Models.AdminViewModel
+
+@{
+    ViewBag.Title = "ActivationSuccess";
+}
+
+@if (Model.MoisProchain.StartsWith("avril") || Model.MoisProchain.StartsWith("août") || Model.MoisProchain.StartsWith("octobre") )
+{
+    <h2>Activation de la saisie du mois d'@Model.MoisProchain</h2>
+}
+else
+{
+    <h2>Activation de la saisie du mois de @Model.MoisProchain</h2>
+    
+}
+
+
+

@@ -1,0 +1,179 @@
+﻿@model Projet_pilate.Models.RegisterMissionViewModel
+
+@{
+    ViewBag.Title = "CreationMission";
+}
+
+<h2>Creation de mission</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ID)
+        @Html.HiddenFor(model => model.CreatorID)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Contact client</label>
+            <div class="col-md-10">
+                <select class="form-control" id="contactId" asp-for="ContactId" name="ContactId" required>
+                    <option selected>@ViewData["contact"]</option>
+                    @foreach (var contact in Model.ContactMail)
+                    {
+                        <option value="@contact">@contact</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Consultant</label>
+            <div class="col-md-10">
+                <select class="form-control" id="consultantId" asp-for="ConsultantId" name="ConsultantId" required>
+                    <option selected>@ViewData["consultant"]</option>
+                    @foreach (var consultant in Model.ConsultantNames)
+                    {
+                        <option value="@consultant">@consultant</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Start, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Start, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Start, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.End, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.End, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.End, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Fee, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Fee, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Fee, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="Periode">Périodicité</label>
+            <div class="col-md-10">
+                <select class="form-control" id="PeriodeId" name="PeriodeId" required>
+                    <option selected>@ViewData["periodicite"]</option>
+                    <option>Jours</option>
+                    <option>Mois</option>
+                    <option>Trimestre</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FreeDay, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.FreeDay, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FreeDay, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Comment, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10 editor-field">
+                @Html.TextAreaFor(model => model.Comment, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Comment, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Enregistrer" class="btn btn-default" id="enregistrer" />
+            </div>
+        </div>
+    </div>
+}
+
+   <form action="/Mission/ValidationMissions" method="post" id="hiddenForm">
+        <input type="hidden" name="name" value="@Model.Name" />
+        <input type="hidden" name="client" value="@ViewData["contact"]" />
+        <input type="hidden" name="consultant" value="@ViewData["consultant"]" />
+        <input type="hidden" name="start" value="@Model.Start" />
+        <input type="hidden" name="end" value="@Model.End" />
+        <input type="hidden" name="fee" value="@Model.Fee" />
+        <input type="hidden" name="periodicity" value="@ViewData["periodicite"]" />
+        <input type="hidden" name="freeday" value="@Model.FreeDay" />
+        <input type="hidden" name="comment" value="@Model.Comment" />
+        <input type="submit" value="save" class="btn btn-default" id="save" />
+    </form>
+
+
+
+@if (Model.MissionEncours != null)
+{
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Le consultant est déjà affecté à une ou plusieurs missions pendant cette période</h4>
+                </div>
+                <div class="modal-body">
+                    <ul>
+                        @foreach (var item in Model.MissionEncours)
+                        {
+                            <li>@item.Name - Début: @item.Start.ToString("dd/MM/yyyy")   Fin: @item.End.ToString("dd/MM/yyyy")</li>
+                        }
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-default" value="valider" id="validation">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+
+
+
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+
+<script type="text/javascript">
+    $(window).on('load', function () {
+        $('#myModal').modal('show');
+    });
+
+    $("#hiddenForm").hide();
+
+    $('#validation').on('click', function () {
+        $("#save").click()
+    });
+</script>
+
+
+
+

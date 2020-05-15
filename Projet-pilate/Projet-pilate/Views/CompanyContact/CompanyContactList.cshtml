@@ -1,0 +1,84 @@
+﻿@model IEnumerable<Projet_pilate.Models.DetailCompanyContactViewModel>
+
+@{
+    ViewBag.Title = "ListeClients";
+}
+
+<h2>Liste de contacts client</h2>
+
+
+@if (User.IsInRole("Super-Administrateur") || User.IsInRole("Administrateur") || User.IsInRole("Manager"))
+{
+    <p>
+        @Html.ActionLink("Ajouter un contact", "CreateCompanyContact", "CompanyContact", new { @class = "btn btn-primary btn-large" })
+    </p>
+}
+
+
+<table class="table">
+    <tr>
+        <th>
+            Email
+        </th>
+        <th>
+            Entreprise
+        </th>
+        <th>
+            Prénom
+        </th>
+        <th>
+            Nom
+        </th>
+        <th>
+            Position
+        </th>
+        <th>
+            Téléphone
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CompanyName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Position)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+
+            <td>
+
+                @*@Html.ActionLink("Modifier", "Edit", new { id = item.CompanyContactID }, new { @class = "btn btn-primary btn-large" })*@
+                @*@Html.ActionLink("Details", "Details", new { id = item.CompanyContactID }, new { @class = "btn btn-primary btn-large" })*@
+                @Html.ActionLink("Supprimer", "Delete", new { id = item.ID }, new { @class = "btn btn-primary btn-large", id = "suppression", onclick = "return ConfirmationDialog()" })
+            </td>
+
+        </tr>
+    }
+
+</table>
+
+@Html.Raw(HttpUtility.HtmlDecode((Html.ValidationSummary(false, "", new { @class = "exception" })).ToHtmlString()))
+
+<script>
+    function ConfirmationDialog() {
+        if (confirm("Etes vous certain de votre choix ?"))
+            return true;
+        else
+            return false;
+    }
+</script>

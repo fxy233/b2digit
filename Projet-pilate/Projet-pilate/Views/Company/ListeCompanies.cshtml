@@ -1,0 +1,69 @@
+﻿@model IEnumerable<Projet_pilate.Models.DetailCompanyViewModel>
+
+@{
+    ViewBag.Title = "ListeCompanies";
+}
+
+<h2>Liste des entreprises</h2>
+
+@if (User.IsInRole("Super-Administrateur") || User.IsInRole("Administrateur"))
+{
+    <p>
+        @Html.ActionLink("Ajouter une entreprise", "CreationCompany", "Company", new { @class = "btn btn-primary btn-large" })
+    </p>
+}
+
+<table class="table">
+    <tr>
+        <th>
+            Raison sociale
+        </th>
+        <th>
+            Adresse
+        </th>
+        <th>
+            Code postal
+        </th>
+        <th>
+            Ville
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PostalCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.City)
+            </td>
+
+            <td>
+                @*@Html.ActionLink("Modifier", "Edit", new { id = item.ID }, new { @class = "btn btn-primary btn-large" })*@
+                @*@Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-primary btn-large" })*@
+                @Html.ActionLink("Supprimer", "Delete", new { id = item.ID }, new { @class = "btn btn-primary btn-large", onclick = "return ConfirmationDialog()" })
+            </td>
+
+        </tr>
+    }
+
+</table>
+
+@Html.Raw(HttpUtility.HtmlDecode((Html.ValidationSummary(false, "", new { @class = "exception" })).ToHtmlString()))
+
+<script>
+    function ConfirmationDialog() {
+        if (confirm("Etes vous certain de votre choix ?"))
+            return true;
+        else
+            return false;
+    }
+</script>

@@ -1,0 +1,74 @@
+﻿@model Projet_pilate.Models.AdminViewModel
+
+@{
+    ViewBag.Title = "ActivationCRA";
+}
+
+<h2>Mois en cours : @Model.MoisActif</h2>
+
+
+@using (Html.BeginForm("ActiverCra", "Admin", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.MoisProchain, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.MoisProchain, new { htmlAttributes = new { @class = "form-control", @readonly = "true" } })
+            @Html.ValidationMessageFor(model => model.MoisProchain, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="button" value="Activer" class="btn btn-default" data-toggle="modal" data-target="#myModal" />
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Confirmation activation du mois</h4>
+                </div>
+                <div class="modal-body">
+                   Etes vous certain de votre choix ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"  id="validation">Oui</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="form-group" id="hiddenButton">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-default" id="save" />
+        </div>
+    </div>
+</div>
+}
+
+
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+
+<script type="text/javascript">
+
+    $("#hiddenButton").hide();
+
+    $('#validation').on('click', function () {
+        $("#save").click()
+    });
+</script>
