@@ -68,9 +68,7 @@
             }
 
             <td>
-                @*@Html.RouteLink("Créer un identifiant pour ce manager", "CreateUserManager", new { id = item.ID }) |*@
                 @Html.ActionLink("Edit", "EditManager", new { id = item.ID }) |
-                @*@Html.ActionLink("Details", "Details", new { id = item.ID }) |*@
                 @Html.ActionLink("Supprimer", "DeleteManager", new { id = item.ID }, new { @class = "btn btn-primary btn-large", onclick = "return ConfirmationDialog()" })
             </td>
         </tr>

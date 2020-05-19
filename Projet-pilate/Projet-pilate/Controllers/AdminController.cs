@@ -758,6 +758,13 @@ namespace Projet_pilate.Controllers
         }
 
 
+        public ActionResult Facturation()
+        {
+          
+
+            return View();
+        }
+
     }
 
 

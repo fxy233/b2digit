@@ -912,17 +912,3 @@ namespace Projet_pilate.Controllers
 
 
 
-
-//// GET: /Account/Delete
-//[AllowAnonymous]
-//public ActionResult Delete(string id)
-//{
-//    ApplicationDbContext db = new ApplicationDbContext();
-
-//    var user = db.Users.SingleOrDefault(u => u.Id == id);
-//    db.Entry(user).State = EntityState.Deleted;
-//    db.SaveChanges();
-
-//    return RedirectToAction("UsersBoard", "Account");
-
-//}

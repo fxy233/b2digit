@@ -3,9 +3,6 @@
     ViewBag.Title = "CRA";
 }
 
-@*<h2>Période concernée: [ @ViewBag.moisActuel ] </h2>*@
-
-@*@if (@ViewBag.moisActuel == "avril" || "août" || "octobre")*@
 @if (Model.MoisActivation.StartsWith("avril") || Model.MoisActivation.StartsWith("août") || Model.MoisActivation.StartsWith("octobre"))
 {
 

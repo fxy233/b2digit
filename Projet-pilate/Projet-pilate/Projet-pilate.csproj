@@ -294,7 +294,6 @@
     <Content Include="Scripts\moisActif.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <None Include="Properties\PublishProfiles\Projet-pilate20200429031923 - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -353,7 +352,6 @@
     <Content Include="Views\CompanyContact\CreateCompanyContact.cshtml" />
     <Content Include="Views\CompanyContact\CompanyContactList.cshtml" />
     <Content Include="Views\Mission\CreationMission.cshtml" />
-    <Content Include="Views\Company\CreationReussi.cshtml" />
     <Content Include="Views\Mission\CreationReussi.cshtml" />
     <Content Include="Views\Company\Edit.cshtml" />
     <Content Include="Views\Company\Details.cshtml" />
@@ -365,11 +363,8 @@
     <Content Include="Views\Consultant\CraSansProjet.cshtml" />
     <Content Include="Views\Consultant\ListeCra.cshtml" />
     <Content Include="Views\Consultant\CRAReadOnly.cshtml" />
-    <Content Include="Views\Consultant\SansProjet.cshtml" />
     <Content Include="Views\Consultant\CRA.cshtml" />
     <Content Include="Views\Consultant\CreationConsultant.cshtml" />
-    <Content Include="Views\Manage\ActivationSalarie.cshtml" />
-    <Content Include="Views\Manage\ManagerActivation.cshtml" />
     <Content Include="Views\Manage\ConsultantManagerActivation.cshtml" />
     <Content Include="Views\ProfitCenter\CreateProfitCenter.cshtml" />
     <Content Include="Views\Subsidiary\CreateSubsidiary.cshtml" />
@@ -388,9 +383,11 @@
     <Content Include="Views\Account\RegisterSuperAdmin.cshtml" />
     <Content Include="Views\Admin\EditManager.cshtml" />
     <Content Include="Views\Admin\EditConsultant.cshtml" />
+    <Content Include="Views\Admin\Facturation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

@@ -22,7 +22,6 @@ namespace Projet_pilate.Models
 
     }
 
-
     public class DetailProfitCenterViewModel
     {
         public int ID { get; set; }

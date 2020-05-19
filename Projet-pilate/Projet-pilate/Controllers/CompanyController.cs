@@ -86,11 +86,6 @@ namespace Projet_pilate.Controllers
             return View(models);
         }
 
-        public ActionResult CreationReussi()
-        {
-            return View();
-        }
-
 
         // GET: /Company/Edit
         [AllowAnonymous]

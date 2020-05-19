@@ -180,14 +180,10 @@ namespace Projet_pilate.Controllers
             var currentMonth = db.MonthActivations.Single();
             int month = currentMonth.Periode.Month;
 
-
-
-            // chaînes de caractères qui stockent la valeur de l'ensemble des checkboxs du calendrier ayant été 
-            //cochées par l'utilisateur pour chacune des journées du mois
             string am = Request["matin"].ToString();
             string pm = Request["apres-midi"].ToString();
 
-            // conversion des chaînes en tableaux 
+
             string[] matinees = am.Split(',');
             string[] apresMidis = pm.Split(',');
 
@@ -351,4 +347,3 @@ namespace Projet_pilate.Controllers
 }
 
 
-/////
