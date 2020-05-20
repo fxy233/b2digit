@@ -257,6 +257,10 @@
     <Compile Include="Migrations\202005150955373_MajIndexUniqueTableConsultant.Designer.cs">
       <DependentUpon>202005150955373_MajIndexUniqueTableConsultant.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202005200912171_Message.cs" />
+    <Compile Include="Migrations\202005200912171_Message.Designer.cs">
+      <DependentUpon>202005200912171_Message.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityViewModels.cs" />
@@ -384,6 +388,7 @@
     <Content Include="Views\Admin\EditManager.cshtml" />
     <Content Include="Views\Admin\EditConsultant.cshtml" />
     <Content Include="Views\Admin\Facturation.cshtml" />
+    <Content Include="Views\Admin\Message.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -450,6 +455,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202005150955373_MajIndexUniqueTableConsultant.resx">
       <DependentUpon>202005150955373_MajIndexUniqueTableConsultant.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202005200912171_Message.resx">
+      <DependentUpon>202005200912171_Message.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

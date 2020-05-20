@@ -758,11 +758,17 @@ namespace Projet_pilate.Controllers
         }
 
 
-        public ActionResult Facturation()
+        // GET: Admin/Message
+        [Route("Admin/Message", Name = "Message")]
+        public ActionResult Message()
         {
-          
+            ApplicationDbContext db = new ApplicationDbContext();
+            MessageViewModel model = new MessageViewModel();
 
-            return View();
+            // var Messages = db.Messages.ToList();
+            //List<string> Messages= new List<string>();
+
+            return View(model);
         }
 
     }

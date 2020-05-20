@@ -15,6 +15,13 @@ namespace Projet_pilate.Entities
         public DateTime Periode { get; set; }
     }
 
+    public class Message
+    {
+        //Primary key
+        public int messageID { get; set; }
+        public string message { get; set; }
+    }
+
 
     public class Activity
     {
