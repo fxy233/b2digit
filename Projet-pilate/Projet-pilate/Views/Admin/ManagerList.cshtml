@@ -9,7 +9,7 @@
 @if (User.IsInRole("Administrateur") || User.IsInRole("Super-Administrateur"))
 {
     <p>
-        @Html.ActionLink("Créer un manager", "CreateManager")
+        @Html.ActionLink("Créer un manager", "CreateManager", "Manager", new { @class = "btn btn-primary btn-large" })
     </p>
 }
 
@@ -68,7 +68,7 @@
             }
 
             <td>
-                @Html.ActionLink("Edit", "EditManager", new { id = item.ID }) |
+                @Html.ActionLink("Edit", "EditManager", new { id = item.ID }, new { @class = "btn btn-primary btn-large" }) |
                 @Html.ActionLink("Supprimer", "DeleteManager", new { id = item.ID }, new { @class = "btn btn-primary btn-large", onclick = "return ConfirmationDialog()" })
             </td>
         </tr>

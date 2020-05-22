@@ -12,12 +12,12 @@
     <dl class="dl-horizontal">
         <dt>Mot de passe :</dt>
         <dd>
-            [
+            
             @if (Model.HasPassword)
             {
-                @Html.ActionLink("Changer votre mot de passe", "ChangePassword")
+                @Html.ActionLink("Changer votre mot de passe", "ChangePassword", "Password", new { @class = "btn btn-primary btn-large" })
             }
-            ]
+            
         </dd>
         @*<dt>E-mail:</dt>*@
         @*<dd>

@@ -7,7 +7,7 @@
 <h2>Liste des consultants</h2>
 
 <p>
-    @Html.ActionLink("Créer un consultant", "CreateConsultant")
+    @Html.ActionLink("Créer un consultant", "CreateConsultant", "Consultant", new { @class = "btn btn-primary btn-large"})
 </p>
 <table class="table">
     <tr>
@@ -60,7 +60,7 @@
                 @Html.DisplayFor(modelItem => item.MonthlyCost)
             </td>
             <td>
-                @Html.ActionLink("Modifier", "EditConsultant", new { id = item.ID }) |
+                @Html.ActionLink("Modifier", "EditConsultant", new { id = item.ID }, new { @class = "btn btn-primary btn-large"}) |
                 @Html.ActionLink("Supprimer", "DeleteConsultant", new { id = item.ID }, new { @class = "btn btn-primary btn-large", onclick = "return ConfirmationDialog()" })
             </td>
         </tr>

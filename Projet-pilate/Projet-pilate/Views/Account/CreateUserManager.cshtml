@@ -62,10 +62,13 @@
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="valider" class="btn btn-default" />
+            <input type="submit" value="valider" class="btn btn-primary btn-large" />
         </div>
     </div>
 </div>
 }
 
 
+<div>
+    @Html.ActionLink("Retour à la liste", "UsersBoard", "Users", new { @class = "btn btn-primary btn-large" })
+</div>

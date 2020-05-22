@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Web;
 using System.Web.Mvc;
 
@@ -40,7 +41,7 @@ namespace Projet_pilate.Controllers
         }
 
 
-        [HttpPost]
+       [HttpPost]
         public ActionResult ActiverCra(AdminViewModel model)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -53,7 +54,7 @@ namespace Projet_pilate.Controllers
 
             return View("ActivationSuccess", model);
         }
-
+        
 
 
         // GET: /Admin/ManagerList
@@ -765,8 +766,17 @@ namespace Projet_pilate.Controllers
             ApplicationDbContext db = new ApplicationDbContext();
             MessageViewModel model = new MessageViewModel();
 
-            // var Messages = db.Messages.ToList();
-            //List<string> Messages= new List<string>();
+            var MessageAccueil = db.Messages.ToString() ;
+            model.Message = MessageAccueil.ToString();
+
+      
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Message(MessageViewModel model)
+        { 
 
             return View(model);
         }

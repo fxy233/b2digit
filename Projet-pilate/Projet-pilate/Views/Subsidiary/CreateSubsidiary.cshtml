@@ -73,7 +73,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Valider" class="btn btn-default" />
+                <input type="submit" value="Valider" class="btn btn-primary btn-large" />
             </div>
         </div>
     </div>
@@ -82,5 +82,5 @@
 @Html.Raw(HttpUtility.HtmlDecode((Html.ValidationSummary(false, "", new { @class = "exception" })).ToHtmlString()))
 
 <div>
-    @Html.ActionLink("Retour à la liste", "SubsidiaryList")
+    @Html.ActionLink("Retour à la liste", "SubsidiaryList", "SubsidiaryList", new { @class = "btn btn-primary btn-large" })
 </div>

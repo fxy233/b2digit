@@ -9,7 +9,7 @@
 @if (User.IsInRole("Super-Administrateur") || User.IsInRole("Administrateur"))
 {
     <p>
-        @Html.ActionLink("Créer une filiale", "CreateSubsidiary", "Subsidiary")
+        @Html.ActionLink("Créer une filiale", "CreateSubsidiary", "Subsidiary", new { @class = "btn btn-primary btn-large" })
     </p>
 }
 
@@ -64,8 +64,8 @@
                 @Html.DisplayFor(modelItem => item.ManagerLastName)
             </td>
             <td>
-                @Html.ActionLink("Modifier", "Edit", new { id = item.ID }) |
-                @Html.ActionLink("Supprimer", "Delete", new { id = item.ID })
+                @Html.ActionLink("Modifier", "Edit", new { id = item.ID } , new { @class = "btn btn-primary btn-large" }) |
+                @Html.ActionLink("Supprimer", "Delete", new { id = item.ID }, new { @class = "btn btn-primary btn-large" })
             </td>
         </tr>
     }

@@ -8,7 +8,7 @@
 @if (User.IsInRole("Administrateur") || User.IsInRole("Super-Administrateur"))
 {
     <p>
-        @Html.RouteLink("Créer un centre de profit", "CreateProfitCenter")
+        @Html.RouteLink("Créer un centre de profit", "CreateProfitCenter", "ProfitCenter", new { @class = "btn btn-primary btn-large" })
     </p>
 }
 
@@ -79,7 +79,7 @@
             <td>
                 @*@Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
                     @Html.ActionLink("Details", "Details", new { id=item.ID }) |*@
-                @Html.ActionLink("Supprimer", "DeleteProfitCenter", new { id = item.ID })
+                @Html.ActionLink("Supprimer", "DeleteProfitCenter", new { id = item.ID }, new { @class = "btn btn-primary btn-large" })
             </td>
         </tr>
     }
