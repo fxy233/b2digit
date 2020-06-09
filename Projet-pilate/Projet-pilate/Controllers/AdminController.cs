@@ -1,4 +1,5 @@
-﻿using Projet_pilate.Entities;
+﻿using Microsoft.Ajax.Utilities;
+using Projet_pilate.Entities;
 using Projet_pilate.Models;
 using System;
 using System.Collections.Generic;
@@ -766,10 +767,9 @@ namespace Projet_pilate.Controllers
             ApplicationDbContext db = new ApplicationDbContext();
             MessageViewModel model = new MessageViewModel();
 
-            var MessageAccueil = db.Messages.ToString() ;
-            model.Message = MessageAccueil.ToString();
-
-      
+            var MessageAccueil = db.Messages.Single() ;
+            model.Message = MessageAccueil.message.ToString();
+            
 
             return View(model);
         }
@@ -779,6 +779,21 @@ namespace Projet_pilate.Controllers
         { 
 
             return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult activerMessage(MessageViewModel model)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+
+            var activerMessage = db.Messages.SingleOrDefault();
+
+            activerMessage.message = activerMessage.message.ToString();
+
+            db.SaveChanges();
+
+            return View("messageSuccess", model);
+            
         }
 
     }
