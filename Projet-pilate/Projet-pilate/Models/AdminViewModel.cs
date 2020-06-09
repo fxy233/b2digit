@@ -19,6 +19,8 @@ namespace Projet_pilate.Models
     {
         public string Message { get; set; }
 
+        public string activerMessage { get; set; }
+
 
     }
 

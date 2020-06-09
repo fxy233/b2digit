@@ -788,7 +788,7 @@ namespace Projet_pilate.Controllers
 
             var activerMessage = db.Messages.SingleOrDefault();
 
-            activerMessage.message = activerMessage.message.ToString();
+           // activerMessage.message = activerMessage.message.ToString();
 
             db.SaveChanges();
 
