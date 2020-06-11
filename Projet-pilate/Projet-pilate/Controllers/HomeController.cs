@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Projet_pilate.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,6 +12,7 @@ namespace Projet_pilate.Controllers
     {
         public ActionResult Index()
         {
+
             return View();
         }
 

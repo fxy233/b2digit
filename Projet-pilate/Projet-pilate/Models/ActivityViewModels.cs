@@ -53,7 +53,7 @@ namespace Projet_pilate.Models
 
         [Display(Name = "Jours travaillés")]
         // Doit être un float
-        public int WorkedDays { get; set; }
+        public float WorkedDays { get; set; }
 
     }
 }

@@ -769,7 +769,6 @@ namespace Projet_pilate.Controllers
 
             var MessageAccueil = db.Messages.Single() ;
             model.Message = MessageAccueil.message.ToString();
-            
 
             return View(model);
         }
@@ -786,9 +785,11 @@ namespace Projet_pilate.Controllers
         {
             ApplicationDbContext db = new ApplicationDbContext();
 
-            var activerMessage = db.Messages.SingleOrDefault();
+           var activerMessage = db.Messages.SingleOrDefault();
 
-           // activerMessage.message = activerMessage.message.ToString();
+           activerMessage.message = activerMessage.message.ToString();
+
+            activerMessage.message = model.Message;
 
             db.SaveChanges();
 
