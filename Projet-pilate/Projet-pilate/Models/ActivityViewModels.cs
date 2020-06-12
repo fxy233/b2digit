@@ -55,5 +55,13 @@ namespace Projet_pilate.Models
         // Doit être un float
         public float WorkedDays { get; set; }
 
+        [Display(Name = "Jours non facturés")]
+        // Doit être un float
+        public float noBillDays { get; set; }
+
+        [Display(Name = "Jours travaillés en WE")]
+        // Doit être un float
+        public float WorkedDaysWE { get; set; }
+
     }
 }

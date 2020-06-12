@@ -321,6 +321,7 @@ namespace Projet_pilate.Controllers
                     Satisfaction = cra.Satisfaction,
                     ConsultantName = cra.Consultant.FirstName + " " + cra.Consultant.LastName,
                     WorkedDays = (projetMatin + projetApresMidi) / 2,
+                    noBillDays = (/ 2),
 
                     Comment = cra.Comment,
                 };
