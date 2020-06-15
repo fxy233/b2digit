@@ -218,6 +218,7 @@ namespace Projet_pilate.Controllers
 
         //
         // GET: /Manage/ChangePassword
+        [Route("Manage/ChangePassword", Name = "ChangePassword")]
         public ActionResult ChangePassword()
         {
             return View();
