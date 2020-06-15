@@ -179,6 +179,9 @@ namespace Projet_pilate.Controllers
 
             var currentMonth = db.MonthActivations.Single();
             int month = currentMonth.Periode.Month;
+            string yearStr = currentMonth.Periode.Year.ToString();
+            int yearInt = currentMonth.Periode.Year;
+
 
             string am = Request["matin"].ToString();
             string pm = Request["apres-midi"].ToString();
@@ -195,7 +198,7 @@ namespace Projet_pilate.Controllers
                     Activity activity = new Activity();
                     string numeroJour = matinees[i].Substring(matinees[i].IndexOf('-')).Replace('-', ' ');
                     int jour = Int32.Parse(numeroJour);
-                    activity.Date = new DateTime(DateTime.Now.Year, month, jour);
+                    activity.Date = new DateTime(yearInt, month, jour);
                     activity.Morning = matinees[i].Substring(0, matinees[i].IndexOf('-'));
                     activity.Afternoon = apresMidis[i].Substring(0, apresMidis[i].IndexOf('-'));
                     activities.Add(activity);
@@ -209,7 +212,7 @@ namespace Projet_pilate.Controllers
                     Activity activity = new Activity();
                     string numeroJour = matinees[i].Substring(matinees[i].IndexOf('-')).Replace('-', ' ');
                     int jour = Int32.Parse(numeroJour);
-                    activity.Date = new DateTime(DateTime.Now.Year, month, jour);
+                    activity.Date = new DateTime(yearInt, month, jour);
                     activity.Morning = matinees[i].Substring(0, matinees[i].IndexOf('-'));
 
                     for (int j = 0; j < apresMidis.Length; j++)
@@ -232,7 +235,7 @@ namespace Projet_pilate.Controllers
                     Activity activity = new Activity();
                     string numeroJour = apresMidis[i].Substring(apresMidis[i].IndexOf('-')).Replace('-', ' ');
                     int jour = Int32.Parse(numeroJour);
-                    activity.Date = new DateTime(DateTime.Now.Year, month, jour);
+                    activity.Date = new DateTime(yearInt, month, jour);
                     activity.Afternoon = apresMidis[i].Substring(0, apresMidis[i].IndexOf('-'));
 
                     for (int j = 0; j < matinees.Length; j++)
@@ -259,7 +262,7 @@ namespace Projet_pilate.Controllers
 
                 Changeable = false,
                 Month = moisConcerne,
-                year = DateTime.Now.Year.ToString(),
+                year = yearStr,
 
             };
 

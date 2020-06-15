@@ -64,13 +64,11 @@
                 @Html.DisplayFor(modelItem => item.ManagerLastName)
             </td>
             <td>
-                @Html.ActionLink("Modifier", "Edit", new { id = item.ID } , new { @class = "btn btn-primary btn-large" }) |
-                @Html.ActionLink("Supprimer", "Delete", new { id = item.ID }, new { @class = "btn btn-primary btn-large" })
-            </td>
-        </tr>
-    }
-
-</table>
+                @Html.ActionLink("Modifier", "Edit", new { id = item.ID }, new { @class = "btn btn-primary btn-large" }) |
+                @Html.ActionLink("Supprimer", "Delete", new { id = item.ID }, new { @class = "btn btn-primary btn-large", onclick = "return ConfirmationDialog()" })
+                </tr>
+            }
+        </table>
 
 @Html.Raw(HttpUtility.HtmlDecode((Html.ValidationSummary(false, "", new { @class = "exception" })).ToHtmlString()))
 
