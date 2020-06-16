@@ -56,7 +56,7 @@ namespace Projet_pilate.Entities
         // Navigation properties    
         public virtual Consultant Consultant { get; set; }
         public virtual List<Activity> Activities { get; set; }
-
+       /* public virtual List<Mission> Missions { get;  set; } */
     }
 
     public class Mission
@@ -95,10 +95,15 @@ namespace Projet_pilate.Entities
         [Index("Mission_Unique_Index", IsUnique = true, Order = 5)]
         public int ProfitCenterID { get; set; }
 
+       /* [Index("Mission_Unique_Index", IsUnique = true, Order = 6)]
+        public int CraID { get; set; }*/
+
+
+
         // Navigation properties   
         public virtual Consultant Consultant { get; set; }
         public virtual CompanyContact CompanyContact { get; set; }
         public virtual ProfitCenter ProfitCenter { get; set; }
-
+        //public virtual Cra Cra { get;  set; }
     }
 }

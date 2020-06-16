@@ -10,56 +10,63 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Month)
+            @Html.DisplayNameFor(model => model.Date)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.ConsultantName)
         </th>
+        @* <th>
+            @Html.DisplayNameFor(model => model.MissionName)
+        </th>*@
         <th>
             @Html.DisplayNameFor(model => model.Satisfaction)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Comment)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.WorkedDays)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.noBillDays)
+            @Html.DisplayNameFor(model => model.NoBillDays)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.WorkedDaysWE)
         </th>
-        </th>
-        <th></th>
     </tr>
 
     @foreach (var item in Model)
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Month)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Satisfaction)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Comment)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ConsultantName)
-            </td>
-        <td>
-            @if (User.IsInRole("Super-Administrateur") || User.IsInRole("Administrateur") || User.IsInRole("Administrateur-ventes"))
-            {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.Date)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.ConsultantName)
+    </td>
+    @*<th>
+          @Html.DisplayFor(modelItem => item.MissionName)
+        </th>*@
+    <td>
+        @Html.DisplayFor(modelItem => item.Satisfaction)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.WorkedDays)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.NoBillDays)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.WorkedDaysWE)
+    </td>
+    <td>
+        @if (User.IsInRole("Super-Administrateur") || User.IsInRole("Administrateur") || User.IsInRole("Administrateur-ventes"))
+        {
 
-                @Html.ActionLink("Supprimer CRA", "DeleteCra", "Consultant", new { id = item.ID }, new { @class = "btn btn-primary btn-large supp" })
-                @Html.ActionLink("Supprimer CRA", "DeleteCra", "Consultant", new { id = item.ID }, new { @class = "btn btn-primary btn-large action" })
-               
-            }
+            @Html.ActionLink("Supprimer CRA", "DeleteCra", "Consultant", new { id = item.ID }, new { @class = "btn btn-primary btn-large supp" })
+            @Html.ActionLink("Supprimer CRA", "DeleteCra", "Consultant", new { id = item.ID }, new { @class = "btn btn-primary btn-large action" })
 
-        </td>
-        </tr>
+        }
+
+    </td>
+</tr>
     }
 </table>
 

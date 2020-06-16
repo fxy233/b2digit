@@ -107,6 +107,12 @@ namespace Projet_pilate.Models
              .HasForeignKey(d => d.CompanyContactID)
              .WillCascadeOnDelete(false);
 
+            /*modelBuilder.Entity<Mission>()
+             .HasRequired(t => t.Cra)
+             .WithMany(t => t.Missions)
+             .HasForeignKey(d => d.CraID)
+             .WillCascadeOnDelete(false);*/
+
 
             modelBuilder.Entity<Cra>()
                .HasRequired(t => t.Consultant)
@@ -119,6 +125,7 @@ namespace Projet_pilate.Models
                .HasRequired(t => t.Cra)
                .WithMany(t => t.Activities)
                .HasForeignKey(d => d.CraID);
+
 
 
             // relation de type "self referencing" pour la table ProfitCenter

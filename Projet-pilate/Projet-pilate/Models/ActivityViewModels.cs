@@ -41,8 +41,9 @@ namespace Projet_pilate.Models
         public int ID { get; set; }
 
         [Display(Name = "Période du Cra")]
-        public string Month { get; set; }
+        public string Date { get; set; }
 
+        [Display(Name = "Satisfaction")]
         public string Satisfaction { get; set; }
 
         [Display(Name = "Commentaire")]
@@ -51,13 +52,16 @@ namespace Projet_pilate.Models
         [Display(Name = "Consultant")]
         public string ConsultantName { get; set; }
 
+        [Display(Name = "Mission")]
+        public string MissionName { get; set; }
+
         [Display(Name = "Jours travaillés")]
         // Doit être un float
         public float WorkedDays { get; set; }
 
         [Display(Name = "Jours non facturés")]
         // Doit être un float
-        public float noBillDays { get; set; }
+        public float NoBillDays { get; set; }
 
         [Display(Name = "Jours travaillés en WE")]
         // Doit être un float

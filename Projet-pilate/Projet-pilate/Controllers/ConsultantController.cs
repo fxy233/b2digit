@@ -118,9 +118,6 @@ namespace Projet_pilate.Controllers
                         case "conge":
                             detailModel.NbConge += 0.5;
                             break;
-                        case null:
-                            detailModel.NbMission += 0;
-                            break;
                         default:
                             detailModel.NbMission += 0.5;
                             break;
@@ -142,9 +139,6 @@ namespace Projet_pilate.Controllers
                             break;
                         case "conge":
                             detailModel.NbConge += 0.5;
-                            break;
-                        case null:
-                            detailModel.NbMission += 0;
                             break;
                         default:
                             detailModel.NbMission += 0.5;
@@ -299,6 +293,10 @@ namespace Projet_pilate.Controllers
                 var nbProjetApreMidi = cra.Activities.Select(a => a.Afternoon).ToList();
                 int projetMatin = 0;
                 int projetApresMidi = 0;
+                int noBillMatin = 0;
+                int noBillApresMidi = 0;
+                
+
 
                 foreach (var item in nbProjetMatin)
                 {
@@ -316,18 +314,36 @@ namespace Projet_pilate.Controllers
                     }
                 }
 
+                foreach (var item in nbProjetMatin)
+                {
+                    if (item == "conge" || item == "ic" || item == "formation" || item == "maladie")
+                    {
+                        noBillMatin++;
+                    }
+                }
+
+                foreach (var item in nbProjetApreMidi)
+                {
+                    if (item == "conge" || item == "ic" || item == "formation" || item == "maladie")
+                    {
+                       noBillApresMidi++;
+                    }
+                }
+
 
                 ActivityViewModel model = new ActivityViewModel()
                 {
                     ID = cra.CraID,
-                    Month = cra.Month + " " + cra.year,
-                    Satisfaction = cra.Satisfaction,
+                    Date =  cra.Month + " " + cra.year,
                     ConsultantName = cra.Consultant.FirstName + " " + cra.Consultant.LastName,
-                    WorkedDays = (projetMatin + projetApresMidi) / 2,
-                    noBillDays = (/ 2),
-
-                    Comment = cra.Comment,
+                    //MissionName = cra.Activities.Select(m => m.Morning).ToString(),
+                    Satisfaction = cra.Satisfaction,
+                    WorkedDays = (projetMatin + projetApresMidi) /2,
+                    NoBillDays = (noBillMatin + noBillApresMidi) /2,
+                    //WorkedDaysWE = (projetMatin + projetApresMidi) / 2,
                 };
+                    
+               
 
                 models.Add(model);
             }
