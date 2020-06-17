@@ -68,7 +68,7 @@
             }
 
             <td>
-                @Html.ActionLink("Edit", "EditManager", new { id = item.ID }, new { @class = "btn btn-primary btn-large" }) |
+                @Html.ActionLink("Modifier", "EditManager", new { id = item.ID }, new { @class = "btn btn-primary btn-large" }) 
                 @Html.ActionLink("Supprimer", "DeleteManager", new { id = item.ID }, new { @class = "btn btn-primary btn-large", onclick = "return ConfirmationDialog()" })
             </td>
         </tr>

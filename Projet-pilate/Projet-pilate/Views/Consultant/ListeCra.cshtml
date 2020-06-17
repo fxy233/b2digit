@@ -60,8 +60,8 @@
         @if (User.IsInRole("Super-Administrateur") || User.IsInRole("Administrateur") || User.IsInRole("Administrateur-ventes"))
         {
 
-            @Html.ActionLink("Supprimer CRA", "DeleteCra", "Consultant", new { id = item.ID }, new { @class = "btn btn-primary btn-large supp" })
-            @Html.ActionLink("Supprimer CRA", "DeleteCra", "Consultant", new { id = item.ID }, new { @class = "btn btn-primary btn-large action" })
+            @Html.ActionLink("Réinitialiser CRA", "DeleteCra", "Consultant", new { id = item.ID }, new { @class = "btn btn-primary btn-large supp" })
+            @Html.ActionLink("Réinitialiser CRA", "DeleteCra", "Consultant", new { id = item.ID }, new { @class = "btn btn-primary btn-large action" })
 
         }
 
@@ -77,7 +77,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Vous êtes sur le point de supprimer un Cra</h4>
+                <h4 class="modal-title" id="myModalLabel">Vous êtes sur le point de Réinitialiser un Cra</h4>
             </div>
             <div class="modal-body">
                 Êtes vous certain de votre choix ?

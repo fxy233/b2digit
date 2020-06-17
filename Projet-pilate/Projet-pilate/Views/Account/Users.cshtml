@@ -52,19 +52,19 @@
 
     @if (User.IsInRole("Super-Administrateur"))
     {
-        <td>
-            @Html.ActionLink("Modifier", "Edit", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })
-            @Html.ActionLink("Supprimer", "Delete", new { id = item.Id }, new { @class = "btn btn-primary btn-large", onclick = "return ConfirmationDialog()" })
-        </td>
+<td>
+    @Html.ActionLink("Modifier", "Edit", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })
+    @Html.ActionLink("Changer le mot de passe", "UpdatePassword", "Manage", new { @class = "btn btn-primary btn-large" })
+</td>
 
     }
 
     else if (User.IsInRole("Administrateur") && item.Position != "Administrateur" && item.Position != "Super-Administrateur")
     {
-        <td>
-            @Html.ActionLink("Modifier", "Edit", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })
-            @Html.ActionLink("Supprimer", "Delete", new { id = item.Id }, new { @class = "btn btn-primary btn-large", onclick = "return ConfirmationDialog()" })
-        </td>
+<td>
+    @Html.ActionLink("Modifier", "Edit", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })
+    @Html.ActionLink("Changer le mot de passe", "UpdatePassword", "Manage", new { @class = "btn btn-primary btn-large" })
+</td>
     }
 
     else
