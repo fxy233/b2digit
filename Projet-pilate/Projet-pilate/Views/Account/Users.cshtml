@@ -54,7 +54,7 @@
     {
 <td>
     @Html.ActionLink("Modifier", "Edit", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })
-    @Html.ActionLink("Changer le mot de passe", "UpdatePassword", "Manage", new { @class = "btn btn-primary btn-large" })
+    @Html.RouteLink("Changer le mot de passe", "ChangePassword", "Manage", new { @class = "btn btn-primary btn-large" })
 </td>
 
     }
@@ -62,8 +62,8 @@
     else if (User.IsInRole("Administrateur") && item.Position != "Administrateur" && item.Position != "Super-Administrateur")
     {
 <td>
-    @Html.ActionLink("Modifier", "Edit", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })
-    @Html.ActionLink("Changer le mot de passe", "UpdatePassword", "Manage", new { @class = "btn btn-primary btn-large" })
+    @Html.ActionLink("Supprimer", "Edit", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })
+    @Html.RouteLink("Changer le mot de passe", "ChangePassword", "Manage", new { @class = "btn btn-primary btn-large" })
 </td>
     }
 

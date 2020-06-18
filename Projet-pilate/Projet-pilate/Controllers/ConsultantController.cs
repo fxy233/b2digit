@@ -289,13 +289,29 @@ namespace Projet_pilate.Controllers
 
             foreach (var cra in cras)
             {
+
+
+                var dateActuelle = new DateTime();
+                var an = dateActuelle.getFullYear();
+                var JourAn = new DateTime(an, "00", "01").toLocaleDateString(undefined, options);
+                var FeteTravail = new DateTime(an, "04", "01").toLocaleDateString(undefined, options);
+                var Victoire1945 = new DateTime(an, "04", "08").toLocaleDateString(undefined, options);
+                var FeteNationale = new DateTime(an, "06", "14").toLocaleDateString(undefined, options);
+                var Assomption = new DateTime(an, "07", "15").toLocaleDateString(undefined, options);
+                var Toussaint = new DateTime(an, "10", "01").toLocaleDateString(undefined, options);
+                var Armistice = new DateTime(an, "10", "11").toLocaleDateString(undefined, options);
+                var Noel = new DateTime(an, "11", "25").toLocaleDateString(undefined, options);
+
                 var nbProjetMatin = cra.Activities.Select(a => a.Morning).ToList();
                 var nbProjetApreMidi = cra.Activities.Select(a => a.Afternoon).ToList();
+                var nbDay = cra.Activities.Select(b => b.Date).ToList();
                 int projetMatin = 0;
                 int projetApresMidi = 0;
                 int noBillMatin = 0;
                 int noBillApresMidi = 0;
-                
+                int projetWEMatin = 0;
+                int projetWEApresMidi = 0;
+
 
 
                 foreach (var item in nbProjetMatin)
@@ -327,6 +343,34 @@ namespace Projet_pilate.Controllers
                     if (item == "conge" || item == "ic" || item == "formation" || item == "maladie")
                     {
                        noBillApresMidi++;
+                    }
+                }
+
+        foreach (var day in nbDay)
+                {
+                    if (day.DayOfWeek == DayOfWeek.Saturday || day.DayOfWeek == DayOfWeek.Sunday)
+                    {
+                        foreach (var item in nbProjetMatin)
+                        {
+                            if (item != "conge" && item != "ic" && item != "formation" && item != "maladie")
+                            {
+                                projetWEMatin++;
+                            }
+                        }
+                    }
+                }
+
+                foreach (var day in nbDay)
+                {
+                    if (day.DayOfWeek == DayOfWeek.Saturday || day.DayOfWeek == DayOfWeek.Sunday)
+                    {
+                        foreach (var item in nbProjetMatin)
+                        {
+                            if (item != "conge" && item != "ic" && item != "formation" && item != "maladie")
+                            {
+                                projetWEApresMidi++;
+                            }
+                        }
                     }
                 }
 
