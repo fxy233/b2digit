@@ -290,83 +290,87 @@ namespace Projet_pilate.Controllers
             List<ActivityViewModel> models = new List<ActivityViewModel>();
 
             List<Cra> cras = db.Cras.ToList();
-            
-            
-            foreach (var cra in cras)
-            {              
-                var nbProjetMatin = cra.Activities.Select(a => a.Morning).ToList();
-                var nbProjetApreMidi = cra.Activities.Select(a => a.Afternoon).ToList();
-                var nbDay = cra.Activities.ToArray();
-                List<string> Missions = new List<string>(); // création de la liste de mission
-                List<int> NBJT = new List<int>();
-                List<int> NBJTWE = new List<int>();
-                int noBill = 0;
-                
-                foreach (var item in nbDay)
-                {
-                    if (item.Date.DayOfWeek == DayOfWeek.Saturday || item.Date.DayOfWeek == DayOfWeek.Sunday)
-                    {//on est en WE
-                        if ((item.Morning != "Congés" && item.Morning != "IC" && item.Morning != "Formation" && item.Morning != "Maladie")
-                            || (item.Afternoon != "Congés" && item.Afternoon != "IC" && item.Afternoon != "Formation" && item.Afternoon != "Maladie"))
-                        {
-                            var IndexMission = Missions.IndexOf(item.Morning);
-                            if (IndexMission < 0)
-                            {
-                                Missions.Add(item.Morning.ToString());
-                                NBJT.Add(0);
-                                NBJTWE.Add(1);
-                            }
-                            else
-                            {
-                                NBJTWE[IndexMission]++;
-                            }
-                        }
-                    }
-                    else
-                    { // on est en jours ouvrés
-                        if ((item.Morning != "Congés" && item.Morning != "IC" && item.Morning != "Formation" && item.Morning != "Maladie")
-                            || (item.Afternoon != "Congés" && item.Afternoon != "IC" && item.Afternoon != "Formation" && item.Afternoon != "Maladie"))
-                        {
-                            var IndexMission = Missions.IndexOf(item.Morning);
-                            if (IndexMission < 0)
-                            {
-                                Missions.Add(item.Morning.ToString());
-                                NBJT.Add(1);
-                                NBJTWE.Add(0);
-                            }
-                            else
-                            {
-                                NBJT[IndexMission]++;
-                            }
-                        }
-                        
-                        if ((item.Morning == "Congés" || item.Morning == "IC" || item.Morning == "Formation" || item.Morning == "Maladie")
-                            || (item.Afternoon == "Congés" || item.Afternoon == "IC" || item.Afternoon == "Formation" || item.Afternoon == "Maladie"))
-                        {
-                            noBill++;
-                        }
-                    
-                    }
-                }
 
-                
-                foreach (var mission in Missions)
+            var currentMonth = db.MonthActivations.Single().Periode.ToString("MMMM", CultureInfo.CurrentCulture);
+
+
+            foreach (var cra in cras)
+            {
+                if (cra.Month == currentMonth)
                 {
-                    var IndexOfMission = Missions.IndexOf(mission);
-                    ActivityViewModel model = new ActivityViewModel()
+                    var nbProjetMatin = cra.Activities.Select(a => a.Morning).ToList();
+                    var nbProjetApreMidi = cra.Activities.Select(a => a.Afternoon).ToList();
+                    var nbDay = cra.Activities.ToArray();
+                    List<string> Missions = new List<string>(); // création de la liste de mission
+                    List<int> NBJT = new List<int>();
+                    List<int> NBJTWE = new List<int>();
+                    int noBill = 0;
+
+                    foreach (var item in nbDay)
                     {
-                        ID = cra.CraID,
-                        Date = cra.Month + " " + cra.year,
-                        ConsultantName = cra.Consultant.FirstName + " " + cra.Consultant.LastName,
-                        Satisfaction = cra.Satisfaction,
-                        MissionName = mission,
-                        WorkedDays = NBJT[IndexOfMission],
-                        NoBillDays = noBill,
-                        WorkedDaysWE = NBJTWE[IndexOfMission],
-                    };
-                    models.Add(model);
+                        if (item.Date.DayOfWeek == DayOfWeek.Saturday || item.Date.DayOfWeek == DayOfWeek.Sunday)
+                        {//on est en WE
+                            if ((item.Morning != "Congés" && item.Morning != "IC" && item.Morning != "Formation" && item.Morning != "Maladie")
+                                || (item.Afternoon != "Congés" && item.Afternoon != "IC" && item.Afternoon != "Formation" && item.Afternoon != "Maladie"))
+                            {
+                                var IndexMission = Missions.IndexOf(item.Morning);
+                                if (IndexMission < 0)
+                                {
+                                    Missions.Add(item.Morning.ToString());
+                                    NBJT.Add(0);
+                                    NBJTWE.Add(1);
+                                }
+                                else
+                                {
+                                    NBJTWE[IndexMission]++;
+                                }
+                            }
+                        }
+                        else
+                        { // on est en jours ouvrés
+                            if ((item.Morning != "Congés" && item.Morning != "IC" && item.Morning != "Formation" && item.Morning != "Maladie")
+                                || (item.Afternoon != "Congés" && item.Afternoon != "IC" && item.Afternoon != "Formation" && item.Afternoon != "Maladie"))
+                            {
+                                var IndexMission = Missions.IndexOf(item.Morning);
+                                if (IndexMission < 0)
+                                {
+                                    Missions.Add(item.Morning.ToString());
+                                    NBJT.Add(1);
+                                    NBJTWE.Add(0);
+                                }
+                                else
+                                {
+                                    NBJT[IndexMission]++;
+                                }
+                            }
+
+                            if ((item.Morning == "Congés" || item.Morning == "IC" || item.Morning == "Formation" || item.Morning == "Maladie")
+                                || (item.Afternoon == "Congés" || item.Afternoon == "IC" || item.Afternoon == "Formation" || item.Afternoon == "Maladie"))
+                            {
+                                noBill++;
+                            }
+
+                        }
+                    }
+
+
+                    foreach (var mission in Missions)
+                    {
+                        var IndexOfMission = Missions.IndexOf(mission);
+                        ActivityViewModel model = new ActivityViewModel()
+                        {
+                            ID = cra.CraID,
+                            Date = cra.Month + " " + cra.year,
+                            ConsultantName = cra.Consultant.FirstName + " " + cra.Consultant.LastName,
+                            Satisfaction = cra.Satisfaction,
+                            MissionName = mission,
+                            WorkedDays = NBJT[IndexOfMission],
+                            NoBillDays = noBill,
+                            WorkedDaysWE = NBJTWE[IndexOfMission],
+                        };
+                        models.Add(model);
+                    }
                 }
-                
                     
                
 
@@ -388,6 +392,79 @@ namespace Projet_pilate.Controllers
 
             return RedirectToAction("ListeCra","Consultant");
         }
+
+        [Route("Consultant/CRAReadOnly")]
+        public ActionResult CRAReadOnly(int id)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var cra = db.Cras.Single(c => c.CraID == id);
+
+            var consultant = db.Consultants.Single(c => c.ConsultantID == cra.ConsultantID);
+            ViewBag.nom = consultant.FirstName + " " + consultant.LastName;
+
+            DetailActivityViewModel detailModel = new DetailActivityViewModel();
+
+            var activities = cra.Activities.ToList();
+
+            detailModel.Cra = cra;
+            detailModel.Activities = activities;
+
+            var matins = cra.Activities.Select(m => m.Morning).ToList();
+            var apresMidi = cra.Activities.Select(m => m.Afternoon).ToList();
+
+            detailModel.NbJoursOuvres = matins.Count;
+
+            foreach (var item in matins)
+            {
+                switch (item)
+                {
+                    case "IC":
+                        detailModel.NbIc += 0.5;
+                        break;
+                    case "Formation":
+                        detailModel.NbFormation += 0.5;
+                        break;
+                    case "Maladie":
+                        detailModel.NbMaladie += 0.5;
+                        break;
+                    case "Congés":
+                        detailModel.NbConges += 0.5;
+                        break;
+                    default:
+                        detailModel.NbMission += 0.5;
+                        break;
+                }
+            }
+
+            foreach (var item in apresMidi)
+            {
+                switch (item)
+                {
+                    case "IC":
+                        detailModel.NbIc += 0.5;
+                        break;
+                    case "Formation":
+                        detailModel.NbFormation += 0.5;
+                        break;
+                    case "Maladie":
+                        detailModel.NbMaladie += 0.5;
+                        break;
+                    case "Congés":
+                        detailModel.NbConges += 0.5;
+                        break;
+                    default:
+                        detailModel.NbMission += 0.5;
+                        break;
+                }
+            }
+
+            detailModel.MoisActivation = db.MonthActivations.Single().Periode.ToString("MMMM");
+
+
+            return View(detailModel);
+        }
+
+
     }
 }
 

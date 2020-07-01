@@ -70,6 +70,8 @@
 
                         @Html.ActionLink("Réinitialiser CRA", "DeleteCra", "Consultant", new { id = item.ID }, new { @class = "btn btn-primary btn-large supp" })
                         @Html.ActionLink("Réinitialiser CRA", "DeleteCra", "Consultant", new { id = item.ID }, new { @class = "btn btn-primary btn-large action" })
+                        @Html.ActionLink("Détail", "CRAReadOnly", new { id = item.ID }, new { @class = "btn btn-primary btn-large" })
+                        @Html.ActionLink("Détail", "CRAReadOnly", new { id = item.ID }, new { @class = "btn btn-primary btn-large action" })
 
                     }
 
