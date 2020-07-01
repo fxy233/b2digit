@@ -1,7 +1,81 @@
-﻿
+﻿@model List<Projet_pilate.Models.ConsultantCraModel>
 @{
     ViewBag.Title = "SuiviCRA";
 }
 
-<h2>Suivi des CRAs </h2>
+<h2>Suivi des CRAs d'année @DateTime.Now.Year.ToString() </h2>
 
+<table class="table">
+    <tr>
+        <th>
+            @DateTime.Now.Year.ToString()
+        </th>
+        <th>
+            Projet
+        </th>
+        <th>Jan</th>
+        <th>Fév</th>
+        <th>Mar</th>
+        <th>Avr</th>
+        <th>Mai</th>
+        <th>Juin</th>
+        <th>Juil</th>
+        <th>Aou</th>
+        <th>Sep</th>
+        <th>Oct</th>
+        <th>Nov</th>
+        <th>Dec</th>
+    </tr>
+    @foreach (var item in Model)
+     {
+        if (item.MissionsList.Count() == 0)
+        {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.Email)
+    </td>
+    <td>
+        Pas de projet
+    </td>
+    @for (int i = 1; i <= 12; ++i)
+    {
+        <td></td>
+    }
+
+</tr>
+        }
+        else
+        {
+            foreach (var mission in item.MissionsList)
+            {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.Email)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => mission)
+    </td>
+    @{ int month = 1;
+        foreach (var nb in item.NbParMission[mission])
+        {
+            if ((month < item.DureeMission[mission][1] && Int32.Parse(@DateTime.Now.Year.ToString())<=item.DureeMission[mission][0] ) || (month > item.DureeMission[mission][3] && Int32.Parse(@DateTime.Now.Year.ToString()) >= item.DureeMission[mission][2]))
+            {
+                <td></td>
+            }
+            else
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => nb)
+                </td>
+            }
+            month += 1;
+        }
+    }
+</tr>
+            }
+        }
+     }
+
+        
+    
+</table>

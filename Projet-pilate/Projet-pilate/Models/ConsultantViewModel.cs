@@ -191,4 +191,22 @@ namespace Projet_pilate.Models
         public List<string> ProfitCenters { get; set; }
        
     }
+
+    public class ConsultantCraModel
+    {
+        public int ID { get; set; }
+
+        [Required]
+    
+        public string Email { get; set; }
+
+
+        public List<string> MissionsList { get; set; }
+
+        public Dictionary<String,double[]> NbParMission { get; set; }
+        public Dictionary<String, int[]> DureeMission { get; set; }
+
+
+
+    }
 }

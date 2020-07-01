@@ -169,6 +169,8 @@ namespace Projet_pilate.Controllers
         public ActionResult CRA(RegisterActivityViewModel model)
         {
             ApplicationDbContext db = new ApplicationDbContext();
+
+
             List<Activity> activities = new List<Activity>();
 
             var currentMonth = db.MonthActivations.Single();
@@ -276,11 +278,6 @@ namespace Projet_pilate.Controllers
 
         }
 
-        [Route("Consultant/SuiviCra", Name = "SuiviCra")]
-        public ActionResult SuiviCra()
-        { 
-            return View();
-        }
 
         [Route("Consultant/ListeCra", Name = "ListeCra")]
         public ActionResult ListeCra()
@@ -465,6 +462,91 @@ namespace Projet_pilate.Controllers
         }
 
 
+        [Route("Consultant/SuiviCra", Name = "SuiviCra")]
+        public ActionResult SuiviCra()
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            List<ConsultantCraModel> models = new List<ConsultantCraModel>();
+
+            var consultants = db.Consultants.ToList();
+
+            foreach (var consultant in consultants)
+            {
+
+                ConsultantCraModel model = new ConsultantCraModel()
+                {
+                    ID = consultant.ConsultantID,
+                    Email = consultant.Email,
+                    MissionsList = new List<string>(),
+                    NbParMission = new Dictionary<string, double[]>(),
+                    DureeMission = new Dictionary<string, int[]>(),
+                };
+                var missionList = db.Missions.ToList();
+                foreach (var mission in missionList)
+                {
+                    if (mission.ConsultantID == consultant.ConsultantID)
+                    {
+                        model.MissionsList.Add(mission.Name);
+                        double[] list = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+                        model.NbParMission.Add(mission.Name,list);
+                        model.DureeMission.Add(mission.Name, new int[] { Int32.Parse(mission.Start.Year.ToString()), Int32.Parse(mission.Start.Month.ToString()), Int32.Parse(mission.End.Year.ToString()), Int32.Parse(mission.End.Month.ToString()) });
+                    }
+                }
+
+                var cras = db.Cras.ToList();
+
+                foreach(var cra in cras)
+                {
+                    if(cra.ConsultantID == consultant.ConsultantID)
+                    {
+                        var activities = db.Activities.ToList();
+
+                        foreach (var activity in activities)
+                        {
+                            if (activity.CraID == cra.CraID)
+                            {
+                                switch (activity.Morning)
+                                {
+                                    case "IC":
+                                        break;
+                                    case "Formation":
+                                        ;
+                                        break;
+                                    case "Maladie":
+                                        break;
+                                    case "Congés":
+                                        break;
+                                    default:
+                                        model.NbParMission[activity.Morning][Int32.Parse(activity.Date.Month.ToString()) - 1] += 0.5;
+                                    break;
+                                }
+                                switch (activity.Afternoon)
+                                {
+                                    case "IC":
+                                        break;
+                                    case "Formation":
+                                        break;
+                                    case "Maladie":
+                                        break;
+                                    case "Congés":
+                                        break;
+                                    default:
+                                        model.NbParMission[activity.Afternoon][Int32.Parse(activity.Date.Month.ToString()) - 1] += 0.5;
+                                        break;
+                                }
+                            }
+
+                        }
+                    }
+                }
+
+
+                models.Add(model);
+            }
+
+            return View(models);
+
+        }
     }
 }
 
