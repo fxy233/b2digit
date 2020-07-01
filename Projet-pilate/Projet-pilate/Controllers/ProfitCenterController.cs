@@ -1,4 +1,5 @@
-﻿using Projet_pilate.Entities;
+﻿using Microsoft.Ajax.Utilities;
+using Projet_pilate.Entities;
 using Projet_pilate.Models;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ namespace Projet_pilate.Controllers
     {
 
         // GET: /ProfitCenter/ProfitCenter
+        [Authorize(Roles = "Administrateur, Super-Administrateur")]
         [Route("ProfitCenter/ProfitCenterList", Name = "ProfitCenterList")]
         public ActionResult ProfitCenterList()
         {
@@ -28,24 +30,24 @@ namespace Projet_pilate.Controllers
                     DetailProfitCenterViewModel model = new DetailProfitCenterViewModel();
                     model.ID = profitCenter.ProfitCenterID;
                     model.Name = profitCenter.Name;
-                    model.Owner = profitCenter.Owner;
+                    model.Owners = profitCenter.Owner;
 
                     if (profitCenter.PartOwner == null)
                     {
-                        model.PartOwner = "Aucun";
+                        model.PartOwners = "Aucun";
                     }
                     else
                     {
-                        model.PartOwner = profitCenter.PartOwner;
+                        model.PartOwners = profitCenter.PartOwner;
                     }
 
                     if (profitCenter.FatherProfitCenter == null)
                     {
-                        model.FatherProfitCenter = "Aucun";
+                        model.FatherProfitCenters = "Aucun";
                     }
                     else
                     {
-                        model.FatherProfitCenter = profitCenter.FatherProfitCenter.Name;
+                        model.FatherProfitCenters = profitCenter.FatherProfitCenter.Name;
                     }
                    
                     models.Add(model);
@@ -65,14 +67,16 @@ namespace Projet_pilate.Controllers
             ProfitCenterViewModel model = new ProfitCenterViewModel();
             ApplicationDbContext db = new ApplicationDbContext();
             List<string> managerNames = new List<string>();
+            List<int> managerID = new List<int>();
             List<string> profitCenterNames = new List<string>();
             var managers = db.Managers.ToList();
-            //
             var ProfitCenters = db.profitCenters.ToList();
 
             foreach (var manager in managers)
             {
                 managerNames.Add(manager.FirstName + " " + manager.LastName);
+                managerID.Add(manager.ManagerID);
+
             }
 
             foreach (var ProfitCenter in ProfitCenters)
@@ -81,6 +85,7 @@ namespace Projet_pilate.Controllers
             }
 
             model.Owners = managerNames;
+            model.OwnersID = managerID;
             model.PartOwners = managerNames;
             model.FatherProfitCenters = profitCenterNames;
 
@@ -134,7 +139,8 @@ namespace Projet_pilate.Controllers
 
             try
             {
-                string fatherProfitCenterName = Request.Form["FatherProfitCenter"].ToString().Split(' ')[0];
+                // string fatherProfitCenterName = Request.Form["FatherProfitCenter"].ToString().Split(' ')[0];
+                string fatherProfitCenterName = Request.Form["FatherProfitCenter"].ToString();
                 ProfitCenter fatherProfitCenter = db.profitCenters.SingleOrDefault(p => p.Name == fatherProfitCenterName);
                 profitCenter.FatherProfitCenter = fatherProfitCenter;
               
@@ -169,6 +175,90 @@ namespace Projet_pilate.Controllers
             return RedirectToAction("ProfitCenterList", "ProfitCenter");
         }
 
+        // GET: ProfitCenter/Edit
+        public ActionResult EditProfitCenter(int id)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var profitcenter = db.profitCenters.Single(p => p.ProfitCenterID == id);
+            UpdateProfitCenterViewModel model = new UpdateProfitCenterViewModel()
+            {
+                ID = profitcenter.ProfitCenterID,
+                Name = profitcenter.Name,
+                Owner = profitcenter.Owner,
+                PartOwner = profitcenter.PartOwner,
+                FatherProfitCenterID = profitcenter.FatherProfitCenterID,
+                Cost = profitcenter.Cost,
+                Turnover = profitcenter.Turnover
+                              
+            };
+
+            List<string> managerNames = new List<string>();
+            List<int> managerID = new List<int>();
+            List<string> profitCenterNames = new List<string>();
+            List<int> profitCenterID = new List<int>();
+            var managers = db.Managers.ToList();
+            var ProfitCenters = db.profitCenters.ToList();
+
+            //
+
+            foreach (var manager in managers)
+            {
+                managerNames.Add(manager.FirstName + " " + manager.LastName);
+                managerID.Add(manager.ManagerID);
+
+            }
+
+            foreach (var ProfitCenter in ProfitCenters)
+            {
+                profitCenterNames.Add(ProfitCenter.Name);
+                profitCenterID.Add(ProfitCenter.ProfitCenterID);
+            }
+
+            //model.FatherProfitCenter = 
+            model.ListOwners= managerNames;
+            model.ListOwnersID = managerID;
+            model.ListPartOwners= managerNames;
+            model.ListFatherProfitCenters = profitCenterNames;
+            
+            return View(model);
+        }
+
+        /*
+        // POST: ProfitCenter/Edit
+        [HttpPost]
+        public ActionResult Edit(UpdateSubsidiaryViewModel model)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            Subsidiary subsidiary = db.Subsidiaries.Single(s => s.SubsidiaryID == model.ID);
+
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            subsidiary.Name = model.Name;
+            subsidiary.Siren = model.Siren;
+            subsidiary.Address = model.Address;
+            subsidiary.PostaleCode = model.PostaleCode;
+            subsidiary.City = model.City;
+            subsidiary.ManagerFirstName = model.ManagerFirstName;
+            subsidiary.ManagerLastName = model.ManagerLastName;
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                string message = "Vérifier qu'une filiale ayant le même siren ou le même nom n'existe pas déjà !";
+                ModelState.AddModelError(string.Empty, message);
+                return View("Edit", model);
+            }
+
+            
+            return RedirectToAction("ProfitCenterList", "ProfitCenter");
+    }*/
 
         [Route("ProfitCenter/DeleteProfitCenter", Name = "DeleteProfitCenter")]
         public ActionResult DeleteProfitCenter(int id)
@@ -187,24 +277,24 @@ namespace Projet_pilate.Controllers
                     DetailProfitCenterViewModel model = new DetailProfitCenterViewModel();
                     model.ID = profitCenter.ProfitCenterID;
                     model.Name = profitCenter.Name;
-                    model.Owner = profitCenter.Owner;
+                    model.Owners = profitCenter.Owner;
 
                     if (profitCenter.PartOwner == null)
                     {
-                        model.PartOwner = "Aucun";
+                        model.PartOwners = "Aucun";
                     }
                     else
                     {
-                        model.PartOwner = profitCenter.PartOwner;
+                        model.PartOwners = profitCenter.PartOwner;
                     }
 
                     if (profitCenter.FatherProfitCenter == null)
                     {
-                        model.FatherProfitCenter = "Aucun";
+                        model.FatherProfitCenters = "Aucun";
                     }
                     else
                     {
-                        model.FatherProfitCenter = profitCenter.FatherProfitCenter.Name;
+                        model.FatherProfitCenters = profitCenter.FatherProfitCenter.Name;
                     }
 
                     models.Add(model);

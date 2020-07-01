@@ -106,17 +106,17 @@ namespace Projet_pilate.Controllers
                 {
                     switch (item)
                     {
-                        case "ic":
+                        case "IC":
                             detailModel.NbIc += 0.5;
                             break;
-                        case "formation":
+                        case "Formation":
                             detailModel.NbFormation += 0.5;
                             break;
-                        case "maladie":
+                        case "Maladie":
                             detailModel.NbMaladie += 0.5;
                             break;
-                        case "conge":
-                            detailModel.NbConge += 0.5;
+                        case "Congés":
+                            detailModel.NbConges += 0.5;
                             break;
                         default:
                             detailModel.NbMission += 0.5;
@@ -128,17 +128,17 @@ namespace Projet_pilate.Controllers
                 {
                     switch (item)
                     {
-                        case "ic":
+                        case "IC":
                             detailModel.NbIc += 0.5;
                             break;
-                        case "formation":
+                        case "Formation":
                             detailModel.NbFormation += 0.5;
                             break;
-                        case "maladie":
+                        case "Maladie":
                             detailModel.NbMaladie += 0.5;
                             break;
-                        case "conge":
-                            detailModel.NbConge += 0.5;
+                        case "Congés":
+                            detailModel.NbConges += 0.5;
                             break;
                         default:
                             detailModel.NbMission += 0.5;
@@ -276,9 +276,13 @@ namespace Projet_pilate.Controllers
 
         }
 
+        [Route("Consultant/SuiviCra", Name = "SuiviCra")]
+        public ActionResult SuiviCra()
+        { 
+            return View();
+        }
 
-
-        [Route("Consultant/ListeCra",Name = "ListeCra")]
+        [Route("Consultant/ListeCra", Name = "ListeCra")]
         public ActionResult ListeCra()
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -286,110 +290,87 @@ namespace Projet_pilate.Controllers
             List<ActivityViewModel> models = new List<ActivityViewModel>();
 
             List<Cra> cras = db.Cras.ToList();
-
+            
+            
             foreach (var cra in cras)
-            {
-
-
-                var dateActuelle = new DateTime();
-                var an = dateActuelle.getFullYear();
-                var JourAn = new DateTime(an, "00", "01").toLocaleDateString(undefined, options);
-                var FeteTravail = new DateTime(an, "04", "01").toLocaleDateString(undefined, options);
-                var Victoire1945 = new DateTime(an, "04", "08").toLocaleDateString(undefined, options);
-                var FeteNationale = new DateTime(an, "06", "14").toLocaleDateString(undefined, options);
-                var Assomption = new DateTime(an, "07", "15").toLocaleDateString(undefined, options);
-                var Toussaint = new DateTime(an, "10", "01").toLocaleDateString(undefined, options);
-                var Armistice = new DateTime(an, "10", "11").toLocaleDateString(undefined, options);
-                var Noel = new DateTime(an, "11", "25").toLocaleDateString(undefined, options);
-
+            {              
                 var nbProjetMatin = cra.Activities.Select(a => a.Morning).ToList();
                 var nbProjetApreMidi = cra.Activities.Select(a => a.Afternoon).ToList();
-                var nbDay = cra.Activities.Select(b => b.Date).ToList();
-                int projetMatin = 0;
-                int projetApresMidi = 0;
-                int noBillMatin = 0;
-                int noBillApresMidi = 0;
-                int projetWEMatin = 0;
-                int projetWEApresMidi = 0;
-
-
-
-                foreach (var item in nbProjetMatin)
+                var nbDay = cra.Activities.ToArray();
+                List<string> Missions = new List<string>(); // création de la liste de mission
+                List<int> NBJT = new List<int>();
+                List<int> NBJTWE = new List<int>();
+                int noBill = 0;
+                
+                foreach (var item in nbDay)
                 {
-                    if (item != "conge" && item != "ic" && item != "formation" && item != "maladie")
-                    {
-                        projetMatin++;
-                    }
-                }
-
-                foreach (var item in nbProjetApreMidi)
-                {
-                    if (item != "conge" && item != "ic" && item != "formation" && item != "maladie")
-                    {
-                        projetApresMidi++;
-                    }
-                }
-
-                foreach (var item in nbProjetMatin)
-                {
-                    if (item == "conge" || item == "ic" || item == "formation" || item == "maladie")
-                    {
-                        noBillMatin++;
-                    }
-                }
-
-                foreach (var item in nbProjetApreMidi)
-                {
-                    if (item == "conge" || item == "ic" || item == "formation" || item == "maladie")
-                    {
-                       noBillApresMidi++;
-                    }
-                }
-
-        foreach (var day in nbDay)
-                {
-                    if (day.DayOfWeek == DayOfWeek.Saturday || day.DayOfWeek == DayOfWeek.Sunday)
-                    {
-                        foreach (var item in nbProjetMatin)
+                    if (item.Date.DayOfWeek == DayOfWeek.Saturday || item.Date.DayOfWeek == DayOfWeek.Sunday)
+                    {//on est en WE
+                        if ((item.Morning != "Congés" && item.Morning != "IC" && item.Morning != "Formation" && item.Morning != "Maladie")
+                            || (item.Afternoon != "Congés" && item.Afternoon != "IC" && item.Afternoon != "Formation" && item.Afternoon != "Maladie"))
                         {
-                            if (item != "conge" && item != "ic" && item != "formation" && item != "maladie")
+                            var IndexMission = Missions.IndexOf(item.Morning);
+                            if (IndexMission < 0)
                             {
-                                projetWEMatin++;
+                                Missions.Add(item.Morning.ToString());
+                                NBJT.Add(0);
+                                NBJTWE.Add(1);
+                            }
+                            else
+                            {
+                                NBJTWE[IndexMission]++;
                             }
                         }
                     }
-                }
-
-                foreach (var day in nbDay)
-                {
-                    if (day.DayOfWeek == DayOfWeek.Saturday || day.DayOfWeek == DayOfWeek.Sunday)
-                    {
-                        foreach (var item in nbProjetMatin)
+                    else
+                    { // on est en jours ouvrés
+                        if ((item.Morning != "Congés" && item.Morning != "IC" && item.Morning != "Formation" && item.Morning != "Maladie")
+                            || (item.Afternoon != "Congés" && item.Afternoon != "IC" && item.Afternoon != "Formation" && item.Afternoon != "Maladie"))
                         {
-                            if (item != "conge" && item != "ic" && item != "formation" && item != "maladie")
+                            var IndexMission = Missions.IndexOf(item.Morning);
+                            if (IndexMission < 0)
                             {
-                                projetWEApresMidi++;
+                                Missions.Add(item.Morning.ToString());
+                                NBJT.Add(1);
+                                NBJTWE.Add(0);
+                            }
+                            else
+                            {
+                                NBJT[IndexMission]++;
                             }
                         }
+                        
+                        if ((item.Morning == "Congés" || item.Morning == "IC" || item.Morning == "Formation" || item.Morning == "Maladie")
+                            || (item.Afternoon == "Congés" || item.Afternoon == "IC" || item.Afternoon == "Formation" || item.Afternoon == "Maladie"))
+                        {
+                            noBill++;
+                        }
+                    
                     }
                 }
 
-
-                ActivityViewModel model = new ActivityViewModel()
+                
+                foreach (var mission in Missions)
                 {
-                    ID = cra.CraID,
-                    Date =  cra.Month + " " + cra.year,
-                    ConsultantName = cra.Consultant.FirstName + " " + cra.Consultant.LastName,
-                    //MissionName = cra.Activities.Select(m => m.Morning).ToString(),
-                    Satisfaction = cra.Satisfaction,
-                    WorkedDays = (projetMatin + projetApresMidi) /2,
-                    NoBillDays = (noBillMatin + noBillApresMidi) /2,
-                    //WorkedDaysWE = (projetMatin + projetApresMidi) / 2,
-                };
+                    var IndexOfMission = Missions.IndexOf(mission);
+                    ActivityViewModel model = new ActivityViewModel()
+                    {
+                        ID = cra.CraID,
+                        Date = cra.Month + " " + cra.year,
+                        ConsultantName = cra.Consultant.FirstName + " " + cra.Consultant.LastName,
+                        Satisfaction = cra.Satisfaction,
+                        MissionName = mission,
+                        WorkedDays = NBJT[IndexOfMission],
+                        NoBillDays = noBill,
+                        WorkedDaysWE = NBJTWE[IndexOfMission],
+                    };
+                    models.Add(model);
+                }
+                
                     
                
 
-                models.Add(model);
+                
             }
 
             return View(models);

@@ -4,12 +4,12 @@
     ViewBag.Title = "SubsidiaryList";
 }
 
-<h2>Liste des filiales </h2>
+<h2>Liste des Business Companies </h2>
 
 @if (User.IsInRole("Super-Administrateur") || User.IsInRole("Administrateur"))
 {
     <p>
-        @Html.ActionLink("Créer une filiale", "CreateSubsidiary", "Subsidiary", new { @class = "btn btn-primary btn-large" })
+        @Html.ActionLink("Créer une Business Company", "CreateSubsidiary", "Subsidiary", new { @class = "btn btn-primary btn-large" })
     </p>
 }
 
@@ -31,10 +31,9 @@
             @Html.DisplayNameFor(model => model.City)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.ManagerFirstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ManagerLastName)
+            Responsable
+            @*Html.DisplayNameFor(model => model.ManagerFirstName)
+            @Html.DisplayNameFor(model => model.ManagerLastName)*@
         </th>
         <th></th>
     </tr>
@@ -59,8 +58,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ManagerFirstName)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.ManagerLastName)
             </td>
             <td>

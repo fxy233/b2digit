@@ -62,9 +62,9 @@
 
             <td>
 
-                @*@Html.ActionLink("Modifier", "Edit", new { id = item.CompanyContactID }, new { @class = "btn btn-primary btn-large" })*@
+                @Html.ActionLink("Modifier", "EditCompanyContact", new { id = item.ID }, new { @class = "btn btn-primary btn-large" })
                 @*@Html.ActionLink("Details", "Details", new { id = item.CompanyContactID }, new { @class = "btn btn-primary btn-large" })*@
-                @Html.ActionLink("Supprimer", "Delete", new { id = item.ID }, new { @class = "btn btn-primary btn-large", id = "suppression", onclick = "return ConfirmationDialog()" })
+                @Html.ActionLink("Supprimer", "DeleteCompanyContact", new { id = item.ID }, new { @class = "btn btn-primary btn-large", id = "suppression", onclick = "return ConfirmationDialog()" })
             </td>
 
         </tr>

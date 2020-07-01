@@ -261,9 +261,14 @@
     <Compile Include="Migrations\202005200912171_Message.Designer.cs">
       <DependentUpon>202005200912171_Message.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202006261110382_MonthCloture.cs" />
+    <Compile Include="Migrations\202006261110382_MonthCloture.Designer.cs">
+      <DependentUpon>202006261110382_MonthCloture.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityViewModels.cs" />
+    <Compile Include="Models\ClotureViewModel.cs" />
     <Compile Include="Models\AdminViewModel.cs" />
     <Compile Include="Models\BusinessViewModels.cs" />
     <Compile Include="Models\ConsultantManagerActivationViewModel.cs" />
@@ -359,7 +364,7 @@
     <Content Include="Views\Mission\CreationReussi.cshtml" />
     <Content Include="Views\Company\Edit.cshtml" />
     <Content Include="Views\Company\Details.cshtml" />
-    <Content Include="Views\CompanyContact\Edit.cshtml" />
+    <Content Include="Views\CompanyContact\EditCompanyContact.cshtml" />
     <Content Include="Views\CompanyContact\Details.cshtml" />
     <Content Include="Views\Mission\ListeMissions.cshtml" />
     <Content Include="Views\Mission\Details.cshtml" />
@@ -389,6 +394,11 @@
     <Content Include="Views\Admin\EditConsultant.cshtml" />
     <Content Include="Views\Admin\Facturation.cshtml" />
     <Content Include="Views\Admin\Message.cshtml" />
+    <Content Include="Views\ProfitCenter\EditProfitCenter.cshtml" />
+    <Content Include="Views\Admin\ClotureMois.cshtml" />
+    <Content Include="Views\Admin\ActivationSuccess.cshtml" />
+    <Content Include="Views\Admin\messageSuccess.cshtml" />
+    <Content Include="Views\Consultant\SuiviCRA.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -458,6 +468,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202005200912171_Message.resx">
       <DependentUpon>202005200912171_Message.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202006261110382_MonthCloture.resx">
+      <DependentUpon>202006261110382_MonthCloture.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

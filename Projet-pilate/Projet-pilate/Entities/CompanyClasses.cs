@@ -56,6 +56,4 @@ namespace Projet_pilate.Entities
 
     }
 
-
-
 }

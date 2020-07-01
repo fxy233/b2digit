@@ -17,6 +17,7 @@ namespace Projet_pilate.Models
         public string Name { get; set; }
 
         public List<string> Owners { get; set; }
+        public List<int> OwnersID { get; set; }
         public List<string> PartOwners { get; set; }
         public List<string> FatherProfitCenters { get; set; }
 
@@ -30,13 +31,13 @@ namespace Projet_pilate.Models
         public string Name { get; set; }
 
         [Display(Name = "Proprietaire")]
-        public string Owner { get; set; }
+        public string Owners { get; set; }
 
         [Display(Name = "Co-proprietaire")]
-        public string PartOwner { get; set; }
+        public string PartOwners { get; set; }
 
         [Display(Name = "Centre père")]
-        public string FatherProfitCenter { get; set; }
+        public string FatherProfitCenters { get; set; }
 
 
         [DataType(DataType.Currency)]
@@ -46,6 +47,39 @@ namespace Projet_pilate.Models
         [DataType(DataType.Currency)]
         [Display(Name = "Chiffre d'affaire")]
         public double Turnover { get; set; }
+
+
+    }
+    public class UpdateProfitCenterViewModel
+    {
+        public int ID { get; set; }
+
+        [Display(Name = "Libellé")]
+        public string Name { get; set; }
+
+        [Display(Name = "Proprietaire")]
+        public string Owner { get; set; }
+
+        [Display(Name = "Co-proprietaire")]
+        public string PartOwner { get; set; }
+
+        [Display(Name = "Centre père")]
+        //public string FatherProfitCenter { get; set; }
+        public int? FatherProfitCenterID { get; set; }
+        public string FatherProfitCenter { get; set; }
+
+        [DataType(DataType.Currency)]
+        [Display(Name = "Coût")]
+        public double Cost { get; set; }
+
+        [DataType(DataType.Currency)]
+        [Display(Name = "Chiffre d'affaire")]
+        public double Turnover { get; set; }
+
+        public List<string> ListOwners { get; set; }
+        public List<int> ListOwnersID { get; set; }
+        public List<string> ListPartOwners { get; set; }
+        public List<string> ListFatherProfitCenters { get; set; }
 
 
     }

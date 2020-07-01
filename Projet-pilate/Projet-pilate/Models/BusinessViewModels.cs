@@ -256,7 +256,7 @@ namespace Projet_pilate.Models
         [Required]
         [StringLength(10)]
         [Display(Name = "Téléphone")]
-        public string PhoneNumber { get; set; }
+        public string Phone { get; set; }
 
     }
 

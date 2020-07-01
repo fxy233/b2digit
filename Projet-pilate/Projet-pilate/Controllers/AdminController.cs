@@ -796,7 +796,44 @@ namespace Projet_pilate.Controllers
             return View("messageSuccess", model);
             
         }
+        // GET: Admin/ClotureMois
+        [Route("Admin/ClotureMois", Name = "ClotureMois")]
+        public ActionResult ClotureMois()
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            ClotureViewModel model = new ClotureViewModel();
 
+            var Mois = db.MonthClotures.Single();
+            model.MoisaCloturer = Mois.Periode.ToString("MMMM", CultureInfo.CurrentCulture) +
+                              " " + Mois.Periode.Year.ToString();
+
+            
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult CloturerMois(ClotureViewModel model)
+        {
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult MoisClot(ClotureViewModel model)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+
+           // var activerMessage = db.Messages.SingleOrDefault();
+
+            //activerMessage.message = activerMessage.message.ToString();
+
+            //activerMessage.message = model.Message;
+
+            //db.SaveChanges();
+
+            return View("messageSuccess", model);
+
+        }
     }
 
 

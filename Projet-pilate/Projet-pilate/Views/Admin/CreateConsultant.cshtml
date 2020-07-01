@@ -5,161 +5,163 @@
 }
 
 <h2>Création d'un consultant</h2>
+<h5>Attention : Ne pas mettre d'espace dans le prénom et dans le nom.</h5>
+
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
-<div class="form-horizontal">
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <div class="form-group">
-        @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.EntryDate, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.EntryDate, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.EntryDate, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.EntryDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.EntryDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.EntryDate, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
 
-    <div class="form-group">
-        <label class="col-md-2 control-label" for="Subsidiary">Filiale</label>
-        <div class="col-md-10">
-            <select class="form-control" id="Subsidiary" name="Subsidiary" required>
-                <option selected>@ViewData["Subsidiary"]</option>
-                @foreach (var subsidiary in Model.Subsidiaries)
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="Subsidiary">Filiale</label>
+            <div class="col-md-10">
+                <select class="form-control" id="Subsidiary" name="Subsidiary" required>
+                    <option selected>@ViewData["Subsidiary"]</option>
+                    @foreach (var subsidiary in Model.Subsidiaries)
+                    {
+                        <option value="@subsidiary">@subsidiary</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="ProfitCenter">Centre de profit</label>
+            <div class="col-md-10">
+                <select class="form-control" id="ProfitCenter" name="ProfitCenter" required>
+                    <option selected>@ViewData["ProfitCenter"]</option>
+                    @foreach (var profitCenter in Model.ProfitCenters)
+                    {
+                        <option value="@profitCenter">@profitCenter</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="Status">Statut</label>
+            <div class="col-md-10">
+                <select class="form-control" id="Status" name="Status" required>
+                    <option selected>Consultant</option>
+                    <option>Sous-Traitant</option>
+                </select>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="Status">Type de coût</label>
+            <div class="col-md-10">
+
+                @if (@ViewData["CostType"] == "MonthlyCost" || @ViewData["CostType"] == null)
                 {
-                    <option value="@subsidiary">@subsidiary</option>
+                    <span class="radio">
+                        <label>
+                            <input type="radio" name="CostType" id="MonthlyCost" value="MonthlyCost" checked>
+                            Salaire mensuel
+                        </label>
+                    </span>
+                    <span class="radio">
+                        <label>
+                            <input type="radio" name="CostType" id="DailyCost" value="DailyCost">
+                            Coût journalier
+                        </label>
+                    </span>
                 }
-            </select>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label class="col-md-2 control-label" for="ProfitCenter">Centre de profit</label>
-        <div class="col-md-10">
-            <select class="form-control" id="ProfitCenter" name="ProfitCenter" required>
-                <option selected>@ViewData["ProfitCenter"]</option>
-                @foreach (var profitCenter in Model.ProfitCenters)
+                else
                 {
-                    <option value="@profitCenter">@profitCenter</option>
+                    <span class="radio">
+                        <label>
+                            <input type="radio" name="CostType" id="MonthlyCost" value="MonthlyCost">
+                            Salaire mensuel
+                        </label>
+                    </span>
+                    <span class="radio">
+                        <label>
+                            <input type="radio" name="CostType" id="DailyCost" value="DailyCost" checked>
+                            Coût journalier
+                        </label>
+                    </span>
                 }
-            </select>
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Cost, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Cost, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Cost, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.MealCost, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.MealCost, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.MealCost, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TravelPackage, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TravelPackage, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TravelPackage, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ExceptionalCost, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ExceptionalCost, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ExceptionalCost, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="valider" class="btn btn-primary btn-large" />
+            </div>
         </div>
     </div>
-
-    <div class="form-group">
-        <label class="col-md-2 control-label" for="Status">Statut</label>
-        <div class="col-md-10">
-            <select class="form-control" id="Status" name="Status" required>
-                <option selected>Consultant</option>
-                <option>Sous-Traitant</option>
-            </select>
-        </div>
-    </div>
-
-
-    <div class="form-group">
-        <label class="col-md-2 control-label" for="Status">Type de coût</label>
-        <div class="col-md-10">
-
-            @if (@ViewData["CostType"] == "MonthlyCost" || @ViewData["CostType"] == null)
-            {
-                <span class="radio">
-                    <label>
-                        <input type="radio" name="CostType" id="MonthlyCost" value="MonthlyCost" checked>
-                        Salaire mensuel
-                    </label>
-                </span>
-                <span class="radio">
-                    <label>
-                        <input type="radio" name="CostType" id="DailyCost" value="DailyCost">
-                        Coût journalier
-                    </label>
-                </span>
-            }
-            else
-            {
-                <span class="radio">
-                    <label>
-                        <input type="radio" name="CostType" id="MonthlyCost" value="MonthlyCost">
-                        Salaire mensuel
-                    </label>
-                </span>
-                <span class="radio">
-                    <label>
-                        <input type="radio" name="CostType" id="DailyCost" value="DailyCost" checked>
-                        Coût journalier
-                    </label>
-                </span>
-            }
-
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Cost, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Cost, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Cost, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.MealCost, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.MealCost, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.MealCost, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.TravelPackage, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.TravelPackage, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.TravelPackage, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.ExceptionalCost, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.ExceptionalCost, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.ExceptionalCost, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="valider" class="btn btn-primary btn-large" />
-        </div>
-    </div>
-</div>
 }
 
 <div>
@@ -182,7 +184,7 @@
 
             monthlyCost.checked = true;
         }
-        
+
     });
 
 </script>

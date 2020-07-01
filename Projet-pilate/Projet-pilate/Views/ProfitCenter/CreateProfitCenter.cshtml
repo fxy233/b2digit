@@ -6,6 +6,7 @@
 
 <h2>Creation d'un centre de profit</h2>
 
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -20,7 +21,6 @@
                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
             </div>
         </div>
-
 
         <div class="form-group">
             <label class="col-md-2 control-label" for="Status">Propriétaire</label>

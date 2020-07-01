@@ -4,7 +4,7 @@
     ViewBag.Title = "ProfitCenterList";
 }
 
-<h2>Centres de profits</h2>
+<h2>Centres de profit</h2>
 @if (User.IsInRole("Administrateur") || User.IsInRole("Super-Administrateur"))
 {
     <p>
@@ -19,19 +19,19 @@
             @Html.DisplayNameFor(model => model.Name)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Owner)
+            @Html.DisplayNameFor(model => model.Owners)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.PartOwner)
+            @Html.DisplayNameFor(model => model.PartOwners)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FatherProfitCenter)
+            @Html.DisplayNameFor(model => model.FatherProfitCenters)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Cost)
+            @*Html.DisplayNameFor(model => model.Cost)*@
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Turnover)
+            @*Html.DisplayNameFor(model => model.Turnover)*@
         </th>
         <th></th>
     </tr>
@@ -43,9 +43,9 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Owner)
+                @Html.DisplayFor(modelItem => item.Owners)
             </td>
-            @if (item.PartOwner == null)
+            @if (item.PartOwners == null)
             {
                 <td>
                     Aucun
@@ -54,10 +54,10 @@
             else
             {
                 <td>
-                    @Html.DisplayFor(modelItem => item.PartOwner)
+                    @Html.DisplayFor(modelItem => item.PartOwners)
                 </td>
             }
-            @if (item.FatherProfitCenter == null)
+            @if (item.FatherProfitCenters == null)
             {
                 <td>
                     Aucun
@@ -66,19 +66,19 @@
             else
             {
                 <td>
-                    @Html.DisplayFor(modelItem => item.FatherProfitCenter)
+                    @Html.DisplayFor(modelItem => item.FatherProfitCenters)
                 </td>
             }
             <td>
-                @Html.DisplayFor(modelItem => item.Cost)
+                @*Html.DisplayFor(modelItem => item.Cost)*@
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Turnover)
+                @*Html.DisplayFor(modelItem => item.Turnover)*@
             </td>
 
             <td>
-                @*@Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-                    @Html.ActionLink("Details", "Details", new { id=item.ID }) |*@
+                @Html.ActionLink("Modifier", "EditProfitCenter", new { id = item.ID }, new { @class = "btn btn-primary btn-large"})
+                @*Html.ActionLink("Details", "Details", new { id=item.ID }) |*@
                 @Html.ActionLink("Supprimer", "DeleteProfitCenter", new { id = item.ID }, new { @class = "btn btn-primary btn-large", onclick = "return ConfirmationDialog()" })
             </td>
         </tr>

@@ -73,20 +73,20 @@ else
                             <tr class="@dt.DayOfWeek jour">
                                 <th>@dt.Date.ToString("D")</th>
                                 <td class="colonnes">
-                                    <input class="am@(dt.Day)" type="checkbox" name="matin" value="ic-@(dt.Day)">
-                                    <input class="pm@(dt.Day)" type="checkbox" name="apres-midi" value="ic-@(dt.Day)">
+                                    <input class="am@(dt.Day)" type="checkbox" name="matin" value="IC-@(dt.Day)">
+                                    <input class="pm@(dt.Day)" type="checkbox" name="apres-midi" value="IC-@(dt.Day)">
                                 </td>
                                 <td class="colonnes">
-                                    <input class="am@(dt.Day)" type="checkbox" name="matin" value="conge-@(dt.Day)">
-                                    <input class="pm@(dt.Day)" type="checkbox" name="apres-midi" value="conge-@(dt.Day)">
+                                    <input class="am@(dt.Day)" type="checkbox" name="matin" value="Congés-@(dt.Day)">
+                                    <input class="pm@(dt.Day)" type="checkbox" name="apres-midi" value="Congés-@(dt.Day)">
                                 </td>
                                 <td class="colonnes">
-                                    <input class="am@(dt.Day)" type="checkbox" name="matin" value="formation-@(dt.Day)">
-                                    <input class="pm@(dt.Day)" type="checkbox" name="apres-midi" value="formation-@(dt.Day)">
+                                    <input class="am@(dt.Day)" type="checkbox" name="matin" value="Formation-@(dt.Day)">
+                                    <input class="pm@(dt.Day)" type="checkbox" name="apres-midi" value="Formation-@(dt.Day)">
                                 </td>
                                 <td class="colonnes">
-                                    <input class="am@(dt.Day)" type="checkbox" name="matin" value="maladie-@(dt.Day)">
-                                    <input class="pm@(dt.Day)" type="checkbox" name="apres-midi" value="maladie-@(dt.Day)">
+                                    <input class="am@(dt.Day)" type="checkbox" name="matin" value="Maladie-@(dt.Day)">
+                                    <input class="pm@(dt.Day)" type="checkbox" name="apres-midi" value="Maladie-@(dt.Day)">
                                 </td>
                                 @if (Model.MissionsList != null)
                                 {
@@ -570,8 +570,8 @@ else
         var typeActivite = e.target.value;
 
         if (typeJour.classList.contains('ferie') || typeJour.classList.contains('weekend')) {
-            if (typeActivite.startsWith("conge") || typeActivite.startsWith("ic") || typeActivite.startsWith("maladie")) {
-                alert('Vous ne pouvez pas être en congé, en inter-contrat ou en arrêt maladie les week-ends ou jours fériés');
+            if (typeActivite.startsWith("Congés") || typeActivite.startsWith("IC") || typeActivite.startsWith("Maladie")) {
+                alert('Vous ne pouvez pas être en congés, en inter-contrat ou en arrêt maladie les week-ends ou jours fériés');
                 e.target.checked = false;
             }
         }

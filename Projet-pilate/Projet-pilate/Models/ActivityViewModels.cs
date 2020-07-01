@@ -22,7 +22,7 @@ namespace Projet_pilate.Models
     {
         public List<Activity> Activities { get; set; }
         public double NbMission { get; set; }
-        public double NbConge { get; set; }
+        public double NbConges { get; set; }
         public double NbFormation { get; set; }
         public double NbIc { get; set; }
         public double NbMaladie { get; set; }
