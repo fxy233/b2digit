@@ -170,7 +170,7 @@ namespace Projet_pilate.Controllers
         {
             ApplicationDbContext db = new ApplicationDbContext();
 
-
+            var dCra = db.Cras.Where(c => c.Consultant.Email == User.Identity.Name).ToList();
             List<Activity> activities = new List<Activity>();
 
             var currentMonth = db.MonthActivations.Single();
@@ -268,6 +268,12 @@ namespace Projet_pilate.Controllers
 
             cra.Consultant = consultant;
             cra.Activities = activities;
+
+            foreach(var itemCra in dCra)
+            if (itemCra != null && itemCra.Month== cra.Month && itemCra.year==cra.year)
+            {
+                return View("info");
+            }
 
             db.Cras.Add(cra);
 
