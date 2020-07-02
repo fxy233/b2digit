@@ -1,4 +1,5 @@
-﻿using Projet_pilate.Entities;
+﻿using Microsoft.AspNet.Identity;
+using Projet_pilate.Entities;
 using Projet_pilate.Models;
 using System;
 using System.Collections.Generic;
@@ -654,6 +655,22 @@ namespace Projet_pilate.Controllers
 
             return View(models);
 
+        }
+
+        [Route("Consultant/Retour", Name = "Retour")]
+        public ActionResult Retour()
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            string id = User.Identity.Name;
+
+            var user = db.Users.Single(u => u.Email == id);
+
+            if (user.Position == "Consultant")
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            return RedirectToAction("ListeCra", "Consultant");
         }
 
 

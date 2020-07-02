@@ -11,7 +11,7 @@
 }
 else
 {
-<h2>CRA du mois de @Model.MoisActivation @*DateTime.Now.Year*@ de @ViewBag.nom</h2>
+    <h2>CRA du mois de @Model.MoisActivation @*DateTime.Now.Year*@ de @ViewBag.nom</h2>
     <br />
 }
 
@@ -93,10 +93,13 @@ else
                             </textarea>
                     </div>
                 </div>
+
+                @Html.ActionLink("Retour", "Retour", new { @class = "btn btn-primary btn-large" })
             </div>
         </div>
     </div>
 </section>
+
 
 @*<link href="~/Content/Site.css" rel="stylesheet" />*@
 
@@ -279,18 +282,18 @@ else
 
         var resultat;
 
-            joursFeries.forEach(element => {
+        joursFeries.forEach(element => {
 
-                if (element == params) {
+            if (element == params) {
 
-                   resultat = true;
-                } 
-        
-            });
+                resultat = true;
+            }
+
+        });
 
         return resultat;
 
-     };
+    };
 
 
 
@@ -328,26 +331,26 @@ else
     var tabJourRemunere = Array.from(jourRemunere);
 
 
-    var test = testFerie ("vendredi 8 mai 2020");
+    var test = testFerie("vendredi 8 mai 2020");
 
-       console.log(test);
+    console.log(test);
 
 
     tabJourRemunere.forEach(element => {
 
-       console.log(element.childNodes[0].textContent);
+        console.log(element.childNodes[0].textContent);
 
-      var test = testFerie (element.childNodes[0].textContent);
+        var test = testFerie(element.childNodes[0].textContent);
 
-       console.log(test);
+        console.log(test);
 
 
-        if (element.childNodes[0].textContent.startsWith("dimanche") || element.childNodes[0].textContent.startsWith("samedi") || test == true){
+        if (element.childNodes[0].textContent.startsWith("dimanche") || element.childNodes[0].textContent.startsWith("samedi") || test == true) {
 
             console.log(element.childNodes[0].textContent);
 
-             element.style.fontWeight = "bold";
-             element.style.color = "red";
+            element.style.fontWeight = "bold";
+            element.style.color = "red";
 
             nonOuvre++;
         }
@@ -355,7 +358,7 @@ else
     });
 
     var jourOuvres = document.getElementsByClassName("jourOuvres");
-   // console.log(jourOuvres[0].childNodes[0].data);
+    // console.log(jourOuvres[0].childNodes[0].data);
 
     var ouvres = jourOuvres[0].childNodes[0].data;
 
@@ -368,7 +371,7 @@ else
     jourOuvres[0].childNodes[0].data = result;
 
 
- 
+
 
 
 </script>
