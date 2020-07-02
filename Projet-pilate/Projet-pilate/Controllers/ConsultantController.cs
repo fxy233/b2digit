@@ -571,8 +571,8 @@ namespace Projet_pilate.Controllers
 
         }*/
 
-        [Route("Consultant/SuiviCra", Name = "SuiviCra")]
-        public ActionResult SuiviCra()
+        [Route("Consultant/SuiviCra_mission", Name = "SuiviCra_mission")]
+        public ActionResult SuiviCra_mission()
         {
             ApplicationDbContext db = new ApplicationDbContext();
 
@@ -676,6 +676,107 @@ namespace Projet_pilate.Controllers
             return RedirectToAction("ListeCra", "Consultant");
         }
 
+
+        [Route("Consultant/SuiviCra", Name = "SuiviCra")]
+        public ActionResult SuiviCra()
+        {
+            return View();
+        }
+
+        [Route("Consultant/SuiviCra_nonfacture", Name = "SuiviCra_nonfacture")]
+        public ActionResult SuiviCra_nonfacture()
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+
+            ViewBag.listMonth = new string[] { "Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Aou", "Sep", "Oct", "Nov", "Dec" };
+
+            List<ConsultantCraModel> models = new List<ConsultantCraModel>();
+
+            var consultants = db.Consultants.ToList();
+
+            foreach (var consultant in consultants)
+            {
+
+                ConsultantCraModel model = new ConsultantCraModel()
+                {
+                    ID = consultant.ConsultantID,
+                    Email = consultant.Email,
+                    MissionsList = new List<string>(),
+                    NbParMission = new Dictionary<string, double[]>(),
+                };
+                var missionList = db.Missions.ToList();
+                double[] lista = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+                model.NbParMission.Add("nonfacture", lista);
+                foreach (var mission in missionList)
+                {
+                    if (mission.ConsultantID == consultant.ConsultantID)
+                    {
+                        model.MissionsList.Add(mission.Name);
+                        double[] list = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+                        model.NbParMission.Add(mission.Name, list);
+                    }
+                }
+
+                var cras = db.Cras.ToList();
+
+                foreach (var cra in cras)
+                {
+                    if (cra.ConsultantID == consultant.ConsultantID)
+                    {
+                        var activities = db.Activities.ToList();
+
+                        foreach (var activity in activities)
+                        {
+                            if (activity.CraID == cra.CraID)
+                            {
+                                switch (activity.Morning)
+                                {
+                                    case "IC":
+                                        model.NbParMission["nonfacture"][Int32.Parse(activity.Date.Month.ToString()) - 1] += 0.5;
+                                        break;
+                                    case "Formation":
+                                        model.NbParMission["nonfacture"][Int32.Parse(activity.Date.Month.ToString()) - 1] += 0.5;
+                                        break;
+                                    case "Maladie":
+                                        model.NbParMission["nonfacture"][Int32.Parse(activity.Date.Month.ToString()) - 1] += 0.5;
+                                        break;
+                                    case "Congés":
+                                        model.NbParMission["nonfacture"][Int32.Parse(activity.Date.Month.ToString()) - 1] += 0.5;
+                                        break;
+                                    default:
+                                       
+                                        break;
+                                }
+                                switch (activity.Afternoon)
+                                {
+                                    case "IC":
+                                        model.NbParMission["nonfacture"][Int32.Parse(activity.Date.Month.ToString()) - 1] += 0.5;
+                                        break;
+                                    case "Formation":
+                                        model.NbParMission["nonfacture"][Int32.Parse(activity.Date.Month.ToString()) - 1] += 0.5;
+                                        break;
+                                    case "Maladie":
+                                        model.NbParMission["nonfacture"][Int32.Parse(activity.Date.Month.ToString()) - 1] += 0.5;
+                                        break;
+                                    case "Congés":
+                                        model.NbParMission["nonfacture"][Int32.Parse(activity.Date.Month.ToString()) - 1] += 0.5;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+
+                        }
+                    }
+                }
+
+
+                models.Add(model);
+            }
+
+            return View(models);
+
+        }
 
 
     }
