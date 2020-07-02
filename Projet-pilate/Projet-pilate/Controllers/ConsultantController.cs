@@ -575,6 +575,9 @@ namespace Projet_pilate.Controllers
         public ActionResult SuiviCra()
         {
             ApplicationDbContext db = new ApplicationDbContext();
+
+            ViewBag.listMonth = new string[]{ "Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Aou", "Sep", "Oct", "Nov", "Dec"};
+
             List<ConsultantCraModel> models = new List<ConsultantCraModel>();
 
             var consultants = db.Consultants.ToList();

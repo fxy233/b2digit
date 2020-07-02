@@ -3,28 +3,36 @@
     ViewBag.Title = "SuiviCRA";
 }
 
-<h2>Suivi des CRAs d'année @DateTime.Now.Year.ToString() </h2>
+    <h2>Suivi des CRAs d'année @DateTime.Now.ToString("yyyy, MMMM", System.Globalization.CultureInfo.CurrentCulture)  </h2>
 
 <table class="table">
     <tr>
         <th>
-            @DateTime.Now.Year.ToString()
+            Consultant
         </th>
         <th>
             Projet
         </th>
-        <th>Jan</th>
-        <th>Fév</th>
-        <th>Mar</th>
-        <th>Avr</th>
-        <th>Mai</th>
-        <th>Juin</th>
-        <th>Juil</th>
-        <th>Aou</th>
-        <th>Sep</th>
-        <th>Oct</th>
-        <th>Nov</th>
-        <th>Dec</th>
+        @{
+            var mCurrent = int.Parse(DateTime.Now.Month.ToString());
+            for (var i = 0; i < 12; ++i)
+            {
+                if (i == 11)
+                {
+                    <th style="color:red;">
+                        @ViewBag.listMonth[mCurrent % 12]
+                    </th>
+                }
+                else
+                {
+                    <th>
+                        @ViewBag.listMonth[mCurrent % 12]
+                    </th>
+                }
+
+                mCurrent++;
+            }
+        }
     </tr>
     @foreach (var item in Model)
      {
@@ -55,21 +63,53 @@
     <td>
         @Html.DisplayFor(modelItem => mission)
     </td>
-    @{ int month = 1;
-        foreach (var nb in item.NbParMission[mission])
+    @{
+        var mC = int.Parse(DateTime.Now.Month.ToString());
+        var yC = Int32.Parse(@DateTime.Now.Year.ToString());
+        var nbDuree = item.DureeMission[mission];
+        for (var i = 0; i < 12; ++i)
         {
-            if ((month < item.DureeMission[mission][1] && Int32.Parse(@DateTime.Now.Year.ToString())<=item.DureeMission[mission][0] ) || (month > item.DureeMission[mission][3] && Int32.Parse(@DateTime.Now.Year.ToString()) >= item.DureeMission[mission][2]))
+            var annee = (mC % 12) + 1 < mC ? yC : yC - 1;
+            Boolean earlier = annee < nbDuree[0] || ((mC % 12) + 1 < nbDuree[1] && annee == nbDuree[0]);
+            Boolean later = annee > nbDuree[2] || ((mC % 12) + 1 > nbDuree[3] && annee == nbDuree[2]);
+            if (earlier || later)
             {
                 <td></td>
             }
             else
             {
-                <td>
-                    @Html.DisplayFor(modelItem => nb)
-                </td>
+                if (i == 11)
+                {
+<td style="color: red;">
+    @Html.DisplayFor(modelItem => item.NbParMission[mission][mC % 12])
+</td>
+                }
+                else
+                {
+<td>
+    @Html.DisplayFor(modelItem => item.NbParMission[mission][mC % 12])
+</td>
+                }
             }
-            month += 1;
+
+            mC++;
         }
+
+        @*int month = 1;
+            foreach (var nb in item.NbParMission[mission])
+            {
+                if ((month < item.DureeMission[mission][1] && Int32.Parse(@DateTime.Now.Year.ToString()) <= item.DureeMission[mission][0]) || (month > item.DureeMission[mission][3] && Int32.Parse(@DateTime.Now.Year.ToString()) >= item.DureeMission[mission][2]))
+                {
+                    <td></td>
+                }
+                else
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => nb)
+                    </td>
+                }
+                month += 1;
+            }*@
     }
 </tr>
             }
