@@ -88,6 +88,8 @@ namespace Projet_pilate.Entities
         public string Periodicity { get; set; }
         public string Comment { get; set; }
 
+        //public Boolean exist { get; set; }
+
         public string Creator { get; set; }
 
         // Foreign key

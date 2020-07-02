@@ -56,7 +56,7 @@
         <div class="col-md-10">
             <select class="form-control" id="FatherProfitCenter" name="FatherProfitCenter" required>
                 <option selected>@Model.FatherProfitCenter</option>
-                @if (Model.FatherProfitCenter == null) {<option selected>Aucun</option> }
+                @if (Model.FatherProfitCenter == null) {<option selected>@Model.FatherProfitCenter</option> }
 
                 @foreach (var FatherProfitCenter in Model.ListFatherProfitCenters)
                         {

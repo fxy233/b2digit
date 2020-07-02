@@ -176,6 +176,7 @@ namespace Projet_pilate.Controllers
                 CompanyContact = db.CompanyContacts.SingleOrDefault(c => c.Mail == nomContact),
                 ProfitCenter = consultant.ProfitCenter,
                 Creator = sessionUser.FirstName + " " + sessionUser.LastName,
+                //exist = true,
             };
 
             consultant.Missions.Add(mission);
@@ -201,24 +202,27 @@ namespace Projet_pilate.Controllers
 
             foreach (var mission in missions)
             {
-                DetailsMissionViewModel model = new DetailsMissionViewModel()
+                if (mission.Fee>0)
                 {
-                    Id = mission.MissionID,
-                    Name = mission.Name,
-                    ContactEmail = mission.CompanyContact.Mail,
-                    ClientName = mission.CompanyContact.FirstName + " " + mission.CompanyContact.LastName,
-                    Start = mission.Start,
-                    End = mission.End,
-                    Fee = mission.Fee,
-                    FreeDay = mission.FreeDay,
-                    Periodicity = mission.Periodicity,
-                    Comment = mission.Comment,
-                    ConsultantName = mission.Consultant.FirstName + " " + mission.Consultant.LastName,
-                    CreatorName = mission.Creator,
-                    ProfitCenter = mission.ProfitCenter.Name,
-                };
+                    DetailsMissionViewModel model = new DetailsMissionViewModel()
+                    {
+                        Id = mission.MissionID,
+                        Name = mission.Name,
+                        ContactEmail = mission.CompanyContact.Mail,
+                        ClientName = mission.CompanyContact.FirstName + " " + mission.CompanyContact.LastName,
+                        Start = mission.Start,
+                        End = mission.End,
+                        Fee = mission.Fee,
+                        FreeDay = mission.FreeDay,
+                        Periodicity = mission.Periodicity,
+                        Comment = mission.Comment,
+                        ConsultantName = mission.Consultant.FirstName + " " + mission.Consultant.LastName,
+                        CreatorName = mission.Creator,
+                        ProfitCenter = mission.ProfitCenter.Name,
+                    };
 
-                models.Add(model);
+                    models.Add(model);
+                }
             }
 
             return View(models);
@@ -245,7 +249,8 @@ namespace Projet_pilate.Controllers
                 ID = mission.MissionID,
                 Start = mission.Start,
                 End = mission.End,
-
+                Name = mission.Name,
+                Fee = mission.Fee,
             };
 
             return View(model);
@@ -261,8 +266,27 @@ namespace Projet_pilate.Controllers
 
             if (ModelState.IsValid)
             {
+                if (mission.Name != model.Name)
+                {
+                    var activities = db.Activities.ToList();
+                    foreach(var act in activities)
+                    {
+                        if(act.Morning==mission.Name)
+                        {
+                            act.Morning = model.Name;
+                        }
+                        if (act.Afternoon == mission.Name)
+                        {
+                            act.Afternoon = model.Name;
+                        }
+                        db.SaveChanges();
+                    }
+                }
 
                 mission.End = model.NewEnd;
+                mission.Name = model.Name;
+                mission.Fee = model.Fee;
+                
                 db.SaveChanges();
 
                 return RedirectToAction("ListeMissions", "Mission");
@@ -316,6 +340,61 @@ namespace Projet_pilate.Controllers
 
             
             return RedirectToAction("ListeMissions", "Mission");
+        }
+
+        [Route("Mission/Delete", Name = "Delete")]
+        public ActionResult Delete(int id)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var missionDelete = db.Missions.Single(m => m.MissionID == id);
+            var monthCurrent = Int32.Parse(DateTime.Now.Month.ToString());
+            var yearCurrent = Int32.Parse(DateTime.Now.Year.ToString());
+            var monthTermine = Int32.Parse(missionDelete.End.Month.ToString());
+            var yearTermine = Int32.Parse(missionDelete.End.Year.ToString());
+
+            if (yearCurrent > yearTermine || (yearCurrent == yearTermine && monthCurrent > monthTermine))
+            {
+                //db.Missions.Remove(missionDelete);
+                //missionDelete.exist = false;
+                missionDelete.Fee = -System.Math.Abs(missionDelete.Fee);
+                db.SaveChanges();
+                return RedirectToAction("ListeMissions", "Mission");
+            }
+            else
+            {
+                List<DetailsMissionViewModel> models = new List<DetailsMissionViewModel>();
+
+                var missions = db.Missions.ToList();
+
+                foreach (var mission in missions)
+                {
+                    if (mission.Fee > 0)
+                    {
+                        DetailsMissionViewModel model = new DetailsMissionViewModel()
+                        {
+                            Id = mission.MissionID,
+                            Name = mission.Name,
+                            ContactEmail = mission.CompanyContact.Mail,
+                            ClientName = mission.CompanyContact.FirstName + " " + mission.CompanyContact.LastName,
+                            Start = mission.Start,
+                            End = mission.End,
+                            Fee = mission.Fee,
+                            FreeDay = mission.FreeDay,
+                            Periodicity = mission.Periodicity,
+                            Comment = mission.Comment,
+                            ConsultantName = mission.Consultant.FirstName + " " + mission.Consultant.LastName,
+                            CreatorName = mission.Creator,
+                            ProfitCenter = mission.ProfitCenter.Name,
+                        };
+
+                        models.Add(model);
+                    }
+                }
+                string message = "Vous pouvez pas supprimé une tâche non terminée !";
+                ModelState.AddModelError(string.Empty, message);
+                return View("ListeMissions", models);
+            }
+
         }
     }
 }

@@ -13,6 +13,9 @@
     </p>
 }
 
+@Html.Raw(HttpUtility.HtmlDecode((Html.ValidationSummary(false, "", new { @class = "text-danger" })).ToHtmlString()))
+
+
 <table class="table">
     <tr>
         <th>
@@ -28,46 +31,51 @@
             @Html.DisplayNameFor(model => model.ProfitCenter)
         </th>
         @*<th>
-            @Html.DisplayNameFor(model => model.CreatorName)
-        </th>*@
+                @Html.DisplayNameFor(model => model.CreatorName)
+            </th>*@
         <th>
             @Html.DisplayNameFor(model => model.Start)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.End)
         </th>
-        <th></th>
+        <th> @Html.DisplayNameFor(model => model.Fee)</th>
     </tr>
 
     @foreach (var item in Model)
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ContactEmail)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ConsultantName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProfitCenter)
-            </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.CreatorName)
-            </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.Start)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.End)
-            </td>
-            <td>
-                @Html.ActionLink("Modifier", "Edit", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })
-                @*Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })*@
-            </td>
-        </tr>
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.Name)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.ContactEmail)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.ConsultantName)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.ProfitCenter)
+    </td>
+    @*<td>
+            @Html.DisplayFor(modelItem => item.CreatorName)
+        </td>*@
+    <td>
+        @Html.DisplayFor(modelItem => item.Start)
+    </td>
+    <td>
+        @Html.DisplayFor(model => item.End)
+    </td>
+    <td>
+        @Html.DisplayFor(model => item.Fee)
+    </td>
+    <td>
+        @Html.ActionLink("Modifier", "Edit", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })
+        @Html.ActionLink("Supprimer", "Delete", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })
+        @*Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })*@
+    </td>
+</tr>
     }
 
 </table>
+

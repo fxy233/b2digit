@@ -180,6 +180,7 @@ namespace Projet_pilate.Controllers
         {
             ApplicationDbContext db = new ApplicationDbContext();
             var profitcenter = db.profitCenters.Single(p => p.ProfitCenterID == id);
+            var father = db.profitCenters.Single(p => p.ProfitCenterID == profitcenter.FatherProfitCenterID);
             UpdateProfitCenterViewModel model = new UpdateProfitCenterViewModel()
             {
                 ID = profitcenter.ProfitCenterID,
@@ -187,6 +188,7 @@ namespace Projet_pilate.Controllers
                 Owner = profitcenter.Owner,
                 PartOwner = profitcenter.PartOwner,
                 FatherProfitCenterID = profitcenter.FatherProfitCenterID,
+                FatherProfitCenter = father.Name,
                 Cost = profitcenter.Cost,
                 Turnover = profitcenter.Turnover
                               

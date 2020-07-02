@@ -281,6 +281,15 @@ namespace Projet_pilate.Models
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime NewEnd { get; set; }
 
+        [Required]
+        [Display(Name = "Nom de la mission")]
+        public string Name { get; set; }
+
+        [Display(Name = "Tarif")]
+        public float Fee { get; set; }
+
+
+
     }
 
     public class SubsidiaryViewModel
