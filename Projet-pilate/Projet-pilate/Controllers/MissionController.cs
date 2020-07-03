@@ -243,12 +243,12 @@ namespace Projet_pilate.Controllers
 
             ApplicationDbContext db = new ApplicationDbContext();
             var mission = db.Missions.SingleOrDefault(m => m.MissionID == id);
-
+            ViewBag.date = mission.End.ToString("yyyy-MM-dd");
             UpdateMissionViewModel model = new UpdateMissionViewModel()
             {
                 ID = mission.MissionID,
                 Start = mission.Start,
-                End = mission.End,
+                NewEnd = mission.End,
                 Name = mission.Name,
                 Fee = mission.Fee,
             };
