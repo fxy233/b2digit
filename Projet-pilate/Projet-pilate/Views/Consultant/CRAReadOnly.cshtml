@@ -93,9 +93,10 @@ else
                             </textarea>
                     </div>
                 </div>
-               <div>
-                @Html.ActionLink("Retour", "Retour", new { @class = "btn btn-primary btn-large" })
-               </div>
+                <div>
+                    @Html.ActionLink("Retour", "Retour", null, new { @class = "btn btn-primary btn-large" })
+                    @Html.ActionLink("Export Excel", "Export", new { id = Model.Cra.CraID }, new { @class = "btn btn-primary btn-large" })
+                </div>
             </div>
         </div>
     </div>

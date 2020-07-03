@@ -1,0 +1,72 @@
+﻿@model  IEnumerable<Projet_pilate.Models.ActivityExportModel>
+@{
+    ViewBag.Title = "Export";
+}
+
+@using (Html.BeginForm("ExportToExcel", "Consultant", new { id = @ViewBag.id }, FormMethod.Post))
+{
+    int i = 1;
+    foreach (var item in Model)
+    {
+        if (i == 1)
+        {
+            <br />
+
+            <br />
+
+            <h2>
+                Export To Excel
+            </h2>
+
+            <table style="background-color: white; width: 100%;">
+                <tr>
+                    <th style="padding-left: 20px;">
+                        Période
+                    </th>
+                    <th style="padding-left: 20px;">
+                        @Html.DisplayFor(m => item.periode)
+                    </th>
+                </tr>
+                <tr>
+                    <td style="padding-left: 20px;">
+                        Client
+                    </td>
+                    <td style="padding-left: 20px;">
+                        Client
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-left: 20px;">
+                        Société émettrice
+                    </td>
+                    <td style="padding-left: 20px;">
+                        B2DIGIT
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-left: 20px;">
+                        Contact
+                    </td>
+                    <td style="padding-left: 20px;">
+                        Contact
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="4">
+                        <br />
+                        <br />
+                        <input type="submit" value="Export to Excel" class="button" />
+                    </td>
+                </tr>
+
+            </table>
+        }
+        else
+        {
+            break;
+        }
+
+    }
+
+}  

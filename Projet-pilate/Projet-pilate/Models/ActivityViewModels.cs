@@ -68,4 +68,25 @@ namespace Projet_pilate.Models
         public float WorkedDaysWE { get; set; }
 
     }
+
+    public class ActivityExportModel
+    {
+        public int id { get; set; }
+        public string consultant { get; set; }
+
+        public Dictionary<string, string> manager { get; set; }
+
+        //public string client { get; set; }
+ 
+        public string periode { get; set; }
+
+        //public Dictionary<string, List<string>> missionParClient { get; set; }
+
+        public Dictionary<string, Dictionary<string, double[] > > activityParClient { get; set; }
+
+
+    }
+
+
+
 }

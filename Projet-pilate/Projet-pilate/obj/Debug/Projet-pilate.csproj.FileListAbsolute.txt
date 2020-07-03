@@ -1093,3 +1093,11 @@ C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Proj
 C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\obj\Debug\Projet-pilate.csproj.CopyComplete
 C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\obj\Debug\Projet-pilate.dll
 C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\obj\Debug\Projet-pilate.pdb
+C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\bin\ClosedXML.dll
+C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\bin\DocumentFormat.OpenXml.dll
+C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\bin\ExcelNumberFormat.dll
+C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\bin\System.IO.Packaging.dll
+C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\bin\ClosedXML.pdb
+C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\bin\ClosedXML.xml
+C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\bin\DocumentFormat.OpenXml.xml
+C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\bin\ExcelNumberFormat.xml

@@ -8,7 +8,11 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-
+using ClosedXML.Excel;
+using System.IO;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using Microsoft.Ajax.Utilities;
 
 namespace Projet_pilate.Controllers
 {
@@ -676,6 +680,161 @@ namespace Projet_pilate.Controllers
             return RedirectToAction("ListeCra", "Consultant");
         }
 
+
+        //problème de manager
+        [Route("Consultant/Export", Name = "Export")]
+        public ActionResult Export(int id)
+        {
+
+            var model = this.GetData(id);
+            ViewBag.id = id;
+            return View(model);
+        }
+
+        public IList<ActivityExportModel> GetData(int id)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var cra = db.Cras.Single(c => c.CraID == id);
+            List<ActivityExportModel> models = new List<ActivityExportModel>(); 
+            ActivityExportModel model = new ActivityExportModel();
+
+            model.id = id;
+            model.periode = cra.Month + " " + cra.year;
+            model.activityParClient = new Dictionary<string, Dictionary<string, double[]>>();
+            model.manager = new Dictionary<string, string>();
+
+            var consultant = db.Consultants.Single(c => c.ConsultantID == cra.ConsultantID);
+            model.consultant = consultant.FirstName + " " + consultant.LastName;
+            var activities = cra.Activities.ToList();
+
+            foreach (var activity in activities)
+            {
+                int jour = Int32.Parse(activity.Date.Day.ToString());
+                var morning = activity.Morning;
+                var afternoon = activity.Afternoon;
+
+                if (morning != "Formation" && morning!= "Maladie" && morning != "Congés" && morning != "IC")
+                {
+                    var missionM = db.Missions.Single(m => m.Name == morning);
+                    var compM = db.CompanyContacts.Single(c => c.CompanyContactID == missionM.CompanyContactID);
+
+                    if (!model.manager.ContainsKey(missionM.Name))
+                    {
+                        model.manager.Add(missionM.Name, missionM.Creator);
+                    }
+
+                    var dictAPC = model.activityParClient;
+
+                    if (dictAPC.ContainsKey(compM.CompanyName))
+                    {
+                        var dictM = dictAPC[compM.CompanyName];
+                        if (dictM.ContainsKey(missionM.Name))
+                        {
+                            dictM[missionM.Name][jour - 1] += 0.5;
+                        }
+                        else
+                        {
+                            var tab = new double[31];
+                            dictM.Add(missionM.Name, tab);
+                            dictM[missionM.Name][jour - 1] += 0.5;
+                        }
+                    }
+                    else
+                    {
+                        dictAPC.Add(compM.CompanyName, new Dictionary<string, double[]>());
+                        var dictM = dictAPC[compM.CompanyName];
+                        var tab = new double[31];
+                        dictM.Add(missionM.Name, tab);
+                        dictM[missionM.Name][jour - 1] += 0.5;
+                    }
+                }
+
+
+                if (afternoon != "Formation" && afternoon != "Maladie" && afternoon != "Congés" && afternoon != "IC")
+                {
+                    var missionA = db.Missions.Single(m => m.Name == afternoon);
+
+                    var compA = db.CompanyContacts.Single(c => c.CompanyContactID == missionA.CompanyContactID);
+
+                    if (!model.manager.ContainsKey(missionA.Name))
+                    {
+                        model.manager.Add(missionA.Name, missionA.Creator);
+                    }
+
+                    var dictAPC = model.activityParClient;
+
+                    if (dictAPC.ContainsKey(compA.CompanyName))
+                    {
+                        var dictA = dictAPC[compA.CompanyName];
+                        if (dictA.ContainsKey(missionA.Name))
+                        {
+                            dictA[missionA.Name][jour - 1] += 0.5;
+                        }
+                        else
+                        {
+                            var tab = new double[31];
+                            dictA.Add(missionA.Name, tab);
+                            dictA[missionA.Name][jour - 1] += 0.5;
+                        }
+                    }
+                    else
+                    {
+                        dictAPC.Add(compA.CompanyName, new Dictionary<string, double[]>());
+                        var dictA = dictAPC[compA.CompanyName];
+                        var tab = new double[31];
+                        dictA.Add(missionA.Name, tab);
+                        dictA[missionA.Name][jour - 1] += 0.5;
+                    }
+                }
+            }
+
+            models.Add(model);
+
+            return models;
+        }
+
+        
+        public ActionResult ExportToExcel(int id)
+        {
+            Response.ClearHeaders();
+            var gv = new GridView();
+            gv.DataSource = this.GetData(id);
+            gv.DataBind();
+            Response.ClearContent();
+            Response.Buffer = true;
+            Response.AddHeader("content-disposition", "attachment; filename=DemoExcel.xls");
+            Response.ContentType = "application/ms-excel";
+            Response.Charset = "";
+            StringWriter objStringWriter = new StringWriter();
+            HtmlTextWriter objHtmlTextWriter = new HtmlTextWriter(objStringWriter);
+            gv.RenderControl(objHtmlTextWriter);
+            Response.Output.Write(objStringWriter.ToString());
+            Response.Flush();
+            Response.End();
+            return View("Export", this.GetData(id));
+        }
+        
+
+        /*public ActionResult ExportToExcel(int id)
+        {
+            
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+
+                var data = this.GetData(id);
+                var ws = wb.Worksheets.Add("cusdata", 1);
+            
+                ws.Cell(1, 1).InsertData(data[0]);
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    wb.SaveAs(memoryStream);
+                    
+                    memoryStream.Seek(0, SeekOrigin.Begin);
+                    
+                    return this.File(memoryStream.ToArray(), "application/vnd.ms-excel", "Download.xlsx");
+                }
+            }
+        }*/
 
         [Route("Consultant/SuiviCra", Name = "SuiviCra")]
         public ActionResult SuiviCra()
