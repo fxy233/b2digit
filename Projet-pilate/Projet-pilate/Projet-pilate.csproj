@@ -421,6 +421,7 @@
     <Content Include="Views\Consultant\SuiviCra_mission.cshtml" />
     <Content Include="Views\Consultant\SuiviCra_nonfacture.cshtml" />
     <Content Include="Views\Consultant\Export.cshtml" />
+    <Content Include="Views\Consultant\test.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

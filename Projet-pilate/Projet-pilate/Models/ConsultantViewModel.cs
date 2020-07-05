@@ -209,4 +209,21 @@ namespace Projet_pilate.Models
 
 
     }
+
+    public class ConsultantCraModelNew
+    {
+        public int ID { get; set; }
+
+        [Required]
+
+        public string Email { get; set; }
+
+
+        public List<string> MissionsList { get; set; }
+
+        public Dictionary<String, Dictionary<String,double[]>> NbParMission { get; set; }
+        public Dictionary<String, int[]> DureeMission { get; set; }
+
+    }
+
 }
