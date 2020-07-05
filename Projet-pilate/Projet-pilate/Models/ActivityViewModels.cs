@@ -74,6 +74,8 @@ namespace Projet_pilate.Models
         public int id { get; set; }
         public string consultant { get; set; }
 
+        public DateTime date { get; set; }
+
         public Dictionary<string, string> manager { get; set; }
 
         //public string client { get; set; }

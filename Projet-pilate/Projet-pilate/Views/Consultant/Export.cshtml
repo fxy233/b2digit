@@ -1,19 +1,11 @@
-﻿@model  IEnumerable<Projet_pilate.Models.ActivityExportModel>
+﻿@model  Projet_pilate.Models.ActivityExportModel
 @{
     ViewBag.Title = "Export";
 }
 
-@using (Html.BeginForm("ExportToExcel", "Consultant", new { id = @ViewBag.id }, FormMethod.Post))
+@using (Html.BeginForm("ExportT", "Consultant", new { id = @ViewBag.id }, FormMethod.Post))
 {
-    int i = 1;
-    foreach (var item in Model)
-    {
-        if (i == 1)
-        {
-            <br />
-
-            <br />
-
+    
             <h2>
                 Export To Excel
             </h2>
@@ -24,7 +16,7 @@
                         Période
                     </th>
                     <th style="padding-left: 20px;">
-                        @Html.DisplayFor(m => item.periode)
+                        @Html.DisplayFor(m => Model.periode)
                     </th>
                 </tr>
                 <tr>
@@ -61,12 +53,8 @@
                 </tr>
 
             </table>
-        }
-        else
-        {
-            break;
-        }
 
-    }
+
+    
 
 }  

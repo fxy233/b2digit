@@ -13,6 +13,8 @@ using System.IO;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Microsoft.Ajax.Utilities;
+using System.Data;
+using DocumentFormat.OpenXml.Office.CustomUI;
 
 namespace Projet_pilate.Controllers
 {
@@ -680,22 +682,11 @@ namespace Projet_pilate.Controllers
             return RedirectToAction("ListeCra", "Consultant");
         }
 
-
-        //problème de manager
-        [Route("Consultant/Export", Name = "Export")]
-        public ActionResult Export(int id)
-        {
-
-            var model = this.GetData(id);
-            ViewBag.id = id;
-            return View(model);
-        }
-
-        public IList<ActivityExportModel> GetData(int id)
+        [Route("Consultant/ExportTest", Name = "ExportTest")]
+        public ActionResult ExportTest(int id)
         {
             ApplicationDbContext db = new ApplicationDbContext();
             var cra = db.Cras.Single(c => c.CraID == id);
-            List<ActivityExportModel> models = new List<ActivityExportModel>(); 
             ActivityExportModel model = new ActivityExportModel();
 
             model.id = id;
@@ -709,6 +700,121 @@ namespace Projet_pilate.Controllers
 
             foreach (var activity in activities)
             {
+                int jour = Int32.Parse(activity.Date.Day.ToString());
+                var morning = activity.Morning;
+                var afternoon = activity.Afternoon;
+
+                if (morning != "Formation" && morning != "Maladie" && morning != "Congés" && morning != "IC")
+                {
+                    var missionM = db.Missions.Single(m => m.Name == morning);
+                    var compM = db.CompanyContacts.Single(c => c.CompanyContactID == missionM.CompanyContactID);
+
+                    if (!model.manager.ContainsKey(missionM.Name))
+                    {
+                        model.manager.Add(missionM.Name, missionM.Creator);
+                    }
+
+                    var dictAPC = model.activityParClient;
+
+                    if (dictAPC.ContainsKey(compM.CompanyName))
+                    {
+                        var dictM = dictAPC[compM.CompanyName];
+                        if (dictM.ContainsKey(missionM.Name))
+                        {
+                            dictM[missionM.Name][jour - 1] += 0.5;
+                        }
+                        else
+                        {
+                            var tab = new double[31];
+                            dictM.Add(missionM.Name, tab);
+                            dictM[missionM.Name][jour - 1] += 0.5;
+                        }
+                    }
+                    else
+                    {
+                        dictAPC.Add(compM.CompanyName, new Dictionary<string, double[]>());
+                        var dictM = dictAPC[compM.CompanyName];
+                        var tab = new double[31];
+                        dictM.Add(missionM.Name, tab);
+                        dictM[missionM.Name][jour - 1] += 0.5;
+                    }
+                }
+
+
+                if (afternoon != "Formation" && afternoon != "Maladie" && afternoon != "Congés" && afternoon != "IC")
+                {
+                    var missionA = db.Missions.Single(m => m.Name == afternoon);
+
+                    var compA = db.CompanyContacts.Single(c => c.CompanyContactID == missionA.CompanyContactID);
+
+                    if (!model.manager.ContainsKey(missionA.Name))
+                    {
+                        model.manager.Add(missionA.Name, missionA.Creator);
+                    }
+
+                    var dictAPC = model.activityParClient;
+
+                    if (dictAPC.ContainsKey(compA.CompanyName))
+                    {
+                        var dictA = dictAPC[compA.CompanyName];
+                        if (dictA.ContainsKey(missionA.Name))
+                        {
+                            dictA[missionA.Name][jour - 1] += 0.5;
+                        }
+                        else
+                        {
+                            var tab = new double[31];
+                            dictA.Add(missionA.Name, tab);
+                            dictA[missionA.Name][jour - 1] += 0.5;
+                        }
+                    }
+                    else
+                    {
+                        dictAPC.Add(compA.CompanyName, new Dictionary<string, double[]>());
+                        var dictA = dictAPC[compA.CompanyName];
+                        var tab = new double[31];
+                        dictA.Add(missionA.Name, tab);
+                        dictA[missionA.Name][jour - 1] += 0.5;
+                    }
+                }
+            }
+
+            
+
+            return View(model);
+        }
+
+
+
+        //problème de manager
+        [Route("Consultant/Export", Name = "Export")]
+        public ActionResult Export(int id)
+        {
+
+            var model = this.GetData(id);
+            ViewBag.id = id;
+            return View(model);
+        }
+
+        public ActivityExportModel GetData(int id)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var cra = db.Cras.Single(c => c.CraID == id);
+            //List<ActivityExportModel> models = new List<ActivityExportModel>(); 
+            ActivityExportModel model = new ActivityExportModel();
+
+            model.id = id;
+            model.periode = cra.Month + " " + cra.year;
+            model.activityParClient = new Dictionary<string, Dictionary<string, double[]>>();
+            model.manager = new Dictionary<string, string>();
+
+            var consultant = db.Consultants.Single(c => c.ConsultantID == cra.ConsultantID);
+            model.consultant = consultant.FirstName + " " + consultant.LastName;
+            var activities = cra.Activities.ToList();
+
+            foreach (var activity in activities)
+            {
+                model.date = activity.Date;
                 int jour = Int32.Parse(activity.Date.Day.ToString());
                 var morning = activity.Morning;
                 var afternoon = activity.Afternoon;
@@ -788,12 +894,80 @@ namespace Projet_pilate.Controllers
                 }
             }
 
-            models.Add(model);
+            return model;
+            /*models.Add(model);
 
-            return models;
+            return models;*/
         }
 
-        
+        [HttpPost]
+        public FileResult ExportT(int id)
+        {
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+            ActivityExportModel exp = this.GetData(id); ;
+            
+
+            string[] Day = new string[] { "D", "L", "M", "M", "J", "V", "S" };
+            int week = Convert.ToInt32(exp.date.DayOfWeek.ToString("d"));
+            int jour = Int32.Parse(exp.date.Day.ToString());
+            int index = (week +7-(jour - 1) % 7)%7;
+            int days = DateTime.DaysInMonth(exp.date.Year, exp.date.Month);
+
+                int x = 1;
+
+            foreach (var item in exp.activityParClient)
+            {
+                DataTable dt = new DataTable("Grid");
+                dt.Columns.AddRange(new DataColumn[4] { new DataColumn("Periode"), new DataColumn("Client"), new DataColumn("Société émettrice"), new DataColumn("Destinataire") });
+                dt.Rows.Add(exp.periode, exp.consultant, "B2DIGIT", item.Key);
+
+                string[] weekdays = new string[days+1];
+                //DataColumn[] daterow = new DataColumn[days];
+                DataColumn[] daterow2 = new DataColumn[days+1];
+                daterow2[0] = new DataColumn("Activité");
+                weekdays[0] = "";
+                int nb = item.Value.Count;
+                for (int i=1;i<=days;++i)
+                {
+                    daterow2[i] = new DataColumn(i.ToString());
+                    weekdays[i]=Day[(index+i-1)%7];
+                    
+                }
+                DataTable dt2 = new DataTable("Grid");
+                dt2.Columns.AddRange(daterow2);
+                //dt2.Rows.Add(daterow);
+                dt2.Rows.Add(weekdays);
+                foreach(var obj in item.Value)
+                {
+                    string[] output = new string[days + 1];
+                    output[0] = obj.Key;
+                    for(int t=1; t<=days; ++t)
+                    {
+                        output[t] = obj.Value[t - 1].ToString();
+                    }
+                    dt2.Rows.Add(output);
+                }
+
+                    wb.Worksheets.Add(x);
+                    wb.Worksheet(x).Cell(1,1).InsertTable(dt);
+                    wb.Worksheet(x).Cell(5, 1).InsertTable(dt2);
+                    x++;
+                }
+
+
+            
+                
+                //wb.Worksheets.Add(dt2);
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    wb.SaveAs(stream);
+                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Grid.xlsx");
+                }
+            }
+        }
+
+        /*
         public ActionResult ExportToExcel(int id)
         {
             Response.ClearHeaders();
@@ -815,7 +989,7 @@ namespace Projet_pilate.Controllers
         }
         
 
-        /*public ActionResult ExportToExcel(int id)
+        public ActionResult ExportToExcel(int id)
         {
             
             using (XLWorkbook wb = new XLWorkbook())
@@ -834,7 +1008,8 @@ namespace Projet_pilate.Controllers
                     return this.File(memoryStream.ToArray(), "application/vnd.ms-excel", "Download.xlsx");
                 }
             }
-        }*/
+        }
+        */
 
         [Route("Consultant/SuiviCra", Name = "SuiviCra")]
         public ActionResult SuiviCra()
