@@ -52,6 +52,37 @@ namespace Projet_pilate.Controllers
             string nomConsultant;
             ApplicationDbContext db = new ApplicationDbContext();
 
+            var missionexist = db.Missions.ToList();
+            foreach(var exist in missionexist)
+            {
+                if (exist.Name == model.Name)
+                {
+                    string message = "le nom du mission a été utilisé !";
+                    ModelState.AddModelError(string.Empty, message);
+
+                    nomContact = Request.Form["ContactId"].ToString();
+                    SelectedConsultant = Request.Form["ConsultantId"].ToString();
+                    periodicite = Request.Form["PeriodeId"].ToString();
+
+                    List<Consultant> consultants = db.Consultants.ToList();
+                    List<string> consultantsNames = new List<string>();
+                    foreach (var consult in consultants)
+                    {
+                        consultantsNames.Add(consult.FirstName + " " + consult.LastName);
+                    }
+
+                    model.ContactMail = db.CompanyContacts.Select(c => c.Mail).ToList();
+                    model.ConsultantNames = consultantsNames;
+
+                    ViewData["contact"] = nomContact;
+                    ViewData["consultant"] = SelectedConsultant;
+                    ViewData["periodicite"] = periodicite;
+
+                    return View(model);
+                }
+            }
+            
+
             //Averti l'utilisateur en cas d'erreur de saisie
             if (!ModelState.IsValid)
             {

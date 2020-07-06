@@ -302,7 +302,7 @@ namespace Projet_pilate.Controllers
             List<Cra> cras = db.Cras.ToList();
 
             var currentMonth = db.MonthActivations.Single().Periode.ToString("MMMM", CultureInfo.CurrentCulture);
-
+            ViewBag.date = db.MonthActivations.Single().Periode;
 
             foreach (var cra in cras)
             {
@@ -320,8 +320,7 @@ namespace Projet_pilate.Controllers
                     {
                         if (item.Date.DayOfWeek == DayOfWeek.Saturday || item.Date.DayOfWeek == DayOfWeek.Sunday)
                         {//on est en WE
-                            if ((item.Morning != "Congés" && item.Morning != "IC" && item.Morning != "Formation" && item.Morning != "Maladie")
-                                || (item.Afternoon != "Congés" && item.Afternoon != "IC" && item.Afternoon != "Formation" && item.Afternoon != "Maladie"))
+                            if ((item.Morning != "Congés" && item.Morning != "IC" && item.Morning != "Formation" && item.Morning != "Maladie"))
                             {
                                 var IndexMission = Missions.IndexOf(item.Morning);
                                 if (IndexMission < 0)
@@ -335,11 +334,24 @@ namespace Projet_pilate.Controllers
                                     NBJTWE[IndexMission]++;
                                 }
                             }
+                            if ((item.Afternoon != "Congés" && item.Afternoon != "IC" && item.Afternoon != "Formation" && item.Afternoon != "Maladie"))
+                            {
+                                var IndexMission = Missions.IndexOf(item.Afternoon);
+                                if (IndexMission < 0)
+                                {
+                                    Missions.Add(item.Afternoon.ToString());
+                                    NBJT.Add(0);
+                                    NBJTWE.Add(1);
+                                }
+                                else
+                                {
+                                    NBJTWE[IndexMission]++;
+                                }
+                            }
                         }
                         else
                         { // on est en jours ouvrés
-                            if ((item.Morning != "Congés" && item.Morning != "IC" && item.Morning != "Formation" && item.Morning != "Maladie")
-                                || (item.Afternoon != "Congés" && item.Afternoon != "IC" && item.Afternoon != "Formation" && item.Afternoon != "Maladie"))
+                            if ((item.Morning != "Congés" && item.Morning != "IC" && item.Morning != "Formation" && item.Morning != "Maladie"))
                             {
                                 var IndexMission = Missions.IndexOf(item.Morning);
                                 if (IndexMission < 0)
@@ -350,12 +362,31 @@ namespace Projet_pilate.Controllers
                                 }
                                 else
                                 {
-                                    NBJT[IndexMission]++;
+                                    NBJT[IndexMission]+=1;
                                 }
                             }
 
-                            if ((item.Morning == "Congés" || item.Morning == "IC" || item.Morning == "Formation" || item.Morning == "Maladie")
-                                || (item.Afternoon == "Congés" || item.Afternoon == "IC" || item.Afternoon == "Formation" || item.Afternoon == "Maladie"))
+                            if ((item.Afternoon != "Congés" && item.Afternoon != "IC" && item.Afternoon != "Formation" && item.Afternoon != "Maladie"))
+                            {
+                                var IndexMission = Missions.IndexOf(item.Afternoon);
+                                if (IndexMission < 0)
+                                {
+                                    Missions.Add(item.Afternoon.ToString());
+                                    NBJT.Add(1);
+                                    NBJTWE.Add(0);
+                                }
+                                else
+                                {
+                                    NBJT[IndexMission] += 1;
+                                }
+                            }
+
+                            if ((item.Morning == "Congés" || item.Morning == "IC" || item.Morning == "Formation" || item.Morning == "Maladie"))
+                            {
+                                noBill++;
+                            }
+
+                            if ((item.Afternoon == "Congés" || item.Afternoon == "IC" || item.Afternoon == "Formation" || item.Afternoon == "Maladie"))
                             {
                                 noBill++;
                             }
@@ -374,9 +405,9 @@ namespace Projet_pilate.Controllers
                             ConsultantName = cra.Consultant.FirstName + " " + cra.Consultant.LastName,
                             Satisfaction = cra.Satisfaction,
                             MissionName = mission,
-                            WorkedDays = NBJT[IndexOfMission],
-                            NoBillDays = noBill,
-                            WorkedDaysWE = NBJTWE[IndexOfMission],
+                            WorkedDays = (float)NBJT[IndexOfMission]/2.0f,
+                            NoBillDays = (float)noBill/2.0f,
+                            WorkedDaysWE = (float)NBJTWE[IndexOfMission] / 2.0f,
                         };
                         models.Add(model);
                     }

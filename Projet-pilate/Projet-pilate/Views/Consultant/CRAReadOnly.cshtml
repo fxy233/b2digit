@@ -3,145 +3,175 @@
     ViewBag.Title = "CRA";
 }
 
-
-@if (Model.MoisActivation.StartsWith("avril") || Model.MoisActivation.StartsWith("août") || Model.MoisActivation.StartsWith("octobre"))
+@using (Html.BeginForm("ExportT", "Consultant", new { id = Model.Cra.CraID }, FormMethod.Post))
 {
+    if (Model.MoisActivation.StartsWith("avril") || Model.MoisActivation.StartsWith("août") || Model.MoisActivation.StartsWith("octobre"))
+    {
 
-    <h2>CRA du mois d'@Model.MoisActivation @*DateTime.Now.Year*@ de @ViewBag.nom</h2>
-}
-else
-{
-    <h2>CRA du mois de @Model.MoisActivation @*DateTime.Now.Year*@ de @ViewBag.nom</h2>
-    <br />
-}
-
-
-<style>
-    .weekend {
-        background-color: lightblue;
+        <h2>CRA du mois d'@Model.MoisActivation @*DateTime.Now.Year*@ de @ViewBag.nom</h2>
+    }
+    else
+    {
+        <h2>CRA du mois de @Model.MoisActivation @*DateTime.Now.Year*@ de @ViewBag.nom</h2>
+        <br />
     }
 
-    .ferie {
-        background-color: lightblue;
-    }
-</style>
 
-<section class="container" style="margin-top:30px;">
+    <style>
+        .weekend {
+            background-color: lightblue;
+        }
+
+        .ferie {
+            background-color: lightblue;
+        }
+    </style>
+
+    <section class="container" style="margin-top:30px;">
 
 
-    <div class="row">
-        <div class="col-sm-6">
-            <div class="table-responsive">
-                <table class="table">
-                    <thead style="background-color:black; color:white">
-                        <tr>
-                            <th>Journées rémunérées</th>
-                            <th>Matin</th>
-                            <th>Après-midi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.Activities)
-                        {
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead style="background-color:black; color:white">
                             <tr>
-                                <td class="jourRemunere">@item.Date.ToString("D")</td>
-                                <td>@item.Morning</td>
-                                <td>@item.Afternoon</td>
+                                <th>Journées rémunérées</th>
+                                <th>Matin</th>
+                                <th>Après-midi</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Activities)
+                            {
+                                <tr>
+                                    <td class="jourRemunere">@item.Date.ToString("D")</td>
+                                    <td>@item.Morning</td>
+                                    <td>@item.Afternoon</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="row">
-                <ul class="list-group">
-                    <li class="list-group-item">
-                        <span>Nombre de jours <strong>ouvrés</strong></span>
-                        <span class="badge jourOuvres">@Model.NbJoursOuvres</span>
-                    </li>
-                    <li class="list-group-item">
-                        <span>Nombre de jours en <strong>mission</strong></span>
-                        <span class="badge">@Model.NbMission</span>
-                    </li>
-                    <li class="list-group-item">
-                        <span>Nombre de jours en <strong>congés</strong></span>
-                        <span class="badge">@Model.NbConges</span>
-                    </li>
-                    <li class="list-group-item">
-                        <span>Nombre de jours en <strong>formation</strong></span>
-                        <span class="badge">@Model.NbFormation</span>
-                    </li>
-                    <li class="list-group-item">
-                        <span>Nombre de jours en <strong>inter-contrat</strong></span>
-                        <span class="badge">@Model.NbIc</span>
-                    </li>
-                    <li class="list-group-item">
-                        <span>Nombre de jours en <strong>arrêt maladie</strong></span>
-                        <span class="badge">@Model.NbMaladie</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="row">
-                <div class="jumbotron" style="background-color:white; border:0.5px solid; border-color:lightgray">
-                    <h5> <strong>Niveau de satisfaction :    </strong><span class="badge"> @Model.Cra.Satisfaction</span></h5>
-                    <hr />
-                    <div class="input-group">
-                        <h5><strong>Commentaire:</strong></h5>
-                        <textarea class="form-control" placeholder="Username" aria-describedby="sizing-addon2" readonly cols="800" rows="5" style="background-color:white">
+            <div class="col-sm-6">
+                <div class="row">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <span>Nombre de jours <strong>ouvrés</strong></span>
+                            <span class="badge jourOuvres">@Model.NbJoursOuvres</span>
+                        </li>
+                        <li class="list-group-item">
+                            <span>Nombre de jours en <strong>mission</strong></span>
+                            <span class="badge">@Model.NbMission</span>
+                        </li>
+                        <li class="list-group-item">
+                            <span>Nombre de jours en <strong>congés</strong></span>
+                            <span class="badge">@Model.NbConges</span>
+                        </li>
+                        <li class="list-group-item">
+                            <span>Nombre de jours en <strong>formation</strong></span>
+                            <span class="badge">@Model.NbFormation</span>
+                        </li>
+                        <li class="list-group-item">
+                            <span>Nombre de jours en <strong>inter-contrat</strong></span>
+                            <span class="badge">@Model.NbIc</span>
+                        </li>
+                        <li class="list-group-item">
+                            <span>Nombre de jours en <strong>arrêt maladie</strong></span>
+                            <span class="badge">@Model.NbMaladie</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <div class="jumbotron" style="background-color:white; border:0.5px solid; border-color:lightgray">
+                        <h5> <strong>Niveau de satisfaction :    </strong><span class="badge"> @Model.Cra.Satisfaction</span></h5>
+                        <hr />
+                        <div class="input-group">
+                            <h5><strong>Commentaire:</strong></h5>
+                            <textarea class="form-control" placeholder="Username" aria-describedby="sizing-addon2" readonly cols="800" rows="5" style="background-color:white">
                                @Model.Cra.Comment
                             </textarea>
+                        </div>
                     </div>
-                </div>
-                <div>
-                    @Html.ActionLink("Retour", "Retour", null, new { @class = "btn btn-primary btn-large" })
-                    @Html.ActionLink("Export Excel", "Export", new { id = Model.Cra.CraID }, new { @class = "btn btn-primary btn-large" })
+                    <div>
+                        @Html.ActionLink("Retour", "Retour", null, new { @class = "btn btn-primary btn-large" })
+                        @*@Html.ActionLink("Export Excel", "ExportT", new { id = Model.Cra.CraID }, new { @class = "btn btn-primary btn-large" })*@
+
+                        <input type="submit" value="Export to Excel" class="btn btn-primary btn-large" />
+                        
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+}
+
+    @*<link href="~/Content/Site.css" rel="stylesheet" />*@
+
+    @*<script src="~/Scripts/jquery-3.3.1.min.js"></script>*@
+
+    <script>
 
 
-@*<link href="~/Content/Site.css" rel="stylesheet" />*@
+        function getNbJours(date) {
+            return new Date(date.getFullYear(), date.getMonth() + 1, -1).getDate() + 1;
+        }
 
-@*<script src="~/Scripts/jquery-3.3.1.min.js"></script>*@
+        var today = new Date();
 
-<script>
+        var nbJours = getNbJours(today);
 
+        var tabJours = [];
 
-    function getNbJours(date) {
-        return new Date(date.getFullYear(), date.getMonth() + 1, -1).getDate() + 1;
-    }
-
-    var today = new Date();
-
-    var nbJours = getNbJours(today);
-
-    var tabJours = [];
-
-    for (let index = 1; index < nbJours + 1; index++) {
-        var am = "am" + index;
-        var pm = "pm" + index;
-        tabJours.push(am);
-        tabJours.push(pm);
-    }
+        for (let index = 1; index < nbJours + 1; index++) {
+            var am = "am" + index;
+            var pm = "pm" + index;
+            tabJours.push(am);
+            tabJours.push(pm);
+        }
 
 
-    tabJours.forEach(elements => {
+        tabJours.forEach(elements => {
 
-        var elements = document.getElementsByClassName(`${elements}`);
+            var elements = document.getElementsByClassName(`${elements}`);
 
-        var checkboxs = Array.from(elements);
-        checkboxs.forEach(checkbox => {
+            var checkboxs = Array.from(elements);
+            checkboxs.forEach(checkbox => {
 
-            checkbox.addEventListener("change", function () {
+                checkbox.addEventListener("change", function () {
 
-                if (checkbox.checked) {
+                    if (checkbox.checked) {
 
-                    checkboxs.forEach(item => {
+                        checkboxs.forEach(item => {
 
-                        if (item != checkbox) {
+                            if (item != checkbox) {
+
+                                item.checked = false;
+                            }
+
+                        });
+                    }
+                });
+
+            });
+
+        });
+
+
+        var satisfaction = document.getElementsByClassName("satisfaction");
+
+        var tabSatisfactions = Array.from(satisfaction);
+
+        tabSatisfactions.forEach(input => {
+
+            input.addEventListener("change", function () {
+
+                if (input.checked) {
+
+                    tabSatisfactions.forEach(item => {
+
+                        if (item != input) {
 
                             item.checked = false;
                         }
@@ -152,229 +182,203 @@ else
 
         });
 
-    });
-
-
-    var satisfaction = document.getElementsByClassName("satisfaction");
-
-    var tabSatisfactions = Array.from(satisfaction);
-
-    tabSatisfactions.forEach(input => {
-
-        input.addEventListener("change", function () {
-
-            if (input.checked) {
-
-                tabSatisfactions.forEach(item => {
-
-                    if (item != input) {
-
-                        item.checked = false;
-                    }
-
-                });
-            }
-        });
-
-    });
 
 
 
 
-
-    var samedi = document.getElementsByClassName("Saturday");
-    var dimanche = document.getElementsByClassName("Sunday");
-
-
-    tabJours.forEach(item => {
-
-        var item = document.getElementsByClassName(`${item}`);
-
-        for (let index = 0; index < dimanche.length; index++) {
-
-            if (dimanche[index] || samedi[index]) {
-
-                dimanche[index].classList.add("weekend");
-                samedi[index].classList.add("weekend");
+        var samedi = document.getElementsByClassName("Saturday");
+        var dimanche = document.getElementsByClassName("Sunday");
 
 
-                //utiliser une boucle avec un compteur initialisé à 3 qui utilise un modulo pour incrémenté sa
-                // valeur uniquement de nombre impaire
-                // exemple = while  dimanche[index].childNodes.length > i "instructions..."
+        tabJours.forEach(item => {
 
-                dimanche[index].childNodes[3].childNodes[1].checked = false;
-                dimanche[index].childNodes[3].childNodes[3].checked = false;
-                dimanche[index].childNodes[5].childNodes[1].checked = false;
-                dimanche[index].childNodes[5].childNodes[3].checked = false;
-                dimanche[index].childNodes[7].childNodes[1].checked = false;
-                dimanche[index].childNodes[7].childNodes[3].checked = false;
-                dimanche[index].childNodes[9].childNodes[1].checked = false;
-                dimanche[index].childNodes[9].childNodes[3].checked = false;
-                dimanche[index].childNodes[11].childNodes[1].checked = false;
-                dimanche[index].childNodes[11].childNodes[3].checked = false;
+            var item = document.getElementsByClassName(`${item}`);
 
-                samedi[index].childNodes[3].childNodes[1].checked = false;
-                samedi[index].childNodes[3].childNodes[3].checked = false;
-                samedi[index].childNodes[5].childNodes[1].checked = false;
-                samedi[index].childNodes[5].childNodes[3].checked = false;
-                samedi[index].childNodes[7].childNodes[1].checked = false;
-                samedi[index].childNodes[7].childNodes[3].checked = false;
-                samedi[index].childNodes[9].childNodes[1].checked = false;
-                samedi[index].childNodes[9].childNodes[3].checked = false;
-                samedi[index].childNodes[11].childNodes[1].checked = false;
-                samedi[index].childNodes[11].childNodes[3].checked = false;
+            for (let index = 0; index < dimanche.length; index++) {
 
-            }
-        }
+                if (dimanche[index] || samedi[index]) {
 
-    });
-
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-
-    var dateActuelle = new Date();
-
-    var an = dateActuelle.getFullYear()
+                    dimanche[index].classList.add("weekend");
+                    samedi[index].classList.add("weekend");
 
 
-    var G = an % 19
-    var C = Math.floor(an / 100)
-    var H = (C - Math.floor(C / 4) - Math.floor((8 * C + 13) / 25) + 19 * G + 15) % 30
-    var I = H - Math.floor(H / 28) * (1 - Math.floor(H / 28) * Math.floor(29 / (H + 1)) * Math.floor((21 - G) / 11))
-    var J = (an * 1 + Math.floor(an / 4) + I + 2 - C + Math.floor(C / 4)) % 7
-    var L = I - J
+                    //utiliser une boucle avec un compteur initialisé à 3 qui utilise un modulo pour incrémenté sa
+                    // valeur uniquement de nombre impaire
+                    // exemple = while  dimanche[index].childNodes.length > i "instructions..."
 
-    var JourAn = new Date(an, "00", "01").toLocaleDateString(undefined, options);
-    var FeteTravail = new Date(an, "04", "01").toLocaleDateString(undefined, options);
-    var Victoire1945 = new Date(an, "04", "08").toLocaleDateString(undefined, options);
-    var FeteNationale = new Date(an, "06", "14").toLocaleDateString(undefined, options);
-    var Assomption = new Date(an, "07", "15").toLocaleDateString(undefined, options);
-    var Toussaint = new Date(an, "10", "01").toLocaleDateString(undefined, options);
-    var Armistice = new Date(an, "10", "11").toLocaleDateString(undefined, options);
-    var Noel = new Date(an, "11", "25").toLocaleDateString(undefined, options);
+                    dimanche[index].childNodes[3].childNodes[1].checked = false;
+                    dimanche[index].childNodes[3].childNodes[3].checked = false;
+                    dimanche[index].childNodes[5].childNodes[1].checked = false;
+                    dimanche[index].childNodes[5].childNodes[3].checked = false;
+                    dimanche[index].childNodes[7].childNodes[1].checked = false;
+                    dimanche[index].childNodes[7].childNodes[3].checked = false;
+                    dimanche[index].childNodes[9].childNodes[1].checked = false;
+                    dimanche[index].childNodes[9].childNodes[3].checked = false;
+                    dimanche[index].childNodes[11].childNodes[1].checked = false;
+                    dimanche[index].childNodes[11].childNodes[3].checked = false;
 
-    var MoisPaques = 3 + Math.floor((L + 40) / 44)
-    var JourPaques = L + 28 - 31 * Math.floor(MoisPaques / 4)
-    var Paques = new Date(an, MoisPaques - 1, JourPaques)
+                    samedi[index].childNodes[3].childNodes[1].checked = false;
+                    samedi[index].childNodes[3].childNodes[3].checked = false;
+                    samedi[index].childNodes[5].childNodes[1].checked = false;
+                    samedi[index].childNodes[5].childNodes[3].checked = false;
+                    samedi[index].childNodes[7].childNodes[1].checked = false;
+                    samedi[index].childNodes[7].childNodes[3].checked = false;
+                    samedi[index].childNodes[9].childNodes[1].checked = false;
+                    samedi[index].childNodes[9].childNodes[3].checked = false;
+                    samedi[index].childNodes[11].childNodes[1].checked = false;
+                    samedi[index].childNodes[11].childNodes[3].checked = false;
 
-    var LundiPaques = new Date(an, MoisPaques - 1, JourPaques + 1).toLocaleDateString(undefined, options);
-    var Ascension = new Date(an, MoisPaques - 1, JourPaques + 39).toLocaleDateString(undefined, options);
-    var Pentecote = new Date(an, MoisPaques - 1, JourPaques + 49).toLocaleDateString(undefined, options);
-    var LundiPentecote = new Date(an, MoisPaques - 1, JourPaques + 50).toLocaleDateString(undefined, options);
-
-
-    var colonnes = document.getElementsByClassName("colonnes");
-    console.log(colonnes);
-
-    var tabColonne = Array.from(colonnes);
-
-    console.log(tabColonne);
-
-    //var cible = colonnes[0].previousSibling.previousSibling.textContent;
-
-
-
-
-
-    var joursFeries = new Array(JourAn, FeteTravail, Victoire1945, FeteNationale, Assomption, Toussaint, Armistice, Noel,
-        LundiPaques, Ascension, Pentecote, LundiPentecote);
-
-
-
-    var testFerie = function estFerie(params) {
-
-        var resultat;
-
-        joursFeries.forEach(element => {
-
-            if (element == params) {
-
-                resultat = true;
+                }
             }
 
         });
 
-        return resultat;
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
-    };
+        var dateActuelle = new Date();
+
+        var an = dateActuelle.getFullYear()
+
+
+        var G = an % 19
+        var C = Math.floor(an / 100)
+        var H = (C - Math.floor(C / 4) - Math.floor((8 * C + 13) / 25) + 19 * G + 15) % 30
+        var I = H - Math.floor(H / 28) * (1 - Math.floor(H / 28) * Math.floor(29 / (H + 1)) * Math.floor((21 - G) / 11))
+        var J = (an * 1 + Math.floor(an / 4) + I + 2 - C + Math.floor(C / 4)) % 7
+        var L = I - J
+
+        var JourAn = new Date(an, "00", "01").toLocaleDateString(undefined, options);
+        var FeteTravail = new Date(an, "04", "01").toLocaleDateString(undefined, options);
+        var Victoire1945 = new Date(an, "04", "08").toLocaleDateString(undefined, options);
+        var FeteNationale = new Date(an, "06", "14").toLocaleDateString(undefined, options);
+        var Assomption = new Date(an, "07", "15").toLocaleDateString(undefined, options);
+        var Toussaint = new Date(an, "10", "01").toLocaleDateString(undefined, options);
+        var Armistice = new Date(an, "10", "11").toLocaleDateString(undefined, options);
+        var Noel = new Date(an, "11", "25").toLocaleDateString(undefined, options);
+
+        var MoisPaques = 3 + Math.floor((L + 40) / 44)
+        var JourPaques = L + 28 - 31 * Math.floor(MoisPaques / 4)
+        var Paques = new Date(an, MoisPaques - 1, JourPaques)
+
+        var LundiPaques = new Date(an, MoisPaques - 1, JourPaques + 1).toLocaleDateString(undefined, options);
+        var Ascension = new Date(an, MoisPaques - 1, JourPaques + 39).toLocaleDateString(undefined, options);
+        var Pentecote = new Date(an, MoisPaques - 1, JourPaques + 49).toLocaleDateString(undefined, options);
+        var LundiPentecote = new Date(an, MoisPaques - 1, JourPaques + 50).toLocaleDateString(undefined, options);
+
+
+        var colonnes = document.getElementsByClassName("colonnes");
+        console.log(colonnes);
+
+        var tabColonne = Array.from(colonnes);
+
+        console.log(tabColonne);
+
+        //var cible = colonnes[0].previousSibling.previousSibling.textContent;
 
 
 
 
-    var DayOfWeek = new Array("Wednesday", "Thursday", "Friday", "Monday", "Tuesday");
 
-    DayOfWeek.forEach(elements => {
+        var joursFeries = new Array(JourAn, FeteTravail, Victoire1945, FeteNationale, Assomption, Toussaint, Armistice, Noel,
+            LundiPaques, Ascension, Pentecote, LundiPentecote);
 
-        var elements = document.getElementsByClassName(`${elements}`);
 
-        var tableau = Array.from(elements);
 
-        tableau.forEach(item => {
+        var testFerie = function estFerie(params) {
 
-            item.childNodes[11].childNodes[1].checked = true;
-            item.childNodes[11].childNodes[3].checked = true;
+            var resultat;
+
+            joursFeries.forEach(element => {
+
+                if (element == params) {
+
+                    resultat = true;
+                }
+
+            });
+
+            return resultat;
+
+        };
+
+
+
+
+        var DayOfWeek = new Array("Wednesday", "Thursday", "Friday", "Monday", "Tuesday");
+
+        DayOfWeek.forEach(elements => {
+
+            var elements = document.getElementsByClassName(`${elements}`);
+
+            var tableau = Array.from(elements);
+
+            tableau.forEach(item => {
+
+                item.childNodes[11].childNodes[1].checked = true;
+                item.childNodes[11].childNodes[3].checked = true;
+
+            });
+        });
+
+        tabColonne.forEach(element => {
+
+            estFerie(element)
 
         });
-    });
-
-    tabColonne.forEach(element => {
-
-        estFerie(element)
-
-    });
 
 
-    //
-    var nonOuvre = 0;
+        //
+        var nonOuvre = 0;
 
-    var jourRemunere = document.querySelectorAll(".jourRemunere");
-    console.log(jourRemunere);
-    console.log(jourRemunere[0].childNodes[0].textContent);
+        var jourRemunere = document.querySelectorAll(".jourRemunere");
+        console.log(jourRemunere);
+        console.log(jourRemunere[0].childNodes[0].textContent);
 
-    var tabJourRemunere = Array.from(jourRemunere);
-
-
-    var test = testFerie("vendredi 8 mai 2020");
-
-    console.log(test);
+        var tabJourRemunere = Array.from(jourRemunere);
 
 
-    tabJourRemunere.forEach(element => {
-
-        console.log(element.childNodes[0].textContent);
-
-        var test = testFerie(element.childNodes[0].textContent);
+        var test = testFerie("vendredi 8 mai 2020");
 
         console.log(test);
 
 
-        if (element.childNodes[0].textContent.startsWith("dimanche") || element.childNodes[0].textContent.startsWith("samedi") || test == true) {
+        tabJourRemunere.forEach(element => {
 
             console.log(element.childNodes[0].textContent);
 
-            element.style.fontWeight = "bold";
-            element.style.color = "red";
+            var test = testFerie(element.childNodes[0].textContent);
 
-            nonOuvre++;
-        }
-
-    });
-
-    var jourOuvres = document.getElementsByClassName("jourOuvres");
-    // console.log(jourOuvres[0].childNodes[0].data);
-
-    var ouvres = jourOuvres[0].childNodes[0].data;
-
-    console.log(nonOuvre);
-    console.log(ouvres);
-
-    var result = ouvres - nonOuvre;
+            console.log(test);
 
 
-    jourOuvres[0].childNodes[0].data = result;
+            if (element.childNodes[0].textContent.startsWith("dimanche") || element.childNodes[0].textContent.startsWith("samedi") || test == true) {
+
+                console.log(element.childNodes[0].textContent);
+
+                element.style.fontWeight = "bold";
+                element.style.color = "red";
+
+                nonOuvre++;
+            }
+
+        });
+
+        var jourOuvres = document.getElementsByClassName("jourOuvres");
+        // console.log(jourOuvres[0].childNodes[0].data);
+
+        var ouvres = jourOuvres[0].childNodes[0].data;
+
+        console.log(nonOuvre);
+        console.log(ouvres);
+
+        var result = ouvres - nonOuvre;
+
+
+        jourOuvres[0].childNodes[0].data = result;
 
 
 
 
 
-</script>
+    </script>
 
