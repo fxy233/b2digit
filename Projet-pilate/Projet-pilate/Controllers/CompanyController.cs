@@ -11,7 +11,7 @@ namespace Projet_pilate.Controllers
 {
     public class CompanyController : Controller
     {
-
+        [Authorize(Roles = "Administrateur, Super-Administrateur")]
         // GET: /Company/CreationCompany
         [Route("Company/CreationCompany", Name = "CreationCompany")]
         public ActionResult CreationCompany()
@@ -20,6 +20,7 @@ namespace Projet_pilate.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Administrateur, Super-Administrateur")]
         // POST: /Company/CreationCompany
         [Route("Company/CreationCompany")]
         [HttpPost]
@@ -61,6 +62,7 @@ namespace Projet_pilate.Controllers
 
         }
 
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager,Administrateur-ventes")]
         //// GET: /Business/ListeCompanies
         [Route("Company/ListeCompanies", Name = "ListeCompanies")]
         public ActionResult ListeCompanies()
@@ -86,7 +88,7 @@ namespace Projet_pilate.Controllers
             return View(models);
         }
 
-
+        [Authorize(Roles = "Administrateur, Super-Administrateur")]
         // GET: /Company/Edit
         [AllowAnonymous]
         public ActionResult Edit(int id)
@@ -107,7 +109,7 @@ namespace Projet_pilate.Controllers
             return View(model);
         }
 
-
+        [Authorize(Roles = "Administrateur, Super-Administrateur")]
         [HttpPost]
         public ActionResult Edit(UpdateCompanyViewModel model)
         {
@@ -130,7 +132,7 @@ namespace Projet_pilate.Controllers
         }
 
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
         public ActionResult Details(int id)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -147,7 +149,7 @@ namespace Projet_pilate.Controllers
         }
 
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Administrateur, Super-Administrateur")]
         public ActionResult Delete(int id)
         {
             ApplicationDbContext db = new ApplicationDbContext();

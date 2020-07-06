@@ -14,6 +14,7 @@ namespace Projet_pilate.Controllers
 {
     public class AdminController : Controller
     {
+        [Authorize(Roles = "Administrateur, Super-Administrateur, Administrateur-ventes")]
         // GET: /Admin/ActivationCRA
         [Route("Admin/ActivationCRA", Name = "ActivationCRA")]
         public ActionResult ActivationCRA()
@@ -34,6 +35,7 @@ namespace Projet_pilate.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Administrateur, Super-Administrateur, Administrateur-ventes")]
         [HttpPost]
         public ActionResult ActivationCRA(AdminViewModel model)
         {
@@ -41,8 +43,8 @@ namespace Projet_pilate.Controllers
             return View(model);
         }
 
-
-       [HttpPost]
+        [Authorize(Roles = "Administrateur, Super-Administrateur, Administrateur-ventes")]
+        [HttpPost]
         public ActionResult ActiverCra(AdminViewModel model)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -55,9 +57,9 @@ namespace Projet_pilate.Controllers
 
             return View("ActivationSuccess", model);
         }
-        
 
 
+        [Authorize(Roles = "Administrateur, Super-Administrateur, Administrateur-ventes, Manager")]
         // GET: /Admin/ManagerList
         [Route("Admin/ManagerList", Name = "ManagerList")]
         public ActionResult ManagerList()
@@ -87,6 +89,7 @@ namespace Projet_pilate.Controllers
             return View(models);
         }
 
+        [Authorize(Roles = "Administrateur, Super-Administrateur")]
         // GET: /Admin/CreateManager
         [Route("Admin/CreateManager", Name = "CreateManager")]
         public ActionResult CreateManager()
@@ -106,7 +109,7 @@ namespace Projet_pilate.Controllers
             return View(model);
         }
 
-
+        [Authorize(Roles = "Administrateur, Super-Administrateur")]
         // POST: /Admin/CreateManager
         [HttpPost]
         [Route("Admin/CreateManager")]
@@ -177,7 +180,7 @@ namespace Projet_pilate.Controllers
         }
 
 
-
+        [Authorize(Roles = "Administrateur, Super-Administrateur")]
         // GET: /Admin/EditManager
         [Route("Admin/EditManager", Name = "EditManager")]
         public ActionResult EditManager(int id)
@@ -214,7 +217,7 @@ namespace Projet_pilate.Controllers
             return View(model);
         }
 
-
+        [Authorize(Roles = "Administrateur, Super-Administrateur")]
         // POST: /Admin/EditManager
         [HttpPost]
         [Route("Admin/EditManager")]
@@ -286,7 +289,7 @@ namespace Projet_pilate.Controllers
 
 
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Administrateur, Super-Administrateur")]
         public ActionResult DeleteManager(int id)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -342,10 +345,10 @@ namespace Projet_pilate.Controllers
             return RedirectToAction("ManagerList", "admin");
         }
 
-     
 
 
 
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager,Administrateur-ventes")]
         //// GET: /Admin/ConsultantList
         [Route("Admin/ConsultantList", Name = "ConsultantList")]
         public ActionResult ConsultantList()
@@ -377,6 +380,7 @@ namespace Projet_pilate.Controllers
 
 
         // GET: /Admin/CreateManager
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager,Administrateur-ventes")]
         [Route("Admin/CreateConsultant", Name = "CreateConsultant")]
         public ActionResult CreateConsultant()
         {
@@ -404,6 +408,7 @@ namespace Projet_pilate.Controllers
 
 
         // POST: /Admin/CreateConsultant
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager,Administrateur-ventes")]
         [HttpPost]
         [Route("Admin/CreateConsultant")]
         public ActionResult CreateConsultant(RegisterConsultantViewModel model)
@@ -523,6 +528,7 @@ namespace Projet_pilate.Controllers
 
 
         // GET: /Admin/EditManager
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager,Administrateur-ventes")]
         [Route("Admin/EditConsultant", Name = "EditConsultant")]
         public ActionResult EditConsultant(int id)
         {
@@ -581,6 +587,7 @@ namespace Projet_pilate.Controllers
 
 
         // POST: /Admin/EditConsultant
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager,Administrateur-ventes")]
         [HttpPost]
         [Route("Admin/EditConsultant")]
         public ActionResult EditConsultant(UpdateConsultantViewModel model)
@@ -700,7 +707,7 @@ namespace Projet_pilate.Controllers
         }
 
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager,Administrateur-ventes")]
         public ActionResult DeleteConsultant(int id)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -761,6 +768,7 @@ namespace Projet_pilate.Controllers
 
 
         // GET: Admin/Message
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
         [Route("Admin/Message", Name = "Message")]
         public ActionResult Message()
         {
@@ -773,6 +781,7 @@ namespace Projet_pilate.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
         [HttpPost]
         public ActionResult Message(MessageViewModel model)
         { 
@@ -780,6 +789,7 @@ namespace Projet_pilate.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
         [HttpPost]
         public ActionResult activerMessage(MessageViewModel model)
         {
@@ -796,6 +806,8 @@ namespace Projet_pilate.Controllers
             return View("messageSuccess", model);
             
         }
+
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
         // GET: Admin/ClotureMois
         [Route("Admin/ClotureMois", Name = "ClotureMois")]
         public ActionResult ClotureMois()
@@ -811,6 +823,7 @@ namespace Projet_pilate.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
         [HttpPost]
         public ActionResult CloturerMois(ClotureViewModel model)
         {

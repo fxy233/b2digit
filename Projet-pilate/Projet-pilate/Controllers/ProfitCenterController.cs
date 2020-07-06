@@ -10,11 +10,12 @@ using System.Web.Mvc;
 
 namespace Projet_pilate.Controllers
 {
+    [Authorize(Roles = "Administrateur, Super-Administrateur, Manager")]
     public class ProfitCenterController : Controller
     {
 
         // GET: /ProfitCenter/ProfitCenter
-        [Authorize(Roles = "Administrateur, Super-Administrateur")]
+        [AllowAnonymous]
         [Route("ProfitCenter/ProfitCenterList", Name = "ProfitCenterList")]
         public ActionResult ProfitCenterList()
         {

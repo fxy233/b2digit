@@ -11,7 +11,7 @@ namespace Projet_pilate.Controllers
 {
     public class CompanyContactController : Controller
     {
-
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager")]
         // GET: /CompanyContact/CreateCompanyContact
         [Route("CompanyContact/CreateCompanyContact", Name = "CompanyContact")]
         public ActionResult CreateCompanyContact()
@@ -37,6 +37,7 @@ namespace Projet_pilate.Controllers
 
 
         //// POST: /CompanyContact/CreateCompanyContact
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager")]
         [Route("CompanyContact/CreateCompanyContact")]
         [HttpPost]
         public ActionResult CreateCompanyContact(RegisterCompanyContactViewModel model)
@@ -131,7 +132,7 @@ namespace Projet_pilate.Controllers
 
         }
 
-
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager,Administrateur-ventes")]
         [Route("CompanyContact/CompanyContactList", Name = "CompanyContactList")]
         public ActionResult CompanyContactList()
         {
@@ -159,7 +160,7 @@ namespace Projet_pilate.Controllers
             //return View(db.CompanyContacts.ToList());
         }
 
-
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager")]
         public ActionResult DeleteCompanyContact(int id)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -198,7 +199,7 @@ namespace Projet_pilate.Controllers
             return RedirectToAction("CompanyContactList", "CompanyContact");
         }
 
-
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager")]
         // GET: /CompanyContact/EditCompanyContact
         [Route("CompanyContact/EditCompanyContact", Name = "EditCompanyContact")]
         public ActionResult EditCompanyContact()
@@ -222,7 +223,7 @@ namespace Projet_pilate.Controllers
             return View(model);
         }
 
-
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager")]
         //// POST: /CompanyContact/EditCompanyContact
         [Route("CompanyContact/EditCompanyContact")]
         [HttpPost]

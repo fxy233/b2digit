@@ -22,6 +22,7 @@ namespace Projet_pilate.Controllers
     public class ConsultantController : Controller
     {
         //// GET: /Consultant/CRA
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes,Manager")]
         [Route("Consultant/CRA", Name = "CRA")]
         public ActionResult CRA()
         {
@@ -174,6 +175,7 @@ namespace Projet_pilate.Controllers
 
         }
 
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes,Manager")]
         [HttpPost]
         [Route("Consultant/CRA")]
         public ActionResult CRA(RegisterActivityViewModel model)
@@ -294,7 +296,7 @@ namespace Projet_pilate.Controllers
 
         }
 
-
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes,Manager")]
         [Route("Consultant/ListeCra", Name = "ListeCra")]
         public ActionResult ListeCra()
         {
@@ -424,7 +426,7 @@ namespace Projet_pilate.Controllers
             return View(models);
         }
 
-
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
         [Route("Consultant/DeleteCra")]
         public ActionResult DeleteCra(int id)
         {
@@ -819,7 +821,7 @@ namespace Projet_pilate.Controllers
         }
 
 
-
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
         //problème de manager
         [Route("Consultant/Export", Name = "Export")]
         public ActionResult Export(int id)
@@ -830,6 +832,7 @@ namespace Projet_pilate.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
         public ActivityExportModel GetData(int id)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -934,6 +937,7 @@ namespace Projet_pilate.Controllers
             return models;*/
         }
 
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
         [HttpPost]
         public FileResult ExportT(int id)
         {
@@ -1044,13 +1048,14 @@ namespace Projet_pilate.Controllers
             }
         }
         */
-
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes,Manager")]
         [Route("Consultant/SuiviCra", Name = "SuiviCra")]
         public ActionResult SuiviCra()
         {
             return View();
         }
 
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes,Manager")]
         [Route("Consultant/test", Name = "test")]
         public ActionResult test()
         {
@@ -1146,6 +1151,7 @@ namespace Projet_pilate.Controllers
 
         }
 
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes,Manager")]
         [Route("Consultant/SuiviCra_nonfacture", Name = "SuiviCra_nonfacture")]
         public ActionResult SuiviCra_nonfacture()
         {

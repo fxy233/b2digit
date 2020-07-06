@@ -10,7 +10,7 @@ namespace Projet_pilate.Controllers
 {
     public class MissionController : Controller
     {
-
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager")]
         //GET: /Mission/CreationMission
         [Route("Mission/CreationMission", Name = "CreationMission")]
         public ActionResult CreationMission()
@@ -40,7 +40,7 @@ namespace Projet_pilate.Controllers
             return View(model);
         }
 
-
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager")]
         // POST: /Mission/CreationMission
         [HttpPost]
         [Route("Mission/CreationMission")]
@@ -221,7 +221,7 @@ namespace Projet_pilate.Controllers
 
         }
 
-
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes,Manager")]
         [Route("Mission/ListeMissions", Name = "ListeMissions")]
         public ActionResult ListeMissions()
         {
@@ -268,7 +268,7 @@ namespace Projet_pilate.Controllers
 
 
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
         public ActionResult Edit(int id)
         {
 
@@ -287,7 +287,7 @@ namespace Projet_pilate.Controllers
             return View(model);
         }
 
-
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
         [HttpPost]
         public ActionResult Edit(UpdateMissionViewModel model)
         {
@@ -338,7 +338,7 @@ namespace Projet_pilate.Controllers
             return View(model);
         }
 
-
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager")]
         public ActionResult ValidationMissions()
         {
             string name = Request.Form["name"].ToString();
@@ -385,6 +385,7 @@ namespace Projet_pilate.Controllers
             return RedirectToAction("ListeMissions", "Mission");
         }
 
+        [Authorize(Roles = "Administrateur, Super-Administrateur")]
         [Route("Mission/Delete", Name = "Delete")]
         public ActionResult Delete(int id)
         {
