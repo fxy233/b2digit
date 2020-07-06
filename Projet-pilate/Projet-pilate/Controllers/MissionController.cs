@@ -295,6 +295,18 @@ namespace Projet_pilate.Controllers
             ApplicationDbContext db = new ApplicationDbContext();
             var mission = db.Missions.SingleOrDefault(m => m.MissionID == model.ID);
 
+            var missionexist = db.Missions.ToList();
+            foreach (var exist in missionexist)
+            {
+                if (exist.Name == model.Name)
+                {
+                    string message = "le nom du mission a été utilisé !";
+                    ModelState.AddModelError(string.Empty, message);
+                    ViewBag.date = mission.End.ToString("yyyy-MM-dd");
+                    return View(model);
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 if (mission.Name != model.Name)

@@ -53,6 +53,7 @@ namespace Projet_pilate.Controllers
             List<Mission> missionsTotal = db.Missions.Where(m => m.Consultant.Email == id).ToList();
 
 
+            /*
             List<Mission> missionsEnCours = missionsTotal.Where(m =>
 
             m.Start < startMonth && m.End > endMonth||
@@ -61,6 +62,8 @@ namespace Projet_pilate.Controllers
             m.Start > startMonth && m.End < endMonth ||
             m.Start > startMonth && m.End == endMonth ||
             m.Start > startMonth && m.End > endMonth).ToList();
+            */
+            List<Mission> missionsEnCours = missionsTotal.Where(m => m.End <= endMonth).ToList();
             List<string> nomMissions = new List<string>();
 
 
