@@ -20,102 +20,164 @@
         <th>
             @Html.DisplayNameFor(model => model.NoBillDays)
         </th>
-        <th>
+        @*<th>
             Detail
+        </th>*@
+        <th>
+            @Html.DisplayNameFor(model => model.MissionName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WorkedDays)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.WorkedDaysWE)
         </th>
     </tr>
-    @{
-        Dictionary<string, List<Projet_pilate.Models.ActivityViewModel>> list = new Dictionary<string, List<Projet_pilate.Models.ActivityViewModel>>();
 
-        string PreviousConsultant = "";
+    @{string Previous = "";
+
         foreach (var item in Model)
         {
-            if (item.ConsultantName != PreviousConsultant)
-            {
-                List<Projet_pilate.Models.ActivityViewModel> l = new List<Projet_pilate.Models.ActivityViewModel>();
-                l.Add(item);
-                list.Add(item.ConsultantName,l);
-            }
-            else
-            {
-                list[item.ConsultantName].Add(item);
-            }
-            PreviousConsultant = item.ConsultantName;
-        }
 
-        foreach (var item in list)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Value[0].ConsultantName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Value[0].Satisfaction)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Value[0].NoBillDays)
-                </td>
+        <tr>
+            <td>
+                @if (item.ConsultantName != Previous)
+                {
+                    @Html.DisplayFor(modelItem => item.ConsultantName)
+                }
 
-                <td>
-                    <div style="width: 800px; height:100px; overflow:scroll;">
-                        <table style="text-align: left;">
-                            <tr>
-                                @foreach (var obj in item.Value)
-                                {
-                                    <th style="padding-right: 7px">
-                                        <div style="width:200px">
-                                            @Html.DisplayNameFor(model => model.MissionName)
-                                        </div>
-                                    </th>
+            </td>
+            <td>
+                @if (item.ConsultantName != Previous)
+                {
+                    @Html.DisplayFor(modelItem => item.Satisfaction)
+                }
+            </td>
+            <td>
+                @if (item.ConsultantName != Previous)
+                {
+                    @Html.DisplayFor(modelItem => item.NoBillDays)
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MissionName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WorkedDays)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WorkedDaysWE)
+            </td>
+            <td>
+                @if ((item.ConsultantName != Previous) && (User.IsInRole("Super-Administrateur") || User.IsInRole("Administrateur")) || User.IsInRole("Administrateur-ventes"))
+                {
 
-                                    <th style="padding-right: 7px">
-                                        <div style="width:200px">
-                                            @Html.DisplayNameFor(model => model.WorkedDays)
-                                        </div>
-                                    </th>
 
-                                    <th style="padding-right: 7px">
-                                        <div style="width:200px">
-                                            @Html.DisplayNameFor(model => model.WorkedDaysWE)
-                                        </div>
-                                    </th>
-                                }
-                            </tr>
-                            <tr>
-                                @foreach (var obj in item.Value)
-                                {
-                                    <td style="padding-right:7px">
-                                        @Html.DisplayFor(modelItem => obj.MissionName)
-                                    </td>
+                    @Html.ActionLink("Réinitialiser CRA", "DeleteCra", "Consultant", new { id = item.ID }, new { @class = "btn btn-primary btn-large supp" })
+                    @Html.ActionLink("Réinitialiser CRA", "DeleteCra", "Consultant", new { id = item.ID }, new { @class = "btn btn-primary btn-large action" })
+                    @Html.ActionLink("Détail", "CRAReadOnly", new { id = item.ID }, new { @class = "btn btn-primary btn-large" })
+                    @Html.ActionLink("Détail", "CRAReadOnly", new { id = item.ID }, new { @class = "btn btn-primary btn-large action" })
 
-                                    <td style="padding-right:7px">
-                                        @Html.DisplayFor(modelItem => obj.WorkedDays)
-                                    </td>
+                }
 
-                                    <td style="padding-right:7px">
-                                        @Html.DisplayFor(modelItem => obj.WorkedDaysWE)
-                                    </td>
-                                }
-                            </tr>
-                        </table>
-                    </div>
-                </td>
-
-                <td>
-                    @if ((User.IsInRole("Super-Administrateur") || User.IsInRole("Administrateur")) || User.IsInRole("Administrateur-ventes"))
-                    {
-
-                        @Html.ActionLink("Réinitialiser CRA", "DeleteCra", "Consultant", new { id = item.Value[0].ID }, new { @class = "btn btn-primary btn-large supp" })
-                        @Html.ActionLink("Réinitialiser CRA", "DeleteCra", "Consultant", new { id = item.Value[0].ID }, new { @class = "btn btn-primary btn-large action" })
-                        @Html.ActionLink("Détail", "CRAReadOnly", new { id = item.Value[0].ID }, new { @class = "btn btn-primary btn-large" })
-                        @Html.ActionLink("Détail", "CRAReadOnly", new { id = item.Value[0].ID }, new { @class = "btn btn-primary btn-large action" })
-                    }
-
-                </td>
-            </tr>
-            
+            </td>
+        </tr>
+            Previous = item.ConsultantName;
         }
     }
+    @*@{
+            Dictionary<string, List<Projet_pilate.Models.ActivityViewModel>> list = new Dictionary<string, List<Projet_pilate.Models.ActivityViewModel>>();
+
+            string PreviousConsultant = "";
+            foreach (var item in Model)
+            {
+                if (item.ConsultantName != PreviousConsultant)
+                {
+                    List<Projet_pilate.Models.ActivityViewModel> l = new List<Projet_pilate.Models.ActivityViewModel>();
+                    l.Add(item);
+                    list.Add(item.ConsultantName,l);
+                }
+                else
+                {
+                    list[item.ConsultantName].Add(item);
+                }
+                PreviousConsultant = item.ConsultantName;
+            }
+
+            foreach (var item in list)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Value[0].ConsultantName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Value[0].Satisfaction)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Value[0].NoBillDays)
+                    </td>
+
+                    <td>
+                        <div style="width: 800px; height:100px; overflow:scroll;">
+                            <table style="text-align: left;">
+                                <tr>
+                                    @foreach (var obj in item.Value)
+                                    {
+                                        <th style="padding-right: 7px">
+                                            <div style="width:200px">
+                                                @Html.DisplayNameFor(model => model.MissionName)
+                                            </div>
+                                        </th>
+
+                                        <th style="padding-right: 7px">
+                                            <div style="width:200px">
+                                                @Html.DisplayNameFor(model => model.WorkedDays)
+                                            </div>
+                                        </th>
+
+                                        <th style="padding-right: 7px">
+                                            <div style="width:200px">
+                                                @Html.DisplayNameFor(model => model.WorkedDaysWE)
+                                            </div>
+                                        </th>
+                                    }
+                                </tr>
+                                <tr>
+                                    @foreach (var obj in item.Value)
+                                    {
+                                        <td style="padding-right:7px">
+                                            @Html.DisplayFor(modelItem => obj.MissionName)
+                                        </td>
+
+                                        <td style="padding-right:7px">
+                                            @Html.DisplayFor(modelItem => obj.WorkedDays)
+                                        </td>
+
+                                        <td style="padding-right:7px">
+                                            @Html.DisplayFor(modelItem => obj.WorkedDaysWE)
+                                        </td>
+                                    }
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+
+                    <td>
+                        @if ((User.IsInRole("Super-Administrateur") || User.IsInRole("Administrateur")) || User.IsInRole("Administrateur-ventes"))
+                        {
+
+                            @Html.ActionLink("Réinitialiser CRA", "DeleteCra", "Consultant", new { id = item.Value[0].ID }, new { @class = "btn btn-primary btn-large supp" })
+                            @Html.ActionLink("Réinitialiser CRA", "DeleteCra", "Consultant", new { id = item.Value[0].ID }, new { @class = "btn btn-primary btn-large action" })
+                            @Html.ActionLink("Détail", "CRAReadOnly", new { id = item.Value[0].ID }, new { @class = "btn btn-primary btn-large" })
+                            @Html.ActionLink("Détail", "CRAReadOnly", new { id = item.Value[0].ID }, new { @class = "btn btn-primary btn-large action" })
+                        }
+
+                    </td>
+                </tr>
+
+            }
+        }*@
 
 </table>
 

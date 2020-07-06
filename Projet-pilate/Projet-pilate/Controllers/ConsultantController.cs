@@ -22,7 +22,7 @@ namespace Projet_pilate.Controllers
     public class ConsultantController : Controller
     {
         //// GET: /Consultant/CRA
-        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes,Manager")]
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes,Manager,Consultant")]
         [Route("Consultant/CRA", Name = "CRA")]
         public ActionResult CRA()
         {
@@ -175,7 +175,7 @@ namespace Projet_pilate.Controllers
 
         }
 
-        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes,Manager")]
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes,Manager,Consultant")]
         [HttpPost]
         [Route("Consultant/CRA")]
         public ActionResult CRA(RegisterActivityViewModel model)
