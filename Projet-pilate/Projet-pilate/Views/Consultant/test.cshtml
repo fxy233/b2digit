@@ -1,182 +1,262 @@
 ﻿@model List<Projet_pilate.Models.ConsultantCraModelNew>
 @{
     ViewBag.Title = "test";
-    ViewBag.nb = 500;
     Layout = null;
 }
 
-<table class="table">
-    <tr>
-        <th>
-            Consultant
-        </th>
-        <th>
-            Projet
-        </th>
-        <th>
-            Detail
-        </th>
-    </tr>
+<style type="text/css">
+    /* important styles */
 
-    @foreach (var item in Model)
-    {
-        if (item.MissionsList.Count() == 0)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Consultant)
-                </td>
-                <td>
-                    Pas de projet
-                </td>
-                <td>
-                    Rien
-                </td>
+    .container {
+        /* Attach fixed-th-table to this container,
+              in order to layout fixed-th-table
+              in the same way as scolled-td-table" */
+        position: relative;
+        /* Truncate fixed-th-table */
+        overflow: hidden;
+    }
 
-            </tr>
+    .fixed-th-table-wrapper td,
+    .fixed-th-table-wrapper th,
+    .scrolled-td-table-wrapper td,
+    .scrolled-td-table-wrapper th {
+        /* Set background to non-transparent color
+              because two tables are one above another.
+            */
+        background: white;
+    }
+
+    .fixed-th-table-wrapper {
+        /* Make table out of flow */
+        position: absolute;
+    }
+
+        .fixed-th-table-wrapper th {
+            /* Place fixed-th-table th-cells above
+               scrolled-td-table td-cells.
+             */
+            position: relative;
+            z-index: 1;
         }
-        else
-        {
-            foreach (var mission in item.MissionsList)
+
+    .scrolled-td-table-wrapper td {
+        /* Place scrolled-td-table td-cells
+               above fixed-th-table.
+             */
+        position: relative;
+    }
+
+    .scrolled-td-table-wrapper {
+        /* Make horizonal scrollbar if needed */
+        overflow-x: auto;
+    }
+
+
+    /* Simulating border-collapse: collapse,
+           because fixed-th-table borders
+           are below ".scrolling-td-wrapper table" borders
+        */
+
+    table {
+        border-spacing: 0;
+    }
+
+    td, th {
+        border-style: solid;
+        border-color: black;
+        border-width: 1px 1px 0 0;
+    }
+
+        th:first-child {
+            border-left-width: 1px;
+        }
+
+    tr:last-child td,
+    tr:last-child th {
+        border-bottom-width: 1px;
+    }
+
+    /* Unimportant styles */
+
+    .container {
+        width: 1000px;
+    }
+
+    td, th {
+        padding: 5px;
+    }
+</style>
+
+<p><button onclick="sortTable()">Trier</button></p>
+<div class="container">
+
+    <div class="fixed-th-table-wrapper">
+
+        <table id="mytable">
+            <tr>
+                <th>
+                    Consultant
+                </th>
+                <th>
+                    Projet
+                </th>
+
+                @for (int start = Int32.Parse(ViewBag.debut.Year.ToString()); start <= Int32.Parse(DateTime.Now.Year.ToString()); start++)
+                {
+                    <td style="color:green; padding-right:7px"> @start  </td>
+
+                    if (start == Int32.Parse(ViewBag.debut.Year.ToString()) && start == Int32.Parse(DateTime.Now.Year.ToString()))
+                    {
+                        for (int m = Int32.Parse(ViewBag.debut.Month.ToString()); m <= Int32.Parse(DateTime.Now.Month.ToString()); ++m)
+                        {
+                            if (start == Int32.Parse(DateTime.Now.Year.ToString()) && m == Int32.Parse(DateTime.Now.Month.ToString()))
+                            {
+                                <td style="width: 70px; padding-right:7px; color:red">
+                                    @ViewBag.listMonth[m - 1]
+                                </td>
+                            }
+                            else
+                            {
+                                <td style="width: 70px; padding-right:7px">
+                                    @ViewBag.listMonth[m - 1]
+                                </td>
+                            }
+
+                        }
+                        continue;
+                    }
+
+                    if (start == Int32.Parse(ViewBag.debut.Year.ToString()) && start != Int32.Parse(DateTime.Now.Year.ToString()))
+                    {
+                        for (int m = Int32.Parse(ViewBag.debut.Month.ToString()); m <= 12; ++m)
+                        {
+                            <td style="width: 70px;padding-right:7px">
+                                @ViewBag.listMonth[m - 1]
+                            </td>
+                        }
+                        continue;
+                    }
+
+                    if (start == Int32.Parse(DateTime.Now.Year.ToString()) && start != Int32.Parse(ViewBag.debut.Year.ToString()))
+                    {
+                        for (int m = 1; m <= Int32.Parse(DateTime.Now.Month.ToString()); ++m)
+                        {
+                            if (start == Int32.Parse(DateTime.Now.Year.ToString()) && m == Int32.Parse(DateTime.Now.Month.ToString()))
+                            {
+                                <td style="width: 70px; padding-right:7px; color:red">
+                                    @ViewBag.listMonth[m - 1]
+                                </td>
+                            }
+                            else
+                            {
+                                <td style="width: 70px; padding-right:7px">
+                                    @ViewBag.listMonth[m - 1]
+                                </td>
+                            }
+                        }
+                        continue;
+                    }
+
+                    for (int m = 1; m <= 12; ++m)
+                    {
+                        <td style="width: 70px;padding-right:7px">
+                            @ViewBag.listMonth[m - 1]
+                        </td>
+                    }
+
+                }
+            </tr>
+            @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Consultant)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => mission)
-                    </td>
-                    <td>
-                        <div style="width: 700px; height:100px; overflow:scroll;">
-                            <table style="text-align: center;">
-                                <tr>
-                                    @for (int start = item.DureeMission[mission][0]; start <= Int32.Parse(DateTime.Now.Year.ToString()); start++)
+                if (item.MissionsList.Count() == 0)
+                {
+                    <tr>
+                        <th>
+                            @Html.DisplayFor(modelItem => item.Consultant)
+                        </th>
+                        <th>
+                            Pas de projet
+                        </th>
+                    </tr>
+
+                }
+                else
+                {
+                    foreach (var mission in item.MissionsList)
+                    {
+                        <tr>
+                            <th>
+                                @Html.DisplayFor(modelItem => item.Consultant)
+                            </th>
+                            <th>
+                                @Html.DisplayFor(modelItem => mission)
+                            </th>
+                            @{
+                                int missionstartyear = item.DureeMission[mission][0];
+                                int missionstartmonth = item.DureeMission[mission][1];
+                                int startyear = Int32.Parse(ViewBag.debut.Year.ToString());
+                                int startmonth = Int32.Parse(ViewBag.debut.Month.ToString());
+
+                                int nb = 0;
+                                Boolean first = true;
+                                while (startyear < missionstartyear)
+                                {
+                                    if (first)
                                     {
-                                        <td style="color:green; padding-right:7px"> @start  </td>
-                                        if (start == item.DureeMission[mission][0] && start == Int32.Parse(DateTime.Now.Year.ToString()))
-                                        {
-                                            for (int m = item.DureeMission[mission][1]; m <= Int32.Parse(DateTime.Now.Month.ToString()); ++m)
-                                            {
-                                                if (start == Int32.Parse(DateTime.Now.Year.ToString()) && m == Int32.Parse(DateTime.Now.Month.ToString()))
-                                                {
-                                                    <th style="width: 70px; padding-right:7px; color:red">
-                                                        @ViewBag.listMonth[m - 1]
-                                                    </th>
-                                                }
-                                                else
-                                                {
-                                                    <th style="width: 70px; padding-right:7px">
-                                                        @ViewBag.listMonth[m - 1]
-                                                    </th>
-                                                }
-
-                                            }
-                                            continue;
-                                        }
-
-                                        if (start == item.DureeMission[mission][0] && start != Int32.Parse(DateTime.Now.Year.ToString()))
-                                        {
-                                            for (int m = item.DureeMission[mission][1]; m <= 12; ++m)
-                                            {
-                                                <th style="width: 70px;padding-right:7px">
-                                                    @ViewBag.listMonth[m - 1]
-                                                </th>
-                                            }
-                                            continue;
-                                        }
-
-                                        if (start == Int32.Parse(DateTime.Now.Year.ToString()) && start != item.DureeMission[mission][0])
-                                        {
-                                            for (int m = 1; m <= Int32.Parse(DateTime.Now.Month.ToString()); ++m)
-                                            {
-                                                if (start == Int32.Parse(DateTime.Now.Year.ToString()) && m == Int32.Parse(DateTime.Now.Month.ToString()))
-                                                {
-                                                    <th style="width: 70px; padding-right:7px; color:red">
-                                                        @ViewBag.listMonth[m - 1]
-                                                    </th>
-                                                }
-                                                else
-                                                {
-                                                    <th style="width: 70px; padding-right:7px">
-                                                        @ViewBag.listMonth[m - 1]
-                                                    </th>
-                                                }
-                                            }
-                                            continue;
-                                        }
-
-                                        for (int m = 1; m <= 12; ++m)
-                                        {
-                                            <th style="width: 70px;padding-right:7px">
-                                                @ViewBag.listMonth[m - 1]
-                                            </th>
-                                        }
-
+                                        nb += (12 - startmonth + 1);
                                     }
-                                </tr>
-                                <tr>
-                                    @for (int start = item.DureeMission[mission][0]; start <= Int32.Parse(DateTime.Now.Year.ToString()); start++)
+                                    else
                                     {
-                                        <td  style="padding-right:7px"></td>
-                                        if (start == item.DureeMission[mission][0] && start == Int32.Parse(DateTime.Now.Year.ToString()))
+                                        nb += 12;
+                                    }
+                                    first = false;
+                                    nb++;
+                                    startyear++;
+                                }
+                                if (first)
+                                {
+                                    nb += (missionstartmonth - startmonth);
+                                }
+                                else
+                                {
+                                    nb += (missionstartmonth - 1);
+                                }
+                                nb++;
+                                for (int i = 1; i <= nb; ++i)
+                                {
+                                    <td style="padding-right:7px"></td>
+                                }
+                                int fois = 1;
+                                for (int start = item.DureeMission[mission][0]; start <= Int32.Parse(DateTime.Now.Year.ToString()); start++)
+                                {
+                                    if (fois > 1)
+                                    {
+                                        <td style="padding-right:7px"></td>
+                                    }
+                                    fois++;
+                                    if (start == item.DureeMission[mission][0] && start == Int32.Parse(DateTime.Now.Year.ToString()))
+                                    {
+                                        for (int m = item.DureeMission[mission][1]; m <= Int32.Parse(DateTime.Now.Month.ToString()); ++m)
                                         {
-                                            for (int m = item.DureeMission[mission][1]; m <= Int32.Parse(DateTime.Now.Month.ToString()); ++m)
+                                            if (start < item.DureeMission[mission][2] || (start == item.DureeMission[mission][2] && m <= item.DureeMission[mission][3]))
                                             {
-                                                if (start < item.DureeMission[mission][2] || (start == item.DureeMission[mission][2] && m <= item.DureeMission[mission][3]))
-                                                {
-                                                    <td style="width: 70px; padding-right:7px">
-                                                        @Html.DisplayFor(modelItem => item.NbParMission[mission][start.ToString()][m - 1])
-                                                    </td>
-                                                }
-                                                else
-                                                {
-                                                    <td style="width: 70px; padding-right:7px">
-                                                    </td>
-                                                }
-
+                                                <td style="width: 70px; padding-right:7px">
+                                                    @Html.DisplayFor(modelItem => item.NbParMission[mission][start.ToString()][m - 1])
+                                                </td>
                                             }
-                                            continue;
-                                        }
-
-                                        if (start == item.DureeMission[mission][0] && start != Int32.Parse(DateTime.Now.Year.ToString()))
-                                        {
-                                            for (int m = item.DureeMission[mission][1]; m <= 12; ++m)
+                                            else
                                             {
-                                                if (start < item.DureeMission[mission][2] || (start == item.DureeMission[mission][2] && m <= item.DureeMission[mission][3]))
-                                                {
-                                                    <td style="width: 70px; padding-right:7px">
-                                                        @Html.DisplayFor(modelItem => item.NbParMission[mission][start.ToString()][m - 1])
-                                                    </td>
-                                                }
-                                                else
-                                                {
-                                                    <td style="width: 70px; padding-right:7px">
-                                                    </td>
-                                                }
+                                                <td style="width: 70px; padding-right:7px">
+                                                </td>
                                             }
-                                            continue;
-                                        }
 
-                                        if (start == Int32.Parse(DateTime.Now.Year.ToString()) && start != item.DureeMission[mission][0])
-                                        {
-                                            for (int m = 1; m <= Int32.Parse(DateTime.Now.Month.ToString()); ++m)
-                                            {
-                                                if (start < item.DureeMission[mission][2] || (start == item.DureeMission[mission][2] && m <= item.DureeMission[mission][3]))
-                                                {
-                                                    <td style="width: 70px; padding-right:7px">
-                                                        @Html.DisplayFor(modelItem => item.NbParMission[mission][start.ToString()][m - 1])
-                                                    </td>
-                                                }
-                                                else
-                                                {
-                                                    <td style="width: 70px; padding-right:7px">
-                                                    </td>
-                                                }
-                                            }
-                                            continue;
                                         }
+                                        continue;
+                                    }
 
-                                        for (int m = 1; m <= 12; ++m)
+                                    if (start == item.DureeMission[mission][0] && start != Int32.Parse(DateTime.Now.Year.ToString()))
+                                    {
+                                        for (int m = item.DureeMission[mission][1]; m <= 12; ++m)
                                         {
                                             if (start < item.DureeMission[mission][2] || (start == item.DureeMission[mission][2] && m <= item.DureeMission[mission][3]))
                                             {
@@ -190,22 +270,822 @@
                                                 </td>
                                             }
                                         }
+                                        continue;
+                                    }
+
+                                    if (start == Int32.Parse(DateTime.Now.Year.ToString()) && start != item.DureeMission[mission][0])
+                                    {
+                                        for (int m = 1; m <= Int32.Parse(DateTime.Now.Month.ToString()); ++m)
+                                        {
+                                            if (start < item.DureeMission[mission][2] || (start == item.DureeMission[mission][2] && m <= item.DureeMission[mission][3]))
+                                            {
+                                                <td style="width: 70px; padding-right:7px">
+                                                    @Html.DisplayFor(modelItem => item.NbParMission[mission][start.ToString()][m - 1])
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td style="width: 70px; padding-right:7px">
+                                                </td>
+                                            }
+                                        }
+                                        continue;
+                                    }
+
+                                    for (int m = 1; m <= 12; ++m)
+                                    {
+                                        if (start < item.DureeMission[mission][2] || (start == item.DureeMission[mission][2] && m <= item.DureeMission[mission][3]))
+                                        {
+                                            <td style="width: 70px; padding-right:7px">
+                                                @Html.DisplayFor(modelItem => item.NbParMission[mission][start.ToString()][m - 1])
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td style="width: 70px; padding-right:7px">
+                                            </td>
+                                        }
+                                    }
+
+                                }
+                            }
+
+                        </tr>
+                    }
+                }
+            }
+        </table>
+    </div>
+
+    <div class="scrolled-td-table-wrapper">
+        <table id="mytable2">
+            <tr>
+                <th>
+                    Consultant
+                </th>
+                <th>
+                    Projet
+                </th>
+
+                @for (int start = Int32.Parse(ViewBag.debut.Year.ToString()); start <= Int32.Parse(DateTime.Now.Year.ToString()); start++)
+                {
+                    <td style="color:green; padding-right:7px"> @start  </td>
+
+                    if (start == Int32.Parse(ViewBag.debut.Year.ToString()) && start == Int32.Parse(DateTime.Now.Year.ToString()))
+                    {
+                        for (int m = Int32.Parse(ViewBag.debut.Month.ToString()); m <= Int32.Parse(DateTime.Now.Month.ToString()); ++m)
+                        {
+                            if (start == Int32.Parse(DateTime.Now.Year.ToString()) && m == Int32.Parse(DateTime.Now.Month.ToString()))
+                            {
+                                <td style="width: 70px; padding-right:7px; color:red">
+                                    @ViewBag.listMonth[m - 1]
+                                </td>
+                            }
+                            else
+                            {
+                                <td style="width: 70px; padding-right:7px">
+                                    @ViewBag.listMonth[m - 1]
+                                </td>
+                            }
+
+                        }
+                        continue;
+                    }
+
+                    if (start == Int32.Parse(ViewBag.debut.Year.ToString()) && start != Int32.Parse(DateTime.Now.Year.ToString()))
+                    {
+                        for (int m = Int32.Parse(ViewBag.debut.Month.ToString()); m <= 12; ++m)
+                        {
+                            <td style="width: 70px;padding-right:7px">
+                                @ViewBag.listMonth[m - 1]
+                            </td>
+                        }
+                        continue;
+                    }
+
+                    if (start == Int32.Parse(DateTime.Now.Year.ToString()) && start != Int32.Parse(ViewBag.debut.Year.ToString()))
+                    {
+                        for (int m = 1; m <= Int32.Parse(DateTime.Now.Month.ToString()); ++m)
+                        {
+                            if (start == Int32.Parse(DateTime.Now.Year.ToString()) && m == Int32.Parse(DateTime.Now.Month.ToString()))
+                            {
+                                <td style="width: 70px; padding-right:7px; color:red">
+                                    @ViewBag.listMonth[m - 1]
+                                </td>
+                            }
+                            else
+                            {
+                                <td style="width: 70px; padding-right:7px">
+                                    @ViewBag.listMonth[m - 1]
+                                </td>
+                            }
+                        }
+                        continue;
+                    }
+
+                    for (int m = 1; m <= 12; ++m)
+                    {
+                        <td style="width: 70px;padding-right:7px">
+                            @ViewBag.listMonth[m - 1]
+                        </td>
+                    }
+
+                }
+            </tr>
+            @foreach (var item in Model)
+            {
+                if (item.MissionsList.Count() == 0)
+                {
+                    <tr>
+                        <th>
+                            @Html.DisplayFor(modelItem => item.Consultant)
+                        </th>
+                        <th>
+                            Pas de projet
+                        </th>
+                    </tr>
+
+                }
+                else
+                {
+                    foreach (var mission in item.MissionsList)
+                    {
+                        <tr>
+                            <th>
+                                @Html.DisplayFor(modelItem => item.Consultant)
+                            </th>
+                            <th>
+                                @Html.DisplayFor(modelItem => mission)
+                            </th>
+                            @{
+                                int missionstartyear = item.DureeMission[mission][0];
+                                int missionstartmonth = item.DureeMission[mission][1];
+                                int startyear = Int32.Parse(ViewBag.debut.Year.ToString());
+                                int startmonth = Int32.Parse(ViewBag.debut.Month.ToString());
+
+                                int nb = 0;
+                                Boolean first = true;
+                                while (startyear < missionstartyear)
+                                {
+                                    if (first)
+                                    {
+                                        nb += (12 - startmonth + 1);
+                                    }
+                                    else
+                                    {
+                                        nb += 12;
+                                    }
+                                    first = false;
+                                    nb++;
+                                    startyear++;
+                                }
+                                if (first)
+                                {
+                                    nb += (missionstartmonth - startmonth);
+                                }
+                                else
+                                {
+                                    nb += (missionstartmonth - 1);
+                                }
+                                nb++;
+                                for (int i = 1; i <= nb; ++i)
+                                {
+                                    <td style="padding-right:7px"></td>
+                                }
+                                int fois = 1;
+                                for (int start = item.DureeMission[mission][0]; start <= Int32.Parse(DateTime.Now.Year.ToString()); start++)
+                                {
+                                    if (fois > 1)
+                                    {
+                                        <td style="padding-right:7px"></td>
+                                    }
+                                    fois++;
+                                    if (start == item.DureeMission[mission][0] && start == Int32.Parse(DateTime.Now.Year.ToString()))
+                                    {
+                                        for (int m = item.DureeMission[mission][1]; m <= Int32.Parse(DateTime.Now.Month.ToString()); ++m)
+                                        {
+                                            if (start < item.DureeMission[mission][2] || (start == item.DureeMission[mission][2] && m <= item.DureeMission[mission][3]))
+                                            {
+                                                <td style="width: 70px; padding-right:7px">
+                                                    @Html.DisplayFor(modelItem => item.NbParMission[mission][start.ToString()][m - 1])
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td style="width: 70px; padding-right:7px">
+                                                </td>
+                                            }
+
+                                        }
+                                        continue;
+                                    }
+
+                                    if (start == item.DureeMission[mission][0] && start != Int32.Parse(DateTime.Now.Year.ToString()))
+                                    {
+                                        for (int m = item.DureeMission[mission][1]; m <= 12; ++m)
+                                        {
+                                            if (start < item.DureeMission[mission][2] || (start == item.DureeMission[mission][2] && m <= item.DureeMission[mission][3]))
+                                            {
+                                                <td style="width: 70px; padding-right:7px">
+                                                    @Html.DisplayFor(modelItem => item.NbParMission[mission][start.ToString()][m - 1])
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td style="width: 70px; padding-right:7px">
+                                                </td>
+                                            }
+                                        }
+                                        continue;
+                                    }
+
+                                    if (start == Int32.Parse(DateTime.Now.Year.ToString()) && start != item.DureeMission[mission][0])
+                                    {
+                                        for (int m = 1; m <= Int32.Parse(DateTime.Now.Month.ToString()); ++m)
+                                        {
+                                            if (start < item.DureeMission[mission][2] || (start == item.DureeMission[mission][2] && m <= item.DureeMission[mission][3]))
+                                            {
+                                                <td style="width: 70px; padding-right:7px">
+                                                    @Html.DisplayFor(modelItem => item.NbParMission[mission][start.ToString()][m - 1])
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td style="width: 70px; padding-right:7px">
+                                                </td>
+                                            }
+                                        }
+                                        continue;
+                                    }
+
+                                    for (int m = 1; m <= 12; ++m)
+                                    {
+                                        if (start < item.DureeMission[mission][2] || (start == item.DureeMission[mission][2] && m <= item.DureeMission[mission][3]))
+                                        {
+                                            <td style="width: 70px; padding-right:7px">
+                                                @Html.DisplayFor(modelItem => item.NbParMission[mission][start.ToString()][m - 1])
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td style="width: 70px; padding-right:7px">
+                                            </td>
+                                        }
+                                    }
+
+                                }
+                            }
+
+                        </tr>
+                    }
+                }
+            }
+        </table>
+    </div>
+
+</div>
+
+<script>
+    function sortTable() {
+        var table, rows, switching, i, x, y, shouldSwitch;
+        table = document.getElementById("mytable");
+        switching = true;
+        /*Make a loop that will continue until
+        no switching has been done:*/
+        while (switching) {
+            //start by saying: no switching is done:
+            switching = false;
+            rows = table.getElementsByTagName("TR");
+            /*Loop through all table rows (except the
+            first, which contains table headers):*/
+            for (i = 1; i < (rows.length - 1); i++) {
+                //start by saying there should be no switching:
+                shouldSwitch = false;
+                /*Get the two elements you want to compare,
+                one from current row and one from the next:*/
+                x = rows[i].getElementsByTagName("TH")[0];
+                y = rows[i + 1].getElementsByTagName("TH")[0];
+                //check if the two rows should switch place:
+                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+            if (shouldSwitch) {
+                /*If a switch has been marked, make the switch
+                and mark that a switch has been done:*/
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+            }
+        }
+        sortTable2();
+    }
+
+    function sortTable2() {
+        var table, rows, switching, i, x, y, shouldSwitch;
+        table = document.getElementById("mytable2");
+        switching = true;
+        /*Make a loop that will continue until
+        no switching has been done:*/
+        while (switching) {
+            //start by saying: no switching is done:
+            switching = false;
+            rows = table.getElementsByTagName("TR");
+            /*Loop through all table rows (except the
+            first, which contains table headers):*/
+            for (i = 1; i < (rows.length - 1); i++) {
+                //start by saying there should be no switching:
+                shouldSwitch = false;
+                /*Get the two elements you want to compare,
+                one from current row and one from the next:*/
+                x = rows[i].getElementsByTagName("TH")[0];
+                y = rows[i + 1].getElementsByTagName("TH")[0];
+                //check if the two rows should switch place:
+                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+            if (shouldSwitch) {
+                /*If a switch has been marked, make the switch
+                and mark that a switch has been done:*/
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+            }
+        }
+    }
+</script>
+@*
+    <table class="table">
+        <tr>
+            <th>
+                Consultant
+            </th>
+            <th>
+                Projet
+            </th>
+            <td>
+                <div style="width: 700px; height:100px; overflow:scroll;">
+                    <table style="text-align: center;">
+                        <tr>
+                            @for (int start = Int32.Parse(ViewBag.debut.Year.ToString()); start <= Int32.Parse(DateTime.Now.Year.ToString()); start++)
+                            {
+                                <td style="color:green; padding-right:7px"> @start  </td>
+
+                                if (start == Int32.Parse(ViewBag.debut.Year.ToString()) && start == Int32.Parse(DateTime.Now.Year.ToString()))
+                                {
+                                    for (int m = Int32.Parse(ViewBag.debut.Month.ToString()); m <= Int32.Parse(DateTime.Now.Month.ToString()); ++m)
+                                    {
+                                        if (start == Int32.Parse(DateTime.Now.Year.ToString()) && m == Int32.Parse(DateTime.Now.Month.ToString()))
+                                        {
+                                            <th style="width: 70px; padding-right:7px; color:red">
+                                                @ViewBag.listMonth[m - 1]
+                                            </th>
+                                        }
+                                        else
+                                        {
+                                            <th style="width: 70px; padding-right:7px">
+                                                @ViewBag.listMonth[m - 1]
+                                            </th>
+                                        }
 
                                     }
-                                </tr>
-                            </table>
-                        </div>
-                    </td>
+                                    continue;
+                                }
 
+                                if (start == Int32.Parse(ViewBag.debut.Year.ToString()) && start != Int32.Parse(DateTime.Now.Year.ToString()))
+                                {
+                                    for (int m = Int32.Parse(ViewBag.debut.Month.ToString()); m <= 12; ++m)
+                                    {
+                                        <th style="width: 70px;padding-right:7px">
+                                            @ViewBag.listMonth[m - 1]
+                                        </th>
+                                    }
+                                    continue;
+                                }
+
+                                if (start == Int32.Parse(DateTime.Now.Year.ToString()) && start != Int32.Parse(ViewBag.debut.Year.ToString()))
+                                {
+                                    for (int m = 1; m <= Int32.Parse(DateTime.Now.Month.ToString()); ++m)
+                                    {
+                                        if (start == Int32.Parse(DateTime.Now.Year.ToString()) && m == Int32.Parse(DateTime.Now.Month.ToString()))
+                                        {
+                                            <th style="width: 70px; padding-right:7px; color:red">
+                                                @ViewBag.listMonth[m - 1]
+                                            </th>
+                                        }
+                                        else
+                                        {
+                                            <th style="width: 70px; padding-right:7px">
+                                                @ViewBag.listMonth[m - 1]
+                                            </th>
+                                        }
+                                    }
+                                    continue;
+                                }
+
+                                for (int m = 1; m <= 12; ++m)
+                                {
+                                    <th style="width: 70px;padding-right:7px">
+                                        @ViewBag.listMonth[m - 1]
+                                    </th>
+                                }
+
+                            }
+
+                        </tr>
+
+                        @foreach (var item in Model)
+                        {
+                            if (item.MissionsList.Count() == 0)
+                            {
+                                <tr>
+                                </tr>
+                            }
+                            else
+                            {
+                                foreach (var mission in item.MissionsList)
+                                {
+                    <tr>
+
+                        @{ int missionstartyear = item.DureeMission[mission][0];
+                            int missionstartmonth = item.DureeMission[mission][1];
+                            int startyear = Int32.Parse(ViewBag.debut.Year.ToString());
+                            int startmonth = Int32.Parse(ViewBag.debut.Month.ToString());
+
+                            int nb = 0;
+                            Boolean first = true;
+                            while (startyear < missionstartyear)
+                            {
+                                if (first)
+                                {
+                                    nb += (12 - startmonth + 1);
+                                }
+                                else
+                                {
+                                    nb += 12;
+                                }
+                                first = false;
+                                nb++;
+                                startyear++;
+                            }
+                            if (first)
+                            {
+                                nb += (missionstartmonth - startmonth);
+                            }
+                            else
+                            {
+                                nb += (missionstartmonth - 1);
+                            }
+                            nb++;
+                            for (int i = 1; i <= nb; ++i)
+                            {
+                                <td style="padding-right:7px"></td>
+                            }
+                            int fois = 1;
+                            for (int start = item.DureeMission[mission][0]; start <= Int32.Parse(DateTime.Now.Year.ToString()); start++)
+                            {
+                                if(fois>1)
+                                {
+                                    <td style="padding-right:7px"></td>
+                                }
+                                fois++;
+                                if (start == item.DureeMission[mission][0] && start == Int32.Parse(DateTime.Now.Year.ToString()))
+                                {
+                                    for (int m = item.DureeMission[mission][1]; m <= Int32.Parse(DateTime.Now.Month.ToString()); ++m)
+                                    {
+                                        if (start < item.DureeMission[mission][2] || (start == item.DureeMission[mission][2] && m <= item.DureeMission[mission][3]))
+                                        {
+                                            <td style="width: 70px; padding-right:7px">
+                                                @Html.DisplayFor(modelItem => item.NbParMission[mission][start.ToString()][m - 1])
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td style="width: 70px; padding-right:7px">
+                                            </td>
+                                        }
+
+                                    }
+                                    continue;
+                                }
+
+                                if (start == item.DureeMission[mission][0] && start != Int32.Parse(DateTime.Now.Year.ToString()))
+                                {
+                                    for (int m = item.DureeMission[mission][1]; m <= 12; ++m)
+                                    {
+                                        if (start < item.DureeMission[mission][2] || (start == item.DureeMission[mission][2] && m <= item.DureeMission[mission][3]))
+                                        {
+                                            <td style="width: 70px; padding-right:7px">
+                                                @Html.DisplayFor(modelItem => item.NbParMission[mission][start.ToString()][m - 1])
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td style="width: 70px; padding-right:7px">
+                                            </td>
+                                        }
+                                    }
+                                    continue;
+                                }
+
+                                if (start == Int32.Parse(DateTime.Now.Year.ToString()) && start != item.DureeMission[mission][0])
+                                {
+                                    for (int m = 1; m <= Int32.Parse(DateTime.Now.Month.ToString()); ++m)
+                                    {
+                                        if (start < item.DureeMission[mission][2] || (start == item.DureeMission[mission][2] && m <= item.DureeMission[mission][3]))
+                                        {
+                                            <td style="width: 70px; padding-right:7px">
+                                                @Html.DisplayFor(modelItem => item.NbParMission[mission][start.ToString()][m - 1])
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td style="width: 70px; padding-right:7px">
+                                            </td>
+                                        }
+                                    }
+                                    continue;
+                                }
+
+                                for (int m = 1; m <= 12; ++m)
+                                {
+                                    if (start < item.DureeMission[mission][2] || (start == item.DureeMission[mission][2] && m <= item.DureeMission[mission][3]))
+                                    {
+                                        <td style="width: 70px; padding-right:7px">
+                                            @Html.DisplayFor(modelItem => item.NbParMission[mission][start.ToString()][m - 1])
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td style="width: 70px; padding-right:7px">
+                                        </td>
+                                    }
+                                }
+
+                            }
+                        }
+                    </tr>
+                                }
+                            }
+                        }
+
+
+                    </table>
+                </div>
+            </td>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            if (item.MissionsList.Count() == 0)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Consultant)
+                    </td>
+                    <td>
+                        Pas de projet
+                    </td>
                 </tr>
 
             }
+            else
+            {
+                foreach (var mission in item.MissionsList)
+                {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Consultant)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => mission)
+                    </td>
+                </tr>
+                }
+            }
+        }
+    </table>
+
+
+*@
+
+
+
+
+
+@*
+    @model List<Projet_pilate.Models.ConsultantCraModelNew>
+    @{
+        ViewBag.Title = "test";
+        ViewBag.nb = 500;
+        Layout = null;
+    }
+
+    <table class="table">
+        <tr>
+            <th>
+                Consultant
+            </th>
+            <th>
+                Projet
+            </th>
+            <th>
+                Detail
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            if (item.MissionsList.Count() == 0)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Consultant)
+                    </td>
+                    <td>
+                        Pas de projet
+                    </td>
+                    <td>
+                        Rien
+                    </td>
+
+                </tr>
+            }
+            else
+            {
+                foreach (var mission in item.MissionsList)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Consultant)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => mission)
+                        </td>
+                        <td>
+                            <div style="width: 700px; height:100px; overflow:scroll;">
+                                <table style="text-align: center;">
+                                    <tr>
+                                        @for (int start = item.DureeMission[mission][0]; start <= Int32.Parse(DateTime.Now.Year.ToString()); start++)
+                                        {
+                                            <td style="color:green; padding-right:7px"> @start  </td>
+                                            if (start == item.DureeMission[mission][0] && start == Int32.Parse(DateTime.Now.Year.ToString()))
+                                            {
+                                                for (int m = item.DureeMission[mission][1]; m <= Int32.Parse(DateTime.Now.Month.ToString()); ++m)
+                                                {
+                                                    if (start == Int32.Parse(DateTime.Now.Year.ToString()) && m == Int32.Parse(DateTime.Now.Month.ToString()))
+                                                    {
+                                                        <th style="width: 70px; padding-right:7px; color:red">
+                                                            @ViewBag.listMonth[m - 1]
+                                                        </th>
+                                                    }
+                                                    else
+                                                    {
+                                                        <th style="width: 70px; padding-right:7px">
+                                                            @ViewBag.listMonth[m - 1]
+                                                        </th>
+                                                    }
+
+                                                }
+                                                continue;
+                                            }
+
+                                            if (start == item.DureeMission[mission][0] && start != Int32.Parse(DateTime.Now.Year.ToString()))
+                                            {
+                                                for (int m = item.DureeMission[mission][1]; m <= 12; ++m)
+                                                {
+                                                    <th style="width: 70px;padding-right:7px">
+                                                        @ViewBag.listMonth[m - 1]
+                                                    </th>
+                                                }
+                                                continue;
+                                            }
+
+                                            if (start == Int32.Parse(DateTime.Now.Year.ToString()) && start != item.DureeMission[mission][0])
+                                            {
+                                                for (int m = 1; m <= Int32.Parse(DateTime.Now.Month.ToString()); ++m)
+                                                {
+                                                    if (start == Int32.Parse(DateTime.Now.Year.ToString()) && m == Int32.Parse(DateTime.Now.Month.ToString()))
+                                                    {
+                                                        <th style="width: 70px; padding-right:7px; color:red">
+                                                            @ViewBag.listMonth[m - 1]
+                                                        </th>
+                                                    }
+                                                    else
+                                                    {
+                                                        <th style="width: 70px; padding-right:7px">
+                                                            @ViewBag.listMonth[m - 1]
+                                                        </th>
+                                                    }
+                                                }
+                                                continue;
+                                            }
+
+                                            for (int m = 1; m <= 12; ++m)
+                                            {
+                                                <th style="width: 70px;padding-right:7px">
+                                                    @ViewBag.listMonth[m - 1]
+                                                </th>
+                                            }
+
+                                        }
+                                    </tr>
+                                    <tr>
+                                        @for (int start = item.DureeMission[mission][0]; start <= Int32.Parse(DateTime.Now.Year.ToString()); start++)
+                                        {
+                                            <td  style="padding-right:7px"></td>
+                                            if (start == item.DureeMission[mission][0] && start == Int32.Parse(DateTime.Now.Year.ToString()))
+                                            {
+                                                for (int m = item.DureeMission[mission][1]; m <= Int32.Parse(DateTime.Now.Month.ToString()); ++m)
+                                                {
+                                                    if (start < item.DureeMission[mission][2] || (start == item.DureeMission[mission][2] && m <= item.DureeMission[mission][3]))
+                                                    {
+                                                        <td style="width: 70px; padding-right:7px">
+                                                            @Html.DisplayFor(modelItem => item.NbParMission[mission][start.ToString()][m - 1])
+                                                        </td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td style="width: 70px; padding-right:7px">
+                                                        </td>
+                                                    }
+
+                                                }
+                                                continue;
+                                            }
+
+                                            if (start == item.DureeMission[mission][0] && start != Int32.Parse(DateTime.Now.Year.ToString()))
+                                            {
+                                                for (int m = item.DureeMission[mission][1]; m <= 12; ++m)
+                                                {
+                                                    if (start < item.DureeMission[mission][2] || (start == item.DureeMission[mission][2] && m <= item.DureeMission[mission][3]))
+                                                    {
+                                                        <td style="width: 70px; padding-right:7px">
+                                                            @Html.DisplayFor(modelItem => item.NbParMission[mission][start.ToString()][m - 1])
+                                                        </td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td style="width: 70px; padding-right:7px">
+                                                        </td>
+                                                    }
+                                                }
+                                                continue;
+                                            }
+
+                                            if (start == Int32.Parse(DateTime.Now.Year.ToString()) && start != item.DureeMission[mission][0])
+                                            {
+                                                for (int m = 1; m <= Int32.Parse(DateTime.Now.Month.ToString()); ++m)
+                                                {
+                                                    if (start < item.DureeMission[mission][2] || (start == item.DureeMission[mission][2] && m <= item.DureeMission[mission][3]))
+                                                    {
+                                                        <td style="width: 70px; padding-right:7px">
+                                                            @Html.DisplayFor(modelItem => item.NbParMission[mission][start.ToString()][m - 1])
+                                                        </td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td style="width: 70px; padding-right:7px">
+                                                        </td>
+                                                    }
+                                                }
+                                                continue;
+                                            }
+
+                                            for (int m = 1; m <= 12; ++m)
+                                            {
+                                                if (start < item.DureeMission[mission][2] || (start == item.DureeMission[mission][2] && m <= item.DureeMission[mission][3]))
+                                                {
+                                                    <td style="width: 70px; padding-right:7px">
+                                                        @Html.DisplayFor(modelItem => item.NbParMission[mission][start.ToString()][m - 1])
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td style="width: 70px; padding-right:7px">
+                                                    </td>
+                                                }
+                                            }
+
+                                        }
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+
+                    </tr>
+
+                }
+                                            }
+
+
                                         }
 
-
-                                    }
-
-</table>
+    </table>
+*@
 
 
 

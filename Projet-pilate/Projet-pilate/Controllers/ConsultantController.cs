@@ -1080,6 +1080,7 @@ namespace Projet_pilate.Controllers
             ViewBag.listMonth = new string[] { " Jan ", " Fév ", " Mar ", " Avr ", " Mai ", " Juin ", " Juil ", " Aou ", " Sep ", " Oct ", " Nov ", " Dec " };
             ApplicationDbContext db = new ApplicationDbContext();
             List<ConsultantCraModelNew> models = new List<ConsultantCraModelNew>();
+            ViewBag.debut = db.MonthActivations.Single().Periode;
 
             var consultants = db.Consultants.ToList();
 
@@ -1100,6 +1101,11 @@ namespace Projet_pilate.Controllers
                 {
                     if (mission.ConsultantID == consultant.ConsultantID)
                     {
+                        if (mission.Start < ViewBag.debut)
+                        {
+                            ViewBag.debut = mission.Start;
+                        }
+
                         model.MissionsList.Add(mission.Name);
                         int end = Int32.Parse(mission.End.Year.ToString());
                         int start = Int32.Parse(mission.Start.Year.ToString());
@@ -1125,8 +1131,9 @@ namespace Projet_pilate.Controllers
 
                         foreach (var activity in activities)
                         {
-                            if (activity.CraID == cra.CraID)
-                            {
+                            
+                                if (activity.CraID == cra.CraID)
+                                {
                                 switch (activity.Morning)
                                 {
                                     case "IC":
@@ -1138,6 +1145,7 @@ namespace Projet_pilate.Controllers
                                     case "Congés":
                                         break;
                                     default:
+                                        
                                         model.NbParMission[activity.Morning][activity.Date.Year.ToString()][Int32.Parse(activity.Date.Month.ToString()) - 1] += 0.5;
                                         break;
                                 }
