@@ -287,6 +287,7 @@
     <Compile Include="Entities\CompanyClasses.cs" />
     <Compile Include="Entities\FactureClasse.cs" />
     <Compile Include="Entities\ProfitCenter.cs" />
+    <Compile Include="Entities\SuiviClasse.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -365,6 +366,10 @@
     <Compile Include="Migrations\202007071946020_Facture.cs" />
     <Compile Include="Migrations\202007071946020_Facture.designer.cs">
       <DependentUpon>202007071946020_Facture.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007072040467_Suivi.cs" />
+    <Compile Include="Migrations\202007072040467_Suivi.designer.cs">
+      <DependentUpon>202007072040467_Suivi.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -581,6 +586,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202007071946020_Facture.resx">
       <DependentUpon>202007071946020_Facture.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007072040467_Suivi.resx">
+      <DependentUpon>202007072040467_Suivi.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

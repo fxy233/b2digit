@@ -150,6 +150,7 @@ namespace Projet_pilate.Models
         public DbSet<Message> Messages { get; set; }
 
         public DbSet<Facture> Factures { get; set; }
+        public DbSet<Suivi> Suivis { get; set; }
 
     }
 
