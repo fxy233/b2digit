@@ -30,10 +30,11 @@ namespace Projet_pilate.Controllers
             RegisterActivityViewModel model = new RegisterActivityViewModel();
 
             var currentMonth = db.MonthActivations.Single();
+            ViewBag.date = currentMonth.Periode;
             int month = currentMonth.Periode.Month;
             int year = currentMonth.Periode.Year;
             int lastDayOfMonth = System.DateTime.DaysInMonth(year, month);
-
+            
             //
 
             DateTime endMonth = new DateTime(year, month, lastDayOfMonth);
@@ -64,7 +65,7 @@ namespace Projet_pilate.Controllers
             m.Start > startMonth && m.End == endMonth ||
             m.Start > startMonth && m.End > endMonth).ToList();
             */
-            List<Mission> missionsEnCours = missionsTotal.Where(m => m.End <= endMonth).ToList();
+            List<Mission> missionsEnCours = missionsTotal.Where(m => m.Start < endMonth && m.End > startMonth).ToList();
             List<string> nomMissions = new List<string>();
 
 
@@ -305,6 +306,7 @@ namespace Projet_pilate.Controllers
             List<ActivityViewModel> models = new List<ActivityViewModel>();
 
             List<Cra> cras = db.Cras.ToList();
+            List<string> consultantCra = new List<string>();
 
             var currentMonth = db.MonthActivations.Single().Periode.ToString("MMMM", CultureInfo.CurrentCulture);
             ViewBag.date = db.MonthActivations.Single().Periode;
@@ -414,13 +416,25 @@ namespace Projet_pilate.Controllers
                             NoBillDays = (float)noBill/2.0f,
                             WorkedDaysWE = (float)NBJTWE[IndexOfMission] / 2.0f,
                         };
+                        consultantCra.Add(model.ConsultantName);
                         models.Add(model);
                     }
                 }
-                    
-               
-
                 
+            }
+
+            var consultantlist = db.Consultants.ToList();
+            foreach (var c in consultantlist)
+            {
+                if (!consultantCra.Contains(c.FirstName + " " + c.LastName))
+                {
+                    ActivityViewModel model = new ActivityViewModel()
+                    {
+                        ConsultantName = c.FirstName + " " + c.LastName,
+                        MissionName = "Rien",
+                    };
+                    models.Add(model);
+                }
             }
 
             return View(models);
@@ -443,6 +457,10 @@ namespace Projet_pilate.Controllers
         public ActionResult CRAReadOnly(int id)
         {
             ApplicationDbContext db = new ApplicationDbContext();
+
+            var currentMonth = db.MonthActivations.Single();
+            ViewBag.date = currentMonth.Periode;
+
             var cra = db.Cras.Single(c => c.CraID == id);
 
             var consultant = db.Consultants.Single(c => c.ConsultantID == cra.ConsultantID);
@@ -630,7 +648,7 @@ namespace Projet_pilate.Controllers
                 ConsultantCraModel model = new ConsultantCraModel()
                 {
                     ID = consultant.ConsultantID,
-                    Email = consultant.Email,
+                    Consultant = consultant.FirstName+" "+consultant.LastName,
                     MissionsList = new List<string>(),
                     NbParMission = new Dictionary<string, double[]>(),
                     DureeMission = new Dictionary<string, int[]>(),
@@ -1071,7 +1089,7 @@ namespace Projet_pilate.Controllers
                 ConsultantCraModelNew model = new ConsultantCraModelNew()
                 {
                     ID = consultant.ConsultantID,
-                    Email = consultant.Email,
+                    Consultant = consultant.FirstName+" "+consultant.LastName,
                     MissionsList = new List<string>(),
                     NbParMission = new Dictionary<string, Dictionary<string, double[]>>(),
                     DureeMission = new Dictionary<string, int[]>(),
@@ -1169,7 +1187,7 @@ namespace Projet_pilate.Controllers
                 ConsultantCraModel model = new ConsultantCraModel()
                 {
                     ID = consultant.ConsultantID,
-                    Email = consultant.Email,
+                    Consultant = consultant.FirstName + " " + consultant.LastName,
                     MissionsList = new List<string>(),
                     NbParMission = new Dictionary<string, double[]>(),
                 };

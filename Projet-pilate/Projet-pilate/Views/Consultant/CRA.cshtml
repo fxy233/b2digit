@@ -6,11 +6,11 @@
 @if (Model.MoisActivation.StartsWith("avril") || Model.MoisActivation.StartsWith("août") || Model.MoisActivation.StartsWith("octobre"))
 {
 
-    <h2>CRA du mois d'@Model.MoisActivation @*DateTime.Now.Year*@ de @ViewBag.nom</h2>
+    <h2>CRA du mois d'@ViewBag.date.ToString("MMMM yyyy", System.Globalization.CultureInfo.CurrentCulture) de @ViewBag.nom</h2>
 }
 else
 {
-    <h2>CRA du mois de @Model.MoisActivation @*DateTime.Now.Year*@ de @ViewBag.nom</h2>
+<h2>CRA du mois de @ViewBag.date.ToString("MMMM yyyy", System.Globalization.CultureInfo.CurrentCulture) de @ViewBag.nom</h2>
     <br />
 }
 

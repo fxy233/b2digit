@@ -7,8 +7,8 @@
 
 <h2>Liste des comptes rendu d'activité du mois de @ViewBag.date.ToString("MMMM, yyyy", System.Globalization.CultureInfo.CurrentCulture)</h2>
 
-
-<table class="table">
+<p><button onclick="sortTable()">Trier</button></p>
+<table class="table" id="mytable">
     <tr>
 
         <th>
@@ -21,8 +21,8 @@
             @Html.DisplayNameFor(model => model.NoBillDays)
         </th>
         @*<th>
-            Detail
-        </th>*@
+                Detail
+            </th>*@
         <th>
             @Html.DisplayNameFor(model => model.MissionName)
         </th>
@@ -40,51 +40,67 @@
         foreach (var item in Model)
         {
 
-        <tr>
-            <td>
-                @if (item.ConsultantName != Previous)
-                {
-                    @Html.DisplayFor(modelItem => item.ConsultantName)
-                }
+            if (item.MissionName == "Rien")
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ConsultantName)
+                    </td>
+                    <td>
+                        Ce consultant n'a pas encore saisi son CRA pendant le mois actif
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td>
+                        @*@if (item.ConsultantName != Previous)
+                            {
+                                @Html.DisplayFor(modelItem => item.ConsultantName)
+                            }*@
+                        @Html.DisplayFor(modelItem => item.ConsultantName)
+                    </td>
+                    <td>
+                        @if (item.ConsultantName != Previous)
+                        {
+                            @Html.DisplayFor(modelItem => item.Satisfaction)
+                        }
+                    </td>
+                    <td>
+                        @if (item.ConsultantName != Previous)
+                        {
+                            @Html.DisplayFor(modelItem => item.NoBillDays)
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MissionName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.WorkedDays)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.WorkedDaysWE)
+                    </td>
+                    <td>
+                        @if ((item.ConsultantName != Previous) && (User.IsInRole("Super-Administrateur") || User.IsInRole("Administrateur")) || User.IsInRole("Administrateur-ventes"))
+                        {
 
-            </td>
-            <td>
-                @if (item.ConsultantName != Previous)
-                {
-                    @Html.DisplayFor(modelItem => item.Satisfaction)
-                }
-            </td>
-            <td>
-                @if (item.ConsultantName != Previous)
-                {
-                    @Html.DisplayFor(modelItem => item.NoBillDays)
-                }
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MissionName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.WorkedDays)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.WorkedDaysWE)
-            </td>
-            <td>
-                @if ((item.ConsultantName != Previous) && (User.IsInRole("Super-Administrateur") || User.IsInRole("Administrateur")) || User.IsInRole("Administrateur-ventes"))
-                {
 
+                            @Html.ActionLink("Réinitialiser CRA", "DeleteCra", "Consultant", new { id = item.ID }, new { @class = "btn btn-primary btn-large supp" })
+                            @Html.ActionLink("Réinitialiser CRA", "DeleteCra", "Consultant", new { id = item.ID }, new { @class = "btn btn-primary btn-large action" })
+                            @Html.ActionLink("Détail", "CRAReadOnly", new { id = item.ID }, new { @class = "btn btn-primary btn-large" })
+                            @Html.ActionLink("Détail", "CRAReadOnly", new { id = item.ID }, new { @class = "btn btn-primary btn-large action" })
 
-                    @Html.ActionLink("Réinitialiser CRA", "DeleteCra", "Consultant", new { id = item.ID }, new { @class = "btn btn-primary btn-large supp" })
-                    @Html.ActionLink("Réinitialiser CRA", "DeleteCra", "Consultant", new { id = item.ID }, new { @class = "btn btn-primary btn-large action" })
-                    @Html.ActionLink("Détail", "CRAReadOnly", new { id = item.ID }, new { @class = "btn btn-primary btn-large" })
-                    @Html.ActionLink("Détail", "CRAReadOnly", new { id = item.ID }, new { @class = "btn btn-primary btn-large action" })
+                        }
 
-                }
-
-            </td>
-        </tr>
-            Previous = item.ConsultantName;
+                    </td>
+                </tr>
+                Previous = item.ConsultantName;
+            }
         }
+
+
     }
     @*@{
             Dictionary<string, List<Projet_pilate.Models.ActivityViewModel>> list = new Dictionary<string, List<Projet_pilate.Models.ActivityViewModel>>();
@@ -227,6 +243,41 @@
             window.location.href = href;
         });
     });
+
+    function sortTable() {
+        var table, rows, switching, i, x, y, shouldSwitch;
+        table = document.getElementById("mytable");
+        switching = true;
+        /*Make a loop that will continue until
+        no switching has been done:*/
+        while (switching) {
+            //start by saying: no switching is done:
+            switching = false;
+            rows = table.getElementsByTagName("TR");
+            /*Loop through all table rows (except the
+            first, which contains table headers):*/
+            for (i = 1; i < (rows.length - 1); i++) {
+                //start by saying there should be no switching:
+                shouldSwitch = false;
+                /*Get the two elements you want to compare,
+                one from current row and one from the next:*/
+                x = rows[i].getElementsByTagName("TD")[0];
+                y = rows[i + 1].getElementsByTagName("TD")[0];
+                //check if the two rows should switch place:
+                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+            if (shouldSwitch) {
+                /*If a switch has been marked, make the switch
+                and mark that a switch has been done:*/
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+            }
+        }
+    }
 
 
 </script>

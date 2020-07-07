@@ -298,12 +298,19 @@ namespace Projet_pilate.Controllers
             var missionexist = db.Missions.ToList();
             foreach (var exist in missionexist)
             {
-                if (exist.Name == model.Name)
+                if (exist.Name == mission.Name)
                 {
-                    string message = "le nom du mission a été utilisé !";
-                    ModelState.AddModelError(string.Empty, message);
-                    ViewBag.date = mission.End.ToString("yyyy-MM-dd");
-                    return View(model);
+                    continue;
+                }
+                else
+                {
+                    if (exist.Name == model.Name)
+                    {
+                        string message = "Le nom de la mission doit être unique !";
+                        ModelState.AddModelError(string.Empty, message);
+                        ViewBag.date = mission.End.ToString("yyyy-MM-dd");
+                        return View(model);
+                    }
                 }
             }
 

@@ -198,7 +198,7 @@ namespace Projet_pilate.Models
 
         [Required]
     
-        public string Email { get; set; }
+        public string Consultant { get; set; }
 
 
         public List<string> MissionsList { get; set; }
@@ -216,7 +216,7 @@ namespace Projet_pilate.Models
 
         [Required]
 
-        public string Email { get; set; }
+        public string Consultant { get; set; }
 
 
         public List<string> MissionsList { get; set; }
