@@ -288,6 +288,9 @@ namespace Projet_pilate.Models
         [Display(Name = "Tarif")]
         public float Fee { get; set; }
 
+        [Display(Name = "Commentaire")]
+        public string Commentaire { get; set; }
+
 
 
     }

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc.Routing.Constraints;
 
 namespace Projet_pilate.Entities
 {
@@ -87,6 +88,12 @@ namespace Projet_pilate.Entities
         public int FreeDay { get; set; }
         public string Periodicity { get; set; }
         public string Comment { get; set; }
+        public string InfoFacturation { get; set; }
+        public int PrincipalBCID { get; set; }
+        public int InterBC1ID { get; set; }
+        public float TJInterBC1 { get; set; }
+        public int InterBC2ID { get; set; }
+        public float TJInterBC2 { get; set; }
 
         //public Boolean exist { get; set; }
 

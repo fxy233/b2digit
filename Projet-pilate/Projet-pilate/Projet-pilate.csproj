@@ -371,6 +371,10 @@
     <Compile Include="Migrations\202007072040467_Suivi.designer.cs">
       <DependentUpon>202007072040467_Suivi.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202007080536508_MissionUpdate.cs" />
+    <Compile Include="Migrations\202007080536508_MissionUpdate.designer.cs">
+      <DependentUpon>202007080536508_MissionUpdate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityViewModels.cs" />
@@ -589,6 +593,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202007072040467_Suivi.resx">
       <DependentUpon>202007072040467_Suivi.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007080536508_MissionUpdate.resx">
+      <DependentUpon>202007080536508_MissionUpdate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

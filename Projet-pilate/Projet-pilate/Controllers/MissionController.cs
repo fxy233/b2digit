@@ -35,7 +35,7 @@ namespace Projet_pilate.Controllers
                 End = DateTime.Today,
             };
 
-            ViewData["periodicite"] = "jours";
+            ViewData["periodicite"] = "Jours";
 
             return View(model);
         }
@@ -282,6 +282,7 @@ namespace Projet_pilate.Controllers
                 NewEnd = mission.End,
                 Name = mission.Name,
                 Fee = mission.Fee,
+                Commentaire = mission.Comment,
             };
 
             return View(model);
@@ -336,6 +337,7 @@ namespace Projet_pilate.Controllers
                 mission.End = model.NewEnd;
                 mission.Name = model.Name;
                 mission.Fee = model.Fee;
+                mission.Comment = model.Commentaire;
                 
                 db.SaveChanges();
 

@@ -202,21 +202,21 @@ namespace Projet_pilate.Controllers
         [Authorize(Roles = "Administrateur, Super-Administrateur,Manager")]
         // GET: /CompanyContact/EditCompanyContact
         [Route("CompanyContact/EditCompanyContact", Name = "EditCompanyContact")]
-        public ActionResult EditCompanyContact()
+        public ActionResult EditCompanyContact(int id)
         {
             ApplicationDbContext db = new ApplicationDbContext();
-            List<Manager> managers = db.Managers.ToList();
-            List<string> managerNames = new List<string>();
 
-            foreach (var manager in managers)
-            {
-                managerNames.Add(manager.FirstName + " " + manager.LastName);
-            }
+            var companyContact = db.CompanyContacts.Single(c => c.CompanyContactID == id);
 
             UpdateCompanyContactViewModel model = new UpdateCompanyContactViewModel
             {
-                //CompanyName = db.Companies.Select(c => c.Name).ToList(),
-                // ManagerName = managerNames,
+                 Id = companyContact.CompanyContactID,
+                 CompanyName = companyContact.CompanyName,
+                 Mail = companyContact.Mail,
+                 FirstName = companyContact.FirstName,
+                 LastName = companyContact.LastName,
+                 Position = companyContact.Position,
+                 Phone = companyContact.PhoneNumber,
 
             };
             
@@ -229,92 +229,43 @@ namespace Projet_pilate.Controllers
         [HttpPost]
         public ActionResult EditCompanyContact(UpdateCompanyContactViewModel model)
         {
-            /* string companyName;
-             string[] managerName;
-             string managerFirstName;
-             string managerLastName;
-             ApplicationDbContext db = new ApplicationDbContext();
 
-             if (!ModelState.IsValid)
-             {
-                 companyName = Request.Form["CompanyId"].ToString();
-                 managerName = Request.Form["ManagerId"].ToString().Split(' ');
-                 managerFirstName = managerName[0];
-                 managerLastName = managerName[1];
+            ApplicationDbContext db = new ApplicationDbContext();
 
-                 List<Manager> managers = db.Managers.ToList();
-                 List<string> managerNames = new List<string>();
+            var companyContact = db.CompanyContacts.Single(c => c.CompanyContactID == model.Id);
 
-                 foreach (var man in managers)
-                 {
-                     managerNames.Add(man.FirstName + " " + man.LastName);
-                 }
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
 
-                 model.CompanyNames = db.Companies.Select(c => c.Name).ToList();
+            var companylist = db.Companies.ToList();
+            Boolean exist = false;
+            foreach(var c in companylist)
+            {
+                if(model.CompanyName==c.Name)
+                {
+                    exist = true;
+                    break;
+                }
+            }
 
-                 model.ManagerNames = managerNames;
+            if(!exist)
+            {
+                string message = "Vérifier que le société exist !";
+                ModelState.AddModelError(string.Empty, message);
+                return View(model);
+            }
 
-                 ViewData["companyName"] = companyName;
-                 ViewData["managerName"] = managerFirstName + " " + managerLastName;
+            companyContact.CompanyName = model.CompanyName;
+            companyContact.Mail = model.Mail;
+            companyContact.FirstName = model.FirstName;
+            companyContact.LastName = model.LastName;
+            companyContact.Position = model.Position;
+            companyContact.PhoneNumber = model.Phone;
 
-                 return View(model);
-             }
+            db.SaveChanges();
 
-             companyName = Request.Form["CompanyId"].ToString();
-             managerName = Request.Form["ManagerId"].ToString().Split(' ');
-             managerFirstName = managerName[0];
-             managerLastName = managerName[1];
-
-
-             Company company = db.Companies.SingleOrDefault(c => c.Name == companyName);
-             Manager manager = db.Managers.SingleOrDefault(c => c.FirstName == managerFirstName
-                                       && c.LastName == managerLastName);
-
-
-             CompanyContact companyContact = new CompanyContact()
-             {
-                 Mail = model.Mail,
-                 CompanyName = companyName,
-                 FirstName = model.FirstName,
-                 LastName = model.LastName,
-                 Position = model.Position,
-                 PhoneNumber = model.Phone,
-             };
-
-             company.CompanyContacts.Add(companyContact);
-             manager.CompanyContacts.Add(companyContact);
-
-
-             db.CompanyContacts.Add(companyContact);
-
-             try
-             {
-                 db.SaveChanges();
-             }
-             catch (Exception)
-             {
-                 model.CompanyNames = db.Companies.Select(c => c.Name).ToList();
-
-                 List<Manager> managers = db.Managers.ToList();
-                 List<string> managerNames = new List<string>();
-
-                 foreach (var item in managers)
-                 {
-                     managerNames.Add(item.FirstName + " " + item.LastName);
-                 }
-
-                 model.ManagerNames = managerNames;
-
-                 ViewData["companyName"] = companyName;
-                 ViewData["managerName"] = managerFirstName + " " + managerLastName;
-
-                 string message = "Un client du même nom existe déjà !";
-                 ModelState.AddModelError(string.Empty, message);
-
-
-                 return View(model);
-             }
-            */
             return RedirectToAction("CompanyContactList", "CompanyContact");
 
         }

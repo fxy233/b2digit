@@ -227,13 +227,14 @@ namespace Projet_pilate.Controllers
             return View(model);
         }
 
-        /*
+        
         // POST: ProfitCenter/Edit
         [HttpPost]
-        public ActionResult Edit(UpdateSubsidiaryViewModel model)
+        public ActionResult EditProfitCenter(UpdateProfitCenterViewModel model)
         {
             ApplicationDbContext db = new ApplicationDbContext();
-            Subsidiary subsidiary = db.Subsidiaries.Single(s => s.SubsidiaryID == model.ID);
+            var profitcenter = db.profitCenters.Single(p => p.ProfitCenterID == model.ID);
+
 
 
             if (!ModelState.IsValid)
@@ -241,28 +242,103 @@ namespace Projet_pilate.Controllers
                 return View(model);
             }
 
-            subsidiary.Name = model.Name;
-            subsidiary.Siren = model.Siren;
-            subsidiary.Address = model.Address;
-            subsidiary.PostaleCode = model.PostaleCode;
-            subsidiary.City = model.City;
-            subsidiary.ManagerFirstName = model.ManagerFirstName;
-            subsidiary.ManagerLastName = model.ManagerLastName;
+            var plist = db.profitCenters.ToList();
+            foreach (var p in plist)
+            {
+                if (p.Name==profitcenter.Name)
+                {
+                    continue;
+                }
+                if(p.Name==model.Name)
+                {
+                    string message = "Vérifier qu'une filiale ayant le même siren ou le même nom n'existe pas déjà !";
+                    ModelState.AddModelError(string.Empty, message);
+                    List<string> managerNames = new List<string>();
+                    List<int> managerID = new List<int>();
+                    List<string> profitCenterNames = new List<string>();
+                    List<int> profitCenterID = new List<int>();
+                    var managers = db.Managers.ToList();
+                    var ProfitCenters = db.profitCenters.ToList();
 
-            try
-            {
-                db.SaveChanges();
+                    //
+
+                    foreach (var manager in managers)
+                    {
+                        managerNames.Add(manager.FirstName + " " + manager.LastName);
+                        managerID.Add(manager.ManagerID);
+
+                    }
+
+                    foreach (var ProfitCenter in ProfitCenters)
+                    {
+                        profitCenterNames.Add(ProfitCenter.Name);
+                        profitCenterID.Add(ProfitCenter.ProfitCenterID);
+                    }
+
+                    //model.FatherProfitCenter = 
+                    model.ListOwners = managerNames;
+                    model.ListOwnersID = managerID;
+                    model.ListPartOwners = managerNames;
+                    model.ListFatherProfitCenters = profitCenterNames;
+                    return View(model);
+                }
+
             }
-            catch (Exception)
+            profitcenter.Name = model.Name;
+            profitcenter.Owner = model.Owner;
+            profitcenter.PartOwner = model.PartOwner;
+            model.FatherProfitCenterID = model.FatherProfitCenter == "Aucune" ? (int?)null : db.profitCenters.Single(p => p.Name == model.FatherProfitCenter).ProfitCenterID;
+            profitcenter.FatherProfitCenterID = model.FatherProfitCenterID;
+            profitcenter.FatherProfitCenter = profitcenter.FatherProfitCenterID==null?null:db.profitCenters.Single(p=> p.ProfitCenterID==profitcenter.FatherProfitCenterID);
+
+            if (profitcenter.Name == profitcenter.FatherProfitCenter.Name)
             {
-                string message = "Vérifier qu'une filiale ayant le même siren ou le même nom n'existe pas déjà !";
+                string message = "La société père d'une filiale ne peut pas être la sienne.";
                 ModelState.AddModelError(string.Empty, message);
-                return View("Edit", model);
+                List<string> managerNames = new List<string>();
+                List<int> managerID = new List<int>();
+                List<string> profitCenterNames = new List<string>();
+                List<int> profitCenterID = new List<int>();
+                var managers = db.Managers.ToList();
+                var ProfitCenters = db.profitCenters.ToList();
+
+                //
+
+                foreach (var manager in managers)
+                {
+                    managerNames.Add(manager.FirstName + " " + manager.LastName);
+                    managerID.Add(manager.ManagerID);
+
+                }
+
+                foreach (var ProfitCenter in ProfitCenters)
+                {
+                    profitCenterNames.Add(ProfitCenter.Name);
+                    profitCenterID.Add(ProfitCenter.ProfitCenterID);
+                }
+
+                //model.FatherProfitCenter = 
+                model.ListOwners = managerNames;
+                model.ListOwnersID = managerID;
+                model.ListPartOwners = managerNames;
+                model.ListFatherProfitCenters = profitCenterNames;
+                return View(model);
             }
+
+            profitcenter.Cost = model.Cost;
+            profitcenter.Turnover = model.Turnover;
+
+            
+
+
+            db.SaveChanges();
+            
+            
+            
 
             
             return RedirectToAction("ProfitCenterList", "ProfitCenter");
-    }*/
+    }
 
         [Route("ProfitCenter/DeleteProfitCenter", Name = "DeleteProfitCenter")]
         public ActionResult DeleteProfitCenter(int id)
