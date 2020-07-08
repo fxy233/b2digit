@@ -135,8 +135,11 @@ namespace Projet_pilate.Models
         [Display(Name = "Coût exceptionnel")]
         public double ExceptionalCost { get; set; }
 
+        [Display(Name = "ProfitCenter")]
+        public string ProfitCenter { get; set; }
 
-        public List<string> ProfitCenters { get; set; }
+        [Display(Name = "Filiale")]
+        public string Subsidiary { get; set; }
     }
 
     public class UpdateConsultantViewModel

@@ -1,4 +1,8 @@
 ﻿@using Microsoft.AspNet.Identity
+@using Projet_pilate.Models;
+
+
+
 @if (Request.IsAuthenticated)
 {
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
@@ -8,7 +12,14 @@
 
     <ul class="nav navbar-nav navbar-right">
         <li>
-            <a href="#">Bonjour @User.Identity.GetUserName() !</a>
+            @{
+                ApplicationDbContext db = new ApplicationDbContext();
+                var id = User.Identity.GetUserId();
+                var user = db.Users.Single(u => u.Id == id);
+                string name = user.FirstName + " " + user.LastName;
+                <a href="#">Bonjour @name !</a>
+            }
+
         </li>
         <li><a href="javascript:document.getElementById('logoutForm').submit()">Se déconnecter</a></li>
     </ul>
