@@ -1153,3 +1153,5 @@ C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Proj
 C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\obj\Debug\Projet_pilate.Migrations.Facture.resources
 C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\obj\Debug\Projet_pilate.Migrations.Suivi.resources
 C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\obj\Debug\Projet_pilate.Migrations.MissionUpdate.resources
+C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\obj\Debug\Projet_pilate.Migrations.missionAjoute.resources
+C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\obj\Debug\Projet_pilate.Migrations.missionAjoute1.resources

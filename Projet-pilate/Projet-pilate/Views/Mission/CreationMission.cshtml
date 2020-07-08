@@ -1,5 +1,5 @@
 ﻿@model Projet_pilate.Models.RegisterMissionViewModel
-
+@using Projet_pilate.Models
 @{
     ViewBag.Title = "CreationMission";
 }
@@ -28,13 +28,30 @@
         <div class="form-group">
             <label class="control-label col-md-2">Contact client</label>
             <div class="col-md-10">
-                <select class="form-control" id="contactId" asp-for="ContactId" name="ContactId" required>
-                    <option selected>@ViewData["contact"]</option>
-                    @foreach (var contact in Model.ContactMail)
-                    {
-                        <option value="@contact">@contact</option>
+                <!--<select class="form-control" id="contactId" asp-for="ContactId" name="ContactId" required>-->
+                @*<option selected>@ViewData["contact"]</option>*@
+                @*{
+                ApplicationDbContext db = new ApplicationDbContext();
+                foreach (var contact in db.CompanyContacts.ToList())
+                {
+                    string c = contact.FirstName + " " + contact.LastName + " ( " + contact.CompanyName + " ) ";
+                    <option value="@contact.Mail">@c</option>
+                };
+            }
+        </select>*@
+                <input type="text" list="ContactId" class="form-control" id="contactId" asp-for="contactId" name="contactId" required />
+                <datalist id="ContactId" >
+                    @*<option selected>@ViewData["contact"]</option>*@
+                    @{
+                        ApplicationDbContext db = new ApplicationDbContext();
+                        foreach (var contact in db.CompanyContacts.ToList())
+                        {
+                            string c = contact.FirstName + " " + contact.LastName + " ( " + contact.CompanyName + " ) ";
+                            <option value="@contact.Mail">@c</option>
+                        };
                     }
-                </select>
+                </datalist>
+
             </div>
         </div>
 
@@ -112,18 +129,18 @@
     </div>
 }
 
-   <form action="/Mission/ValidationMissions" method="post" id="hiddenForm">
-        <input type="hidden" name="name" value="@Model.Name" />
-        <input type="hidden" name="client" value="@ViewData["contact"]" />
-        <input type="hidden" name="consultant" value="@ViewData["consultant"]" />
-        <input type="hidden" name="start" value="@Model.Start" />
-        <input type="hidden" name="end" value="@Model.End" />
-        <input type="hidden" name="fee" value="@Model.Fee" />
-        <input type="hidden" name="periodicity" value="@ViewData["periodicite"]" />
-        <input type="hidden" name="freeday" value="@Model.FreeDay" />
-        <input type="hidden" name="comment" value="@Model.Comment" />
-        <input type="submit" value="save" class="btn btn-default" id="save" />
-    </form>
+<form action="/Mission/ValidationMissions" method="post" id="hiddenForm">
+    <input type="hidden" name="name" value="@Model.Name" />
+    <input type="hidden" name="client" value="@ViewData["contact"]" />
+    <input type="hidden" name="consultant" value="@ViewData["consultant"]" />
+    <input type="hidden" name="start" value="@Model.Start" />
+    <input type="hidden" name="end" value="@Model.End" />
+    <input type="hidden" name="fee" value="@Model.Fee" />
+    <input type="hidden" name="periodicity" value="@ViewData["periodicite"]" />
+    <input type="hidden" name="freeday" value="@Model.FreeDay" />
+    <input type="hidden" name="comment" value="@Model.Comment" />
+    <input type="submit" value="save" class="btn btn-default" id="save" />
+</form>
 
 
 

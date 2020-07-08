@@ -228,7 +228,7 @@ namespace Projet_pilate.Controllers
         // POST: /Manage/ChangePassword
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
+        public async Task<ActionResult> ChangePassword1(ChangePasswordViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -245,7 +245,7 @@ namespace Projet_pilate.Controllers
                 return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
             }
             AddErrors(result);
-            return View(model);
+            return View("ChangePassword",model);
         }
 
         //

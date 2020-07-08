@@ -95,7 +95,7 @@ namespace Projet_pilate.Entities
         public int InterBC2ID { get; set; }
         public float TJInterBC2 { get; set; }
 
-        //public Boolean exist { get; set; }
+        public Boolean inexist { get; set; }
 
         public string Creator { get; set; }
 

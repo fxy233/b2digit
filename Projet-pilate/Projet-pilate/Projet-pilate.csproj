@@ -375,6 +375,14 @@
     <Compile Include="Migrations\202007080536508_MissionUpdate.designer.cs">
       <DependentUpon>202007080536508_MissionUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202007081212255_missionAjoute.cs" />
+    <Compile Include="Migrations\202007081212255_missionAjoute.designer.cs">
+      <DependentUpon>202007081212255_missionAjoute.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007081214297_missionAjoute1.cs" />
+    <Compile Include="Migrations\202007081214297_missionAjoute1.designer.cs">
+      <DependentUpon>202007081214297_missionAjoute1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityViewModels.cs" />
@@ -596,6 +604,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202007080536508_MissionUpdate.resx">
       <DependentUpon>202007080536508_MissionUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007081212255_missionAjoute.resx">
+      <DependentUpon>202007081212255_missionAjoute.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007081214297_missionAjoute1.resx">
+      <DependentUpon>202007081214297_missionAjoute1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

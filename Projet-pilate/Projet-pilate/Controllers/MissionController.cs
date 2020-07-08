@@ -108,7 +108,7 @@ namespace Projet_pilate.Controllers
             }
 
 
-            nomContact = Request.Form["ContactId"].ToString();
+            nomContact = Request.Form["contactId"].ToString();
             SelectedConsultant = Request.Form["ConsultantId"].ToString();
             var tabPrenomNom = SelectedConsultant.Split(' ');
             nomConsultant = tabPrenomNom[0];
@@ -233,7 +233,7 @@ namespace Projet_pilate.Controllers
 
             foreach (var mission in missions)
             {
-                if (mission.Fee>0)
+                if (!mission.inexist)
                 {
                     DetailsMissionViewModel model = new DetailsMissionViewModel()
                     {
@@ -405,48 +405,77 @@ namespace Projet_pilate.Controllers
             var monthTermine = Int32.Parse(missionDelete.End.Month.ToString());
             var yearTermine = Int32.Parse(missionDelete.End.Year.ToString());
 
-            if (yearCurrent > yearTermine || (yearCurrent == yearTermine && monthCurrent > monthTermine))
+            if (yearCurrent > yearTermine || (yearCurrent == yearTermine && monthCurrent-1 > monthTermine))
             {
                 //db.Missions.Remove(missionDelete);
                 //missionDelete.exist = false;
-                missionDelete.Fee = -System.Math.Abs(missionDelete.Fee);
+
+
+
+                missionDelete.inexist = true;
                 db.SaveChanges();
                 return RedirectToAction("ListeMissions", "Mission");
-            }
-            else
+            }else
             {
-                List<DetailsMissionViewModel> models = new List<DetailsMissionViewModel>();
-
-                var missions = db.Missions.ToList();
-
-                foreach (var mission in missions)
+                
+                var actlist = db.Activities.ToList();
+                Boolean recent = false;
+                foreach(var act in actlist)
                 {
-                    if (mission.Fee > 0)
+                    if (act.Morning==missionDelete.Name||act.Afternoon==missionDelete.Name)
                     {
-                        DetailsMissionViewModel model = new DetailsMissionViewModel()
+                        if ((yearCurrent == Int32.Parse(act.Date.Year.ToString()) && monthCurrent-1 <= Int32.Parse(act.Date.Month.ToString())))
                         {
-                            Id = mission.MissionID,
-                            Name = mission.Name,
-                            ContactEmail = mission.CompanyContact.Mail,
-                            ClientName = mission.CompanyContact.FirstName + " " + mission.CompanyContact.LastName,
-                            Start = mission.Start,
-                            End = mission.End,
-                            Fee = mission.Fee,
-                            FreeDay = mission.FreeDay,
-                            Periodicity = mission.Periodicity,
-                            Comment = mission.Comment,
-                            ConsultantName = mission.Consultant.FirstName + " " + mission.Consultant.LastName,
-                            CreatorName = mission.Creator,
-                            ProfitCenter = mission.ProfitCenter.Name,
-                        };
-
-                        models.Add(model);
+                            recent = true;
+                            
+                        }
                     }
                 }
-                string message = "Vous pouvez pas supprimé une tâche non terminée !";
-                ModelState.AddModelError(string.Empty, message);
-                return View("ListeMissions", models);
+
+                if(!recent)
+                {
+                    missionDelete.inexist = true;
+                    db.SaveChanges();
+                    return RedirectToAction("ListeMissions", "Mission");
+                }
+
+                
+                
+                
+                    List<DetailsMissionViewModel> models = new List<DetailsMissionViewModel>();
+
+                    var missions = db.Missions.ToList();
+
+                    foreach (var mission in missions)
+                    {
+                        if (!mission.inexist)
+                        {
+                            DetailsMissionViewModel model = new DetailsMissionViewModel()
+                            {
+                                Id = mission.MissionID,
+                                Name = mission.Name,
+                                ContactEmail = mission.CompanyContact.Mail,
+                                ClientName = mission.CompanyContact.FirstName + " " + mission.CompanyContact.LastName,
+                                Start = mission.Start,
+                                End = mission.End,
+                                Fee = mission.Fee,
+                                FreeDay = mission.FreeDay,
+                                Periodicity = mission.Periodicity,
+                                Comment = mission.Comment,
+                                ConsultantName = mission.Consultant.FirstName + " " + mission.Consultant.LastName,
+                                CreatorName = mission.Creator,
+                                ProfitCenter = mission.ProfitCenter.Name,
+                            };
+
+                            models.Add(model);
+                        }
+                    }
+                    string message = "Vous pouvez pas supprimé une tâche non terminée !";
+                    ModelState.AddModelError(string.Empty, message);
+                    return View("ListeMissions", models);
+                
             }
+            
 
         }
     }
