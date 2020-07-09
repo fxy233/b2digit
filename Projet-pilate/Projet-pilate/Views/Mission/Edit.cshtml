@@ -1,5 +1,5 @@
 ﻿@model Projet_pilate.Models.UpdateMissionViewModel
-
+@using Projet_pilate.Models
 @{
     ViewBag.Title = "Edit";
 }
@@ -12,60 +12,146 @@
 {
     @Html.AntiForgeryToken()
 
-<div class="form-horizontal">
+    <div class="form-horizontal">
 
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    @Html.HiddenFor(model => model.ID)
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ID)
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Start, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(model => model.Start, "{0:dd/MM/yyyy}", new { @readonly = "readonly" })
-            @Html.ValidationMessageFor(model => model.Start, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Start, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Start, "{0:dd/MM/yyyy}", new { @readonly = "readonly" })
+                @Html.ValidationMessageFor(model => model.Start, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NewEnd, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.NewEnd, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.date } })
+                @Html.ValidationMessageFor(model => model.NewEnd, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Fee, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Fee, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Fee, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.InfoFacturation, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.InfoFacturation, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.InfoFacturation, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PrincipalBCID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @* @Html.EditorFor(model => model.PrincipalBCID, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.PrincipalBCID, "", new { @class = "text-danger" })
+                *@
+                <input type="text" value="@ViewData["principalBCID"]" list="principalBCID" class="form-control" id="PrincipalBCID" asp-for="PrincipalBCID" name="PrincipalBCID" required />
+                <datalist id="principalBCID">
+                    @*<option selected>@ViewData["contact"]</option>*@
+                    @{
+@*                        <option selected>@ViewData["principalBCID"]</option>
+*@                        ApplicationDbContext db = new ApplicationDbContext();
+                        foreach (var s in db.Subsidiaries.ToList())
+                        {
+                            <option value="@s.SubsidiaryID">@s.Name</option>
+                        };
+                    }
+                </datalist>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.InterBC1ID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @*@Html.EditorFor(model => model.InterBC1ID, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.InterBC1ID, "", new { @class = "text-danger" })
+                *@
+                <input type="text" value="@ViewData["interBC1ID"]" list="interBC1ID" class="form-control" id="InterBC1ID" asp-for="InterBC1ID" name="InterBC1ID" required />
+                <datalist id="interBC1ID">
+                    @{
+                        @*<option selected>@ViewData["interBC1ID"]</option>*@
+                        foreach (var s in db.Subsidiaries.ToList())
+                        {
+                            <option value="@s.SubsidiaryID">@s.Name</option>
+                        };
+                    }
+                </datalist>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TJInterBC1, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TJInterBC1, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TJInterBC1, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.InterBC2ID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @*@Html.EditorFor(model => model.InterBC2ID, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.InterBC2ID, "", new { @class = "text-danger" })
+                *@
+                <input type="text" value="@ViewData["interBC2ID"]" list="interBC2ID" class="form-control" id="InterBC2ID" asp-for="InterBC2ID" name="InterBC2ID" required />
+                <datalist id="interBC2ID">
+                    @*<option selected>@ViewData["contact"]</option>*@
+                    @{
+                        @*<option selected>@ViewData["interBC2ID"]</option>*@
+                        foreach (var s in db.Subsidiaries.ToList())
+                        {
+                            <option value="@s.SubsidiaryID">@s.Name</option>
+                        };
+                    }
+                </datalist>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TJInterBC2, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TJInterBC2, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TJInterBC2, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Commentaire, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Commentaire, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Commentaire, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Enregistrer" class="btn btn-default btn-large" />
+            </div>
         </div>
     </div>
-
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.NewEnd, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.NewEnd, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.date } })
-            @Html.ValidationMessageFor(model => model.NewEnd, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Fee, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Fee, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Fee, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Commentaire, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Commentaire, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Commentaire, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Enregistrer" class="btn btn-default btn-large" />
-        </div>
-    </div>
-</div>
 }
 
 <div>

@@ -291,6 +291,25 @@ namespace Projet_pilate.Models
         [Display(Name = "Commentaire")]
         public string Commentaire { get; set; }
 
+        [Display(Name = "InfoFacturation")]
+        public string InfoFacturation { get; set; }
+
+        [Display(Name = "PrincipalBCID")]
+        public int  PrincipalBCID { get; set; }
+
+        [Display(Name = "InterBC1ID")]
+        public int InterBC1ID { get; set; }
+
+        [Display(Name = "TJInterBC1")]
+        public float TJInterBC1 { get; set; }
+        
+        [Display(Name = "InterBC2ID")]
+        public int InterBC2ID { get; set; }
+
+        [Display(Name = "TJInterBC2")]
+        public float TJInterBC2 { get; set; }
+
+
 
 
     }

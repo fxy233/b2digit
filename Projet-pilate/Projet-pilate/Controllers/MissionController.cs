@@ -208,10 +208,25 @@ namespace Projet_pilate.Controllers
                 ProfitCenter = consultant.ProfitCenter,
                 Creator = sessionUser.FirstName + " " + sessionUser.LastName,
                 //exist = true,
+                PrincipalBCID = db.Subsidiaries.ToList()[0].SubsidiaryID,
+
             };
 
-            consultant.Missions.Add(mission);
+            var consultantList = db.Consultants.ToList();
+            
+            foreach(var c in consultantList)
+            {
+                if (c.FirstName+" "+c.LastName == SelectedConsultant)
+                {
+                    mission.ConsultantID = c.ConsultantID;
+                }
+            }
 
+            var con = mission.ConsultantID==0?null:db.Consultants.Single(c => c.ConsultantID == mission.ConsultantID);
+            int interid =con==null?0:db.Subsidiaries.Single(s => s.SubsidiaryID == con.SubsidiaryID).SubsidiaryID;
+            mission.InterBC1ID = interid;
+
+            mission.TJInterBC1 =interid==0? 0:0.07f * mission.Fee;
 
             db.Missions.Add(mission);
             db.SaveChanges();
@@ -283,7 +298,15 @@ namespace Projet_pilate.Controllers
                 Name = mission.Name,
                 Fee = mission.Fee,
                 Commentaire = mission.Comment,
+                InfoFacturation = mission.InfoFacturation,
+                TJInterBC1 = mission.TJInterBC1,
+                TJInterBC2 = mission.TJInterBC2,
             };
+
+            ViewData["PrincipalBCID"] = mission.PrincipalBCID;
+            ViewData["interBC1ID"] = mission.InterBC1ID;
+            ViewData["interBC2ID"] = mission.InterBC2ID;
+
 
             return View(model);
         }
@@ -338,7 +361,13 @@ namespace Projet_pilate.Controllers
                 mission.Name = model.Name;
                 mission.Fee = model.Fee;
                 mission.Comment = model.Commentaire;
-                
+                mission.InfoFacturation = model.InfoFacturation;
+                mission.PrincipalBCID = Int32.Parse(Request.Form["PrincipalBCID"]);
+                mission.InterBC1ID = Int32.Parse(Request.Form["InterBC1ID"]);
+                mission.TJInterBC1 = model.TJInterBC1;
+                mission.InterBC2ID = Int32.Parse(Request.Form["InterBC2ID"]);
+                mission.TJInterBC2 = model.TJInterBC2;
+
                 db.SaveChanges();
 
                 return RedirectToAction("ListeMissions", "Mission");
