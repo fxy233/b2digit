@@ -1,4 +1,5 @@
-﻿using Microsoft.Ajax.Utilities;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using Microsoft.Ajax.Utilities;
 using Projet_pilate.Entities;
 using Projet_pilate.Models;
 using System;
@@ -817,7 +818,7 @@ namespace Projet_pilate.Controllers
             ApplicationDbContext db = new ApplicationDbContext();
             ClotureViewModel model = new ClotureViewModel();
 
-            var Mois = db.MonthClotures.Single();
+            var Mois = db.MonthActivations.Single();
             model.MoisaCloturer = Mois.Periode.ToString("MMMM", CultureInfo.CurrentCulture) +
                               " " + Mois.Periode.Year.ToString();
 
@@ -826,11 +827,134 @@ namespace Projet_pilate.Controllers
         }
 
         [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
-        [HttpPost]
-        public ActionResult CloturerMois(ClotureViewModel model)
+        public ActionResult CloturerMois1()
         {
+            ApplicationDbContext db = new ApplicationDbContext();
 
-            return View(model);
+            var missionlist = db.Missions.ToList();
+            var activitylist = db.Activities.ToList();
+            int id = db.Factures.ToList().Count;
+            var time = db.MonthActivations.Single().Periode;
+            int month = Int32.Parse(time.Month.ToString());
+            int year = Int32.Parse(time.Year.ToString());
+            foreach (var m in missionlist)
+            {
+                float nb = 0;
+                foreach(var a in activitylist)
+                {
+                    if(month==Int32.Parse(a.Date.Month.ToString())&& year == Int32.Parse(a.Date.Year.ToString()))
+                    {
+                        if (a.Morning == m.Name)
+                        {
+                            nb += 0.5f;
+                        }
+                        if (a.Afternoon == m.Name)
+                        {
+                            nb += 0.5f;
+                        }
+                    }
+                    
+                }
+
+                var BC = db.Subsidiaries.Single(s => s.SubsidiaryID == m.PrincipalBCID);
+                var contact = db.CompanyContacts.Single(c => c.CompanyContactID == m.CompanyContactID);
+                var company = db.Companies.Single(c => c.CompanyID == contact.CompanyID);
+
+                float montant = 0f;
+                float nbUO = 0f;
+                switch (m.Periodicity)
+                {
+                    case "Jours":
+                        nbUO = nb;
+                        montant = nbUO * m.Fee;
+                        break;
+                    case "Mois":
+                        nbUO = 1;
+                        montant = nbUO * m.Fee;
+                        break;
+                    case "Trimestre":
+                        nbUO = 1.0f / 3;
+                        montant = nbUO * m.Fee;
+                        break;
+                    default:
+                        break;
+                }
+
+                Boolean exist = false;
+                var factureId = 0;
+                foreach(var f in db.Factures.ToList())
+                {
+                    if(f.mission==m.Name&&f.MoisDeFacturation==db.MonthActivations.Single().Periode)
+                    {
+                        exist = true;
+                        factureId = f.FactureID;
+                    }
+                }
+
+                if (exist)
+                {
+                    Facture facture = db.Factures.Single(f => f.FactureID == factureId);
+
+                    facture.InfoFacturation = m.InfoFacturation;
+                    facture.PrincipalBC = BC.Name;
+                    facture.AdresseBC = BC.Address;
+                    facture.Client = company.Name;
+                    facture.AdresseFacturation = company.Address;
+                    facture.NombredUO = nbUO;
+                    facture.TJ = m.Fee;
+                    facture.TVA = 0.2f;
+                        facture.MontantHT = montant;
+                        facture.FAE = false;
+                        facture.Emise = false;
+                        facture.payee = false;
+                        facture.annulee = false;
+                   
+
+                    db.SaveChanges();
+                }
+                else
+                {
+                    Facture facture = new Facture()
+                    {
+                        mission = m.Name,
+                        FactureID = id,
+                        NomFacture = "Fact-" + BC.Name + "-" + db.MonthActivations.Single().Periode.ToString("yyyy-MMM", System.Globalization.CultureInfo.CurrentCulture) + "-" + id + "P",
+                        MoisDeFacturation = db.MonthActivations.Single().Periode,
+                        InfoFacturation = m.InfoFacturation,
+                        PrincipalBC = BC.Name,
+                        AdresseBC = BC.Address,
+                        Client = company.Name,
+                        AdresseFacturation = company.Address,
+                        NombredUO = nbUO,
+                        TJ = m.Fee,
+                        TVA = 0.2f,
+                        MontantHT = montant,
+                        FAE = false,
+                        Emise = false,
+                        payee = false,
+                        annulee = false,
+                    };
+
+                    id++;
+                    db.Factures.Add(facture);
+                    db.SaveChanges();
+                }
+
+                
+            }
+
+            
+
+            
+
+            ClotureViewModel model = new ClotureViewModel();
+
+            var Mois = db.MonthActivations.Single();
+            model.MoisaCloturer = Mois.Periode.ToString("MMMM", CultureInfo.CurrentCulture) +
+                              " " + Mois.Periode.Year.ToString();
+
+            ModelState.AddModelError(string.Empty, "Mois a été clôturé");
+            return View("ClotureMois", model);
         }
 
         [HttpPost]

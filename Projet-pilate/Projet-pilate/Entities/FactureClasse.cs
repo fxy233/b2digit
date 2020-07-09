@@ -16,6 +16,8 @@ namespace Projet_pilate.Entities
         [Index("Index_NomFacture", IsUnique = true)]
         [MaxLength(50)]
         public string NomFacture { get; set; }
+
+        public string mission { get; set; }
         public string InfoFacturation { get; set; }
         public string PrincipalBC { get; set; }
         public string AdresseBC { get; set; }
