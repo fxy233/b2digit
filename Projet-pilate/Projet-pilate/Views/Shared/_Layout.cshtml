@@ -48,87 +48,96 @@
                         </li>
                     }
 
-       
-
-
-                        @if (User.IsInRole("Super-Administrateur") || User.IsInRole("Administrateur-ventes") || User.IsInRole("Administrateur") || User.IsInRole("Manager"))
-                        {
-
-                            <li class="nav-item dropdown">
-                                <a href="#" class=" nav-link dropdown-toggle" data-toggle="dropdown">Administration</a>
-                                <ul class="dropdown-menu">
-                                    @if (User.IsInRole("Administrateur-ventes") || User.IsInRole("Administrateur") || User.IsInRole("Super-Administrateur"))
-                                    {
-                                        <li>@Html.RouteLink("Business Companies", "SubsidiaryList")</li>
-                                        <li>@Html.RouteLink("Business Managers", "ManagerList")</li>
-                                        <li>@Html.RouteLink("Centres de profit", "ProfitCenterList")</li>
-
-                                        <li>@Html.RouteLink("Consultants", "ConsultantList")</li>
-
-                                    }
-                                    @if (User.IsInRole("Manager"))
-                                    {
-                                        <li> @Html.RouteLink("Centres de profit", "ProfitCenterList")</li>
 
 
 
-                                        <li>@Html.RouteLink("Consultants", "ConsultantList")</li>
+                    @if (User.IsInRole("Super-Administrateur") || User.IsInRole("Administrateur-ventes") || User.IsInRole("Administrateur") || User.IsInRole("Manager"))
+                    {
+
+                        <li class="nav-item dropdown">
+                            <a href="#" class=" nav-link dropdown-toggle" data-toggle="dropdown">Administration</a>
+                            <ul class="dropdown-menu">
+                                @if (User.IsInRole("Administrateur-ventes") || User.IsInRole("Administrateur") || User.IsInRole("Super-Administrateur"))
+                                {
+                                    <li>@Html.RouteLink("Business Companies", "SubsidiaryList")</li>
+                                    <li>@Html.RouteLink("Business Managers", "ManagerList")</li>
+                                    <li>@Html.RouteLink("Centres de profit", "ProfitCenterList")</li>
+
+                                    <li>@Html.RouteLink("Consultants", "ConsultantList")</li>
+
+                                }
+                                @if (User.IsInRole("Manager"))
+                                {
+                                    <li> @Html.RouteLink("Centres de profit", "ProfitCenterList")</li>
 
 
 
-                                    }
+                                    <li>@Html.RouteLink("Consultants", "ConsultantList")</li>
 
-                                    @if (User.IsInRole("Administrateur") || User.IsInRole("Super-Administrateur"))
-                                    {
 
-                                        <li>@Html.RouteLink("Comptes utilisateurs", "UsersBoard")</li>
 
-                                    }
-                                </ul>
-                            </li>
-                     
+                                }
+
+                                @if (User.IsInRole("Administrateur") || User.IsInRole("Super-Administrateur"))
+                                {
+
+                                    <li>@Html.RouteLink("Comptes utilisateurs", "UsersBoard")</li>
+
+                                }
+                            </ul>
+                        </li>
+
                         if (User.IsInRole("Administrateur-ventes") || User.IsInRole("Administrateur") || User.IsInRole("Super-Administrateur"))
                         {
-                                <li class="nav-item dropdown">
-                                    <a href="#" class=" nav-link dropdown-toggle" data-toggle="dropdown">Administration des ventes</a>
-                                    <ul class="dropdown-menu">
-                                        <li>@Html.RouteLink("Activation du mois", "ActivationCRA")</li>
-                                        <li>@Html.RouteLink("Message d'accueil", "Message")</li>
-                                        <li>@Html.RouteLink("Clôture du mois", "ClotureMois")</li>
-                                    </ul>
-                                </li>
-                            }
-
                             <li class="nav-item dropdown">
-                                <a href="#" class=" nav-link dropdown-toggle" data-toggle="dropdown">Business</a>
+                                <a href="#" class=" nav-link dropdown-toggle" data-toggle="dropdown">Administration des ventes</a>
                                 <ul class="dropdown-menu">
-                                    <li>@Html.RouteLink("Sociétés clientes", "ListeCompanies")</li>
-                                    <li>@Html.RouteLink("Contacts client", "CompanyContactList")</li>
-                                    <li>@Html.RouteLink("Missions", "ListeMissions")</li>
+                                    <li>@Html.RouteLink("Activation du mois", "ActivationCRA")</li>
+                                    <li>@Html.RouteLink("Message d'accueil", "Message")</li>
+                                    <li>@Html.RouteLink("Clôture du mois", "ClotureMois")</li>
                                 </ul>
                             </li>
 
-                        }
-
-
-                        @if (User.IsInRole("Consultant"))
-                        {
-
-                            <li>
-                                @Html.RouteLink("Saisir votre CRAS", "CRA", new { @class = "dropdown-item" })
-                            </li>
-                        }
-                        @if (User.IsInRole("Super-Administrateur") || User.IsInRole("Administrateur-ventes") || User.IsInRole("Administrateur") || User.IsInRole("Manager"))
-                        {
                             <li class="nav-item dropdown">
-                                <a href="#" class=" nav-link dropdown-toggle" data-toggle="dropdown">Gestion des Cras</a>
+                                <a href="#" class=" nav-link dropdown-toggle" data-toggle="dropdown">Facture</a>
                                 <ul class="dropdown-menu">
-                                    <li>@Html.RouteLink("Suivi des CRAs", "SuiviCra")</li>
-                                    <li>@Html.RouteLink("Liste des CRAS du mois", "ListeCra")</li>
+                                    <li>@Html.RouteLink("Factures", "ListeFactures")</li>
+                                    <li>@Html.RouteLink("Suivis", "Suivis")</li>
+                                    
                                 </ul>
                             </li>
-                            
                         }
+
+                        <li class="nav-item dropdown">
+                            <a href="#" class=" nav-link dropdown-toggle" data-toggle="dropdown">Business</a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.RouteLink("Sociétés clientes", "ListeCompanies")</li>
+                                <li>@Html.RouteLink("Contacts client", "CompanyContactList")</li>
+                                <li>@Html.RouteLink("Missions", "ListeMissions")</li>
+                            </ul>
+                        </li>
+
+                    }
+
+
+                    @if (User.IsInRole("Consultant"))
+                    {
+
+                        <li>
+                            @Html.RouteLink("Saisir votre CRAS", "CRA", new { @class = "dropdown-item" })
+                        </li>
+                    }
+                    @if (User.IsInRole("Super-Administrateur") || User.IsInRole("Administrateur-ventes") || User.IsInRole("Administrateur") || User.IsInRole("Manager"))
+                    {
+                        <li class="nav-item dropdown">
+                            <a href="#" class=" nav-link dropdown-toggle" data-toggle="dropdown">Gestion des Cras</a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.RouteLink("Suivi des CRAs", "SuiviCra")</li>
+                                <li>@Html.RouteLink("Liste des CRAS du mois", "ListeCra")</li>
+                            </ul>
+                        </li>
+
+                    }
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

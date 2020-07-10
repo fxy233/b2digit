@@ -1,0 +1,144 @@
+﻿@model IEnumerable<Projet_pilate.Models.FactureSimpleViewModel>
+
+@{
+    Layout = null;
+}
+
+<style>
+    .btn{
+        background-color: cornflowerblue;
+        border : none;
+        color: white;
+        padding: 10px 25px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size : 16px;
+    }
+</style>
+<script type="text/css" src="~/Scripts/jquery.dataTables.min.css"></script>
+<script type="text/javascript" src="~/Scripts/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.dataTables.min.js"></script>
+
+<table class="display" id="mytable" style="width:100%">
+    <thead>
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.NomFacture)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Client)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MontantHT)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FAE)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Emise)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Payee)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Annulee)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NomFacture)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Client)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MontantHT)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FAE)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Emise)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Payee)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Annulee)
+                </td>
+
+                <td>
+                    @Html.ActionLink("Modifier", "Modifier", new { id = item.ID }, new { @class = "btn" })
+                    @Html.ActionLink("Détail", "Detail", new { id = item.ID }, new { @class = "btn" })
+                </td>
+            </tr>
+
+        }
+    </tbody>
+
+    <tfoot>
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.NomFacture)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Client)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MontantHT)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FAE)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Emise)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Payee)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Annulee)
+            </th>
+            <th></th>
+        </tr>
+    </tfoot>
+
+</table>
+
+@Html.ActionLink("Return", "Return", null, new { @class = "btn" })
+
+<script>
+    $(document).ready(function () {
+        $('#mytable').DataTable({
+            initComplete: function () {
+                this.api().columns().every(function () {
+                    var column = this;
+                    var select = $('<select><option value=""></option></select>')
+                        .appendTo($(column.footer()).empty())
+                        .on('change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex(
+                                $(this).val()
+                            );
+
+                            column
+                                .search(val ? '^' + val + '$' : '', true, false)
+                                .draw();
+                        });
+
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>')
+                    });
+                });
+            }
+        });
+    });
+</script>
