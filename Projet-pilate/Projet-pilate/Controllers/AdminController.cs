@@ -904,10 +904,7 @@ namespace Projet_pilate.Controllers
                     facture.TJ = m.Fee;
                     facture.TVA = 0.2f;
                         facture.MontantHT = montant;
-                        facture.FAE = false;
-                        facture.Emise = false;
-                        facture.payee = false;
-                        facture.annulee = false;
+                    facture.DernierEnregistrer = DateTime.Now;
                    
 
                     db.SaveChanges();
@@ -933,6 +930,7 @@ namespace Projet_pilate.Controllers
                         Emise = false,
                         payee = false,
                         annulee = false,
+                        DernierEnregistrer=DateTime.Now,
                     };
 
                     id++;

@@ -19,17 +19,18 @@ namespace Projet_pilate.Models
         [Display(Name = "Montant")]
         public string MontantHT { get; set; }
 
-        [Display(Name = "FAE")]
-        public string FAE { get; set; }
+        [Display(Name = "Mission")]
+        public string Mission { get; set; }
 
-        [Display(Name = "Emise")]
-        public string Emise { get; set; }
+        [Display(Name = "Status")]
+        public string Status { get; set; }
 
-        [Display(Name = "Payee")]
-        public string Payee { get; set; }
+        [Display(Name = "Dernier Enregistrement")]
+        public DateTime Dernier { get; set; }
 
-        [Display(Name = "Annulee")]
-        public string Annulee { get; set; }
+
+
+
 
     }
 

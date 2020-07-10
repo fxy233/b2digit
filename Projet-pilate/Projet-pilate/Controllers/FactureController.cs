@@ -28,11 +28,29 @@ namespace Projet_pilate.Controllers
                     NomFacture = f.NomFacture,
                     Client = f.Client,
                     MontantHT = f.MontantHT.ToString(),
-                    FAE = f.FAE==false?"NON":"OUI",
-                    Emise = f.Emise == false ? "NON" : "OUI",
-                    Payee = f.payee == false ? "NON" : "OUI",
-                    Annulee = f.annulee == false ? "NON" : "OUI",
+                    Mission = f.mission,
+                    Dernier = f.DernierEnregistrer,
                 };
+
+                string s = "FAE";
+
+                if (f.Emise)
+                {
+                    s = "Emise";
+                }
+
+                if (f.payee)
+                {
+                    s = "Payee";
+                }
+
+                if (f.annulee)
+                {
+                    s = "Annulee";
+                }
+
+                model.Status = s;
+
                 models.Add(model);
             
             }
@@ -41,7 +59,7 @@ namespace Projet_pilate.Controllers
             return View(models);
         }
 
-        [Route("Facture/Return", Name = "Return")]
+/*        [Route("Facture/Return", Name = "Return")]
         public ActionResult Return()
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -52,7 +70,7 @@ namespace Projet_pilate.Controllers
 
             ModelState.AddModelError(string.Empty, "Mois a été clôturé");
             return View("ClotureMois","Admin", model);
-        }
+        }*/
 
         /*[Route("Facture/ListeFactures", Name = "ListeFactures")]
         public ActionResult ListeFactures()

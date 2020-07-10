@@ -11,6 +11,8 @@ namespace Projet_pilate.Entities
     {
         // Primary Key
         public int FactureID { get; set; }
+
+        public DateTime DernierEnregistrer { get; set; }
         public DateTime MoisDeFacturation { get; set; }
 
         [Index("Index_NomFacture", IsUnique = true)]
