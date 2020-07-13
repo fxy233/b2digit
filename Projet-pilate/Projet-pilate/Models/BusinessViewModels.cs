@@ -294,19 +294,19 @@ namespace Projet_pilate.Models
         [Display(Name = "InfoFacturation")]
         public string InfoFacturation { get; set; }
 
-        [Display(Name = "PrincipalBCID")]
+        [Display(Name = "Business Company émettrice")]
         public int  PrincipalBCID { get; set; }
 
-        [Display(Name = "InterBC1ID")]
+        [Display(Name = "Business Company Intermédiaire 1")]
         public int InterBC1ID { get; set; }
 
-        [Display(Name = "TJInterBC1")]
+        [Display(Name = "TJ intermédiaire")]
         public float TJInterBC1 { get; set; }
         
-        [Display(Name = "InterBC2ID")]
+        [Display(Name = "Business Company Intermédiaire N°2")]
         public int InterBC2ID { get; set; }
 
-        [Display(Name = "TJInterBC2")]
+        [Display(Name = "TJ intermédiaire N°2")]
         public float TJInterBC2 { get; set; }
 
 

@@ -226,7 +226,7 @@ namespace Projet_pilate.Controllers
             int interid =con==null?0:db.Subsidiaries.Single(s => s.SubsidiaryID == con.SubsidiaryID).SubsidiaryID;
             mission.InterBC1ID = interid;
 
-            mission.TJInterBC1 =interid==0? 0:0.07f * mission.Fee;
+            mission.TJInterBC1 =interid==0? 0:0.93f * mission.Fee;
 
             db.Missions.Add(mission);
             db.SaveChanges();
@@ -431,9 +431,9 @@ namespace Projet_pilate.Controllers
             var missionDelete = db.Missions.Single(m => m.MissionID == id);
             var monthCurrent = Int32.Parse(DateTime.Now.Month.ToString());
             var yearCurrent = Int32.Parse(DateTime.Now.Year.ToString());
-            var monthTermine = Int32.Parse(missionDelete.End.Month.ToString());
-            var yearTermine = Int32.Parse(missionDelete.End.Year.ToString());
-
+            //var monthTermine = Int32.Parse(missionDelete.End.Month.ToString());
+            //var yearTermine = Int32.Parse(missionDelete.End.Year.ToString());
+            /*
             if (yearCurrent > yearTermine || (yearCurrent == yearTermine && monthCurrent-1 > monthTermine))
             {
                 //db.Missions.Remove(missionDelete);
@@ -445,7 +445,7 @@ namespace Projet_pilate.Controllers
                 db.SaveChanges();
                 return RedirectToAction("ListeMissions", "Mission");
             }else
-            {
+            {*/
                 
                 var actlist = db.Activities.ToList();
                 Boolean recent = false;
@@ -503,7 +503,7 @@ namespace Projet_pilate.Controllers
                     ModelState.AddModelError(string.Empty, message);
                     return View("ListeMissions", models);
                 
-            }
+            //}
             
 
         }

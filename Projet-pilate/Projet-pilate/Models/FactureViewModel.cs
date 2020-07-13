@@ -28,10 +28,23 @@ namespace Projet_pilate.Models
         [Display(Name = "Dernier Enregistrement")]
         public DateTime Dernier { get; set; }
 
+    }
 
+    public class FacturePDFViewModel
+    {
+        public int ID { get; set; }
+        public string EmetInfo { get; set; }
+        public string Siren { get; set; }
+        public string ClientName { get; set; }
+        public string ClientInfo { get; set; }
+        public string ClientContact { get; set; }
+        public string FactureName { get; set; }
+        public string FactInfo { get; set; }
+        public float Quantite { get; set; }
+        public float HTunitaire { get; set; }
+        public float TVA { get; set; }
 
 
 
     }
-
 }

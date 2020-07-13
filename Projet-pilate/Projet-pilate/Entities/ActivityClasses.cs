@@ -37,6 +37,7 @@ namespace Projet_pilate.Entities
         public DateTime Date { get; set; }
         public string Morning { get; set; }
         public string Afternoon { get; set; }
+        public int verrouille { get; set; }
 
         // Foreign key
         public int CraID { get; set; }
@@ -52,6 +53,8 @@ namespace Projet_pilate.Entities
         // Primary key
         public int CraID { get; set; }
         public Boolean Changeable { get; set; }
+
+        //public Boolean verrouille { get; set; }
         public string Month { get; set; }
         public string year { get; set; }
         public string Satisfaction { get; set; }

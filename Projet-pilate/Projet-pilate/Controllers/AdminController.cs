@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Office2013.Excel;
 using Microsoft.Ajax.Utilities;
 using Projet_pilate.Entities;
 using Projet_pilate.Models;
@@ -833,25 +834,90 @@ namespace Projet_pilate.Controllers
 
             var missionlist = db.Missions.ToList();
             var activitylist = db.Activities.ToList();
-            int id = db.Factures.ToList().Count;
+            var fl = db.Factures.ToList();
+            int id = 0;
+            foreach (var item in fl)
+            {
+                if (item.FactureID>id)
+                {
+                    id = item.FactureID;
+                }
+            }
+            id++;
             var time = db.MonthActivations.Single().Periode;
             int month = Int32.Parse(time.Month.ToString());
             int year = Int32.Parse(time.Year.ToString());
             foreach (var m in missionlist)
             {
+                if (Int32.Parse(m.End.Year.ToString())<year || (Int32.Parse(m.End.Year.ToString()) == year&& Int32.Parse(m.End.Month.ToString()) < month))
+                {
+                    continue;
+                }
                 float nb = 0;
                 foreach(var a in activitylist)
                 {
+                    if (a.verrouille == 3)
+                    {
+                        continue;
+                    }
                     if(month==Int32.Parse(a.Date.Month.ToString())&& year == Int32.Parse(a.Date.Year.ToString()))
                     {
+                        
                         if (a.Morning == m.Name)
                         {
-                            nb += 0.5f;
+                            if (a.verrouille==0)
+                            {
+                                nb += 0.5f;
+                                a.verrouille = 1;
+                            }
+                            if (a.verrouille==1)
+                            {
+                            }
+                            if (a.verrouille==2)
+                            {
+                                nb += 0.5f;
+                                a.verrouille = 3;
+                            }
+                       
                         }
                         if (a.Afternoon == m.Name)
                         {
-                            nb += 0.5f;
+                            if (a.verrouille == 0)
+                            {
+                                nb += 0.5f;
+                                a.verrouille = 2;
+                            }
+                            if (a.verrouille == 2)
+                            {
+                            }
+                            if (a.verrouille == 1)
+                            {
+                                nb += 0.5f;
+                                a.verrouille = 3;
+                            }
                         }
+                    }
+                    
+                }
+
+                if (nb == 0 )
+                {
+                    var flist = db.Factures.Where(f=>f.MoisDeFacturation == time).ToList();
+                    Boolean exist = false;
+                    foreach(var f in flist)
+                    {
+                        if (f.mission == m.Name)
+                        {
+                            exist = true;
+                        }
+                    }
+                    if (exist == true)
+                    {
+                        continue;
+                    } else
+                    {
+                        //todo
+                        continue;
                     }
                     
                 }
@@ -880,6 +946,7 @@ namespace Projet_pilate.Controllers
                         break;
                 }
 
+                /*
                 Boolean exist = false;
                 var factureId = 0;
                 foreach(var f in db.Factures.ToList())
@@ -890,7 +957,9 @@ namespace Projet_pilate.Controllers
                         factureId = f.FactureID;
                     }
                 }
+                */
 
+                /*
                 if (exist)
                 {
                     Facture facture = db.Factures.Single(f => f.FactureID == factureId);
@@ -911,12 +980,13 @@ namespace Projet_pilate.Controllers
                 }
                 else
                 {
+                */
                     Facture facture = new Facture()
                     {
                         mission = m.Name,
                         FactureID = id,
-                        NomFacture = "Fact-" + BC.Name + "-" + db.MonthActivations.Single().Periode.ToString("yyyy-MMM", System.Globalization.CultureInfo.CurrentCulture) + "-" + id + "P",
-                        MoisDeFacturation = db.MonthActivations.Single().Periode,
+                        NomFacture = "Fact-" + BC.Name + "-" + time.ToString("yyyy-MMM", System.Globalization.CultureInfo.CurrentCulture) + "-" + id + "P",
+                        MoisDeFacturation = time,
                         InfoFacturation = m.InfoFacturation,
                         PrincipalBC = BC.Name,
                         AdresseBC = BC.Address,
@@ -936,7 +1006,7 @@ namespace Projet_pilate.Controllers
                     id++;
                     db.Factures.Add(facture);
                     db.SaveChanges();
-                }
+                //}
 
                 
             }
@@ -944,7 +1014,7 @@ namespace Projet_pilate.Controllers
             
 
             
-
+            /*
             ClotureViewModel model = new ClotureViewModel();
 
             var Mois = db.MonthActivations.Single();
@@ -952,7 +1022,8 @@ namespace Projet_pilate.Controllers
                               " " + Mois.Periode.Year.ToString();
 
             ModelState.AddModelError(string.Empty, "Mois a été clôturé");
-            return View("ClotureMois", model);
+            */
+            return RedirectToAction("ListeFactures", "Facture");
         }
 
         [HttpPost]

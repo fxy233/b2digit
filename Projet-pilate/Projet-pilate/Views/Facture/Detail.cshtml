@@ -1,7 +1,129 @@
-﻿
+﻿@model Projet_pilate.Models.FacturePDFViewModel
 @{
     ViewBag.Title = "Detail";
+    //Layout = null;
+    Layout = "~/Views/Shared/_particular.cshtml";
 }
 
+@*<!DOCTYPE html>
+    <html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Index</title>
+        <style type="text/css">
+            body {
+                font-family: Arial;
+                font-size: 9pt;
+            }
+        </style>
+    </head>
+    <body>
+*@
 <h2>Detail</h2>
 
+
+@*<div id="Grid">
+
+
+        <strong><pre style="background-color:white;border-color:white;margin-bottom:0px;padding-bottom:0px;">@Model.EmetInfo</pre></strong>
+        <p style="color:blue; padding-left:10px;margin-top:0px; padding-bottom:0px;margin-bottom:0px">contact@b2digit.com</p>
+        <p style="color:green; padding-left:10px;margin-top:0px">N°SIREN : @Model.Siren</p>
+        <p class="col-md-offset-8" style="padding-left: 10px; margin-bottom:0px"><strong>@Model.ClientName</strong></p>
+        <pre class="col-md-offset-8" style="background-color:white;border-color:white; margin-top:0px; margin-bottom:0px">@Model.ClientInfo</pre>
+        <p class="col-md-offset-8" style="color:blue;padding-left:10px;margin-top:0px;">@Model.ClientContact</p>
+    </div>*@
+
+@using (Html.BeginForm("Export", "Facture", FormMethod.Post))
+{
+
+    <input type="hidden" name="GridHtml" />
+
+    <input type="submit" id="btnSubmit" value="Export" />
+}
+
+
+<div id="Grid" style="visibility:hidden">
+
+
+    <div style=" padding-bottom: 0px; padding-left:10px">
+        <strong><pre style="background-color:white;border-color:white;margin-bottom:0px;padding-bottom:0px;">@Model.EmetInfo</pre></strong>
+    </div>
+    <p style="color:blue; padding-left:10px">contact@b2digit.com</p>
+    <p style="color:green; padding-left:10px;">N°SIREN : @Model.Siren</p>
+    <p style="padding-left: 500px; margin-bottom:0px"><strong>@Model.ClientName</strong></p>
+    <div style=" margin-top: 0px; margin-bottom: 0px; padding-left: 500px;">
+        <pre style="background-color:white;border-color:white; margin-top:0px; margin-bottom:0px;margin-left: 500px;">@Model.ClientInfo</pre>
+    </div>
+    <p style="color:blue;padding-left:500px;margin-top:0px;">@Model.ClientContact</p>
+    <pre>
+
+    </pre>
+    <p style="text-align:center; margin-top:30px; font-size:20px"><strong>Facture</strong></p>
+
+
+    <p>Facture N°:</p>
+    <p><strong>@Model.FactureName</strong></p>-->
+    <div style="width:150px; color:darkblue; border-color:black">@Model.FactInfo</div>
+    <div style="float:left; width:40%; color:darkblue; border-color:black">testtesttestestestestestestestestestestest</div>
+    @*       <div style="float:right; width:57%;">Date: @ViewBag.date</div>
+    *@
+    <table style="margin-top:15px; border-color:black">
+        <tr>
+            <td style="background-color:gray; text-align:center; padding:5px"> Désignation </td>
+            <td style="background-color:gray; text-align:center; padding:5px"> Quantité </td>
+            <td style="background-color:gray; text-align:center; padding:5px"> Prix unitaire H.T </td>
+            <td style="background-color:gray; text-align:center; padding:5px"> Total H.T </td>
+            <td style="background-color:gray; text-align:center; padding:5px"> Taux TVA </td>
+            <td style="background-color:gray; text-align:center; padding:5px"> Montant TVA </td>
+            <td style="background-color:gray; text-align:center; padding:5px"> TOTAL T.T.C </td>
+        </tr>
+        <tr>
+            @{
+                string designation = DateTime.Now.ToString("MMMM yyyy", System.Globalization.CultureInfo.CurrentCulture) + Environment.NewLine + "" + Environment.NewLine + "Unité d'oeuvre";
+                float total = Model.Quantite * Model.HTunitaire;
+                float mtva = total * Model.TVA;
+                float totalTTC = total + mtva;
+                ViewBag.montantHT = total.ToString();
+                ViewBag.montantTVA = mtva.ToString();
+                ViewBag.montantTTC = totalTTC.ToString();
+                <td style="text-align:center; padding:5px"> <pre>@designation</pre> </td>
+                <td style="text-align:center; padding:5px"> @Model.Quantite </td>
+                <td style="text-align:center; padding:5px"> @Model.HTunitaire </td>
+                <td style="text-align:center; padding:5px"> @total </td>
+                <td style="text-align:center; padding:5px"> @Model.TVA </td>
+                <td style="text-align:center; padding:5px"> @mtva </td>
+                <td style="text-align:center; padding:5px"> @totalTTC </td>
+            }
+        </tr>
+    </table>
+    <pre>
+
+
+    </pre>
+
+    <pre>
+                                                  Montant H.T en Euros              @ViewBag.montantHT €
+                                                      Montant TVA en Euros              @ViewBag.montantTVA €
+                                                      Net à payer T.T.C en Euros        @ViewBag.montantTTC €
+    </pre>
+
+</div>
+
+
+
+
+
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $("#btnSubmit").click(function () {
+            $("input[name='GridHtml']").val($("#Grid").html());
+        });
+        console.log($("#Grid").html());
+    });
+</script>
+@*
+    </body>
+    </html>
+*@
