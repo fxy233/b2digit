@@ -103,6 +103,10 @@ namespace Projet_pilate.Entities
 
         public string Creator { get; set; }
 
+        public string Delai { get; set; }
+        public string DesignationFacturation { get; set; }
+
+
         // Foreign key
 
         [Index("Mission_Unique_Index", IsUnique = true, Order = 3)]

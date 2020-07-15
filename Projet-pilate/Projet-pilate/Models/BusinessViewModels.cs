@@ -323,7 +323,11 @@ namespace Projet_pilate.Models
         [Display(Name = "TJ intermédiaire N°2")]
         public float TJInterBC2 { get; set; }
 
+        [Display(Name = "Designation Facturation")]
+        public string DesignationFacturation { get; set; }
 
+        [Display(Name = "Délai de Paiement")]
+        public string DelaiPaiement { get; set; }
 
 
     }
@@ -366,6 +370,20 @@ namespace Projet_pilate.Models
         [StringLength(50)]
         [Display(Name = "nom responsable")]
         public string ManagerLastName { get; set; }
+
+        [Required]
+        [StringLength(27)]
+        [Display(Name = "IBAN")]
+        public string IBAN { get; set; }
+
+        [Required]
+        [StringLength(11)]
+        [Display(Name = "BIC")]
+        public string BIC { get; set; }
+
+        [Required]
+        [Display(Name = "TVA Intracommunautaire")]
+        public string TVAIntra { get; set; }
 
     }
 
@@ -433,6 +451,20 @@ namespace Projet_pilate.Models
         [StringLength(50)]
         [Display(Name = "nom responsable")]
         public string ManagerLastName { get; set; }
+
+        [Required]
+        [StringLength(27)]
+        [Display(Name = "IBAN")]
+        public string IBAN { get; set; }
+
+        [Required]
+        [StringLength(11)]
+        [Display(Name = "BIC")]
+        public string BIC { get; set; }
+
+        [Required]
+        [Display(Name = "TVA Intracommunautaire")]
+        public string TVAIntra { get; set; }
     }
 }
 

@@ -119,6 +119,14 @@ namespace Projet_pilate.Entities
         public string City { get; set; }
         public string ManagerFirstName { get; set; }
         public string ManagerLastName { get; set; }
+        public string email { get; set; }
+
+        [MaxLength(27)]
+        public string IBAN { get; set; }
+
+        [MaxLength(11)]
+        public string BIC { get; set; }
+        public string TVAIntra { get; set; }
 
 
         // Navigation properties

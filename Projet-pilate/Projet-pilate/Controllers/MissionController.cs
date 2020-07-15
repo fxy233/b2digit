@@ -260,7 +260,8 @@ namespace Projet_pilate.Controllers
                 //exist = true,
                 AdresseMission = model.AdresseMission,
                 PrincipalBCID = db.Subsidiaries.ToList()[0].SubsidiaryID,
-
+                DesignationFacturation = model.Name,
+                Delai = "30 jours",
             };
 
             var consultantList = db.Consultants.ToList();
@@ -353,11 +354,13 @@ namespace Projet_pilate.Controllers
                 InfoFacturation = mission.InfoFacturation,
                 TJInterBC1 = mission.TJInterBC1,
                 TJInterBC2 = mission.TJInterBC2,
+                DelaiPaiement = mission.Delai,
+                DesignationFacturation = mission.DesignationFacturation,
             };
 
-            ViewData["PrincipalBCID"] = mission.PrincipalBCID;
-            ViewData["interBC1ID"] = mission.InterBC1ID;
-            ViewData["interBC2ID"] = mission.InterBC2ID;
+            ViewData["PrincipalBCID"] = mission.PrincipalBCID==0?"Rien": db.Subsidiaries.Single(s=>s.SubsidiaryID==mission.PrincipalBCID).Name;
+            ViewData["interBC1ID"] = mission.InterBC1ID == 0 ? "Rien" : db.Subsidiaries.Single(s => s.SubsidiaryID == mission.InterBC1ID).Name;
+            ViewData["interBC2ID"] = mission.InterBC2ID == 0 ? "Rien" : db.Subsidiaries.Single(s => s.SubsidiaryID == mission.InterBC2ID).Name;
 
 
             return View(model);
@@ -390,8 +393,8 @@ namespace Projet_pilate.Controllers
                 }
             }
 
-            if (ModelState.IsValid)
-            {
+/*            if (ModelState.IsValid)
+            {*/
                 if (mission.Name != model.Name)
                 {
                     var activities = db.Activities.ToList();
@@ -415,18 +418,26 @@ namespace Projet_pilate.Controllers
                 mission.Comment = model.Commentaire;
                 mission.AdresseMission = model.AdresseMission;
                 mission.InfoFacturation = model.InfoFacturation;
-                mission.PrincipalBCID = Int32.Parse(Request.Form["PrincipalBCID"]);
-                mission.InterBC1ID = Int32.Parse(Request.Form["InterBC1ID"]);
+                string nom = Request.Form["PrincipalBCID"];
+                int pid = db.Subsidiaries.Single(s => s.Name == nom).SubsidiaryID;
+                mission.PrincipalBCID = pid;
+                string nomI = Request.Form["InterBC1ID"];
+                int Iid = nomI=="Rien"? 0 : db.Subsidiaries.Single(s => s.Name == nomI).SubsidiaryID;
+                mission.InterBC1ID = Iid;
                 mission.TJInterBC1 = model.TJInterBC1;
-                mission.InterBC2ID = Int32.Parse(Request.Form["InterBC2ID"]);
+                string nomI2 = Request.Form["InterBC2ID"];
+                int I2id = nomI2 == "Rien" ? 0 : db.Subsidiaries.Single(s => s.Name == nomI2).SubsidiaryID;
+                mission.InterBC2ID = I2id;
                 mission.TJInterBC2 = model.TJInterBC2;
+                mission.DesignationFacturation = model.DesignationFacturation;
+                mission.Delai = Request.Form["DelaiPaiement"]; ;
 
                 db.SaveChanges();
 
                 return RedirectToAction("ListeMissions", "Mission");
-            }
+            //}
 
-            return View(model);
+            //return View(model);
         }
 
         [Authorize(Roles = "Administrateur, Super-Administrateur,Manager")]

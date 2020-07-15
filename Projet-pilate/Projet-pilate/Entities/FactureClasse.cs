@@ -34,6 +34,14 @@ namespace Projet_pilate.Entities
         public bool Emise { get; set; }
         public bool payee { get; set; }
         public bool annulee { get; set; }
+        public string Delai { get; set; }
+        public string DesignationFacturation { get; set; }
 
+    }
+
+    public class InfoUtil
+    {
+        public float TVA { get; set; }
+        public string Mention { get; set; }
     }
 }

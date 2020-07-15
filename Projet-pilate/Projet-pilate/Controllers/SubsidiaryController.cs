@@ -1,4 +1,5 @@
-﻿using Projet_pilate.Entities;
+﻿using iTextSharp.text.pdf.qrcode;
+using Projet_pilate.Entities;
 using Projet_pilate.Models;
 using System;
 using System.Collections.Generic;
@@ -40,6 +41,9 @@ namespace Projet_pilate.Controllers
                 //
                 ManagerFirstName = model.ManagerFirstName,
                 ManagerLastName = model.ManagerLastName,
+                IBAN = model.IBAN,
+                BIC = model.BIC,
+                TVAIntra = model.TVAIntra,
             };
 
             db.Subsidiaries.Add(subsidiary);
@@ -102,7 +106,10 @@ namespace Projet_pilate.Controllers
                 PostaleCode = subsidiary.PostaleCode,
                 City = subsidiary.City,
                 ManagerFirstName = subsidiary.ManagerFirstName,
-                ManagerLastName = subsidiary.ManagerLastName
+                ManagerLastName = subsidiary.ManagerLastName,
+                IBAN = subsidiary.IBAN,
+                BIC = subsidiary.BIC,
+                TVAIntra = subsidiary.TVAIntra,
             };
 
             return View(model);
@@ -129,6 +136,9 @@ namespace Projet_pilate.Controllers
             subsidiary.City = model.City;
             subsidiary.ManagerFirstName = model.ManagerFirstName;
             subsidiary.ManagerLastName = model.ManagerLastName;
+            subsidiary.IBAN = model.IBAN;
+            subsidiary.BIC = model.BIC;
+            subsidiary.TVAIntra = model.TVAIntra;
 
             try
             {

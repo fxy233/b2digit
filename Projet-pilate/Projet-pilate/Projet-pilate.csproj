@@ -443,6 +443,22 @@
     <Compile Include="Migrations\202007150913193_ajouterAdresseMission.designer.cs">
       <DependentUpon>202007150913193_ajouterAdresseMission.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202007151111140_infoUtil.cs" />
+    <Compile Include="Migrations\202007151111140_infoUtil.designer.cs">
+      <DependentUpon>202007151111140_infoUtil.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007151120369_ajouterDelai.cs" />
+    <Compile Include="Migrations\202007151120369_ajouterDelai.designer.cs">
+      <DependentUpon>202007151120369_ajouterDelai.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007151142383_updateDelai.cs" />
+    <Compile Include="Migrations\202007151142383_updateDelai.designer.cs">
+      <DependentUpon>202007151142383_updateDelai.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007151239432_updateSubidiairy.cs" />
+    <Compile Include="Migrations\202007151239432_updateSubidiairy.designer.cs">
+      <DependentUpon>202007151239432_updateSubidiairy.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityViewModels.cs" />
@@ -703,6 +719,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202007150913193_ajouterAdresseMission.resx">
       <DependentUpon>202007150913193_ajouterAdresseMission.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007151111140_infoUtil.resx">
+      <DependentUpon>202007151111140_infoUtil.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007151120369_ajouterDelai.resx">
+      <DependentUpon>202007151120369_ajouterDelai.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007151142383_updateDelai.resx">
+      <DependentUpon>202007151142383_updateDelai.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007151239432_updateSubidiairy.resx">
+      <DependentUpon>202007151239432_updateSubidiairy.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -1038,6 +1038,8 @@ namespace Projet_pilate.Controllers
                         payee = false,
                         annulee = false,
                         DernierEnregistrer=DateTime.Now,
+                        Delai = m.Delai,
+                        DesignationFacturation = m.DesignationFacturation,
                     };
 
                     id++;
@@ -1065,6 +1067,9 @@ namespace Projet_pilate.Controllers
                         payee = false,
                         annulee = false,
                         DernierEnregistrer = DateTime.Now,
+                        Delai = m.Delai,
+                        DesignationFacturation = m.DesignationFacturation,
+
                     };
                     db.Factures.Add(factureInt);
                     id++;
