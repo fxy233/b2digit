@@ -17,6 +17,9 @@ namespace Projet_pilate.Entities
         [MaxLength(50)]
         public string Name { get; set; }
         public string Address { get; set; }
+        
+        [MaxLength(50)]
+        public string MailFacturation { get; set; }
         public string PostalCode { get; set; }
         public string City { get; set; }
         public virtual List<CompanyContact> CompanyContacts { get; set; }

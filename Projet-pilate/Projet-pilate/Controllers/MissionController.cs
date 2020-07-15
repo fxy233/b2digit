@@ -33,6 +33,7 @@ namespace Projet_pilate.Controllers
                 ConsultantNames = consultantsNames,
                 Start = DateTime.Today,
                 End = DateTime.Today,
+                AdresseMission = "",
             };
 
             ViewData["periodicite"] = "Jours";
@@ -46,12 +47,14 @@ namespace Projet_pilate.Controllers
         [Route("Mission/CreationMission")]
         public ActionResult CreationMission(RegisterMissionViewModel model)
         {
-            string nomContact;
+            string nomContact="";
             string SelectedConsultant;
             string periodicite;
             string nomConsultant;
+            string[] array;
+            string[] array2;
             ApplicationDbContext db = new ApplicationDbContext();
-
+            var list = db.CompanyContacts.ToList();
             var missionexist = db.Missions.ToList();
             foreach(var exist in missionexist)
             {
@@ -60,7 +63,18 @@ namespace Projet_pilate.Controllers
                     string message = "le nom du mission a été utilisé !";
                     ModelState.AddModelError(string.Empty, message);
 
-                    nomContact = Request.Form["ContactId"].ToString();
+                    array = Request.Form["ContactId"].ToString().Split('(');
+                    array2 = array[0].Split(' ');
+                    
+                    foreach(var item in list)
+                    {
+                        if (item.FirstName == array2[0] && item.LastName == array2[1] && item.CompanyName == array[1].Split(')')[0]) 
+                        {
+                            nomContact = item.Mail;
+                            
+                        }
+                    }
+      
                     SelectedConsultant = Request.Form["ConsultantId"].ToString();
                     periodicite = Request.Form["PeriodeId"].ToString();
 
@@ -86,7 +100,16 @@ namespace Projet_pilate.Controllers
             //Averti l'utilisateur en cas d'erreur de saisie
             if (!ModelState.IsValid)
             {
-                nomContact = Request.Form["ContactId"].ToString();
+                array = Request.Form["ContactId"].ToString().Split('(');
+                array2 = array[0].Split(' ');
+                foreach (var item in list)
+                {
+                    if (item.FirstName == array2[0] && item.LastName == array2[1] && item.CompanyName == array[1].Split(')')[0])
+                    {
+                        nomContact = item.Mail;
+                       
+                    }
+                }
                 SelectedConsultant = Request.Form["ConsultantId"].ToString();
                 periodicite = Request.Form["PeriodeId"].ToString();
 
@@ -108,7 +131,16 @@ namespace Projet_pilate.Controllers
             }
 
 
-            nomContact = Request.Form["contactId"].ToString();
+            array = Request.Form["ContactId"].ToString().Split('(');
+            array2 = array[0].Split(' ');
+            foreach (var item in list)
+            {
+                if (item.FirstName == array2[0] && item.LastName == array2[1] && item.CompanyName == array[1].Split(')')[0])
+                {
+                    nomContact = item.Mail;
+                    
+                }
+            }
             SelectedConsultant = Request.Form["ConsultantId"].ToString();
             var tabPrenomNom = SelectedConsultant.Split(' ');
             nomConsultant = tabPrenomNom[0];
@@ -125,7 +157,16 @@ namespace Projet_pilate.Controllers
                 if (consultant.EntryDate > model.Start)
                 {
 
-                nomContact = Request.Form["ContactId"].ToString();
+                array = Request.Form["ContactId"].ToString().Split('(');
+                array2 = array[0].Split(' ');
+                foreach (var item in list)
+                {
+                    if (item.FirstName == array2[0] && item.LastName == array2[1] && item.CompanyName == array[1].Split(')')[0])
+                    {
+                        nomContact = item.Mail;
+                        
+                    }
+                }
                 SelectedConsultant = Request.Form["ConsultantId"].ToString();
                 periodicite = Request.Form["PeriodeId"].ToString();
 
@@ -172,7 +213,16 @@ namespace Projet_pilate.Controllers
 
             if (model.MissionEncours.Count > 0)
             {
-                nomContact = Request.Form["ContactId"].ToString();
+                array = Request.Form["ContactId"].ToString().Split('(');
+                array2 = array[0].Split(' ');
+                foreach (var item in list)
+                {
+                    if (item.FirstName == array2[0] && item.LastName == array2[1] && item.CompanyName == array[1].Split(')')[0])
+                    {
+                        nomContact = item.Mail;
+                        
+                    }
+                }
                 SelectedConsultant = Request.Form["ConsultantId"].ToString();
                 periodicite = Request.Form["PeriodeId"].ToString();
 
@@ -208,6 +258,7 @@ namespace Projet_pilate.Controllers
                 ProfitCenter = consultant.ProfitCenter,
                 Creator = sessionUser.FirstName + " " + sessionUser.LastName,
                 //exist = true,
+                AdresseMission = model.AdresseMission,
                 PrincipalBCID = db.Subsidiaries.ToList()[0].SubsidiaryID,
 
             };
@@ -298,6 +349,7 @@ namespace Projet_pilate.Controllers
                 Name = mission.Name,
                 Fee = mission.Fee,
                 Commentaire = mission.Comment,
+                AdresseMission = mission.AdresseMission,
                 InfoFacturation = mission.InfoFacturation,
                 TJInterBC1 = mission.TJInterBC1,
                 TJInterBC2 = mission.TJInterBC2,
@@ -361,6 +413,7 @@ namespace Projet_pilate.Controllers
                 mission.Name = model.Name;
                 mission.Fee = model.Fee;
                 mission.Comment = model.Commentaire;
+                mission.AdresseMission = model.AdresseMission;
                 mission.InfoFacturation = model.InfoFacturation;
                 mission.PrincipalBCID = Int32.Parse(Request.Form["PrincipalBCID"]);
                 mission.InterBC1ID = Int32.Parse(Request.Form["InterBC1ID"]);

@@ -435,6 +435,14 @@
     <Compile Include="Migrations\202007120727279_up.designer.cs">
       <DependentUpon>202007120727279_up.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202007150853106_updateCompany.cs" />
+    <Compile Include="Migrations\202007150853106_updateCompany.designer.cs">
+      <DependentUpon>202007150853106_updateCompany.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007150913193_ajouterAdresseMission.cs" />
+    <Compile Include="Migrations\202007150913193_ajouterAdresseMission.designer.cs">
+      <DependentUpon>202007150913193_ajouterAdresseMission.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityViewModels.cs" />
@@ -689,6 +697,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202007120727279_up.resx">
       <DependentUpon>202007120727279_up.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007150853106_updateCompany.resx">
+      <DependentUpon>202007150853106_updateCompany.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007150913193_ajouterAdresseMission.resx">
+      <DependentUpon>202007150913193_ajouterAdresseMission.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

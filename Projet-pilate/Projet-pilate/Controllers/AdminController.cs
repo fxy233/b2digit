@@ -606,6 +606,7 @@ namespace Projet_pilate.Controllers
 
             Consultant consultant = db.Consultants.SingleOrDefault(m => m.ConsultantID == model.ID);
 
+            Boolean change = consultant.Email != Request.Form["Email"];
 
             if (!ModelState.IsValid)
             {
@@ -634,6 +635,39 @@ namespace Projet_pilate.Controllers
                 ViewData["ProfitCenter"] = ProfitCenterName;
                 ViewData["CostType"] = selectedTypeCost;
 
+                return View(model);
+            }
+
+            if (change)
+            {
+                selectedTypeCost = Request.Form["CostType"].ToString();
+                SubsidiaryName = Request.Form["Subsidiary"].ToString();
+                ProfitCenterName = Request.Form["ProfitCenter"].ToString();
+                var profitCenters = db.profitCenters.ToList();
+                var subsidiaries = db.Subsidiaries.ToList();
+                List<string> profitCenterNames = new List<string>();
+                List<string> subsidiariesNames = new List<string>();
+
+                foreach (var profit in profitCenters)
+                {
+                    profitCenterNames.Add(profit.Name);
+                }
+                model.ProfitCenters = profitCenterNames;
+
+                foreach (var sub in subsidiaries)
+                {
+                    subsidiariesNames.Add(sub.Name);
+                }
+                model.Subsidiaries = subsidiariesNames;
+
+
+                ViewData["Subsidiary"] = SubsidiaryName;
+                ViewData["ProfitCenter"] = ProfitCenterName;
+                ViewData["CostType"] = selectedTypeCost;
+
+                model.Email = consultant.Email;
+                string message = "On peut pas modifier email d'un consultant";
+                ModelState.AddModelError(string.Empty, message);
                 return View(model);
             }
 
@@ -849,6 +883,9 @@ namespace Projet_pilate.Controllers
             int year = Int32.Parse(time.Year.ToString());
             foreach (var m in missionlist)
             {
+
+                
+
                 if (Int32.Parse(m.End.Year.ToString())<year || (Int32.Parse(m.End.Year.ToString()) == year&& Int32.Parse(m.End.Month.ToString()) < month))
                 {
                     continue;
@@ -1004,7 +1041,37 @@ namespace Projet_pilate.Controllers
                     };
 
                     id++;
-                    db.Factures.Add(facture);
+
+                if (m.InterBC1ID != 0)
+                {
+                    var c = db.Subsidiaries.Single(s => s.SubsidiaryID == m.InterBC1ID);
+                    Facture factureInt = new Facture()
+                    {
+                        mission = m.Name,
+                        FactureID = id,
+                        NomFacture = "Fact-Int-" + BC.Name + "-" + time.ToString("yyyy-MMM", System.Globalization.CultureInfo.CurrentCulture) + "-" + id + "P",
+                        MoisDeFacturation = time,
+                        InfoFacturation = m.InfoFacturation,
+                        PrincipalBC = c.Name,
+                        AdresseBC = c.Address,
+                        Client = BC.Name,
+                        AdresseFacturation =  BC.Address,
+                        NombredUO = nbUO,
+                        TJ = m.TJInterBC1,
+                        TVA = 0.2f,
+                        MontantHT = montant,
+                        FAE = false,
+                        Emise = false,
+                        payee = false,
+                        annulee = false,
+                        DernierEnregistrer = DateTime.Now,
+                    };
+                    db.Factures.Add(factureInt);
+                    id++;
+                }
+
+
+                db.Factures.Add(facture);
                     db.SaveChanges();
                 //}
 

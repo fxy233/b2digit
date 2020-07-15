@@ -90,6 +90,7 @@ namespace Projet_pilate.Entities
         public float Fee { get; set; }
         public int FreeDay { get; set; }
         public string Periodicity { get; set; }
+        public string AdresseMission { get; set; }
         public string Comment { get; set; }
         public string InfoFacturation { get; set; }
         public int PrincipalBCID { get; set; }

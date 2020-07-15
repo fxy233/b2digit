@@ -40,6 +40,7 @@ namespace Projet_pilate.Controllers
                 Address = model.Address,
                 PostalCode = model.PostalCode,
                 City = model.City,
+                MailFacturation = model.MailFacturation,
 
             };
 
@@ -103,7 +104,8 @@ namespace Projet_pilate.Controllers
                 Name = company.Name,
                 Address = company.Address,
                 PostalCode = company.PostalCode,
-                City = company.City
+                City = company.City,
+                MailFacturation = company.MailFacturation,
             };
 
             return View(model);
@@ -123,6 +125,7 @@ namespace Projet_pilate.Controllers
                 company.Address = model.Address;
                 company.PostalCode = model.PostalCode;
                 company.City = model.City;
+                company.MailFacturation = model.MailFacturation;
                 db.SaveChanges();
 
                 return RedirectToAction("ListeCompanies", "Company");

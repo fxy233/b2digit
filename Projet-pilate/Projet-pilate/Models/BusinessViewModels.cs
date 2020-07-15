@@ -31,6 +31,10 @@ namespace Projet_pilate.Models
         [Display(Name = "Ville")]
         public string City { get; set; }
 
+        [Required(ErrorMessage = "Le Mail de facturation doit être renseigné.")]
+        [Display(Name = "Mail de Facturation")]
+        public string MailFacturation { get; set; }
+
     }
 
     public class DetailCompanyViewModel
@@ -74,6 +78,10 @@ namespace Projet_pilate.Models
         [Display(Name = "Ville")]
         public string City { get; set; }
 
+        [Required]
+        [Display(Name = "Mail de Facturation")]
+        public string MailFacturation { get; set; }
+
     }
 
     public class RegisterMissionViewModel
@@ -115,6 +123,9 @@ namespace Projet_pilate.Models
 
         [Display(Name = "Périodicité")]
         public List<string> Periodicity { get; set; }
+
+        [Display(Name = "Adresse de Mission")]
+        public string AdresseMission { get; set; }
 
 
         [Display(Name = "Commentaire")]
@@ -287,6 +298,9 @@ namespace Projet_pilate.Models
 
         [Display(Name = "Tarif")]
         public float Fee { get; set; }
+
+        [Display(Name = "Adresse de Mission")]
+        public string AdresseMission { get; set; }
 
         [Display(Name = "Commentaire")]
         public string Commentaire { get; set; }
