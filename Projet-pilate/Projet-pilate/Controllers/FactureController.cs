@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Projet_pilate.Entities;
 using System.Linq;
 using System.Web;
 using Projet_pilate.Models;
@@ -17,6 +18,7 @@ using iTextSharp.tool.xml.pipeline.end;
 using iTextSharp.tool.xml.parser;
 using iTextSharp.tool.xml.html;
 using System.Text;
+using DocumentFormat.OpenXml.EMMA;
 
 namespace Projet_pilate.Controllers
 {
@@ -96,13 +98,85 @@ namespace Projet_pilate.Controllers
         [Route("Facture/Suivis", Name = "Suivis")]
         public ActionResult Suivis()
         {
-            return View();
+             return View();
         }
 
         [Route("Facture/Modifier", Name = "Modifier")]
         public ActionResult Modifier()
         {
             return View();
+        }
+
+            [Route("Facture/CreerFact", Name = "CreerFact")]
+        public ActionResult CreerFact()
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            ViewBag.TVA = db.Infos.ToList().Count == 0 ? 0 : db.Infos.Single().TVA;
+
+
+            return View();
+        }
+
+        [Route("Facture/CreerFact")]
+        [HttpPost]
+        public ActionResult CreerFact(FactureCreationViewModel model)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+
+            var fl = db.Factures.ToList();
+            int id = 0;
+            foreach (var item in fl)
+            {
+                if (item.FactureID > id)
+                {
+                    id = item.FactureID;
+                }
+            }
+            id++;
+
+            string type = Request.Form["Type"] == "facture" ? "Fact" : "FactAvoir";
+            var namefacture = Request.Form["ClientName"];
+
+            foreach (var item in db.Subsidiaries.ToList())
+            {
+                if (item.Name == namefacture)
+                {
+                    type = type + "Int";
+                    break;
+                }
+            }
+
+            string nomMission = Request.Form["Mission"];
+            var missionItem = db.Missions.Single(m => m.Name == nomMission);
+
+            Facture facture = new Facture()
+            {
+                mission = Request.Form["Mission"],
+                FactureID = id,
+                NomFacture = type + "-" + Request.Form["NomEmettrice"] + "-" + db.MonthActivations.Single().Periode.ToString("yyyy-MMM", System.Globalization.CultureInfo.CurrentCulture) + "-" + id,
+                MoisDeFacturation = db.MonthActivations.Single().Periode,
+                InfoFacturation = model.FactInfo,
+                PrincipalBC = Request.Form["NomEmettrice"],
+                AdresseBC = Request.Form["AdresseEmettrice"],
+                Client = Request.Form["ClientName"],
+                AdresseFacturation = Request.Form["ClientAdresse"],
+                NombredUO = model.Quantite,
+                TJ = model.HTunitaire,
+                TVA = (float)model.TVA/100,
+                MontantHT = model.HTunitaire* model.Quantite,
+                FAE = false,
+                Emise = false,
+                payee = false,
+                annulee = false,
+                DernierEnregistrer = DateTime.Now,
+                Delai = missionItem.Delai,
+                DesignationFacturation = missionItem.DesignationFacturation,
+            };
+
+            db.Factures.Add(facture);
+            db.SaveChanges();
+
+            return RedirectToAction("ListeFactures", "Facture");
         }
 
         [Route("Facture/Detail", Name = "Detail")]

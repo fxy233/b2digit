@@ -1114,6 +1114,71 @@ namespace Projet_pilate.Controllers
             return View("messageSuccess", model);
 
         }
+
+
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
+        // GET: Admin/InfoGeneral
+        [Route("Admin/InfoGeneral", Name = "InfoGeneral")]
+        public ActionResult InfoGeneral()
+        {
+            return View();
+        }
+
+
+
+        // GET: /Admin/EditInfo
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
+        [Route("Admin/EditInfo", Name = "EditInfo")]
+        public ActionResult EditInfo()
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var Infolist = db.Infos.ToList();
+
+            InfoViewModel model = new InfoViewModel();
+
+            if (Infolist.Count==0)
+            {
+                model.TVA = 0.0;
+                model.mention = "Rien";
+            }
+            else
+            {
+                model.TVA = Infolist[0].TVA;
+                model.mention = Infolist[0].Mention;
+            }
+            return View(model);
+        }
+
+
+        // POST: /Admin/EditConsultant
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
+        [HttpPost]
+        [Route("Admin/EditInfo")]
+        public ActionResult EditInfo(InfoViewModel model)
+        {
+
+            ApplicationDbContext db = new ApplicationDbContext();
+            var Infolist = db.Infos.ToList();
+            if (Infolist.Count == 0)
+            {
+                Info info = new Info()
+                {
+                    TVA = model.TVA/100,
+                    Mention = model.mention,
+                };
+                db.Infos.Add(info);
+                db.SaveChanges();
+            }
+            else
+            {
+                var info = db.Infos.Single();
+                info.TVA = model.TVA/100; 
+                info.Mention = model.mention;
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("InfoGeneral", "Admin");
+        }
     }
 
 

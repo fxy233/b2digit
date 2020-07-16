@@ -1,0 +1,28 @@
+﻿@using Projet_pilate.Models;
+@{
+    ViewBag.Title = "InfoGeneral";
+}
+
+<h2>Informations Générales</h2>
+
+<br />
+<br />
+@{
+    ApplicationDbContext db = new ApplicationDbContext();
+    var tva = "rien";
+    var mention = "rien";
+    if (db.Infos.ToList().Count != 0)
+    {
+        tva = db.Infos.Single().TVA.ToString();
+        mention = db.Infos.Single().Mention;
+    }
+
+    <h4>TVA current:  <strong style="color:blue">@tva</strong></h4>
+    <h4>Mention obligatoire current: <strong style="color:blue">@mention</strong></h4>
+    <br />
+    <br />
+    @Html.ActionLink("Modifier", "EditInfo", null, new { @class = "btn btn-primary btn-large" })
+}
+
+
+

@@ -39,9 +39,5 @@ namespace Projet_pilate.Entities
 
     }
 
-    public class InfoUtil
-    {
-        public float TVA { get; set; }
-        public string Mention { get; set; }
-    }
+    
 }

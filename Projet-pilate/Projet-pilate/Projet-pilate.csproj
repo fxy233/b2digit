@@ -314,6 +314,7 @@
     <Compile Include="Entities\BusinessClasses.cs" />
     <Compile Include="Entities\CompanyClasses.cs" />
     <Compile Include="Entities\FactureClasse.cs" />
+    <Compile Include="Entities\InfoClasses.cs" />
     <Compile Include="Entities\ProfitCenter.cs" />
     <Compile Include="Entities\SuiviClasse.cs" />
     <Compile Include="Global.asax.cs">
@@ -458,6 +459,14 @@
     <Compile Include="Migrations\202007151239432_updateSubidiairy.cs" />
     <Compile Include="Migrations\202007151239432_updateSubidiairy.designer.cs">
       <DependentUpon>202007151239432_updateSubidiairy.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007151911551_info.cs" />
+    <Compile Include="Migrations\202007151911551_info.designer.cs">
+      <DependentUpon>202007151911551_info.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007152040315_info1.cs" />
+    <Compile Include="Migrations\202007152040315_info1.designer.cs">
+      <DependentUpon>202007152040315_info1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -605,9 +614,12 @@
     <Content Include="Views\Consultant\ExportTest.cshtml" />
     <Content Include="Views\Facture\ListeFactures.cshtml" />
     <Content Include="Views\Facture\Suivis.cshtml" />
-    <Content Include="Views\Facture\Modifier.cshtml" />
+    <Content Include="Views\Facture\CreerFact.cshtml" />
     <Content Include="Views\Facture\Detail.cshtml" />
     <Content Include="Views\Shared\_particular.cshtml" />
+    <Content Include="Views\Admin\InfoGeneral.cshtml" />
+    <Content Include="Views\Admin\EditInfo.cshtml" />
+    <Content Include="Views\Facture\Modifier.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -731,6 +743,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202007151239432_updateSubidiairy.resx">
       <DependentUpon>202007151239432_updateSubidiairy.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007151911551_info.resx">
+      <DependentUpon>202007151911551_info.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007152040315_info1.resx">
+      <DependentUpon>202007152040315_info1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
