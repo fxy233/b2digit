@@ -12,80 +12,97 @@
     </p>
 }
 
-<p><button onclick="sortTable1()">Trier</button></p>
-<table class="table" id="mytable1">
-    <tr>
-        <th>
-            Prénom
-        </th>
-        <th>
-            Nom
-        </th>
-        <th>
-            Rôle
-        </th>
-        <th>
-            Email
-        </th>
 
-        <th></th>
-    </tr>
+<table class="display" id="mytable2" style="width:90%">
+    <thead>
+        <tr>
+            <th>
+                Prénom
+            </th>
+            <th>
+                Nom
+            </th>
+            <th>
+                Rôle
+            </th>
+            <th>
+                Email
+            </th>
 
-    @foreach (var item in Model)
-    {
-<tr>
-
-
-    <td>
-        @Html.DisplayFor(modelItem => item.FirstName)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.LastName)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Position)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Email)
-    </td>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
 
 
-
-    @if (User.IsInRole("Super-Administrateur"))
-    {
-<td>
-    @Html.ActionLink("Supprimer", "Delete", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })
-    @*Html.ActionLink("Modifier", "Edit", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })*@
-    @*Html.RouteLink("Changer le mot de passe", "ChangePassword", "Manage", new { @class = "btn btn-primary btn-large" })*@
-</td>
-
-    }
-
-    else if (User.IsInRole("Administrateur") && item.Position != "Administrateur" && item.Position != "Super-Administrateur")
-    {
-<td>
-    @Html.ActionLink("Supprimer", "Edit", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })
-    @*Html.RouteLink("Changer le mot de passe", "ChangePassword", "Manage", new { @class = "btn btn-primary btn-large" })*@
-</td>
-    }
-
-    else
-    {
-        <td>
-            <button class="btn btn-secondary btn-large" type="button" disabled>Supprimer</button>
-            <button class="btn btn-secondary btn-large" type="button" disabled>Changer mot de passe</button>
-        </td>
-
-    }
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Position)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
 
 
 
+                @if (User.IsInRole("Super-Administrateur"))
+                {
+                    <td>
+                        @Html.ActionLink("Supprimer", "Delete", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })
+                        @*Html.ActionLink("Modifier", "Edit", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })*@
+                        @*Html.RouteLink("Changer le mot de passe", "ChangePassword", "Manage", new { @class = "btn btn-primary btn-large" })*@
+                    </td>
 
+                }
 
+                else if (User.IsInRole("Administrateur") && item.Position != "Administrateur" && item.Position != "Super-Administrateur")
+                {
+                    <td>
+                        @Html.ActionLink("Supprimer", "Edit", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })
+                        @*Html.RouteLink("Changer le mot de passe", "ChangePassword", "Manage", new { @class = "btn btn-primary btn-large" })*@
+                    </td>
+                }
 
+                else
+                {
+                    <td>
+                        <button class="btn btn-secondary btn-large" type="button" disabled>Supprimer</button>
+                        <button class="btn btn-secondary btn-large" type="button" disabled>Changer mot de passe</button>
+                    </td>
 
-</tr>
-    }
+                }
+
+            </tr>
+
+        }
+    </tbody>
+
+    <tfoot >
+        <tr>
+            <th style="border-color:white">
+                Prénom
+            </th>
+            <th style="border-color:white">
+                Nom
+            </th>
+            <th style="border-color:white">
+                Rôle
+            </th>
+            <th style="border-color:white">
+                Email
+            </th>
+
+            
+        </tr>
+    </tfoot>
 </table>
 
 

@@ -41,11 +41,15 @@
         <div class="col-md-10">
             <select class="form-control" id="PartOwner" name="PartOwner" required>
                 <option selected>@Model.PartOwner</option>
-                @if (Model.PartOwner == null) {<option selected>Aucun</option>}
+                @if (Model.PartOwner == null)
+                {
+                    <option selected>Aucun</option>
+}
                 @foreach (var partOwner in Model.ListPartOwners)
                 {
                     <option class="partOwner" value="@partOwner">@partOwner</option>
                 }
+                <option>Aucun</option>
             </select>
         </div>
     </div>
@@ -56,12 +60,16 @@
         <div class="col-md-10">
             <select class="form-control" id="FatherProfitCenter" name="FatherProfitCenter" required>
                 <option selected>@Model.FatherProfitCenter</option>
-                @if (Model.FatherProfitCenter == null) {<option selected>@Model.FatherProfitCenter</option> }
+                @if (Model.FatherProfitCenter == null)
+                {
+                    <option selected>@Model.FatherProfitCenter</option>
+}
 
                 @foreach (var FatherProfitCenter in Model.ListFatherProfitCenters)
-                        {
+                {
                     <option value="@FatherProfitCenter">@FatherProfitCenter</option>
                 }
+                <option>Aucun</option>
             </select>
         </div>
     </div>

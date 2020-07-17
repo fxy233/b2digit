@@ -58,15 +58,19 @@
     <pre>
 
     </pre>
-    <p style="text-align:center; margin-top:30px; font-size:20px"><strong>Facture</strong></p>
+    @{
+        string s = Model.type == null ? "Facture" : Model.type;
+        < p style = "text-align:center; margin-top:30px; font-size:20px" >< strong > @s </ strong ></ p >
+    }
+
 
 
     <p>Facture N°:</p>
     <p><strong>@Model.FactureName</strong></p>-->
     <div style="width:150px; color:darkblue; border-color:black">@Model.FactInfo</div>
-    <div style="float:left; width:40%; color:darkblue; border-color:black">testtesttestestestestestestestestestestest</div>
-    @*       <div style="float:right; width:57%;">Date: @ViewBag.date</div>
-    *@
+   
+    <pre style="float:right; width:57%;">                                                                   Date: @ViewBag.date</pre>
+    
     <table style="margin-top:15px; border-color:black">
         <tr>
             <td style="background-color:gray; text-align:center; padding:5px"> Désignation </td>
@@ -79,14 +83,13 @@
         </tr>
         <tr>
             @{
-                string designation = DateTime.Now.ToString("MMMM yyyy", System.Globalization.CultureInfo.CurrentCulture) + Environment.NewLine + "" + Environment.NewLine + "Unité d'oeuvre";
                 float total = Model.Quantite * Model.HTunitaire;
                 float mtva = total * Model.TVA;
                 float totalTTC = total + mtva;
                 ViewBag.montantHT = total.ToString();
                 ViewBag.montantTVA = mtva.ToString();
                 ViewBag.montantTTC = totalTTC.ToString();
-                <td style="text-align:center; padding:5px"> <pre>@designation</pre> </td>
+                <td style="text-align:center; padding:5px"> <pre>@Model.Designation</pre> </td>
                 <td style="text-align:center; padding:5px"> @Model.Quantite </td>
                 <td style="text-align:center; padding:5px"> @Model.HTunitaire </td>
                 <td style="text-align:center; padding:5px"> @total </td>
@@ -105,7 +108,18 @@
                                                   Montant H.T en Euros              @ViewBag.montantHT €
                                                       Montant TVA en Euros              @ViewBag.montantTVA €
                                                       Net à payer T.T.C en Euros        @ViewBag.montantTTC €
+                                                           Date de règlement:          @Model.dateReglement
     </pre>
+    <pre>
+
+
+    </pre>
+    <pre>IBAN : @Model.IBAN
+    BIC : @Model.BIC
+    TVA intracommunautaire : @Model.TVAIntra
+    @Model.Mention
+    </pre>
+
 
 </div>
 

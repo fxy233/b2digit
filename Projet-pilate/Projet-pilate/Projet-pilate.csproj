@@ -468,6 +468,14 @@
     <Compile Include="Migrations\202007152040315_info1.designer.cs">
       <DependentUpon>202007152040315_info1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202007161340000_updateFacture.cs" />
+    <Compile Include="Migrations\202007161340000_updateFacture.designer.cs">
+      <DependentUpon>202007161340000_updateFacture.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007171015356_ajoutDateReglement.cs" />
+    <Compile Include="Migrations\202007171015356_ajoutDateReglement.designer.cs">
+      <DependentUpon>202007171015356_ajoutDateReglement.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityViewModels.cs" />
@@ -749,6 +757,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202007152040315_info1.resx">
       <DependentUpon>202007152040315_info1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007161340000_updateFacture.resx">
+      <DependentUpon>202007161340000_updateFacture.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007171015356_ajoutDateReglement.resx">
+      <DependentUpon>202007171015356_ajoutDateReglement.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

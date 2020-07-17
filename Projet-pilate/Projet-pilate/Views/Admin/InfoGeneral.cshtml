@@ -13,11 +13,11 @@
     var mention = "rien";
     if (db.Infos.ToList().Count != 0)
     {
-        tva = db.Infos.Single().TVA.ToString();
+        tva = (100*db.Infos.Single().TVA).ToString();
         mention = db.Infos.Single().Mention;
     }
 
-    <h4>TVA current:  <strong style="color:blue">@tva</strong></h4>
+    <h4>TVA current:  <strong style="color:blue">@tva</strong> %</h4>
     <h4>Mention obligatoire current: <strong style="color:blue">@mention</strong></h4>
     <br />
     <br />

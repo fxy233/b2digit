@@ -441,7 +441,7 @@ namespace Projet_pilate.Controllers
         }
 
         [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
-        [Route("Consultant/DeleteCra")]
+        //[Route("Consultant/DeleteCra")]
         public ActionResult DeleteCra(int id)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -631,7 +631,7 @@ namespace Projet_pilate.Controllers
 
         }*/
 
-        [Route("Consultant/SuiviCra_mission", Name = "SuiviCra_mission")]
+        //[Route("Consultant/SuiviCra_mission", Name = "SuiviCra_mission")]
         public ActionResult SuiviCra_mission()
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -1074,7 +1074,7 @@ namespace Projet_pilate.Controllers
         }
 
         [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes,Manager")]
-        [Route("Consultant/test", Name = "test")]
+        //[Route("Consultant/test", Name = "test")]
         public ActionResult test()
         {
             ViewBag.listMonth = new string[] { " Jan ", " Fév ", " Mar ", " Avr ", " Mai ", " Juin ", " Juil ", " Aou ", " Sep ", " Oct ", " Nov ", " Dec " };
@@ -1178,7 +1178,7 @@ namespace Projet_pilate.Controllers
         }
 
         [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes,Manager")]
-        [Route("Consultant/SuiviCra_nonfacture", Name = "SuiviCra_nonfacture")]
+        //[Route("Consultant/SuiviCra_nonfacture", Name = "SuiviCra_nonfacture")]
         public ActionResult SuiviCra_nonfacture()
         {
             ApplicationDbContext db = new ApplicationDbContext();

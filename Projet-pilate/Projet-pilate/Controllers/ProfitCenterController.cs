@@ -10,12 +10,12 @@ using System.Web.Mvc;
 
 namespace Projet_pilate.Controllers
 {
-    [Authorize(Roles = "Administrateur, Super-Administrateur, Manager")]
+   
     public class ProfitCenterController : Controller
     {
 
         // GET: /ProfitCenter/ProfitCenter
-        [AllowAnonymous]
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager")]
         [Route("ProfitCenter/ProfitCenterList", Name = "ProfitCenterList")]
         public ActionResult ProfitCenterList()
         {
@@ -60,7 +60,7 @@ namespace Projet_pilate.Controllers
         }
 
 
-
+        [Authorize(Roles = "Administrateur, Super-Administrateur")]
         //GET: ProfitCenter/CreateProfitCenter
         [Route("ProfitCenter/CreateProfitCenter", Name = "CreateProfitCenter")]
         public ActionResult CreateProfitCenter()
@@ -123,7 +123,25 @@ namespace Projet_pilate.Controllers
             };
 
             string ownerFirstName = Request.Form["Owner"].ToString().Split(' ')[0];
-            string ownerLastName = Request.Form["Owner"].ToString().Split(' ')[1];
+            string ownerLastName = "";
+            int i = 0;
+            foreach(var c in Request.Form["Owner"].ToString().Split(' '))
+            {
+                if(i==0)
+                {
+                    i++;
+                    continue;
+                }
+                if (i == 1)
+                {
+                    ownerLastName = c;
+                    i++;
+                    continue;
+                }
+                ownerLastName = ownerLastName + " " + c;
+                i++;
+
+            }
             Manager owner = db.Managers.SingleOrDefault(m => m.FirstName == ownerFirstName && m.LastName == ownerLastName);
             profitCenter.Owner = Request.Form["Owner"].ToString();
             owner.ProfitCenters.Add(profitCenter);
@@ -131,7 +149,25 @@ namespace Projet_pilate.Controllers
             try
             {
                 string partOwnerFirstName = Request.Form["PartOwner"].ToString().Split(' ')[0];
-                string partOwnerLastName = Request.Form["PartOwner"].ToString().Split(' ')[1];
+                string partOwnerLastName = "";
+                int x = 0;
+                foreach (var c in Request.Form["PartOwner"].ToString().Split(' '))
+                {
+                    if (x == 0)
+                    {
+                        x++;
+                        continue;
+                    }
+                    if (x == 1)
+                    {
+                        partOwnerLastName = c;
+                        x++;
+                        continue;
+                    }
+                    partOwnerLastName = partOwnerLastName + " " + c;
+                    x++;
+
+                }
                 Manager partOwner = db.Managers.SingleOrDefault(m => m.FirstName == partOwnerFirstName && m.LastName == partOwnerLastName);
                 profitCenter.PartOwner = Request.Form["PartOwner"].ToString();
                 partOwner.ProfitCenters.Add(profitCenter);
@@ -176,6 +212,7 @@ namespace Projet_pilate.Controllers
             return RedirectToAction("ProfitCenterList", "ProfitCenter");
         }
 
+        [Authorize(Roles = "Administrateur, Super-Administrateur")]
         // GET: ProfitCenter/Edit
         public ActionResult EditProfitCenter(int id)
         {
@@ -190,7 +227,7 @@ namespace Projet_pilate.Controllers
                 Owner = profitcenter.Owner,
                 PartOwner = profitcenter.PartOwner,
                 FatherProfitCenterID = profitcenter.FatherProfitCenterID,
-                FatherProfitCenter = father == null ? "Aucune":father.Name,
+                FatherProfitCenter = father == null ? "Aucun":father.Name,
                 Cost = profitcenter.Cost,
                 Turnover = profitcenter.Turnover
                               
@@ -287,11 +324,11 @@ namespace Projet_pilate.Controllers
             profitcenter.Name = model.Name;
             profitcenter.Owner = model.Owner;
             profitcenter.PartOwner = model.PartOwner;
-            model.FatherProfitCenterID = model.FatherProfitCenter == "Aucune" ? (int?)null : db.profitCenters.Single(p => p.Name == model.FatherProfitCenter).ProfitCenterID;
+            model.FatherProfitCenterID = model.FatherProfitCenter == "Aucun" ? (int?)null : db.profitCenters.Single(p => p.Name == model.FatherProfitCenter).ProfitCenterID;
             profitcenter.FatherProfitCenterID = model.FatherProfitCenterID;
             profitcenter.FatherProfitCenter = profitcenter.FatherProfitCenterID==null?null:db.profitCenters.Single(p=> p.ProfitCenterID==profitcenter.FatherProfitCenterID);
 
-            if (profitcenter.Name == profitcenter.FatherProfitCenter.Name)
+            if (profitcenter.Name == (profitcenter.FatherProfitCenter==null? "Aucun": profitcenter.FatherProfitCenter.Name))
             {
                 string message = "La société père d'une filiale ne peut pas être la sienne.";
                 ModelState.AddModelError(string.Empty, message);
@@ -340,6 +377,7 @@ namespace Projet_pilate.Controllers
             return RedirectToAction("ProfitCenterList", "ProfitCenter");
     }
 
+        [Authorize(Roles = "Administrateur, Super-Administrateur")]
         [Route("ProfitCenter/DeleteProfitCenter", Name = "DeleteProfitCenter")]
         public ActionResult DeleteProfitCenter(int id)
         {

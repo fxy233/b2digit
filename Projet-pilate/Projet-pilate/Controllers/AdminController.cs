@@ -1138,12 +1138,12 @@ namespace Projet_pilate.Controllers
 
             if (Infolist.Count==0)
             {
-                model.TVA = 0.0;
+                model.TVA = 0;
                 model.mention = "Rien";
             }
             else
             {
-                model.TVA = Infolist[0].TVA;
+                model.TVA = Infolist[0].TVA*100;
                 model.mention = Infolist[0].Mention;
             }
             return View(model);

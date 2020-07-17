@@ -15,6 +15,8 @@ namespace Projet_pilate.Entities
         public DateTime DernierEnregistrer { get; set; }
         public DateTime MoisDeFacturation { get; set; }
 
+        public DateTime DateRegelement { get; set; }
+
         [Index("Index_NomFacture", IsUnique = true)]
         [MaxLength(50)]
         public string NomFacture { get; set; }
@@ -36,6 +38,7 @@ namespace Projet_pilate.Entities
         public bool annulee { get; set; }
         public string Delai { get; set; }
         public string DesignationFacturation { get; set; }
+        public string type { get; set; }
 
     }
 

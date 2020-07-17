@@ -102,9 +102,107 @@ namespace Projet_pilate.Controllers
         }
 
         [Route("Facture/Modifier", Name = "Modifier")]
-        public ActionResult Modifier()
+        public ActionResult Modifier(int id)
         {
-            return View();
+                        ApplicationDbContext db = new ApplicationDbContext();
+                        var facture = db.Factures.Single(f => f.FactureID == id);
+                        ViewBag.TVA = db.Infos.ToList().Count == 0 ? 0 : db.Infos.Single().TVA;
+
+                        FactureCreationViewModel model = new FactureCreationViewModel();
+                        model.ID = facture.FactureID;
+                        model.NomEmettrice = facture.PrincipalBC;
+                        var emettrice = db.Subsidiaries.Single(s => s.Name == model.NomEmettrice);
+                        model.AdresseEmettrice = emettrice.Address;
+                        model.VilleEmettrice = emettrice.PostaleCode + ", " + emettrice.City;
+                        model.MailEmettrice = emettrice.email;
+                        model.Siren = emettrice.Siren;
+                        model.ClientName = facture.Client;
+                        
+                        foreach(var client in db.Companies.ToList())
+                        {
+                            if(client.Name == facture.Client)
+                            {
+                                model.ClientAdresse = client.Address;
+                                model.ClientVille = client.PostalCode + ", " + client.City;
+                                model.ClientContact = client.MailFacturation;
+                            }
+                        }
+
+                        foreach (var client in db.Subsidiaries.ToList())
+                        {
+                            if (client.Name == facture.Client)
+                            {
+                                model.ClientAdresse = client.Address;
+                                model.ClientVille = client.PostaleCode + ", " + client.City;
+                                model.ClientContact = client.email;
+                            }
+                        }
+
+            model.type = facture.type == null ? "facture" : facture.type;
+                        model.FactureName = facture.NomFacture;
+                        model.FactInfo = facture.InfoFacturation;
+                        model.date = facture.MoisDeFacturation;
+                        model.designation = facture.DesignationFacturation;
+                        model.Quantite = facture.NombredUO;
+                        model.HTunitaire = facture.TJ;
+                        model.TVA = facture.TVA;
+                        model.totalHT = facture.NombredUO * facture.TJ;
+                        model.montantTVA = facture.TVA * facture.NombredUO * facture.TJ;
+                        model.totalTTC = (1 + facture.TVA) * facture.NombredUO * facture.TJ;
+                        model.dateReglement = facture.MoisDeFacturation;
+                        model.IBAN = emettrice.IBAN;
+                        model.BIC = emettrice.BIC;
+                        model.TVAintra = emettrice.TVAIntra;
+                        model.Mention = db.Infos.Single().Mention;
+                        model.mission = facture.mission;
+            model.dateReglement = facture.DateRegelement;
+                        return View(model);
+            
+        }
+
+        [Route("Facture/Modifier")]
+        [HttpPost]
+        public ActionResult Modifier(FactureCreationViewModel model)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+
+            var facture = db.Factures.Single(f => f.NomFacture == model.FactureName);
+
+            string type = Request.Form["Type"] == "facture" ? "Fact" : "FactAvoir";
+            var namefacture = Request.Form["ClientName"];
+
+            foreach (var item in db.Subsidiaries.ToList())
+            {
+                if (item.Name == namefacture)
+                {
+                    type = type + "Int";
+                    break;
+                }
+            }
+
+            string nomMission = Request.Form["Mission"];
+            var missionItem = db.Missions.Single(m => m.Name == nomMission);
+
+
+            facture.mission = Request.Form["Mission"];
+            facture.MoisDeFacturation = db.MonthActivations.Single().Periode;
+            facture.InfoFacturation = model.FactInfo;
+            facture.PrincipalBC = Request.Form["NomEmettrice"];
+            facture.AdresseBC = Request.Form["AdresseEmettrice"];
+            facture.Client = Request.Form["ClientName"];
+            facture.AdresseFacturation = Request.Form["ClientAdresse"];
+                facture.NombredUO = model.Quantite;
+                facture.TJ = model.HTunitaire;
+                facture.TVA = (float)model.TVA / 100;
+                facture.MontantHT = model.HTunitaire * model.Quantite;
+                facture.DernierEnregistrer = DateTime.Now;
+                facture.Delai = missionItem.Delai;
+                facture.DesignationFacturation = missionItem.DesignationFacturation;
+            facture.DateRegelement = model.dateReglement;
+            
+            db.SaveChanges();
+
+            return RedirectToAction("ListeFactures", "Facture");
         }
 
             [Route("Facture/CreerFact", Name = "CreerFact")]
@@ -134,7 +232,7 @@ namespace Projet_pilate.Controllers
             }
             id++;
 
-            string type = Request.Form["Type"] == "facture" ? "Fact" : "FactAvoir";
+            string type = Request.Form["Type"] == "Facture" ? "Fact" : "FactAvoir";
             var namefacture = Request.Form["ClientName"];
 
             foreach (var item in db.Subsidiaries.ToList())
@@ -171,6 +269,7 @@ namespace Projet_pilate.Controllers
                 DernierEnregistrer = DateTime.Now,
                 Delai = missionItem.Delai,
                 DesignationFacturation = missionItem.DesignationFacturation,
+                DateRegelement = model.dateReglement,
             };
 
             db.Factures.Add(facture);
@@ -186,26 +285,54 @@ namespace Projet_pilate.Controllers
             ApplicationDbContext db = new ApplicationDbContext();
             var facture = db.Factures.Single(f => f.FactureID == id);
             var sub = db.Subsidiaries.Single(s => s.Name == facture.PrincipalBC);
-            var client = db.Companies.Single(c => c.Name == facture.Client);
+            var client = "";
+            string clientInfo = "";
+            string contactClient = "";
+            var slist = db.Subsidiaries.ToList();
+            var clist = db.Companies.ToList();
+            foreach(var s in slist)
+            {
+                if (s.Name==facture.Client)
+                {
+                    clientInfo = s.Address + Environment.NewLine + s.PostaleCode + " " + s.City;
+                    contactClient = s.email;
+                }
+            }
+            foreach (var c in clist)
+            {
+                if (c.Name == facture.Client)
+                {
+                    clientInfo = c.Address + Environment.NewLine + c.PostalCode + " " + c.City;
+                    contactClient = db.CompanyContacts.Single(t=>t.CompanyID==c.CompanyID).Mail;
+                }
+            }
+           
             string emetInfo = facture.PrincipalBC + Environment.NewLine + facture.AdresseBC;
             emetInfo = emetInfo + Environment.NewLine + sub.PostaleCode + " " + sub.City +  Environment.NewLine;
-            string clientInfo = client.Address + Environment.NewLine + client.PostalCode + " " + client.City;
-            var contactClient = db.CompanyContacts.Single(c=>c.CompanyName==facture.Client);
 
             ViewBag.date = DateTime.Now.ToString("dd MMMM yyyy", System.Globalization.CultureInfo.CurrentCulture);
 
-            FacturePDFViewModel model =new FacturePDFViewModel(){
+            var mission = db.Missions.Single(m => m.Name == facture.mission);
+            FacturePDFViewModel model = new FacturePDFViewModel() {
                 ID = id,
                 EmetInfo = emetInfo,
                 Siren = sub.Siren,
                 ClientName = facture.Client,
                 ClientInfo = clientInfo,
-                ClientContact = contactClient.Mail,
+                ClientContact = contactClient,
                 FactureName = facture.NomFacture,
                 FactInfo = facture.InfoFacturation,
                 Quantite = facture.NombredUO,
                 HTunitaire = facture.TJ,
                 TVA = facture.TVA,
+                type = facture.type,
+                dateReglement = facture.DateRegelement.ToString("dd MMMM yyyy", System.Globalization.CultureInfo.CurrentCulture),
+                IBAN = sub.IBAN,
+                BIC = sub.BIC,
+                TVAIntra = sub.TVAIntra,
+                Mention = db.Infos.ToList().Count==0?"":db.Infos.Single().Mention,
+                Designation = mission.DesignationFacturation,
+
             };
 
 

@@ -16,7 +16,7 @@
                 @{ ApplicationDbContext db = new ApplicationDbContext();
                     foreach (var m in db.Missions.ToList())
                     {
-                        <option value="@m.Name"></option>
+                        <option value="@m.Name" ></option>
                     };
                 }
             </datalist>
@@ -26,7 +26,7 @@
             <div class="col-md-8">
                 @*                @Html.EditorFor(model => model.NomEmettrice, new { htmlAttributes = new { @class = "form-control", @placeholder = "Nom société émettrice" } })
                 *@
-                <input type="text" placeholder="Nom société émettrice" list="principalBCID" class="form-control" id="NomEmettrice" asp-for="NomEmettrice" name="NomEmettrice" required />
+                <input type="text" onchange="auto()" placeholder="Nom société émettrice" list="principalBCID" class="form-control" id="NomEmettrice" asp-for="NomEmettrice" name="NomEmettrice" required />
                 <datalist id="principalBCID">
                     @{ 
                         foreach (var s in db.Subsidiaries.ToList())
@@ -39,12 +39,13 @@
             <div class="col-md-8">
                 @*                @Html.EditorFor(model => model.AdresseEmettrice, new { htmlAttributes = new { @class = "form-control", @placeholder = "Adresse" } })
                 *@
-                <input type="text" placeholder="Adresse" list="adresseEmettrice" class="form-control" id="AdresseEmettrice" asp-for="AdresseEmettrice" name="AdresseEmettrice" required />
+                <input type="text" placeholder="Adresse" readonly = "readonly" list="adresseEmettrice" class="form-control" id="AdresseEmettrice" asp-for="AdresseEmettrice" name="AdresseEmettrice" required />
                 <datalist id="adresseEmettrice">
                     @{
                         foreach (var s in db.Subsidiaries.ToList())
                         {
-                            <option value="@s.Address"></option>
+                            string id = s.Name + "Adresse";
+                            <option value="@s.Address" id="@id"></option>
                         };
                     }
                 </datalist>
@@ -53,13 +54,14 @@
             <div class="col-md-8">
                 @*                @Html.EditorFor(model => model.VilleEmettrice, new { htmlAttributes = new { @class = "form-control", @placeholder = "Code postal, ville" } })
                 *@
-                <input type="text" placeholder="Code postal, Ville" list="villeEmettrice" class="form-control" id="VilleEmettrice" asp-for="VilleEmettrice" name="VilleEmettrice" required />
+                <input type="text" placeholder="Code postal, Ville" readonly = "readonly" list="villeEmettrice" class="form-control" id="VilleEmettrice" asp-for="VilleEmettrice" name="VilleEmettrice" required />
                 <datalist id="villeEmettrice">
                     @{
                         foreach (var s in db.Subsidiaries.ToList())
                         {
+                            string id = s.Name + "City";
                             string str = s.PostaleCode + ", " + s.City;
-                            <option value="@str"></option>
+                            <option value="@str" id="@id"></option>
                         };
                     }
                 </datalist>
@@ -67,12 +69,13 @@
             <div class="col-md-12">
                 @*                @Html.EditorFor(model => model.MailEmettrice, new { htmlAttributes = new { @class = "form-control", @placeholder = "Mail de la société" } })
                 *@
-                <input type="text" placeholder="Mail de la société" list="mailEmettrice" class="form-control" id="MailEmettrice" asp-for="MailEmettrice" name="MailEmettrice" required />
+                <input type="text" placeholder="Mail de la société" readonly = "readonly" list="mailEmettrice" class="form-control" id="MailEmettrice" asp-for="MailEmettrice" name="MailEmettrice" required />
                 <datalist id="mailEmettrice">
                     @{
                         foreach (var s in db.Subsidiaries.ToList())
                         {
-                            <option value="@s.email"></option>
+                            string id = s.Name + "Email";
+                            <option value="@s.email" id="@id"></option>
                         };
                     }
                 </datalist>
@@ -83,12 +86,13 @@
             <div class="col-md-offset-1 col-md-8" style="margin-left:0px; padding-left:0px;">
                 @*                @Html.EditorFor(model => model.Siren, new { htmlAttributes = new { @class = "form-control", @placeholder = "SIREN" } })
                 *@
-                <input type="text" placeholder="SIREN" list="siren" class="form-control" id="Siren" asp-for="Siren" name="Siren" required />
+                <input type="text" placeholder="SIREN" readonly = "readonly" list="siren" class="form-control" id="Siren" asp-for="Siren" name="Siren" required />
                 <datalist id="siren">
                     @{
                         foreach (var s in db.Subsidiaries.ToList())
                         {
-                            <option value="@s.Siren"></option>
+                            string id = s.Name + "Siren";
+                            <option value="@s.Siren" id="@id"></option>
                         };
                     }
                 </datalist>
@@ -102,11 +106,12 @@
                 @*                @Html.EditorFor(model => model.ClientName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Nom société facturée" } })
                 *@
 
-                <input type="text" placeholder="Nom société facturée" list="clientName" class="form-control" id="ClientName" asp-for="ClientName" name="ClientName" required />
+                <input type="text" onchange="auto2()" placeholder="Nom société facturée" list="clientName" class="form-control" id="ClientName" asp-for="ClientName" name="ClientName" required />
                 <datalist id="clientName">
                     @{
                         foreach (var s in db.Subsidiaries.ToList())
                         {
+                            
                             <option value="@s.Name"></option>
                         };
                         foreach (var c in db.Companies.ToList())
@@ -119,16 +124,18 @@
             <div class="col-md-8">
                 @*                @Html.EditorFor(model => model.ClientAdresse, new { htmlAttributes = new { @class = "form-control", @placeholder = "Adresse" } })
                 *@
-                <input type="text" placeholder="Adresse" list="clientAdresse" class="form-control" id="ClientAdresse" asp-for="ClientAdresse" name="ClientAdresse" required />
+                <input type="text" placeholder="Adresse" readonly = "readonly" list="clientAdresse" class="form-control" id="ClientAdresse" asp-for="ClientAdresse" name="ClientAdresse" required />
                 <datalist id="clientAdresse">
                     @{
                         foreach (var s in db.Subsidiaries.ToList())
                         {
-                            <option value="@s.Address"></option>
+                            string id = s.Name + "AdresseClient";
+                            <option value="@s.Address" id="@id"></option>
                         };
                         foreach (var c in db.Companies.ToList())
                         {
-                            <option value="@c.Address"></option>
+                            string id = c.Name + "AdresseClient";
+                            <option value="@c.Address" id="@id"></option>
                         };
                     }
                 </datalist>
@@ -137,18 +144,20 @@
             <div class="col-md-8">
                 @*                @Html.EditorFor(model => model.ClientVille, new { htmlAttributes = new { @class = "form-control", @placeholder = "Code postal, ville" } })
                 *@
-                <input type="text" placeholder="Code postal, ville" list="clientVille" class="form-control" id="ClientVille" asp-for="ClientVille" name="ClientVille" required />
+                <input type="text" placeholder="Code postal, ville" readonly = "readonly" list="clientVille" class="form-control" id="ClientVille" asp-for="ClientVille" name="ClientVille" required />
                 <datalist id="clientVille">
                     @{
                         foreach (var s in db.Subsidiaries.ToList())
                         {
+                            string id = s.Name + "CityClient";
                             string str = s.PostaleCode + ", " + s.City;
-                            <option value="@str"></option>
+                            <option value="@str" id="@id"></option>
                         };
                         foreach (var c in db.Companies.ToList())
                         {
+                            string id = c.Name + "CityClient";
                             string str = c.PostalCode + ", " + c.City;
-                            <option value="@str"></option>
+                            <option value="@str" id="@id"></option>
                         };
                     }
                 </datalist>
@@ -157,16 +166,18 @@
             <div class="col-md-8">
                 @*                @Html.EditorFor(model => model.ClientContact, new { htmlAttributes = new { @class = "form-control", @placeholder = "Mail de la société" } })
                 *@
-                <input type="text" placeholder="Mail de la société" list="clientContact" class="form-control" id="ClientContact" asp-for="ClientContact" name="ClientContact" required />
+                <input type="text" placeholder="Mail de la société" readonly = "readonly" list="clientContact" class="form-control" id="ClientContact" asp-for="ClientContact" name="ClientContact" required />
                 <datalist id="clientContact">
                     @{
                         foreach (var s in db.Subsidiaries.ToList())
                         {
-                            <option value="@s.email"></option>
+                            string id = s.Name + "EmailClient";
+                            <option value="@s.email" id="@id"></option>
                         };
                         foreach (var c in db.Companies.ToList())
                         {
-                            <option value="@c.MailFacturation"></option>
+                            string id = c.Name + "EmailClient";
+                            <option value="@c.MailFacturation" id="@id"></option>
                         };
                     }
                 </datalist>
@@ -181,8 +192,8 @@
             <datalist id="type">
                 @{
 
-                    <option value="facture"></option>
-                    <option value="avoir"></option>
+                    <option value="Facture"></option>
+                    <option value="Avoir"></option>
 
                 }
             </datalist>
@@ -237,7 +248,7 @@
         <div class="col-md-4" style="margin-top:20px">@Html.EditorFor(model => model.totalTTC, new { htmlAttributes = new { @class = "form-control", @placeholder = "calculer automatiquement", @readonly = "readonly", @id = "totalTTC" } })</div>
 
         <div class="col-md-offset-6 col-md-2" style="margin-top:40px;padding-top:7px">Date de règlement :</div>
-        <div class="col-md-4" style="margin-top:40px">@Html.EditorFor(model => model.dateReglement, new { htmlAttributes = new { @class = "form-control", @placeholder = "calculer automatiquement", @readonly = "readonly" } })</div>
+        <div class="col-md-4" style="margin-top:40px">@Html.EditorFor(model => model.dateReglement, new { htmlAttributes = new { @class = "form-control" } })</div>
 
 
         <div class="col-md-1" style="margin-top:50px;padding-top:7px">IBAN :</div>
@@ -245,12 +256,13 @@
             @*        @Html.EditorFor(model => model.IBAN, new { htmlAttributes = new { @class = "form-control", @placeholder = "IBAN" } })
             *@
 
-            <input type="text" placeholder="IBAN" list="iban" class="form-control" id="IBAN" asp-for="IBAN" name="IBAN" required />
+            <input type="text" placeholder="IBAN" readonly = "readonly" list="iban" class="form-control" id="IBAN" asp-for="IBAN" name="IBAN" required />
             <datalist id="iban">
                 @{
                     foreach (var s in db.Subsidiaries.ToList())
                     {
-                        <option value="@s.IBAN"></option>
+                        string id = s.Name + "IBAN";
+                        <option value="@s.IBAN" id="@id"></option>
                     };
                 }
             </datalist>
@@ -259,12 +271,13 @@
         <div class="col-md-11" style="margin-top:10px">
             @*        @Html.EditorFor(model => model.BIC, new { htmlAttributes = new { @class = "form-control", @placeholder = "BIC" } })
             *@
-            <input type="text" placeholder="BIC" list="bic" class="form-control" id="BIC" asp-for="BIC" name="BIC" required />
+            <input type="text" placeholder="BIC" readonly = "readonly" list="bic" class="form-control" id="BIC" asp-for="BIC" name="BIC" required />
             <datalist id="bic">
                 @{
                     foreach (var s in db.Subsidiaries.ToList())
                     {
-                        <option value="@s.BIC"></option>
+                        string id = s.Name + "BIC";
+                        <option value="@s.BIC" id="@id"></option>
                     };
                 }
             </datalist>
@@ -274,12 +287,13 @@
         <div class="col-md-9" style="margin-top:10px">
             @*        @Html.EditorFor(model => model.TVAintra, new { htmlAttributes = new { @class = "form-control", @placeholder = "TVA intracommunautaire" } })
             *@
-            <input type="text" placeholder="TVA intracommunautaire" list="tVAintra" class="form-control" id="TVAintra" asp-for="TVAintra" name="TVAintra" required />
+            <input type="text" placeholder="TVA intracommunautaire" readonly = "readonly" list="tVAintra" class="form-control" id="TVAintra" asp-for="TVAintra" name="TVAintra" required />
             <datalist id="tVAintra">
                 @{
                     foreach (var s in db.Subsidiaries.ToList())
                     {
-                        <option value="@s.TVAIntra"></option>
+                        string id = s.Name + "TVAIntra";
+                        <option value="@s.TVAIntra" id="@id"></option>
                     };
                 }
             </datalist>
@@ -297,12 +311,58 @@
 
 }
 
-@*<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
 
 <script type="text/javascript">
-    $(function () {
-        $("#btnValider").click(function () {
-            $("#nomFacture").val("test");
-        });
-    });
-</script>*@
+    function auto() {
+        var name = document.getElementById("NomEmettrice").value;
+        var id = name + "Adresse";
+        var adresse = document.getElementById(id).value;
+        document.getElementById("AdresseEmettrice").value = adresse;
+        console.log(adresse)
+
+        id = name + "City";
+        var city = document.getElementById(id).value;
+        document.getElementById("VilleEmettrice").value = city;
+        console.log(city)
+
+        id = name + "Email";
+        var email = document.getElementById(id).value == null ? "" : document.getElementById(id).value;
+        document.getElementById("MailEmettrice").value = email;
+
+        id = name + "Siren";
+        var Siren = document.getElementById(id).value == null ? "" : document.getElementById(id).value;
+        document.getElementById("Siren").value = Siren;
+        console.log(id)
+        id = name + "IBAN";
+        var IBAN = document.getElementById(id).value == null ? "" : document.getElementById(id).value;
+        document.getElementById("IBAN").value = IBAN;
+        console.log(IBAN)
+        id = name + "BIC";
+        var BIC = document.getElementById(id).value == null ? "" : document.getElementById(id).value;
+        document.getElementById("BIC").value = BIC;
+        console.log(BIC)
+        id = name + "TVAIntra";
+        var TVAintra = document.getElementById(id).value == null ? "" : document.getElementById(id).value;
+        document.getElementById("TVAintra").value = TVAintra;
+        console.log(TVAintra)
+    }
+
+    function auto2() {
+        var name = document.getElementById("ClientName").value;
+
+        id = name + "AdresseClient";
+        var adresse = document.getElementById(id).value;
+        document.getElementById("ClientAdresse").value = adresse;
+
+        id = name + "CityClient";
+        var city = document.getElementById(id).value;
+        document.getElementById("ClientVille").value = city;
+
+        id = name + "EmailClient";
+        var email = document.getElementById(id).value == null ? "" : document.getElementById(id).value;
+        document.getElementById("ClientContact").value = email;
+
+    }
+
+</script>

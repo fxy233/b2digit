@@ -44,6 +44,13 @@ namespace Projet_pilate.Models
         public float HTunitaire { get; set; }
         public float TVA { get; set; }
 
+        public string type { get; set; }
+        public string dateReglement { get; set; }
+        public string IBAN { get; set; }
+        public string BIC { get; set; }
+        public string TVAIntra { get; set; }
+        public string Mention { get; set; }
+        public string Designation { get; set; }
 
 
     }
@@ -94,6 +101,8 @@ namespace Projet_pilate.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime dateReglement { get; set; }
+
+        public string mission { get; set; }
     }
 
 }

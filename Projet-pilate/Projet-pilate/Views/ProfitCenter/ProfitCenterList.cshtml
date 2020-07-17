@@ -77,9 +77,12 @@
             </td>
 
             <td>
-                @Html.ActionLink("Modifier", "EditProfitCenter", new { id = item.ID }, new { @class = "btn btn-primary btn-large"})
-                @*Html.ActionLink("Details", "Details", new { id=item.ID }) |*@
-                @Html.ActionLink("Supprimer", "DeleteProfitCenter", new { id = item.ID }, new { @class = "btn btn-primary btn-large", onclick = "return ConfirmationDialog()" })
+                @if (User.IsInRole("Super-Administrateur") || User.IsInRole("Administrateur"))
+                {
+                    @Html.ActionLink("Modifier", "EditProfitCenter", new { id = item.ID }, new { @class = "btn btn-primary btn-large" })
+                    @*Html.ActionLink("Details", "Details", new { id=item.ID }) |*@
+                    @Html.ActionLink("Supprimer", "DeleteProfitCenter", new { id = item.ID }, new { @class = "btn btn-primary btn-large", onclick = "return ConfirmationDialog()" })
+                }
             </td>
         </tr>
     }

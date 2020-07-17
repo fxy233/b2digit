@@ -363,12 +363,12 @@ namespace Projet_pilate.Models
 
         [Required]
         [StringLength(50)]
-        [Display(Name = "Prénom responsable")]
+        [Display(Name = "Prénom du responsable")]
         public string ManagerFirstName { get; set; }
 
         [Required]
         [StringLength(50)]
-        [Display(Name = "nom responsable")]
+        [Display(Name = "Nom du responsable")]
         public string ManagerLastName { get; set; }
 
         [Required]
