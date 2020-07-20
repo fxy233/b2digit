@@ -40,30 +40,35 @@
 
     @foreach (var item in Model)
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Siren)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Address)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PostaleCode)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.City)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ManagerFirstName)
-                @Html.DisplayFor(modelItem => item.ManagerLastName)
-            </td>
-            <td>
-                @Html.ActionLink("Modifier", "Edit", new { id = item.ID }, new { @class = "btn btn-primary btn-large" }) 
-                @Html.ActionLink("Supprimer", "Delete", new { id = item.ID }, new { @class = "btn btn-primary btn-large", onclick = "return ConfirmationDialog()" })
-                </tr>
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.Siren)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Name)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Address)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.PostaleCode)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.City)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.ManagerFirstName)
+        @Html.DisplayFor(modelItem => item.ManagerLastName)
+    </td>
+    @if (!User.IsInRole("Administrateur-ventes"))
+    {
+<td>
+    @Html.ActionLink("Modifier", "Edit", new { id = item.ID }, new { @class = "btn btn-primary btn-large" })
+    @Html.ActionLink("Supprimer", "Delete", new { id = item.ID }, new { @class = "btn btn-primary btn-large", onclick = "return ConfirmationDialog()" })
+</td>
+    }
+
+</tr>
             }
         </table>
 

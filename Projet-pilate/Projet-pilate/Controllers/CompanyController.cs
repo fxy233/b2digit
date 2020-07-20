@@ -11,7 +11,7 @@ namespace Projet_pilate.Controllers
 {
     public class CompanyController : Controller
     {
-        [Authorize(Roles = "Administrateur, Super-Administrateur")]
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager")]
         // GET: /Company/CreationCompany
         [Route("Company/CreationCompany", Name = "CreationCompany")]
         public ActionResult CreationCompany()
@@ -20,7 +20,7 @@ namespace Projet_pilate.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "Administrateur, Super-Administrateur")]
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager")]
         // POST: /Company/CreationCompany
         [Route("Company/CreationCompany")]
         [HttpPost]

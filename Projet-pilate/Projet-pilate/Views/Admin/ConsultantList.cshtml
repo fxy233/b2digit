@@ -41,116 +41,116 @@
     });
 </script>
 
+@Html.Raw(HttpUtility.HtmlDecode((Html.ValidationSummary(false, "", new { @class = "text-danger" })).ToHtmlString()))
+<table class="display" id="mytable" style="width:80%">
 
-    <table class="display" id="mytable" style="width:80%">
-
-        <thead>
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EntryDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DailyCost)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MonthlyCost)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProfitCenter)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Subsidiary)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
             <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.LastName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Email)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.EntryDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Status)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DailyCost)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.MonthlyCost)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ProfitCenter)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Subsidiary)
-                </th>
-                <th></th>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EntryDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DailyCost)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MonthlyCost)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProfitCenter)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subsidiary)
+                </td>
+                <td>
+                    @Html.ActionLink("Modifier", "EditConsultant", new { id = item.ID }, new { @class = "btn btn-primary btn-large" })
+                    @Html.ActionLink("Supprimer", "DeleteConsultant", new { id = item.ID }, new { @class = "btn btn-primary btn-large", onclick = "return ConfirmationDialog()" })
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FirstName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.LastName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Email)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EntryDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Status)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DailyCost)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.MonthlyCost)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ProfitCenter)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Subsidiary)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Modifier", "EditConsultant", new { id = item.ID }, new { @class = "btn btn-primary btn-large" })
-                        @Html.ActionLink("Supprimer", "DeleteConsultant", new { id = item.ID }, new { @class = "btn btn-primary btn-large", onclick = "return ConfirmationDialog()" })
-                    </td>
-                </tr>
-            }
-        </tbody>
+        }
+    </tbody>
 
-        <tfoot>
-            <tr>
-                <th style="border-color:white">
-                    @Html.DisplayNameFor(model => model.FirstName)
-                </th>
-                <th style="border-color:white">
-                    @Html.DisplayNameFor(model => model.LastName)
-                </th>
-                <th style="border-color:white">
-                    @Html.DisplayNameFor(model => model.Email)
-                </th>
-                <th style="border-color:white">
-                    @Html.DisplayNameFor(model => model.EntryDate)
-                </th>
-                <th style="border-color:white">
-                    @Html.DisplayNameFor(model => model.Status)
-                </th>
-                <th style="border-color:white">
-                    @Html.DisplayNameFor(model => model.DailyCost)
-                </th>
-                <th style="border-color:white">
-                    @Html.DisplayNameFor(model => model.MonthlyCost)
-                </th>
-                <th style="border-color:white">
-                    @Html.DisplayNameFor(model => model.ProfitCenter)
-                </th>
-                <th style="border-color:white">
-                    @Html.DisplayNameFor(model => model.Subsidiary)
-                </th>
+    <tfoot>
+        <tr>
+            <th style="border-color:white">
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th style="border-color:white">
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th style="border-color:white">
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th style="border-color:white">
+                @Html.DisplayNameFor(model => model.EntryDate)
+            </th>
+            <th style="border-color:white">
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th style="border-color:white">
+                @Html.DisplayNameFor(model => model.DailyCost)
+            </th>
+            <th style="border-color:white">
+                @Html.DisplayNameFor(model => model.MonthlyCost)
+            </th>
+            <th style="border-color:white">
+                @Html.DisplayNameFor(model => model.ProfitCenter)
+            </th>
+            <th style="border-color:white">
+                @Html.DisplayNameFor(model => model.Subsidiary)
+            </th>
 
-            </tr>
-        </tfoot>
+        </tr>
+    </tfoot>
 
-    </table>
+</table>
 
-@Html.Raw(HttpUtility.HtmlDecode((Html.ValidationSummary(false, "", new { @class = "exception" })).ToHtmlString()))
+
 
 <script>
     function ConfirmationDialog() {

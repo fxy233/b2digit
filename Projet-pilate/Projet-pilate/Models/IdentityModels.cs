@@ -153,6 +153,8 @@ namespace Projet_pilate.Models
         public DbSet<Suivi> Suivis { get; set; }
         public DbSet<Info> Infos { get; set; }
 
+        public DbSet<OrdreDeMission> OrdreDeMissions { get; set; }
+
     }
 
 

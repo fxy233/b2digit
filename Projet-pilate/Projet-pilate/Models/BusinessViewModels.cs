@@ -385,6 +385,9 @@ namespace Projet_pilate.Models
         [Display(Name = "TVA Intracommunautaire")]
         public string TVAIntra { get; set; }
 
+        [Display(Name = "Mail de la société")]
+        public string email { get; set; }
+
     }
 
     public class DetailSubsidiaryViewModel
@@ -449,7 +452,7 @@ namespace Projet_pilate.Models
 
         [Required]
         [StringLength(50)]
-        [Display(Name = "nom responsable")]
+        [Display(Name = "Nom responsable")]
         public string ManagerLastName { get; set; }
 
         [Required]

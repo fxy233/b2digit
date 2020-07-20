@@ -528,6 +528,7 @@ namespace Projet_pilate.Controllers
                 if(!recent)
                 {
                     missionDelete.inexist = true;
+                    db.Missions.Remove(missionDelete);
                     db.SaveChanges();
                     return RedirectToAction("ListeMissions", "Mission");
                 }
@@ -571,6 +572,27 @@ namespace Projet_pilate.Controllers
             
 
         }
+
+
+
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
+        //GET: /Mission/CreationMission
+        [Route("Mission/CreationOdm", Name = "CreationOdm")]
+        public ActionResult CreationOdm()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
+        //GET: /Mission/CreationMission
+        [HttpPost]
+        [Route("Mission/CreationOdm")]
+        public ActionResult CreationOdm(CreationOdmModel model)
+        {
+            return View();
+        }
+
+
     }
 }
 

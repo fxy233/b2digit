@@ -182,7 +182,7 @@ namespace Projet_pilate.Controllers
         }
 
 
-        [Authorize(Roles = "Administrateur, Super-Administrateur")]
+        [Authorize(Roles = "Administrateur, Super-Administrateur, Administrateur-ventes")]
         // GET: /Admin/EditManager
         [Route("Admin/EditManager", Name = "EditManager")]
         public ActionResult EditManager(int id)
@@ -539,6 +539,69 @@ namespace Projet_pilate.Controllers
             ApplicationDbContext db = new ApplicationDbContext();
             var consultant = db.Consultants.Single(m => m.ConsultantID == id);
 
+            if (User.IsInRole("Manager"))
+            {
+                var email = User.Identity.Name;
+                var user = db.Users.Single(u => u.Email == email);
+                string name = user.FirstName + " " + user.LastName;
+                List<int> pIdlist = new List<int>();
+                foreach (var item in db.profitCenters.ToList())
+                {
+                    if (item.Owner == name)
+                    {
+                        pIdlist.Add(item.ProfitCenterID);
+                    }
+                }
+                var pc = db.profitCenters.Single(p => p.ProfitCenterID == consultant.ProfitCenterID);
+                Boolean ability = false;
+                if (pIdlist.Count != 0)
+                {
+                    foreach (int profitId in pIdlist)
+                    {
+                        if (consultant.ProfitCenterID == profitId)
+                        {
+                            ability = true;
+                        }
+
+                        if (profitId == pc.FatherProfitCenterID)
+                        {
+                            ability = true;
+                        }
+
+                    }
+                }
+                if (name == pc.PartOwner)
+                {
+                    ability = true;
+                }
+                var consultants = db.Consultants.ToList();
+                List<DetailConsultantViewModel> models = new List<DetailConsultantViewModel>();
+                if (!ability)
+                {
+                    foreach (var c in consultants)
+                    {
+                        var subsidiary = db.Subsidiaries.Single(s => s.SubsidiaryID == c.SubsidiaryID);
+
+                        DetailConsultantViewModel m = new DetailConsultantViewModel()
+                        {
+                            ID = c.ConsultantID,
+                            FirstName = c.FirstName,
+                            LastName = c.LastName,
+                            Email = c.Email,
+                            EntryDate = c.EntryDate,
+                            Status = c.Status,
+                            DailyCost = c.DailyCost,
+                            MonthlyCost = c.MonthlyCost,
+                        };
+                        models.Add(m);
+                    }
+
+                    string message = "Ce consultant ne peut être modifié car il n'est pas dans votre profitcenter !";
+                    ModelState.AddModelError(string.Empty, message);
+                    return View("ConsultantList", models);
+                }
+            }
+
 
             UpdateConsultantViewModel model = new UpdateConsultantViewModel()
             {
@@ -752,6 +815,68 @@ namespace Projet_pilate.Controllers
             var consultants = db.Consultants.ToList();
             List<DetailConsultantViewModel> models = new List<DetailConsultantViewModel>();
             var consultantToDelete = consultants.SingleOrDefault(c => c.ConsultantID == id);
+            
+            if (User.IsInRole("Manager"))
+            {
+                var email = User.Identity.Name;
+                var user = db.Users.Single(u => u.Email == email);
+                string name = user.FirstName + " " + user.LastName;
+                List<int> pIdlist = new List<int>();
+                foreach (var item in db.profitCenters.ToList())
+                {
+                    if (item.Owner==name)
+                    {
+                        pIdlist.Add(item.ProfitCenterID);
+                    }
+                }
+                var pc = db.profitCenters.Single(p => p.ProfitCenterID == consultantToDelete.ProfitCenterID);
+                Boolean ability = false;
+                if (pIdlist.Count!=0)
+                {
+                    foreach( int profitId in pIdlist)
+                    {
+                        if (consultantToDelete.ProfitCenterID == profitId)
+                        {
+                            ability = true;
+                        }
+                        
+                        if (profitId == pc.FatherProfitCenterID)
+                        {
+                            ability = true;
+                        }
+                        
+                    }
+                }
+                if (name == pc.PartOwner)
+                {
+                    ability = true;
+                }
+
+                if (!ability)
+                {
+                    foreach (var consultant in consultants)
+                    {
+                        var subsidiary = db.Subsidiaries.Single(s => s.SubsidiaryID == consultant.SubsidiaryID);
+
+                        DetailConsultantViewModel model = new DetailConsultantViewModel()
+                        {
+                            ID = consultant.ConsultantID,
+                            FirstName = consultant.FirstName,
+                            LastName = consultant.LastName,
+                            Email = consultant.Email,
+                            EntryDate = consultant.EntryDate,
+                            Status = consultant.Status,
+                            DailyCost = consultant.DailyCost,
+                            MonthlyCost = consultant.MonthlyCost,
+                        };
+                        models.Add(model);
+                    }
+
+                    string message = "Ce consultant ne peut être supprimé car il n'est pas dans votre profitcenter !";
+                    ModelState.AddModelError(string.Empty, message);
+                    return View("ConsultantList", models);
+                }
+            }
 
             try
             {

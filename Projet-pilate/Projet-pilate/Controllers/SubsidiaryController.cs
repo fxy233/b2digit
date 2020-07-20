@@ -44,6 +44,7 @@ namespace Projet_pilate.Controllers
                 IBAN = model.IBAN,
                 BIC = model.BIC,
                 TVAIntra = model.TVAIntra,
+                email = model.email,
             };
 
             db.Subsidiaries.Add(subsidiary);
@@ -92,6 +93,7 @@ namespace Projet_pilate.Controllers
         }
 
 
+        [Authorize(Roles = "Administrateur, Super-Administrateur")]
         // GET: Subsidiary/Edit
         public ActionResult Edit(int id)
         {
@@ -116,6 +118,7 @@ namespace Projet_pilate.Controllers
         }
 
 
+        [Authorize(Roles = "Administrateur, Super-Administrateur")]
         // POST: Subsidiary/Edit
         [HttpPost]
         public ActionResult Edit(UpdateSubsidiaryViewModel model)
@@ -156,6 +159,7 @@ namespace Projet_pilate.Controllers
         }
 
 
+        [Authorize(Roles = "Administrateur, Super-Administrateur")]
         public ActionResult Delete(int id)
         {
             ApplicationDbContext db = new ApplicationDbContext();

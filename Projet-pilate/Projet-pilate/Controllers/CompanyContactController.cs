@@ -160,7 +160,7 @@ namespace Projet_pilate.Controllers
             //return View(db.CompanyContacts.ToList());
         }
 
-        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager")]
+        [Authorize(Roles = "Administrateur, Super-Administrateur")]
         public ActionResult DeleteCompanyContact(int id)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -199,7 +199,7 @@ namespace Projet_pilate.Controllers
             return RedirectToAction("CompanyContactList", "CompanyContact");
         }
 
-        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager")]
+        [Authorize(Roles = "Administrateur, Super-Administrateur, Administrateur-ventes")]
         // GET: /CompanyContact/EditCompanyContact
         [Route("CompanyContact/EditCompanyContact", Name = "EditCompanyContact")]
         public ActionResult EditCompanyContact(int id)
@@ -223,7 +223,7 @@ namespace Projet_pilate.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager")]
+        [Authorize(Roles = "Administrateur, Super-Administrateur, Administrateur-ventes")]
         //// POST: /CompanyContact/EditCompanyContact
         [Route("CompanyContact/EditCompanyContact")]
         [HttpPost]

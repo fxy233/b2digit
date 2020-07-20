@@ -143,7 +143,7 @@ namespace Projet_pilate.Models
         [Display(Name = "Prénom")]
         public string FirstName { get; set; }
 
-        [Display(Name = "Prénom")]
+        [Display(Name = "Nom")]
         public string LastName { get; set; }
 
         [Display(Name = "Courrier électronique")]

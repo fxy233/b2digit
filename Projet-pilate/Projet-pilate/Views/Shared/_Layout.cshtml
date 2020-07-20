@@ -101,13 +101,22 @@
                                 </ul>
                             </li>
 
+
+                            <li class="nav-item dropdown">
+                                <a href="#" class=" nav-link dropdown-toggle" data-toggle="dropdown">Ordre de missions</a>
+                                <ul class="dropdown-menu">
+                                    <li>@Html.RouteLink("Creation du Ordre de mission", "CreationOdm")</li>
+                                    
+                                </ul>
+                            </li>
+
                         }
 
                         <li class="nav-item dropdown">
                             <a href="#" class=" nav-link dropdown-toggle" data-toggle="dropdown">Business</a>
                             <ul class="dropdown-menu">
                                 <li>@Html.RouteLink("Sociétés clientes", "ListeCompanies")</li>
-                                <li>@Html.RouteLink("Contacts client", "CompanyContactList")</li>
+                                <li>@Html.RouteLink("Contacts clients", "CompanyContactList")</li>
                                 <li>@Html.RouteLink("Missions", "ListeMissions")</li>
                             </ul>
                         </li>
@@ -129,7 +138,7 @@
                             <ul class="dropdown-menu">
                                 <li>@Html.RouteLink("Suivi des CRAs", "SuiviCra")</li>
                                 <li>@Html.RouteLink("Liste des CRAS du mois", "ListeCra")</li>
-                                
+
                             </ul>
                         </li>
 
@@ -140,6 +149,10 @@
         </div>
     </div>
     <div class="container body-content">
+        <br />
+        <br />
+        <br />
+        <br />
         @RenderBody()
         <hr />
         <footer>

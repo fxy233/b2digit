@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<Projet_pilate.Models.DetailsMissionViewModel>
-
+@using Projet_pilate.Models
 @{
     ViewBag.Title = "ListeMissions";
 }
@@ -44,37 +44,92 @@
 
     @foreach (var item in Model)
     {
-<tr>
-    <td>
-        @Html.DisplayFor(modelItem => item.Name)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.ClientName)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.ConsultantName)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.ProfitCenter)
-    </td>
-    @*<td>
-            @Html.DisplayFor(modelItem => item.CreatorName)
-        </td>*@
-    <td>
-        @Html.DisplayFor(modelItem => item.Start)
-    </td>
-    <td>
-        @Html.DisplayFor(model => item.End)
-    </td>
-    <td>
-        @Html.DisplayFor(model => item.Fee)
-    </td>
-    <td>
-        @Html.ActionLink("Modifier", "Edit", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })
-        @Html.ActionLink("Supprimer", "Delete", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })
-        @*Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })*@
-    </td>
-</tr>
+        if (User.IsInRole("Manager"))
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var pclist = db.profitCenters.ToList();
+            var user = db.Users.Single(u => u.Email == User.Identity.Name);
+            string name = user.FirstName + " " + user.LastName;
+            foreach (var pc in pclist)
+            {
+
+                if (item.ProfitCenter == pc.Name)
+                {
+                    if (pc.Owner == name || pc.PartOwner == name)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ClientName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ConsultantName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProfitCenter)
+                            </td>
+                            @*<td>
+                                    @Html.DisplayFor(modelItem => item.CreatorName)
+                                </td>*@
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Start)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.End)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Fee)
+                            </td>
+                            
+
+
+                        </tr>
+                        break;
+                    }
+                }
+
+            }
+
+        }
+        else
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClientName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ConsultantName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProfitCenter)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.CreatorName)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.Start)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.End)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Fee)
+                </td>
+                <td>
+                    @Html.ActionLink("Modifier", "Edit", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })
+                    @Html.ActionLink("Supprimer", "Delete", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })
+                    @*Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })*@
+                </td>
+
+
+            </tr>
+        }
+
     }
 
 </table>

@@ -89,6 +89,30 @@ namespace Projet_pilate.Models
 
     }
 
+    public class CreationOdmModel
+    {
+        public int id { get; set; }
+        public string Manager { get; set; }
+        public string typeProjet { get; set; }
+
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime debut { get; set; }
+
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime fin { get; set; }
+        public string nomConsultant { get; set; }
+        public string prenomConsultant { get; set; }
+        public string nomClient { get; set; }
+        public string contactClient { get; set; }
+        public string Adresse { get; set; }
+        public string Environnement { get; set; }
+        public string Mission { get; set; }
+
+        
+    }
+
 
 
 }

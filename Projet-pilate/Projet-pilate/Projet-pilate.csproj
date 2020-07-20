@@ -315,6 +315,7 @@
     <Compile Include="Entities\CompanyClasses.cs" />
     <Compile Include="Entities\FactureClasse.cs" />
     <Compile Include="Entities\InfoClasses.cs" />
+    <Compile Include="Entities\OrdreMission.cs" />
     <Compile Include="Entities\ProfitCenter.cs" />
     <Compile Include="Entities\SuiviClasse.cs" />
     <Compile Include="Global.asax.cs">
@@ -476,6 +477,10 @@
     <Compile Include="Migrations\202007171015356_ajoutDateReglement.designer.cs">
       <DependentUpon>202007171015356_ajoutDateReglement.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202007180719378_OrdreDeMission.cs" />
+    <Compile Include="Migrations\202007180719378_OrdreDeMission.designer.cs">
+      <DependentUpon>202007180719378_OrdreDeMission.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityViewModels.cs" />
@@ -628,6 +633,7 @@
     <Content Include="Views\Admin\InfoGeneral.cshtml" />
     <Content Include="Views\Admin\EditInfo.cshtml" />
     <Content Include="Views\Facture\Modifier.cshtml" />
+    <Content Include="Views\Mission\CreationOdm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -763,6 +769,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202007171015356_ajoutDateReglement.resx">
       <DependentUpon>202007171015356_ajoutDateReglement.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007180719378_OrdreDeMission.resx">
+      <DependentUpon>202007180719378_OrdreDeMission.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

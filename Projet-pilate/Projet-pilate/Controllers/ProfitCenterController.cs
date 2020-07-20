@@ -15,7 +15,7 @@ namespace Projet_pilate.Controllers
     {
 
         // GET: /ProfitCenter/ProfitCenter
-        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager")]
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager, Administrateur-ventes")]
         [Route("ProfitCenter/ProfitCenterList", Name = "ProfitCenterList")]
         public ActionResult ProfitCenterList()
         {
@@ -331,6 +331,40 @@ namespace Projet_pilate.Controllers
             if (profitcenter.Name == (profitcenter.FatherProfitCenter==null? "Aucun": profitcenter.FatherProfitCenter.Name))
             {
                 string message = "La société père d'une filiale ne peut pas être la sienne.";
+                ModelState.AddModelError(string.Empty, message);
+                List<string> managerNames = new List<string>();
+                List<int> managerID = new List<int>();
+                List<string> profitCenterNames = new List<string>();
+                List<int> profitCenterID = new List<int>();
+                var managers = db.Managers.ToList();
+                var ProfitCenters = db.profitCenters.ToList();
+
+                //
+
+                foreach (var manager in managers)
+                {
+                    managerNames.Add(manager.FirstName + " " + manager.LastName);
+                    managerID.Add(manager.ManagerID);
+
+                }
+
+                foreach (var ProfitCenter in ProfitCenters)
+                {
+                    profitCenterNames.Add(ProfitCenter.Name);
+                    profitCenterID.Add(ProfitCenter.ProfitCenterID);
+                }
+
+                //model.FatherProfitCenter = 
+                model.ListOwners = managerNames;
+                model.ListOwnersID = managerID;
+                model.ListPartOwners = managerNames;
+                model.ListFatherProfitCenters = profitCenterNames;
+                return View(model);
+            }
+
+            if (profitcenter.Owner.ToUpper() == (profitcenter.PartOwner == null ? "Aucun" : profitcenter.PartOwner.ToUpper()))
+            {
+                string message = "Un centre de profit ne peut pas avoir son propriétaire en associé.";
                 ModelState.AddModelError(string.Empty, message);
                 List<string> managerNames = new List<string>();
                 List<int> managerID = new List<int>();

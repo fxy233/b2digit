@@ -15,6 +15,7 @@ using System.Web.UI.WebControls;
 using Microsoft.Ajax.Utilities;
 using System.Data;
 using DocumentFormat.OpenXml.Office.CustomUI;
+using iTextSharp.text.pdf.qrcode;
 
 namespace Projet_pilate.Controllers
 {
@@ -631,7 +632,10 @@ namespace Projet_pilate.Controllers
 
         }*/
 
+
+
         //[Route("Consultant/SuiviCra_mission", Name = "SuiviCra_mission")]
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes,Manager")]
         public ActionResult SuiviCra_mission()
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -682,14 +686,18 @@ namespace Projet_pilate.Controllers
                                     case "IC":
                                         break;
                                     case "Formation":
-                                        ;
+                                        
                                         break;
                                     case "Maladie":
                                         break;
                                     case "Congés":
                                         break;
                                     default:
-                                        model.NbParMission[activity.Morning][Int32.Parse(activity.Date.Month.ToString()) - 1] += 0.5;
+                                        if (model.MissionsList.Contains(activity.Morning))
+                                        {
+                                            model.NbParMission[activity.Morning][Int32.Parse(activity.Date.Month.ToString()) - 1] += 0.5;
+                                        }
+                                        
                                         break;
                                 }
                                 switch (activity.Afternoon)
@@ -703,7 +711,10 @@ namespace Projet_pilate.Controllers
                                     case "Congés":
                                         break;
                                     default:
-                                        model.NbParMission[activity.Afternoon][Int32.Parse(activity.Date.Month.ToString()) - 1] += 0.5;
+                                        if (model.MissionsList.Contains(activity.Afternoon))
+                                        {
+                                            model.NbParMission[activity.Afternoon][Int32.Parse(activity.Date.Month.ToString()) - 1] += 0.5;
+                                        }
                                         break;
                                 }
                             }
@@ -1145,8 +1156,12 @@ namespace Projet_pilate.Controllers
                                     case "Congés":
                                         break;
                                     default:
+                                        if (model.MissionsList.Contains(activity.Morning))
+                                        {
+                                            model.NbParMission[activity.Morning][activity.Date.Year.ToString()][Int32.Parse(activity.Date.Month.ToString()) - 1] += 0.5;
+
+                                        }
                                         
-                                        model.NbParMission[activity.Morning][activity.Date.Year.ToString()][Int32.Parse(activity.Date.Month.ToString()) - 1] += 0.5;
                                         break;
                                 }
                                 switch (activity.Afternoon)
@@ -1160,7 +1175,11 @@ namespace Projet_pilate.Controllers
                                     case "Congés":
                                         break;
                                     default:
-                                        model.NbParMission[activity.Afternoon][activity.Date.Year.ToString()][Int32.Parse(activity.Date.Month.ToString()) - 1] += 0.5;
+                                        if (model.MissionsList.Contains(activity.Afternoon))
+                                        {
+                                            model.NbParMission[activity.Afternoon][activity.Date.Year.ToString()][Int32.Parse(activity.Date.Month.ToString()) - 1] += 0.5;
+
+                                        }
                                         break;
                                 }
                             }
