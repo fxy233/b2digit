@@ -1,0 +1,134 @@
+﻿@model IEnumerable<Projet_pilate.Models.FactureSimpleViewModel>
+@{
+    ViewBag.Title = "FacturesEmise";
+    Layout = null;
+}
+
+<script>
+    $(document).ready(function () {
+        $('#mytable1').DataTable({
+            initComplete: function () {
+                this.api().columns().every(function () {
+                    var column = this;
+                    var select = $('<select><option value=""></option></select>')
+                        .appendTo($(column.footer()).empty())
+                        .on('change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex(
+                                $(this).val()
+                            );
+
+                            column
+                                .search(val ? '^' + val + '$' : '', true, false)
+                                .draw();
+                        });
+
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>')
+                    });
+                });
+            }
+        });
+    });
+
+</script>
+
+
+<table class="display" id="mytable1" style="width:90%">
+
+    <thead>
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.NomFacture)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Client)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MontantHT)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Mission)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Dernier)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.NomFacture)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Client)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MontantHT)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mission)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Dernier)
+            </td>
+            @{
+                if (item.Status == "Payee" || item.Status == "Annulee")
+                {
+                    <td>Non modifiable</td>
+                }
+                else
+                {
+                    <td>
+                        @Html.ActionLink("Annulée", "Annulee", new { id = item.ID }, new { @class = "btn" })
+                        @Html.ActionLink("Payée", "Payee", new { id = item.ID }, new { @class = "btn" })
+                    </td>
+                }
+            }
+
+
+        </tr>
+
+        }
+    </tbody>
+
+    <tfoot>
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.NomFacture)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Client)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MontantHT)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Mission)
+            </th>
+            <th id="statu">
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Dernier)
+            </th>
+            <th></th>
+        </tr>
+    </tfoot>
+
+</table>
+
+
+
+

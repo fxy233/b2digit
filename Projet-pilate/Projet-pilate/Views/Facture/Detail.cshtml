@@ -5,41 +5,141 @@
     Layout = "~/Views/Shared/_particular.cshtml";
 }
 
-@*<!DOCTYPE html>
-    <html>
-    <head>
-        <meta name="viewport" content="width=device-width" />
-        <title>Index</title>
-        <style type="text/css">
-            body {
-                font-family: Arial;
-                font-size: 9pt;
-            }
-        </style>
-    </head>
-    <body>
-*@
-<h2>Detail</h2>
-
-
-@*<div id="Grid">
-
-
-        <strong><pre style="background-color:white;border-color:white;margin-bottom:0px;padding-bottom:0px;">@Model.EmetInfo</pre></strong>
-        <p style="color:blue; padding-left:10px;margin-top:0px; padding-bottom:0px;margin-bottom:0px">contact@b2digit.com</p>
-        <p style="color:green; padding-left:10px;margin-top:0px">N°SIREN : @Model.Siren</p>
-        <p class="col-md-offset-8" style="padding-left: 10px; margin-bottom:0px"><strong>@Model.ClientName</strong></p>
-        <pre class="col-md-offset-8" style="background-color:white;border-color:white; margin-top:0px; margin-bottom:0px">@Model.ClientInfo</pre>
-        <p class="col-md-offset-8" style="color:blue;padding-left:10px;margin-top:0px;">@Model.ClientContact</p>
-    </div>*@
+<h2 style="text-align:center; margin-bottom:30px;">Détail</h2>
 
 @using (Html.BeginForm("Export", "Facture", FormMethod.Post))
 {
 
     <input type="hidden" name="GridHtml" />
 
-    <input type="submit" id="btnSubmit" value="Export" />
+    <input type="submit" id="btnSubmit" value="Export" class="btn btn-primary col-md-offset-11" style="margin-bottom:10px" />
 }
+
+<div class="col-md-offset-11">
+    @Html.ActionLink("Modifier", "Modifier", new { id = Model.ID }, new { @class = "btn btn-primary" })
+</div>
+
+
+<div class="form-group col-md-12">
+
+    <div class="col-md-12">
+        <div class="col-md-8">
+            <input type="text" value="@ViewBag.NomEmettrice" readonly="readonly" placeholder="Nom société émettrice" list="principalBCID" class="form-control" id="NomEmettrice" asp-for="NomEmettrice" name="NomEmettrice" required />
+        </div>
+        <div class="col-md-8">
+            <input type="text" value="@ViewBag.AdresseEmettrice" readonly="readonly" placeholder="Adresse" list="adresseEmettrice" class="form-control" id="AdresseEmettrice" asp-for="AdresseEmettrice" name="AdresseEmettrice" required />
+        </div>
+        <div class="col-md-8">
+            <input type="text" value="@ViewBag.VilleEmettrice" readonly="readonly" placeholder="Code postal, Ville" list="villeEmettrice" class="form-control" id="VilleEmettrice" asp-for="VilleEmettrice" name="VilleEmettrice" required />
+        </div>
+        <div class="col-md-12">
+            <input type="text" value="@ViewBag.MailEmettrice" readonly="readonly" placeholder="Mail de la société" list="mailEmettrice" class="form-control" id="MailEmettrice" asp-for="MailEmettrice" name="MailEmettrice" required />
+        </div>
+        <div class="col-md-1" style="padding-top:7px;padding-right:0px; margin-right:0px">
+            SIREN :
+        </div>
+        <div class="col-md-offset-1 col-md-8" style="margin-left:0px; padding-left:0px;">
+            <input type="text" value="@Model.Siren" readonly="readonly" placeholder="SIREN" list="siren" class="form-control" id="Siren" asp-for="Siren" name="Siren" required />
+        </div>
+    </div>
+
+
+    <div class="col-md-offset-7 col-md-5">
+        <div class="col-md-8">
+            <input type="text" value="@Model.ClientName" readonly="readonly" placeholder="Nom société facturée" list="clientName" class="form-control" id="ClientName" asp-for="ClientName" name="ClientName" required />
+        </div>
+        <div class="col-md-8">
+            <input type="text" value="@ViewBag.ClientAdresse" readonly="readonly" placeholder="Adresse" list="clientAdresse" class="form-control" id="ClientAdresse" asp-for="ClientAdresse" name="ClientAdresse" required />
+        </div>
+        <div class="col-md-8">
+            <input type="text" value="@ViewBag.ClientVille" readonly="readonly" placeholder="Code postal, ville" list="clientVille" class="form-control" id="ClientVille" asp-for="ClientVille" name="ClientVille" required />
+        </div>
+        <div class="col-md-8">
+            <input type="text" value="@Model.ClientContact" readonly="readonly" placeholder="Mail de la société" list="clientContact" class="form-control" id="ClientContact" asp-for="ClientContact" name="ClientContact" required />
+        </div>
+    </div>
+
+    <div class="col-md-12" style="text-align:center; font-size:25px; margin-top:40px; margin-bottom:40px; padding-left:400px">
+        <input type="text" readonly="readonly" value="@Model.type" placeholder="Intitulé du document ( facture ou avoir )" list="type" class="form-control" id="Type" asp-for="Type" name="Type" required />
+    </div>
+
+    <div class="col-md-12">
+        Facture n°:
+    </div>
+    <div class="col-md-12">
+        @Html.EditorFor(model => model.FactureName, new { htmlAttributes = new { @class = "form-control", @placeholder = "produire automatiquement", @id = "nomFacture", @readonly = "readonly" } })
+    </div>
+    <div class="col-md-6">
+        @Html.EditorFor(model => model.FactInfo, new { htmlAttributes = new { @class = "form-control", @placeholder = "Information Facturation", @readonly = "readonly" } })
+    </div>
+    <div class="col-md-1" style=" padding-left:50px">
+        Date:
+    </div>
+    <div class="col-md-5">
+        @ViewBag.date
+    </div>
+
+
+    <div class="col-md-12" style="margin-top:40px;">
+        <table style="border-color:white">
+            <tr>
+                <th class="col-md-2" style="background-color:cornflowerblue; text-align:center;border-color:white">Désignation</th>
+                <th class="col-md-1" style="background-color:cornflowerblue; text-align:center;border-color:white">Quantité</th>
+                <th class="col-md-2" style="background-color:cornflowerblue; text-align:center;border-color:white">Prix unitaire H.T</th>
+                <th class="col-md-2" style="background-color:cornflowerblue; text-align:center;border-color:white">Total H.T</th>
+                <th class="col-md-1" style="background-color:cornflowerblue; text-align:center;border-color:white">Taux TVA</th>
+                <th class="col-md-2" style="background-color:cornflowerblue; text-align:center;border-color:white">Montant TVA</th>
+                <th class="col-md-2" style="background-color:cornflowerblue; text-align:center;border-color:white">TOTAL T.T.C</th>
+            </tr>
+            <tr>
+                <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.Designation, new { htmlAttributes = new { @class = "form-control", @placeholder = "Désignation", @readonly = "readonly" } })</td>
+                <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.Quantite, new { htmlAttributes = new { @class = "form-control", @placeholder = "Quantité", @readonly = "readonly" } })</td>
+                <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.HTunitaire, new { htmlAttributes = new { @class = "form-control", @placeholder = "Prix unitaire", @readonly = "readonly" } })</td>
+                @{
+                    float total = Model.Quantite * Model.HTunitaire;
+                    float mtva = total * Model.TVA;
+                    float totalTTC = total + mtva;
+                    ViewBag.montantHT = total.ToString();
+                    ViewBag.montantTVA = mtva.ToString();
+                    ViewBag.montantTTC = totalTTC.ToString();
+                    <td style="background-color:lightsteelblue;border-color:white">@total</td>
+                    <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.TVA, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @placeholder = "Taux TVA%", @type = "number", @min = 0, @step = 1, @max = 100 } })</td>
+                    <td style="background-color:lightsteelblue;border-color:white">@mtva</td>
+                    <td style="background-color:lightsteelblue;border-color:white">@totalTTC</td>
+
+                }
+            </tr>
+        </table>
+    </div>
+
+    <div class="col-md-offset-5 col-md-3" style="margin-top:40px;padding-top:7px; padding-left:20px;">Montant H.T en Euros</div>
+    <div class="col-md-4" style="margin-top:40px">@ViewBag.montantHT</div>
+    <div class="col-md-offset-5 col-md-3" style="margin-top:20px;padding-top:7px; padding-left:20px">Montant T.V.A @ViewBag.TVA% en Euros</div>
+    <div class="col-md-4" style="margin-top:20px">@ViewBag.montantTVA</div>
+    <div class="col-md-offset-5 col-md-3" style="margin-top:20px;padding-top:7px; padding-left:20px">Net à payer T.T.C en Euros</div>
+    <div class="col-md-4" style="margin-top:20px">@ViewBag.montantTTC</div>
+
+    <div class="col-md-offset-6 col-md-2" style="margin-top:40px;padding-top:7px">Date de règlement :</div>
+    <div class="col-md-4" style="margin-top:40px">@Html.EditorFor(model => model.dateReglement, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })</div>
+
+
+    <div class="col-md-1" style="margin-top:50px;padding-top:7px">IBAN :</div>
+    <div class="col-md-11" style="margin-top:50px">
+        <input type="text" value="@Model.IBAN" readonly="readonly" placeholder="IBAN" list="iban" class="form-control" id="IBAN" asp-for="IBAN" name="IBAN" required />
+    </div>
+    <div class="col-md-1" style="margin-top:10px;padding-top:7px">BIC :</div>
+    <div class="col-md-11" style="margin-top:10px">
+        <input type="text" value="@Model.BIC" readonly="readonly" placeholder="BIC" list="bic" class="form-control" id="BIC" asp-for="BIC" name="BIC" required />
+    </div>
+    <div class="col-md-3" style="margin-top:10px;padding-top:7px">TVA  intracommunautaire:</div>
+    <div class="col-md-9" style="margin-top:10px">
+        <input type="text" value="@Model.TVAIntra" readonly="readonly" placeholder="TVA intracommunautaire" list="tVAintra" class="form-control" id="TVAintra" asp-for="TVAintra" name="TVAintra" required />
+    </div>
+    <div class="col-md-12" style="margin-top:10px; margin-bottom:50px">@Html.EditorFor(model => model.Mention, new { htmlAttributes = new { @class = "form-control", @placeholder = "Mention Obligatoire (similaire sur toutes les factures)", @readonly = "readonly" } })</div>
+
+
+</div>
+
 
 
 <div id="Grid" style="visibility:hidden">
@@ -48,7 +148,7 @@
     <div style=" padding-bottom: 0px; padding-left:10px">
         <strong><pre style="background-color:white;border-color:white;margin-bottom:0px;padding-bottom:0px;">@Model.EmetInfo</pre></strong>
     </div>
-    <p style="color:blue; padding-left:10px">contact@b2digit.com</p>
+    <p style="color:blue; padding-left:10px">@ViewBag.MailEmettrice</p>
     <p style="color:green; padding-left:10px;">N°SIREN : @Model.Siren</p>
     <p style="padding-left: 500px; margin-bottom:0px"><strong>@Model.ClientName</strong></p>
     <div style=" margin-top: 0px; margin-bottom: 0px; padding-left: 500px;">
@@ -68,9 +168,9 @@
     <p>Facture N°:</p>
     <p><strong>@Model.FactureName</strong></p>-->
     <div style="width:150px; color:darkblue; border-color:black">@Model.FactInfo</div>
-   
+
     <pre style="float:right; width:57%;">                                                                   Date: @ViewBag.date</pre>
-    
+
     <table style="margin-top:15px; border-color:black">
         <tr>
             <td style="background-color:gray; text-align:center; padding:5px"> Désignation </td>
@@ -83,9 +183,9 @@
         </tr>
         <tr>
             @{
-                float total = Model.Quantite * Model.HTunitaire;
-                float mtva = total * Model.TVA;
-                float totalTTC = total + mtva;
+                total = Model.Quantite * Model.HTunitaire;
+                mtva = total * Model.TVA;
+                totalTTC = total + mtva;
                 ViewBag.montantHT = total.ToString();
                 ViewBag.montantTVA = mtva.ToString();
                 ViewBag.montantTTC = totalTTC.ToString();

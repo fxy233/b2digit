@@ -103,6 +103,8 @@ namespace Projet_pilate.Models
         public DateTime dateReglement { get; set; }
 
         public string mission { get; set; }
+
+        public string status { get; set; }
     }
 
 }

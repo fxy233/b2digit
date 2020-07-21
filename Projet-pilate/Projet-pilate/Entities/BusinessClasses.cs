@@ -127,6 +127,7 @@ namespace Projet_pilate.Entities
         [MaxLength(11)]
         public string BIC { get; set; }
         public string TVAIntra { get; set; }
+        public int FactureID { get; set; }
 
 
         // Navigation properties

@@ -1147,7 +1147,7 @@ namespace Projet_pilate.Controllers
                     {
                         mission = m.Name,
                         FactureID = id,
-                        NomFacture = "Fact-" + BC.Name + "-" + time.ToString("yyyy-MMM", System.Globalization.CultureInfo.CurrentCulture) + "-" + id + "P",
+                        NomFacture = "Fact-" + BC.Name + "-" + time.ToString("yyyy-MMM", System.Globalization.CultureInfo.CurrentCulture) + "-" + id,
                         MoisDeFacturation = time,
                         InfoFacturation = m.InfoFacturation,
                         PrincipalBC = BC.Name,
@@ -1156,7 +1156,7 @@ namespace Projet_pilate.Controllers
                         AdresseFacturation = company.Address,
                         NombredUO = nbUO,
                         TJ = m.Fee,
-                        TVA = 0.2f,
+                        TVA = (float)db.Infos.Single().TVA,
                         MontantHT = montant,
                         FAE = false,
                         Emise = false,
@@ -1165,6 +1165,8 @@ namespace Projet_pilate.Controllers
                         DernierEnregistrer=DateTime.Now,
                         Delai = m.Delai,
                         DesignationFacturation = m.DesignationFacturation,
+                        type = "Facture",
+                        DateRegelement = DateTime.Now,
                     };
 
                     id++;
@@ -1176,7 +1178,7 @@ namespace Projet_pilate.Controllers
                     {
                         mission = m.Name,
                         FactureID = id,
-                        NomFacture = "Fact-Int-" + BC.Name + "-" + time.ToString("yyyy-MMM", System.Globalization.CultureInfo.CurrentCulture) + "-" + id + "P",
+                        NomFacture = "Fact-Int-" + BC.Name + "-" + time.ToString("yyyy-MMM", System.Globalization.CultureInfo.CurrentCulture) + "-" + id,
                         MoisDeFacturation = time,
                         InfoFacturation = m.InfoFacturation,
                         PrincipalBC = c.Name,
@@ -1185,15 +1187,17 @@ namespace Projet_pilate.Controllers
                         AdresseFacturation =  BC.Address,
                         NombredUO = nbUO,
                         TJ = m.TJInterBC1,
-                        TVA = 0.2f,
+                        TVA = (float)db.Infos.Single().TVA,
                         MontantHT = montant,
-                        FAE = false,
+                        FAE = true,
                         Emise = false,
                         payee = false,
                         annulee = false,
                         DernierEnregistrer = DateTime.Now,
                         Delai = m.Delai,
                         DesignationFacturation = m.DesignationFacturation,
+                        type = "Facture",
+                        DateRegelement = DateTime.Now,
 
                     };
                     db.Factures.Add(factureInt);

@@ -201,6 +201,11 @@ namespace Projet_pilate.Controllers
             string[] apresMidis = pm.Split(',');
 
 
+            //
+            Dictionary<string,double> missionlist = new Dictionary<string, double>();
+            //
+
+
             if (matinees.Count() == apresMidis.Count())
             {
                 for (int i = 0; i < matinees.Length; i++)
@@ -212,6 +217,26 @@ namespace Projet_pilate.Controllers
                     activity.Morning = matinees[i].Substring(0, matinees[i].IndexOf('-'));
                     activity.Afternoon = apresMidis[i].Substring(0, apresMidis[i].IndexOf('-'));
                     activities.Add(activity);
+
+                    //
+                    if (missionlist.ContainsKey(activity.Morning))
+                    {
+                        missionlist[activity.Morning] += 0.5;
+                    }
+                    else
+                    {
+                        missionlist.Add(activity.Morning,0.5);
+                    }
+
+                    if (missionlist.ContainsKey(activity.Afternoon))
+                    {
+                        missionlist[activity.Afternoon] += 0.5;
+                    }
+                    else
+                    {
+                        missionlist.Add(activity.Afternoon, 0.5);
+                    }
+                    //
                 }
             }
 
@@ -225,11 +250,33 @@ namespace Projet_pilate.Controllers
                     activity.Date = new DateTime(yearInt, month, jour);
                     activity.Morning = matinees[i].Substring(0, matinees[i].IndexOf('-'));
 
+                    //
+                    if (missionlist.ContainsKey(activity.Morning))
+                    {
+                        missionlist[activity.Morning] += 0.5;
+                    }
+                    else
+                    {
+                        missionlist.Add(activity.Morning, 0.5);
+                    }
+                    //
+
                     for (int j = 0; j < apresMidis.Length; j++)
                     {
                         if (matinees[i] == apresMidis[j])
                         {
                             activity.Afternoon = apresMidis[j].Substring(0, apresMidis[j].IndexOf('-'));
+                            //
+
+                            if (missionlist.ContainsKey(activity.Afternoon))
+                            {
+                                missionlist[activity.Afternoon] += 0.5;
+                            }
+                            else
+                            {
+                                missionlist.Add(activity.Afternoon, 0.5);
+                            }
+                            //
                         }
                     }
 
@@ -248,11 +295,35 @@ namespace Projet_pilate.Controllers
                     activity.Date = new DateTime(yearInt, month, jour);
                     activity.Afternoon = apresMidis[i].Substring(0, apresMidis[i].IndexOf('-'));
 
+                    //
+
+                    if (missionlist.ContainsKey(activity.Afternoon))
+                    {
+                        missionlist[activity.Afternoon] += 0.5;
+                    }
+                    else
+                    {
+                        missionlist.Add(activity.Afternoon, 0.5);
+                    }
+                    //
+
                     for (int j = 0; j < matinees.Length; j++)
                     {
                         if (apresMidis[i] == matinees[j])
                         {
                             activity.Morning = matinees[j].Substring(0, matinees[j].IndexOf('-'));
+
+                            //
+                            if (missionlist.ContainsKey(activity.Morning))
+                            {
+                                missionlist[activity.Morning] += 0.5;
+                            }
+                            else
+                            {
+                                missionlist.Add(activity.Morning, 0.5);
+                            }
+
+                            //
                         }
                     }
 
@@ -292,6 +363,147 @@ namespace Projet_pilate.Controllers
             db.Cras.Add(cra);
 
             db.SaveChanges();
+
+
+            //
+            var time = db.MonthActivations.Single().Periode;
+            foreach(KeyValuePair<string, double> pair in missionlist)
+            {
+                var mission = db.Missions.Single(m => m.Name == pair.Key);
+                var BC = db.Subsidiaries.Single(s => s.SubsidiaryID == mission.PrincipalBCID);
+                var contact = db.CompanyContacts.Single(c => c.CompanyContactID == mission.CompanyContactID);
+                var company = db.Companies.Single(c => c.CompanyID == contact.CompanyID);
+
+                float montant = 0f;
+                float nbUO = 0f;
+                switch (mission.Periodicity)
+                {
+                    case "Jours":
+                        nbUO = (float)pair.Value;
+                        montant = nbUO * mission.Fee;
+                        break;
+                    case "Mois":
+                        nbUO = 1;
+                        montant = nbUO * mission.Fee;
+                        break;
+                    case "Trimestre":
+                        nbUO = 1.0f / 3;
+                        montant = nbUO * mission.Fee;
+                        break;
+                    default:
+                        break;
+                }
+
+                DateTime reglement = DateTime.Now;
+                switch (mission.Delai)
+                {
+                    case "30 jours":
+                        reglement = time.AddDays(30);
+                        break;
+                    case "30 jours fin de mois":
+                        reglement = time.AddDays(30);
+                        reglement = DateTime.Parse(reglement.ToString("yyyy-MM-01")).AddMonths(1).AddDays(-1);
+                        break;
+                    case "45 jours":
+                        reglement = time.AddDays(45);
+                        break;
+                    case "45 jours fin de mois":
+                        reglement = time.AddDays(45);
+                        reglement = DateTime.Parse(reglement.ToString("yyyy-MM-01")).AddMonths(1).AddDays(-1);
+                        break;
+                    case "60 jours":
+                        reglement = time.AddDays(60);
+                        break;
+                    case "60 jours fin de mois":
+                        reglement = time.AddDays(60);
+                        reglement = DateTime.Parse(reglement.ToString("yyyy-MM-01")).AddMonths(1).AddDays(-1);
+                        break;
+                    default:
+                        break;
+                }
+
+                int Id = 0;
+                foreach (var item in db.Factures.ToList())
+                {
+                    if (item.FactureID > Id)
+                    {
+                        Id = item.FactureID;
+                    }
+                }
+                Id++;
+
+                Facture facture = new Facture()
+                {
+                    mission = mission.Name,
+                    FactureID = Id,
+                    NomFacture = "FAE"+ Id,
+                    MoisDeFacturation = time,
+                    InfoFacturation = mission.InfoFacturation,
+                    PrincipalBC = BC.Name,
+                    AdresseBC = BC.Address,
+                    Client = company.Name,
+                    AdresseFacturation = company.Address,
+                    NombredUO = nbUO,
+                    TJ = mission.Fee,
+                    TVA = db.Infos.ToList().Count == 0 ? 0.2f : (float)db.Infos.Single().TVA,
+                    MontantHT = montant,
+                    FAE = true,
+                    Emise = false,
+                    payee = false,
+                    annulee = false,
+                    DernierEnregistrer = DateTime.Now,
+                    Delai = mission.Delai,
+                    DesignationFacturation = mission.DesignationFacturation,
+                    DateRegelement = reglement,
+                    type = "Facture",
+
+                };
+
+                db.Factures.Add(facture);
+                Id++;
+
+                if (mission.InterBC1ID != 0)
+                {
+                    var c = db.Subsidiaries.Single(s => s.SubsidiaryID == mission.InterBC1ID);
+                    Facture factureInt = new Facture()
+                    {
+                        mission = mission.Name,
+                        FactureID = Id,
+                        NomFacture = "FAE"+Id,
+                        MoisDeFacturation = time,
+                        InfoFacturation = mission.InfoFacturation,
+                        PrincipalBC = c.Name,
+                        AdresseBC = c.Address,
+                        Client = BC.Name,
+                        AdresseFacturation = BC.Address,
+                        NombredUO = nbUO,
+                        TJ = mission.TJInterBC1,
+                        TVA = db.Infos.ToList().Count == 0 ? 0.2f : (float)db.Infos.Single().TVA,
+                        MontantHT = montant,
+                        FAE = true,
+                        Emise = false,
+                        payee = false,
+                        annulee = false,
+                        DernierEnregistrer = DateTime.Now,
+                        Delai = mission.Delai,
+                        DesignationFacturation = mission.DesignationFacturation,
+                        DateRegelement = reglement,
+                        type = "Facture",
+                    };
+                    db.Factures.Add(factureInt);
+                    Id++;
+                }
+
+                db.SaveChanges();
+
+
+
+            }
+
+
+
+            //
+
 
 
             return RedirectToAction("CRA");

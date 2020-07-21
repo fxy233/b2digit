@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Projet_pilate.Models.FactureSimpleViewModel>
 
 @{
-    Layout = "~/Views/Shared/_particular.cshtml";
+    Layout = null;
 }
 
 <style>
@@ -46,9 +46,14 @@
             }
         });
     });
+
 </script>
 
-<h2>Liste des factures du mois de @ViewBag.date.ToString("MMMM, yyyy", System.Globalization.CultureInfo.CurrentCulture)</h2>
+@*<div class="col-md-10">
+        <h2>Liste des factures du mois de @ViewBag.date.ToString("MMMM, yyyy", System.Globalization.CultureInfo.CurrentCulture)</h2>
+    </div>*@
+
+
 
 
 <table class="display" id="mytable" style="width:90%">
@@ -100,11 +105,20 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Dernier)
                 </td>
+                @{
+                    if (item.Status == "Payee" || item.Status == "Annulee")
+                    {
+                        <td>Non modifiable</td>
+                    }
+                    else
+                    {
+                        <td>
 
-                <td>
-                    @Html.ActionLink("Détail", "Modifier", new { id = item.ID }, new { @class = "btn" })
-                    @Html.ActionLink("Télécharger", "Detail", new { id = item.ID }, new { @class = "btn" })
-                </td>
+                            @Html.ActionLink("Détail", "Detail", new { id = item.ID }, new { @class = "btn" })
+                        </td>
+                    }
+                }
+
             </tr>
 
         }
@@ -125,7 +139,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Mission)
             </th>
-            <th>
+            <th id="statu">
                 @Html.DisplayNameFor(model => model.Status)
             </th>
             <th>

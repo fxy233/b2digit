@@ -4,13 +4,14 @@
     ViewBag.Title = "Modifier";
 }
 
-
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
 @using (Html.BeginForm())
 {
 
     <div class="form-group col-md-12">
 
-        <div class="col-md-12" style="margin-top:40px; margin-bottom:40px;padding-left:400px">
+        <div class="col-md-2" style="padding-top:7px;padding-left:30px;">Mission : </div>
+        <div class="col-md-4" style=" margin-bottom:40px; ">
             <input type="text" value="@Model.mission" placeholder="Mission Name" list="mission" class="form-control" id="Mission" asp-for="Mission" name="Mission" required />
             <datalist id="mission">
                 @{ ApplicationDbContext db = new ApplicationDbContext();
@@ -19,6 +20,17 @@
                         <option value="@m.Name"></option>
                     };
                 }
+            </datalist>
+        </div>
+
+        <div class="col-md-1" style="padding-top:7px;padding-left:30px;padding-left:0px; margin-left:0px">Statu : </div>
+        <div class="col-md-5" style=" margin-bottom:40px;">
+            <input type="text" value="@Model.status" placeholder="Status" list="status" class="form-control" id="Status" asp-for="Status" name="Status" required />
+            <datalist id="status">
+                <option value="FAE"></option>
+                <option value="Emise"></option>
+                <option value="Payee"></option>
+                <option value="Annulee"></option>
             </datalist>
         </div>
 
@@ -39,7 +51,7 @@
             <div class="col-md-8">
                 @*                @Html.EditorFor(model => model.AdresseEmettrice, new { htmlAttributes = new { @class = "form-control", @placeholder = "Adresse" } })
                 *@
-                <input type="text" value="@Model.AdresseEmettrice" readonly = "readonly" placeholder="Adresse" list="adresseEmettrice" class="form-control" id="AdresseEmettrice" asp-for="AdresseEmettrice" name="AdresseEmettrice" required />
+                <input type="text" value="@Model.AdresseEmettrice" readonly="readonly" placeholder="Adresse" list="adresseEmettrice" class="form-control" id="AdresseEmettrice" asp-for="AdresseEmettrice" name="AdresseEmettrice" required />
                 <datalist id="adresseEmettrice">
                     @{
                         foreach (var s in db.Subsidiaries.ToList())
@@ -54,7 +66,7 @@
             <div class="col-md-8">
                 @*                @Html.EditorFor(model => model.VilleEmettrice, new { htmlAttributes = new { @class = "form-control", @placeholder = "Code postal, ville" } })
                 *@
-                <input type="text" value="@Model.VilleEmettrice" readonly = "readonly" placeholder="Code postal, Ville" list="villeEmettrice" class="form-control" id="VilleEmettrice" asp-for="VilleEmettrice" name="VilleEmettrice" required />
+                <input type="text" value="@Model.VilleEmettrice" readonly="readonly" placeholder="Code postal, Ville" list="villeEmettrice" class="form-control" id="VilleEmettrice" asp-for="VilleEmettrice" name="VilleEmettrice" required />
                 <datalist id="villeEmettrice">
                     @{
                         foreach (var s in db.Subsidiaries.ToList())
@@ -69,7 +81,7 @@
             <div class="col-md-12">
                 @*                @Html.EditorFor(model => model.MailEmettrice, new { htmlAttributes = new { @class = "form-control", @placeholder = "Mail de la société" } })
                 *@
-                <input type="text" value="@Model.MailEmettrice" readonly = "readonly" placeholder="Mail de la société" list="mailEmettrice" class="form-control" id="MailEmettrice" asp-for="MailEmettrice" name="MailEmettrice" required />
+                <input type="text" value="@Model.MailEmettrice" readonly="readonly" placeholder="Mail de la société" list="mailEmettrice" class="form-control" id="MailEmettrice" asp-for="MailEmettrice" name="MailEmettrice" required />
                 <datalist id="mailEmettrice">
                     @{
                         foreach (var s in db.Subsidiaries.ToList())
@@ -86,7 +98,7 @@
             <div class="col-md-offset-1 col-md-8" style="margin-left:0px; padding-left:0px;">
                 @*                @Html.EditorFor(model => model.Siren, new { htmlAttributes = new { @class = "form-control", @placeholder = "SIREN" } })
                 *@
-                <input type="text" value="@Model.Siren" readonly = "readonly" placeholder="SIREN" list="siren" class="form-control" id="Siren" asp-for="Siren" name="Siren" required />
+                <input type="text" value="@Model.Siren" readonly="readonly" placeholder="SIREN" list="siren" class="form-control" id="Siren" asp-for="Siren" name="Siren" required />
                 <datalist id="siren">
                     @{
                         foreach (var s in db.Subsidiaries.ToList())
@@ -123,7 +135,7 @@
             <div class="col-md-8">
                 @*                @Html.EditorFor(model => model.ClientAdresse, new { htmlAttributes = new { @class = "form-control", @placeholder = "Adresse" } })
                 *@
-                <input type="text" value="@Model.ClientAdresse" readonly = "readonly" placeholder="Adresse" list="clientAdresse" class="form-control" id="ClientAdresse" asp-for="ClientAdresse" name="ClientAdresse" required />
+                <input type="text" value="@Model.ClientAdresse" readonly="readonly" placeholder="Adresse" list="clientAdresse" class="form-control" id="ClientAdresse" asp-for="ClientAdresse" name="ClientAdresse" required />
                 <datalist id="clientAdresse">
                     @{
                         foreach (var s in db.Subsidiaries.ToList())
@@ -143,7 +155,7 @@
             <div class="col-md-8">
                 @*                @Html.EditorFor(model => model.ClientVille, new { htmlAttributes = new { @class = "form-control", @placeholder = "Code postal, ville" } })
                 *@
-                <input type="text" value="@Model.ClientVille" readonly = "readonly" placeholder="Code postal, ville" list="clientVille" class="form-control" id="ClientVille" asp-for="ClientVille" name="ClientVille" required />
+                <input type="text" value="@Model.ClientVille" readonly="readonly" placeholder="Code postal, ville" list="clientVille" class="form-control" id="ClientVille" asp-for="ClientVille" name="ClientVille" required />
                 <datalist id="clientVille">
                     @{
                         foreach (var s in db.Subsidiaries.ToList())
@@ -165,7 +177,7 @@
             <div class="col-md-8">
                 @*                @Html.EditorFor(model => model.ClientContact, new { htmlAttributes = new { @class = "form-control", @placeholder = "Mail de la société" } })
                 *@
-                <input type="text" value="@Model.ClientContact" readonly = "readonly" placeholder="Mail de la société" list="clientContact" class="form-control" id="ClientContact" asp-for="ClientContact" name="ClientContact" required />
+                <input type="text" value="@Model.ClientContact" readonly="readonly" placeholder="Mail de la société" list="clientContact" class="form-control" id="ClientContact" asp-for="ClientContact" name="ClientContact" required />
                 <datalist id="clientContact">
                     @{
                         foreach (var s in db.Subsidiaries.ToList())
@@ -222,7 +234,7 @@
                     <th class="col-md-1" style="background-color:cornflowerblue; text-align:center;border-color:white">Quantité</th>
                     <th class="col-md-2" style="background-color:cornflowerblue; text-align:center;border-color:white">Prix unitaire H.T</th>
                     <th class="col-md-2" style="background-color:cornflowerblue; text-align:center;border-color:white">Total H.T</th>
-                    <th class="col-md-1" style="background-color:cornflowerblue; text-align:center;border-color:white">Taux TVA</th>
+                    <th class="col-md-1" style="background-color:cornflowerblue; text-align:center;border-color:white">Taux TVA(%)</th>
                     <th class="col-md-2" style="background-color:cornflowerblue; text-align:center;border-color:white">Montant TVA</th>
                     <th class="col-md-2" style="background-color:cornflowerblue; text-align:center;border-color:white">TOTAL T.T.C</th>
                 </tr>
@@ -231,7 +243,7 @@
                     <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.Quantite, new { htmlAttributes = new { @class = "form-control", @placeholder = "Quantité" } })</td>
                     <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.HTunitaire, new { htmlAttributes = new { @class = "form-control", @placeholder = "Prix unitaire" } })</td>
                     <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.totalHT, new { htmlAttributes = new { @class = "form-control", @placeholder = "calculer automatiquement", @readonly = "readonly", @id = "totalHT" } })</td>
-                    <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.TVA, new { htmlAttributes = new { @class = "form-control", @placeholder = "Taux TVA%", @type = "number", @min = 0, @step = 1, @max = 100 } })</td>
+                    <td style="background-color:lightsteelblue;border-color:white"><input type="number" value=@ViewBag.TVA placeholder="TVA(%)" class="form-control" id="TVA" asp-for="TVA" name="TVA" required /></td>
                     <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.montantTVA, new { htmlAttributes = new { @class = "form-control", @placeholder = "calculer automatiquement", @readonly = "readonly", @id = "montantTVA" } })</td>
                     <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.totalTTC, new { htmlAttributes = new { @class = "form-control", @placeholder = "calculer automatiquement", @readonly = "readonly", @id = "totalTTC" } })</td>
 
@@ -255,7 +267,7 @@
             @*        @Html.EditorFor(model => model.IBAN, new { htmlAttributes = new { @class = "form-control", @placeholder = "IBAN" } })
             *@
 
-            <input type="text" value="@Model.IBAN" readonly = "readonly" placeholder="IBAN" list="iban" class="form-control" id="IBAN" asp-for="IBAN" name="IBAN" required />
+            <input type="text" value="@Model.IBAN" readonly="readonly" placeholder="IBAN" list="iban" class="form-control" id="IBAN" asp-for="IBAN" name="IBAN" required />
             <datalist id="iban">
                 @{
                     foreach (var s in db.Subsidiaries.ToList())
@@ -270,7 +282,7 @@
         <div class="col-md-11" style="margin-top:10px">
             @*        @Html.EditorFor(model => model.BIC, new { htmlAttributes = new { @class = "form-control", @placeholder = "BIC" } })
             *@
-            <input type="text" value="@Model.BIC" readonly = "readonly" placeholder="BIC" list="bic" class="form-control" id="BIC" asp-for="BIC" name="BIC" required />
+            <input type="text" value="@Model.BIC" readonly="readonly" placeholder="BIC" list="bic" class="form-control" id="BIC" asp-for="BIC" name="BIC" required />
             <datalist id="bic">
                 @{
                     foreach (var s in db.Subsidiaries.ToList())
@@ -286,7 +298,7 @@
         <div class="col-md-9" style="margin-top:10px">
             @*        @Html.EditorFor(model => model.TVAintra, new { htmlAttributes = new { @class = "form-control", @placeholder = "TVA intracommunautaire" } })
             *@
-            <input type="text" value="@Model.TVAintra" readonly = "readonly" placeholder="TVA intracommunautaire" list="tVAintra" class="form-control" id="TVAintra" asp-for="TVAintra" name="TVAintra" required />
+            <input type="text" value="@Model.TVAintra" readonly="readonly" placeholder="TVA intracommunautaire" list="tVAintra" class="form-control" id="TVAintra" asp-for="TVAintra" name="TVAintra" required />
             <datalist id="tVAintra">
                 @{
                     foreach (var s in db.Subsidiaries.ToList())
@@ -303,12 +315,10 @@
     </div>
 
 
-    <div class="col-md-4" style="margin-top:40px; margin-bottom:50px; padding-left:50px">
-        <input type="submit" class="btn btn-primary btn-large" value="Submit" id="validation">
+    <div class="col-md-offset-6 col-md-6" style="margin-top:40px; margin-bottom:50px; padding-left:50px">
+        <input type="submit" class="btn btn-primary btn-large" value="Facturé" id="validation">
     </div>
-    <div class="col-md-offset-4 col-md-4" style="margin-top:40px; margin-bottom:50px; padding-left:50px">
-        @Html.ActionLink("Créer un nouveau", "CreerFact", "Facture", new { @class = "btn btn-primary btn-large" })
-    </div>
+
 
 }
 
@@ -363,6 +373,6 @@
         document.getElementById("ClientContact").value = email;
 
     }
-    
+
 
 </script>

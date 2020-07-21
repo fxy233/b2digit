@@ -94,8 +94,8 @@
                                 <ul class="dropdown-menu">
                                     <li>@Html.RouteLink("Activation du mois", "ActivationCRA")</li>
                                     <li>@Html.RouteLink("Message d'accueil", "Message")</li>
-                                    <li>@Html.RouteLink("Clôture du mois", "ClotureMois")</li>
-                                    <li>@Html.RouteLink("Factures", "ListeFactures")</li>
+                                    
+                                    <li>@Html.RouteLink("Factures", "Factures")</li>
                                     <li>@Html.RouteLink("Suivis", "Suivis")</li>
                                 </ul>
                             </li>
@@ -110,6 +110,15 @@
                                 <li>@Html.RouteLink("Missions", "ListeMissions")</li>
                             </ul>
                         </li>
+
+                        <li class="nav-item dropdown">
+                            <a href="#" class=" nav-link dropdown-toggle" data-toggle="dropdown">Ordre de missions</a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.RouteLink("Creation du Ordre de mission", "CreationOdm")</li>
+
+                            </ul>
+                        </li>
+
 
                     }
 
