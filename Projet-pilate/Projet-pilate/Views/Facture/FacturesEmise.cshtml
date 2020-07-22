@@ -76,23 +76,32 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Mission)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
+            @{
+                if (item.Status == "Annulee")
+                {
+                    <td style="color:red">Emise</td>
+                }
+                else
+                {
+                    <td>Emise</td>
+                }
+            }
             <td>
                 @Html.DisplayFor(modelItem => item.Dernier)
             </td>
             @{
-                if (item.Status == "Payee" || item.Status == "Annulee")
+                if (item.Status == "Annulee")
                 {
-                    <td>Non modifiable</td>
+                        <td>
+                            @Html.ActionLink("Payée", "Payee", new { id = item.ID }, new { @class = "btn" })
+                        </td>
                 }
                 else
                 {
-                    <td>
-                        @Html.ActionLink("Annulée", "Annulee", new { id = item.ID }, new { @class = "btn" })
-                        @Html.ActionLink("Payée", "Payee", new { id = item.ID }, new { @class = "btn" })
-                    </td>
+        <td>
+            @Html.ActionLink("Faire Avoir", "Annulee", new { id = item.ID }, new { @class = "btn" })
+            @Html.ActionLink("Payée", "Payee", new { id = item.ID }, new { @class = "btn" })
+        </td>
                 }
             }
 

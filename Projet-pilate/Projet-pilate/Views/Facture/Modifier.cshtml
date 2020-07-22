@@ -238,16 +238,51 @@
                     <th class="col-md-2" style="background-color:cornflowerblue; text-align:center;border-color:white">Montant TVA</th>
                     <th class="col-md-2" style="background-color:cornflowerblue; text-align:center;border-color:white">TOTAL T.T.C</th>
                 </tr>
-                <tr>
-                    <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.designation, new { htmlAttributes = new { @class = "form-control", @placeholder = "Désignation" } })</td>
-                    <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.Quantite, new { htmlAttributes = new { @class = "form-control", @placeholder = "Quantité" } })</td>
-                    <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.HTunitaire, new { htmlAttributes = new { @class = "form-control", @placeholder = "Prix unitaire" } })</td>
-                    <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.totalHT, new { htmlAttributes = new { @class = "form-control", @placeholder = "calculer automatiquement", @readonly = "readonly", @id = "totalHT" } })</td>
-                    <td style="background-color:lightsteelblue;border-color:white"><input type="number" value=@ViewBag.TVA placeholder="TVA(%)" class="form-control" id="TVA" asp-for="TVA" name="TVA" required /></td>
-                    <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.montantTVA, new { htmlAttributes = new { @class = "form-control", @placeholder = "calculer automatiquement", @readonly = "readonly", @id = "montantTVA" } })</td>
-                    <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.totalTTC, new { htmlAttributes = new { @class = "form-control", @placeholder = "calculer automatiquement", @readonly = "readonly", @id = "totalTTC" } })</td>
 
-                </tr>
+                @{
+                    int pid = Model.ID;
+                    if (db.Factures.Single(f => f.FactureID == pid).parentID < 0)
+                    {
+                        int i = 0;
+                        foreach (var item in db.Factures.ToList())
+                        {
+                            if (item.parentID == pid)
+                            {
+
+                                float mtva = Model.factures[i].TVA * Model.factures[i].MontantHT;
+                                float totalTTC = (1+Model.factures[i].TVA) * Model.factures[i].MontantHT;
+                                string name = "TVA" + i.ToString();
+                                        <tr>
+                                            <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.factures[i].DesignationFacturation, new { htmlAttributes = new { @class = "form-control", @placeholder = "Désignation" } })</td>
+                                            <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.factures[i].NombredUO, new { htmlAttributes = new { @class = "form-control", @placeholder = "Quantité" } })</td>
+                                            <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.factures[i].TJ, new { htmlAttributes = new { @class = "form-control", @placeholder = "Prix unitaire" } })</td>
+                                            <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.factures[i].MontantHT, new { htmlAttributes = new { @class = "form-control", @placeholder = "calculer automatiquement", @readonly = "readonly", @id = "totalHT" } })</td>
+                                            <td style="background-color:lightsteelblue;border-color:white"><input type="number" value=@ViewBag.TVA placeholder="TVA(%)" class="form-control" id="TVA" asp-for="TVA" name="@name" required /></td>
+                                            <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => mtva, new { htmlAttributes = new { @class = "form-control", @placeholder = "calculer automatiquement", @readonly = "readonly", @id = "montantTVA" } })</td>
+                                            <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => totalTTC, new { htmlAttributes = new { @class = "form-control", @placeholder = "calculer automatiquement", @readonly = "readonly", @id = "totalTTC" } })</td>
+
+                                        </tr>
+                                i++;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.designation, new { htmlAttributes = new { @class = "form-control", @placeholder = "Désignation" } })</td>
+                            <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.Quantite, new { htmlAttributes = new { @class = "form-control", @placeholder = "Quantité" } })</td>
+                            <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.HTunitaire, new { htmlAttributes = new { @class = "form-control", @placeholder = "Prix unitaire" } })</td>
+                            <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.totalHT, new { htmlAttributes = new { @class = "form-control", @placeholder = "calculer automatiquement", @readonly = "readonly", @id = "totalHT" } })</td>
+                            <td style="background-color:lightsteelblue;border-color:white"><input type="number" value=@ViewBag.TVA placeholder="TVA(%)" class="form-control" id="TVA" asp-for="TVA" name="TVA" required /></td>
+                            <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.montantTVA, new { htmlAttributes = new { @class = "form-control", @placeholder = "calculer automatiquement", @readonly = "readonly", @id = "montantTVA" } })</td>
+                            <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.totalTTC, new { htmlAttributes = new { @class = "form-control", @placeholder = "calculer automatiquement", @readonly = "readonly", @id = "totalTTC" } })</td>
+
+                        </tr>
+                    }
+
+                }
+
+
             </table>
         </div>
 

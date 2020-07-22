@@ -22,6 +22,10 @@ using DocumentFormat.OpenXml.EMMA;
 using System.Text.RegularExpressions;
 using NPOI.SS.Formula.Functions;
 
+using System.Text;
+using System.Net.Mail;
+using System.Net;
+
 namespace Projet_pilate.Controllers
 {
     public class FactureController : Controller
@@ -38,6 +42,10 @@ namespace Projet_pilate.Controllers
 
             foreach(var f in factureList)
             {
+                if (f.payee == true || f.Emise == true)
+                {
+                    continue;
+                }
                 FactureSimpleViewModel model = new FactureSimpleViewModel()
                 {
                     ID = f.FactureID,
@@ -91,7 +99,7 @@ namespace Projet_pilate.Controllers
 
             foreach (var f in factureList)
             {
-                if (f.Emise==false)
+                if (f.Emise==false||f.payee==true)
                 {
                     continue;
                 }
@@ -225,9 +233,9 @@ namespace Projet_pilate.Controllers
                         model.Quantite = facture.NombredUO;
                         model.HTunitaire = facture.TJ;
                         model.TVA = facture.TVA*100;
-                        model.totalHT = facture.NombredUO * facture.TJ;
-                        model.montantTVA = facture.TVA * facture.NombredUO * facture.TJ;
-                        model.totalTTC = (1 + facture.TVA) * facture.NombredUO * facture.TJ;
+                        model.totalHT = facture.MontantHT;
+                        model.montantTVA = facture.TVA * facture.MontantHT;
+                        model.totalTTC = (1 + facture.TVA) * facture.MontantHT;
                         model.dateReglement = facture.MoisDeFacturation;
                         model.IBAN = emettrice.IBAN;
                         model.BIC = emettrice.BIC;
@@ -235,6 +243,21 @@ namespace Projet_pilate.Controllers
                         model.Mention = db.Infos.Single().Mention;
                         model.mission = facture.mission;
             model.dateReglement = facture.DateRegelement;
+
+
+
+            if (facture.parentID < 0)
+            {
+                model.factures = new List<Facture>();
+                foreach(var f in db.Factures.ToList())
+                {
+                    if (f.parentID == facture.FactureID)
+                    {
+                        model.factures.Add(f);
+                    }
+                }
+            }
+
                         return View(model);
             
         }
@@ -244,6 +267,7 @@ namespace Projet_pilate.Controllers
         public ActionResult Modifier(FactureCreationViewModel model)
         {
             ApplicationDbContext db = new ApplicationDbContext();
+
 
             var facture = db.Factures.Single(f => f.NomFacture == model.FactureName);
             string nm = Request.Form["NomEmettrice"];
@@ -356,14 +380,48 @@ namespace Projet_pilate.Controllers
             facture.Client = Request.Form["ClientName"];
             facture.AdresseFacturation = Request.Form["ClientAdresse"];
             facture.type = Request.Form["Type"];
-            facture.NombredUO = model.Quantite;
-                facture.TJ = model.HTunitaire;
-                facture.TVA = (float)Int32.Parse(Request.Form["TVA"]) / 100;
-                facture.MontantHT = model.HTunitaire * model.Quantite;
                 facture.DernierEnregistrer = DateTime.Now;
                 facture.Delai = missionItem.Delai;
                 facture.DesignationFacturation = missionItem.DesignationFacturation;
             facture.DateRegelement = model.dateReglement;
+            
+            if (facture.parentID < 0)
+            {
+                int i = 0;
+                facture.NombredUO = 0;
+                facture.TJ = 0;
+                facture.TVA = (float)Int32.Parse(Request.Form["TVA0"]) / 100;
+                facture.MontantHT = 0;
+                foreach (var item in db.Factures.ToList())
+                {
+                    if (item.parentID == facture.FactureID)
+                    {
+                        string str = "TVA" + i.ToString();
+                        var f = db.Factures.Single(ff => ff.FactureID == item.FactureID);
+                        f.NombredUO = model.factures[i].NombredUO;
+                        f.TJ = model.factures[i].TJ;
+                        f.MontantHT = f.TJ*f.NombredUO;
+                        f.TVA = (float)Int32.Parse(Request.Form[str]) / 100;
+                        facture.NombredUO += f.NombredUO;
+                        facture.TJ += f.TJ;
+                        facture.MontantHT += f.MontantHT;
+                        db.SaveChanges();
+                        i++;
+                    }
+                    
+
+                }
+
+                
+            }
+            else
+            {
+                facture.NombredUO = model.Quantite;
+                facture.TJ = model.HTunitaire;
+                facture.TVA = (float)Int32.Parse(Request.Form["TVA"]) / 100;
+                facture.MontantHT = model.HTunitaire * model.Quantite;
+            }
+
             
             db.SaveChanges();
 
@@ -614,6 +672,23 @@ namespace Projet_pilate.Controllers
                 XMLWorkerHelper.GetInstance().ParseXHtml(writer, pdfDoc, sr);
                 pdfDoc.Close();
 
+                /*
+                MemoryStream ms = new MemoryStream(stream.ToArray());
+                System.Net.Mime.ContentType ct = new System.Net.Mime.ContentType(System.Net.Mime.MediaTypeNames.Application.Pdf);
+                System.Net.Mail.Attachment attach = new System.Net.Mail.Attachment(ms, ct);
+                attach.ContentDisposition.FileName = m[0] + ".pdf";
+
+                GMailer.GmailUsername = "fengxy233@gmail.com";
+                GMailer.GmailPassword = "fxyjiayou~";
+
+                GMailer mailer = new GMailer();
+                mailer.ToEmail = "fengxy233@gmail.com";
+                mailer.Subject = "Facture";
+                mailer.Body = "Bonjour,<br /> Nous vous envoyons votre facture.<br /> Cordialement";
+                mailer.IsHtml = true;
+                mailer.attch = attach;
+                mailer.Send();
+                */
 
                 return File(stream.ToArray(), "application/pdf", m[0]+".pdf");
             }
@@ -686,5 +761,266 @@ namespace Projet_pilate.Controllers
 
         }
 
+        [HttpPost]
+        public ActionResult fusionner()
+        {
+
+            string selection = Request["select"]==null?"": Request["select"].ToString();
+            string type = Request["type"]==null?"":Request["type"].ToString();
+
+            if (selection==""||type=="")
+            {
+                string message = "Vous devez choisir factures à combiner et la méthode de combiner !";
+                ModelState.AddModelError(string.Empty, message);
+                return View("Factures");
+            }
+
+            string[] selectionlist = selection.Split(',');
+            string[] typelist = type.Split(',');
+
+            if (typelist.Length > 1)
+            {
+                string message = "Vous pouver choisir qu'une méthode pour les combiner !";
+                ModelState.AddModelError(string.Empty, message);
+                return View("Factures");
+            }
+            if (typelist.Length > 1)
+            {
+                string message = "Vous pouver choisir qu'une méthode pour les combiner !";
+                ModelState.AddModelError(string.Empty, message);
+                return View("Factures");
+            }
+
+            ApplicationDbContext db = new ApplicationDbContext();
+
+            var fl = db.Factures.ToList();
+            int id = 0;
+            foreach (var item in fl)
+            {
+                if (item.FactureID > id)
+                {
+                    id = item.FactureID;
+                }
+            }
+            id++;
+
+            int sid = Int32.Parse(selectionlist[0]);
+            var facturefusionner = db.Factures.Single(f => f.FactureID == sid);
+            DateTime reglement = DateTime.Now;
+            switch (facturefusionner.Delai)
+            {
+                case "30 jours":
+                    reglement = db.MonthActivations.Single().Periode.AddDays(30);
+                    break;
+                case "30 jours fin de mois":
+                    reglement = db.MonthActivations.Single().Periode.AddDays(30);
+                    reglement = DateTime.Parse(reglement.ToString("yyyy-MM-01")).AddMonths(1).AddDays(-1);
+                    break;
+                case "45 jours":
+                    reglement = db.MonthActivations.Single().Periode.AddDays(45);
+                    break;
+                case "45 jours fin de mois":
+                    reglement = db.MonthActivations.Single().Periode.AddDays(45);
+                    reglement = DateTime.Parse(reglement.ToString("yyyy-MM-01")).AddMonths(1).AddDays(-1);
+                    break;
+                case "60 jours":
+                    reglement = db.MonthActivations.Single().Periode.AddDays(60);
+                    break;
+                case "60 jours fin de mois":
+                    reglement = db.MonthActivations.Single().Periode.AddDays(60);
+                    reglement = DateTime.Parse(reglement.ToString("yyyy-MM-01")).AddMonths(1).AddDays(-1);
+                    break;
+                default:
+                    break;
+            }
+
+            if (typelist[0] == "fusionner")
+            {
+                
+
+                Facture facture = new Facture()
+                {
+                    mission = facturefusionner.mission,
+                    FactureID = id,
+                    NomFacture = "FAE" +"-" + id,
+                    MoisDeFacturation = db.MonthActivations.Single().Periode,
+                    InfoFacturation = facturefusionner.InfoFacturation,
+                    PrincipalBC = facturefusionner.PrincipalBC,
+                    AdresseBC = facturefusionner.AdresseBC,
+                    Client = facturefusionner.Client,
+                    AdresseFacturation = facturefusionner.AdresseFacturation,
+                    NombredUO = facturefusionner.NombredUO,
+                    TJ = facturefusionner.TJ,
+                    TVA = facturefusionner.TVA,
+                    MontantHT = facturefusionner.MontantHT,
+                    type = facturefusionner.type,
+                    FAE = true,
+                    Emise = false,
+                    payee = false,
+                    annulee = false,
+                    DernierEnregistrer = DateTime.Now,
+                    Delai = facturefusionner.Delai,
+                    DesignationFacturation = facturefusionner.DesignationFacturation,
+                    DateRegelement = reglement,
+                };
+
+                foreach(var item in selectionlist)
+                {
+                    int itemid = Int32.Parse(item);
+                    var f = db.Factures.Single(fa => fa.FactureID == itemid);
+                    if (f.FactureID == facturefusionner.FactureID)
+                    {
+                        db.Factures.Remove(facturefusionner);
+                        continue;
+                    }
+                    else
+                    {
+                        facture.NombredUO += f.NombredUO;
+                        facture.MontantHT += f.MontantHT;
+                        db.Factures.Remove(f);
+                    }
+                }
+
+                db.Factures.Add(facture);
+                db.SaveChanges();
+            }
+
+            if (typelist[0] == "assembler")
+            {
+
+
+                Facture facture = new Facture()
+                {
+                    mission = facturefusionner.mission,
+                    FactureID = id,
+                    NomFacture = "FAE" + "-" + id,
+                    MoisDeFacturation = db.MonthActivations.Single().Periode,
+                    InfoFacturation = facturefusionner.InfoFacturation,
+                    PrincipalBC = facturefusionner.PrincipalBC,
+                    AdresseBC = facturefusionner.AdresseBC,
+                    Client = facturefusionner.Client,
+                    AdresseFacturation = facturefusionner.AdresseFacturation,
+                    NombredUO = facturefusionner.NombredUO,
+                    TJ = facturefusionner.TJ,
+                    TVA = facturefusionner.TVA,
+                    MontantHT = facturefusionner.MontantHT,
+                    type = facturefusionner.type,
+                    FAE = true,
+                    Emise = false,
+                    payee = false,
+                    annulee = false,
+                    DernierEnregistrer = DateTime.Now,
+                    Delai = facturefusionner.Delai,
+                    DesignationFacturation = facturefusionner.DesignationFacturation,
+                    DateRegelement = reglement,
+                };
+
+                foreach (var item in selectionlist)
+                {
+                    int itemid = Int32.Parse(item);
+                    var f = db.Factures.Single(fa => fa.FactureID == itemid);
+                    if (f.FactureID == facturefusionner.FactureID)
+                    {
+                        facturefusionner.parentID = facture.FactureID;
+                        db.SaveChanges();
+                        continue;
+                    }
+                    else
+                    {
+                        facture.NombredUO += f.NombredUO;
+                        facture.MontantHT += f.MontantHT;
+                        f.parentID = facture.FactureID;
+                        db.SaveChanges();
+                    }
+                }
+
+                facture.parentID = -1;
+                db.Factures.Add(facture);
+                db.SaveChanges();
+            }
+
+           
+
+
+                return RedirectToAction("Factures", "Facture");
+        }
+
+        public ActionResult FacturesPayee()
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            ViewBag.date = db.MonthActivations.Single().Periode;
+
+            List<FactureSimpleViewModel> models = new List<FactureSimpleViewModel>();
+            var factureList = db.Factures.ToList();
+
+            foreach (var f in factureList)
+            {
+                if (f.payee == false)
+                {
+                    continue;
+                }
+                FactureSimpleViewModel model = new FactureSimpleViewModel()
+                {
+                    ID = f.FactureID,
+                    NomFacture = f.NomFacture,
+                    Client = f.Client,
+                    MontantHT = f.MontantHT.ToString(),
+                    Mission = f.mission,
+                    Dernier = f.DernierEnregistrer,
+                };
+
+                model.Status = "Payee";
+
+                models.Add(model);
+
+            }
+
+
+            return View(models);
+        }
+
+    }
+
+    public class GMailer
+    {
+        public static string GmailUsername { get; set; }
+        public static string GmailPassword { get; set; }
+        public static string GmailHost { get; set; }
+        public static int GmailPort { get; set; }
+        public static bool GmailSSL { get; set; }
+
+        public string ToEmail { get; set; }
+        public string Subject { get; set; }
+        public string Body { get; set; }
+        public string PathToAttachment { get; set; }
+        public Attachment attch { get; set; }
+        public bool IsHtml { get; set; }
+
+        static GMailer()
+        {
+            GmailHost = "smtp.gmail.com";
+            GmailPort = 25; // Gmail can use ports 25, 465 & 587; but must be 25 for medium trust environment.
+            GmailSSL = true;
+        }
+
+        public void Send()
+        {
+            SmtpClient smtp = new SmtpClient();
+            smtp.Host = GmailHost;
+            smtp.Port = GmailPort;
+            smtp.EnableSsl = GmailSSL;
+            smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+            smtp.UseDefaultCredentials = false;
+            smtp.Credentials = new NetworkCredential(GmailUsername, GmailPassword);
+
+            using (var message = new MailMessage(GmailUsername, ToEmail))
+            {
+                message.Subject = Subject;
+                message.Body = Body;
+                message.IsBodyHtml = IsHtml;
+                message.Attachments.Add(attch);
+                smtp.Send(message);
+            }
+        }
     }
 }

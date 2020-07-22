@@ -1,4 +1,5 @@
 ﻿@model Projet_pilate.Models.FacturePDFViewModel
+@using Projet_pilate.Models;
 @{
     ViewBag.Title = "Detail";
     //Layout = null;
@@ -15,9 +16,15 @@
     <input type="submit" id="btnSubmit" value="Export" class="btn btn-primary col-md-offset-11" style="margin-bottom:10px" />
 }
 
-<div class="col-md-offset-11">
-    @Html.ActionLink("Modifier", "Modifier", new { id = Model.ID }, new { @class = "btn btn-primary" })
-</div>
+@{ ApplicationDbContext db = new ApplicationDbContext();
+    if (db.Factures.Single(f => f.FactureID == Model.ID).payee == false)
+    {
+        <div class="col-md-offset-11">
+            @Html.ActionLink("Modifier", "Modifier", new { id = Model.ID }, new { @class = "btn btn-primary" })
+        </div>
+    }
+}
+
 
 
 <div class="form-group col-md-12">
@@ -91,24 +98,63 @@
                 <th class="col-md-2" style="background-color:cornflowerblue; text-align:center;border-color:white">Montant TVA</th>
                 <th class="col-md-2" style="background-color:cornflowerblue; text-align:center;border-color:white">TOTAL T.T.C</th>
             </tr>
-            <tr>
-                <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.Designation, new { htmlAttributes = new { @class = "form-control", @placeholder = "Désignation", @readonly = "readonly" } })</td>
-                <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.Quantite, new { htmlAttributes = new { @class = "form-control", @placeholder = "Quantité", @readonly = "readonly" } })</td>
-                <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.HTunitaire, new { htmlAttributes = new { @class = "form-control", @placeholder = "Prix unitaire", @readonly = "readonly" } })</td>
-                @{
-                    float total = Model.Quantite * Model.HTunitaire;
-                    float mtva = total * Model.TVA;
-                    float totalTTC = total + mtva;
-                    ViewBag.montantHT = total.ToString();
-                    ViewBag.montantTVA = mtva.ToString();
-                    ViewBag.montantTTC = totalTTC.ToString();
-                    <td style="background-color:lightsteelblue;border-color:white">@total</td>
-                    <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.TVA, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @placeholder = "Taux TVA%", @type = "number", @min = 0, @step = 1, @max = 100 } })</td>
-                    <td style="background-color:lightsteelblue;border-color:white">@mtva</td>
-                    <td style="background-color:lightsteelblue;border-color:white">@totalTTC</td>
+            @{
+
+                int pid = Model.ID;
+                if (db.Factures.Single(f => f.FactureID == Model.ID).parentID < 0)
+                {
+
+                    ViewBag.montantHT = 0f;
+                    ViewBag.montantTVA = 0f;
+                    ViewBag.montantTTC = 0f;
+                    foreach (var item in db.Factures.ToList())
+                    {
+                        if (item.parentID == pid)
+                        {
+                            <tr>
+                                <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => item.DesignationFacturation, new { htmlAttributes = new { @class = "form-control", @placeholder = "Désignation", @readonly = "readonly" } })</td>
+                                <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => item.NombredUO, new { htmlAttributes = new { @class = "form-control", @placeholder = "Quantité", @readonly = "readonly" } })</td>
+                                <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => item.TJ, new { htmlAttributes = new { @class = "form-control", @placeholder = "Prix unitaire", @readonly = "readonly" } })</td>
+                                @{
+                                    float total = item.NombredUO * item.TJ;
+                                    float mtva = total * item.TVA;
+                                    float totalTTC = total + mtva;
+                                    ViewBag.montantHT += total;
+                                    ViewBag.montantTVA += mtva;
+                                    ViewBag.montantTTC += totalTTC;
+                                    <td style="background-color:lightsteelblue;border-color:white">@total</td>
+                                    <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => item.TVA, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @placeholder = "Taux TVA%", @type = "number", @min = 0, @step = 1, @max = 100 } })</td>
+                                    <td style="background-color:lightsteelblue;border-color:white">@mtva</td>
+                                    <td style="background-color:lightsteelblue;border-color:white">@totalTTC</td>
+
+                                }
+                            </tr>
+                        }
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.Designation, new { htmlAttributes = new { @class = "form-control", @placeholder = "Désignation", @readonly = "readonly" } })</td>
+                        <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.Quantite, new { htmlAttributes = new { @class = "form-control", @placeholder = "Quantité", @readonly = "readonly" } })</td>
+                        <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.HTunitaire, new { htmlAttributes = new { @class = "form-control", @placeholder = "Prix unitaire", @readonly = "readonly" } })</td>
+                        @{
+                            float total = Model.Quantite * Model.HTunitaire;
+                            float mtva = total * Model.TVA;
+                            float totalTTC = total + mtva;
+                            ViewBag.montantHT = total.ToString();
+                            ViewBag.montantTVA = mtva.ToString();
+                            ViewBag.montantTTC = totalTTC.ToString();
+                            <td style="background-color:lightsteelblue;border-color:white">@total</td>
+                            <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.TVA, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @placeholder = "Taux TVA%", @type = "number", @min = 0, @step = 1, @max = 100 } })</td>
+                            <td style="background-color:lightsteelblue;border-color:white">@mtva</td>
+                            <td style="background-color:lightsteelblue;border-color:white">@totalTTC</td>
+
+                        }
+                    </tr>
 
                 }
-            </tr>
+            }
         </table>
     </div>
 
@@ -181,23 +227,55 @@
             <td style="background-color:gray; text-align:center; padding:5px"> Montant TVA </td>
             <td style="background-color:gray; text-align:center; padding:5px"> TOTAL T.T.C </td>
         </tr>
-        <tr>
-            @{
-                total = Model.Quantite * Model.HTunitaire;
-                mtva = total * Model.TVA;
-                totalTTC = total + mtva;
-                ViewBag.montantHT = total.ToString();
-                ViewBag.montantTVA = mtva.ToString();
-                ViewBag.montantTTC = totalTTC.ToString();
-                <td style="text-align:center; padding:5px"> <pre>@Model.Designation</pre> </td>
-                <td style="text-align:center; padding:5px"> @Model.Quantite </td>
-                <td style="text-align:center; padding:5px"> @Model.HTunitaire </td>
-                <td style="text-align:center; padding:5px"> @total </td>
-                <td style="text-align:center; padding:5px"> @Model.TVA </td>
-                <td style="text-align:center; padding:5px"> @mtva </td>
-                <td style="text-align:center; padding:5px"> @totalTTC </td>
+        @{
+
+            pid = Model.ID;
+
+            if (db.Factures.Single(fa => fa.FactureID == pid).parentID < 0)
+            {
+                foreach (var item in db.Factures.ToList())
+                {
+                    if (item.parentID == pid)
+                    {
+                        float total = item.NombredUO * item.TJ;
+                        float mtva = total * item.TVA;
+                        float totalTTC = total + mtva;
+                        <tr>
+
+                            <td style="text-align:center; padding:5px"> <pre>@item.DesignationFacturation</pre> </td>
+                            <td style="text-align:center; padding:5px"> @item.NombredUO </td>
+                            <td style="text-align:center; padding:5px"> @item.TJ </td>
+                            <td style="text-align:center; padding:5px"> @total </td>
+                            <td style="text-align:center; padding:5px"> @item.TVA </td>
+                            <td style="text-align:center; padding:5px"> @mtva </td>
+                            <td style="text-align:center; padding:5px"> @totalTTC </td>
+                        </tr>
+                    }
+                }
             }
-        </tr>
+            else
+            {
+                <tr>
+                    @{
+                        float total = Model.Quantite * Model.HTunitaire;
+                        float mtva = total * Model.TVA;
+                        float totalTTC = total + mtva;
+                        ViewBag.montantHT = total.ToString();
+                        ViewBag.montantTVA = mtva.ToString();
+                        ViewBag.montantTTC = totalTTC.ToString();
+                        <td style="text-align:center; padding:5px"> <pre>@Model.Designation</pre> </td>
+                        <td style="text-align:center; padding:5px"> @Model.Quantite </td>
+                        <td style="text-align:center; padding:5px"> @Model.HTunitaire </td>
+                        <td style="text-align:center; padding:5px"> @total </td>
+                        <td style="text-align:center; padding:5px"> @Model.TVA </td>
+                        <td style="text-align:center; padding:5px"> @mtva </td>
+                        <td style="text-align:center; padding:5px"> @totalTTC </td>
+                    }
+                </tr>
+            }
+
+
+        }
     </table>
     <pre>
 

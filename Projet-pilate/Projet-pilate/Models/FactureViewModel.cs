@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Projet_pilate.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -105,6 +106,8 @@ namespace Projet_pilate.Models
         public string mission { get; set; }
 
         public string status { get; set; }
+
+        public List<Facture> factures { get; set; }
     }
 
 }

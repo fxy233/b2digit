@@ -56,100 +56,113 @@
 
 
 
-<table class="display" id="mytable" style="width:90%">
+@using (Html.BeginForm("fusionner", "Facture", FormMethod.Post))
+{
+    
+    <div class="col-md-1" style="margin-top:7px ;margin-bottom:30px; padding-left:0px; font-size:medium;font-weight:bolder">Fusionner</div>
+    <div class="col-md-3" style="margin-top:7px ;margin-bottom:30px;"><input type="checkbox" name="type" value="fusionner"></div>
+    <div class="col-md-1" style="margin-top: 7px; margin-bottom: 30px; font-size: medium; font-weight: bolder">Assembler</div>
+    <div class="col-md-3" style="margin-top: 7px; margin-bottom: 23px;"><input type="checkbox" name="type" value="assembler"></div>
+    <div class="col-md-4" style="margin-bottom:30px; padding-left:260px">
+        <input type="submit" class="btn btn-primary" value="Combiner" id="valider" />
+    </div>
 
-    <thead>
-        <tr>
+    <table class="display" id="mytable" style="width:90%">
 
-            <th>
-                @Html.DisplayNameFor(model => model.NomFacture)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Client)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MontantHT)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Mission)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Dernier)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NomFacture)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Client)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MontantHT)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Mission)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Dernier)
-                </td>
-                @{
-                    if (item.Status == "Payee" || item.Status == "Annulee")
-                    {
-                        <td>Non modifiable</td>
-                    }
-                    else
-                    {
-                        <td>
-
-                            @Html.ActionLink("Détail", "Detail", new { id = item.ID }, new { @class = "btn" })
-                        </td>
-                    }
-                }
-
+                <th></th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NomFacture)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Client)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MontantHT)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Mission)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Status)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Dernier)
+                </th>
+                <th></th>
             </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
 
-        }
-    </tbody>
+                <tr>
+                    <td><input type="checkbox" name="select" value="@item.ID"></td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NomFacture)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Client)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MontantHT)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Mission)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Dernier)
+                    </td>
+                    @{
+                        if (item.Status == "Payee" || item.Status == "Annulee")
+                        {
+                            <td>Non modifiable</td>
+                        }
+                        else
+                        {
+                            <td>
 
-    <tfoot>
-        <tr>
+                                @Html.ActionLink("Détail", "Detail", new { id = item.ID }, new { @class = "btn" })
+                            </td>
+                        }
+                    }
 
-            <th>
-                @Html.DisplayNameFor(model => model.NomFacture)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Client)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MontantHT)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Mission)
-            </th>
-            <th id="statu">
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Dernier)
-            </th>
-            <th></th>
-        </tr>
-    </tfoot>
+                </tr>
 
-</table>
+            }
+        </tbody>
+
+        <tfoot>
+            <tr>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.NomFacture)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Client)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MontantHT)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Mission)
+                </th>
+                <th id="statu">
+                    @Html.DisplayNameFor(model => model.Status)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Dernier)
+                </th>
+                <th></th>
+            </tr>
+        </tfoot>
+
+    </table>
+}
 
 @* @Html.ActionLink("Return", "Return", null, new { @class = "btn" })*@
 
