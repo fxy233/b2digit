@@ -112,6 +112,7 @@ namespace Projet_pilate.Controllers
                 IBAN = subsidiary.IBAN,
                 BIC = subsidiary.BIC,
                 TVAIntra = subsidiary.TVAIntra,
+                email = subsidiary.email,
             };
 
             return View(model);
@@ -142,6 +143,7 @@ namespace Projet_pilate.Controllers
             subsidiary.IBAN = model.IBAN;
             subsidiary.BIC = model.BIC;
             subsidiary.TVAIntra = model.TVAIntra;
+            subsidiary.email = model.email;
 
             try
             {

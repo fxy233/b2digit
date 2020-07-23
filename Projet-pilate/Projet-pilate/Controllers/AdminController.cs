@@ -751,6 +751,7 @@ namespace Projet_pilate.Controllers
             consultant.MealCost = model.MealCost;
             consultant.TravelPackage = model.TravelPackage;
             consultant.ExceptionalCost = model.ExceptionalCost;
+            consultant.Subsidiary = newSubsidiary;
 
             if (selectedTypeCost == "MonthlyCost")
             {

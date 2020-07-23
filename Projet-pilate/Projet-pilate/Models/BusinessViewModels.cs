@@ -308,6 +308,9 @@ namespace Projet_pilate.Models
         [Display(Name = "InfoFacturation")]
         public string InfoFacturation { get; set; }
 
+        [Display(Name = "Référence")]
+        public string Reference { get; set; }
+
         [Display(Name = "Business Company émettrice")]
         public int  PrincipalBCID { get; set; }
 
@@ -468,6 +471,9 @@ namespace Projet_pilate.Models
         [Required]
         [Display(Name = "TVA Intracommunautaire")]
         public string TVAIntra { get; set; }
+
+        [Display(Name = "Mail de la société")]
+        public string email { get; set; }
     }
 }
 

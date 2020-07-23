@@ -29,6 +29,9 @@ namespace Projet_pilate.Models
         [Display(Name = "Dernier Enregistrement")]
         public DateTime Dernier { get; set; }
 
+        [Display(Name = "Nom Emettrice")]
+        public string Emettrice { get; set; }
+
     }
 
     public class FacturePDFViewModel
@@ -52,6 +55,8 @@ namespace Projet_pilate.Models
         public string TVAIntra { get; set; }
         public string Mention { get; set; }
         public string Designation { get; set; }
+        public string Reference { get; set; }
+        public string ReferenceBancaires { get; set; }
 
 
     }
@@ -65,6 +70,12 @@ namespace Projet_pilate.Models
         public string mention { get; set; }
     }
 
+    public class OngletViewModel
+    {
+        public string first { get; set; }
+        public string seconde { get; set; }
+        public string third { get; set; }
+    }
 
     public class FactureCreationViewModel
     {
@@ -106,6 +117,8 @@ namespace Projet_pilate.Models
         public string mission { get; set; }
 
         public string status { get; set; }
+        public string Reference { get; set; }
+        public string ReferenceBancaire { get; set; }
 
         public List<Facture> factures { get; set; }
     }

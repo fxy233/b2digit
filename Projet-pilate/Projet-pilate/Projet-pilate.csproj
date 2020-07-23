@@ -494,6 +494,14 @@
     <Compile Include="Migrations\202007220843597_enleverunique.designer.cs">
       <DependentUpon>202007220843597_enleverunique.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202007230810495_reference.cs" />
+    <Compile Include="Migrations\202007230810495_reference.designer.cs">
+      <DependentUpon>202007230810495_reference.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007230910436_reference2.cs" />
+    <Compile Include="Migrations\202007230910436_reference2.designer.cs">
+      <DependentUpon>202007230910436_reference2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityViewModels.cs" />
@@ -798,6 +806,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202007220843597_enleverunique.resx">
       <DependentUpon>202007220843597_enleverunique.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007230810495_reference.resx">
+      <DependentUpon>202007230810495_reference.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007230910436_reference2.resx">
+      <DependentUpon>202007230910436_reference2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -93,6 +93,7 @@ namespace Projet_pilate.Entities
         public string AdresseMission { get; set; }
         public string Comment { get; set; }
         public string InfoFacturation { get; set; }
+        public string Reference { get; set; }
         public int PrincipalBCID { get; set; }
         public int InterBC1ID { get; set; }
         public float TJInterBC1 { get; set; }

@@ -76,6 +76,9 @@
                     @Html.DisplayNameFor(model => model.NomFacture)
                 </th>
                 <th>
+                    @Html.DisplayNameFor(model => model.Emettrice)
+                </th>
+                <th>
                     @Html.DisplayNameFor(model => model.Client)
                 </th>
                 <th>
@@ -84,12 +87,7 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Mission)
                 </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Status)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Dernier)
-                </th>
+
                 <th></th>
             </tr>
         </thead>
@@ -97,41 +95,39 @@
             @foreach (var item in Model)
             {
 
-                <tr>
-                    <td><input type="checkbox" name="select" value="@item.ID"></td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.NomFacture)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Client)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.MontantHT)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Mission)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Status)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Dernier)
-                    </td>
-                    @{
-                        if (item.Status == "Payee" || item.Status == "Annulee")
-                        {
-                            <td>Non modifiable</td>
-                        }
-                        else
-                        {
-                            <td>
+            <tr>
+                <td><input type="checkbox" name="select" value="@item.ID"></td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NomFacture)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Emettrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Client)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MontantHT)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Mission)
+                </td>
 
-                                @Html.ActionLink("Détail", "Detail", new { id = item.ID }, new { @class = "btn" })
-                            </td>
-                        }
+                @{
+                    if (item.Status == "Payee" || item.Status == "Annulee")
+                    {
+                        <td>Non modifiable</td>
                     }
+                    else
+                    {
+                        <td>
 
-                </tr>
+                            @Html.ActionLink("Détail", "Detail", new { id = item.ID }, new { @class = "btn" })
+                        </td>
+                    }
+                }
+
+            </tr>
 
             }
         </tbody>
@@ -143,6 +139,9 @@
                     @Html.DisplayNameFor(model => model.NomFacture)
                 </th>
                 <th>
+                    @Html.DisplayNameFor(model => model.Emettrice)
+                </th>
+                <th>
                     @Html.DisplayNameFor(model => model.Client)
                 </th>
                 <th>
@@ -151,12 +150,8 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Mission)
                 </th>
-                <th id="statu">
-                    @Html.DisplayNameFor(model => model.Status)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Dernier)
-                </th>
+
+
                 <th></th>
             </tr>
         </tfoot>

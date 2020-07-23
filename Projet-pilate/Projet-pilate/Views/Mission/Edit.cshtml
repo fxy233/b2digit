@@ -24,7 +24,7 @@
             @Html.LabelFor(model => model.Start, htmlAttributes: new { @class = "control-label" })
         </div>
         <div class="col-md-10">
-            @Html.TextBoxFor(model => model.Start, "{0:dd/MM/yyyy}", new { @readonly = "readonly" })
+            @Html.TextBoxFor(model => model.Start, "{0:dd/MM/yyyy}", new { @readonly = "readonly", @class = "form-control" })
             @Html.ValidationMessageFor(model => model.Start, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -61,12 +61,12 @@
             @Html.LabelFor(model => model.Commentaire, htmlAttributes: new { @class = "control-label" })
         </div>
         <div class="col-md-10">
-            @Html.EditorFor(model => model.Commentaire, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.TextAreaFor(model => model.Commentaire,6,40, new { htmlAttributes = new { @class = "form-control"} })
             @Html.ValidationMessageFor(model => model.Commentaire, "", new { @class = "text-danger" })
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" >
         <div class="col-md-10">
             @Html.LabelFor(model => model.AdresseMission, htmlAttributes: new { @class = "control-label" })
         </div>
@@ -86,8 +86,18 @@
             @Html.LabelFor(model => model.InfoFacturation, htmlAttributes: new { @class = "control-label" })
         </div>
         <div class="col-md-10">
-            @Html.EditorFor(model => model.InfoFacturation, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.TextAreaFor(model => model.InfoFacturation, 4, 40, new { htmlAttributes = new { @class = "form-control" } })
             @Html.ValidationMessageFor(model => model.InfoFacturation, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-10">
+            @Html.LabelFor(model => model.Reference, htmlAttributes: new { @class = "control-label" })
+        </div>
+        <div class="col-md-10">
+            @Html.TextAreaFor(model => model.Reference, 3, 40, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Reference, "", new { @class = "text-danger" })
         </div>
     </div>
 
@@ -132,7 +142,7 @@
                     foreach (var s in db.Subsidiaries.ToList())
                     {
                         @*<option value="@s.SubsidiaryID">@s.Name</option>*@
-                <option value="@s.Name"></option>
+                        <option value="@s.Name"></option>
                     };
                 }
             </datalist>

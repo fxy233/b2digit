@@ -10,10 +10,10 @@
 
 @using (Html.BeginForm("Export", "Facture", FormMethod.Post))
 {
-
+    <input type="hidden" name="id" value="@Model.ID" />
     <input type="hidden" name="GridHtml" />
 
-    <input type="submit" id="btnSubmit" value="Export" class="btn btn-primary col-md-offset-11" style="margin-bottom:10px" />
+    <input type="submit" id="btnSubmit" value="Facturée" class="btn btn-primary col-md-offset-11" style="margin-bottom:10px" />
 }
 
 @{ ApplicationDbContext db = new ApplicationDbContext();
@@ -24,7 +24,9 @@
         </div>
     }
 }
-
+<div class="col-md-offset-11" style="margin-top:10px">
+    @Html.ActionLink("Retour", "Factures", null, new { @class = "btn btn-primary" })
+</div>
 
 
 <div class="form-group col-md-12">
@@ -85,6 +87,9 @@
     <div class="col-md-5">
         @ViewBag.date
     </div>
+    <div class="col-md-12">
+        @Html.EditorFor(model => model.Reference, new { htmlAttributes = new { @class = "form-control", @placeholder = "Reference", @readonly = "readonly" } })
+    </div>
 
 
     <div class="col-md-12" style="margin-top:40px;">
@@ -119,11 +124,12 @@
                                     float total = item.NombredUO * item.TJ;
                                     float mtva = total * item.TVA;
                                     float totalTTC = total + mtva;
+                                    float tva = item.TVA * 100;
                                     ViewBag.montantHT += total;
                                     ViewBag.montantTVA += mtva;
                                     ViewBag.montantTTC += totalTTC;
                                     <td style="background-color:lightsteelblue;border-color:white">@total</td>
-                                    <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => item.TVA, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @placeholder = "Taux TVA%", @type = "number", @min = 0, @step = 1, @max = 100 } })</td>
+                                    <td style="background-color:lightsteelblue;border-color:white">@tva</td>
                                     <td style="background-color:lightsteelblue;border-color:white">@mtva</td>
                                     <td style="background-color:lightsteelblue;border-color:white">@totalTTC</td>
 
@@ -142,11 +148,12 @@
                             float total = Model.Quantite * Model.HTunitaire;
                             float mtva = total * Model.TVA;
                             float totalTTC = total + mtva;
+                            float tva = Model.TVA * 100;
                             ViewBag.montantHT = total.ToString();
                             ViewBag.montantTVA = mtva.ToString();
                             ViewBag.montantTTC = totalTTC.ToString();
                             <td style="background-color:lightsteelblue;border-color:white">@total</td>
-                            <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.TVA, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @placeholder = "Taux TVA%", @type = "number", @min = 0, @step = 1, @max = 100 } })</td>
+                            <td style="background-color:lightsteelblue;border-color:white">@tva</td>
                             <td style="background-color:lightsteelblue;border-color:white">@mtva</td>
                             <td style="background-color:lightsteelblue;border-color:white">@totalTTC</td>
 
@@ -168,9 +175,12 @@
     <div class="col-md-offset-6 col-md-2" style="margin-top:40px;padding-top:7px">Date de règlement :</div>
     <div class="col-md-4" style="margin-top:40px">@Html.EditorFor(model => model.dateReglement, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })</div>
 
-
-    <div class="col-md-1" style="margin-top:50px;padding-top:7px">IBAN :</div>
-    <div class="col-md-11" style="margin-top:50px">
+    <div class="col-md-2" style="margin-top:50px;padding-top:7px">Référence Bancaires :</div>
+    <div class="col-md-10" style="margin-top:50px">
+        <input type="text" value="@Model.ReferenceBancaires" readonly="readonly" placeholder="Référence Bancaires" list="RB" class="form-control" id="RB" asp-for="RB" name="RB" required />
+    </div>
+    <div class="col-md-1" style="margin-top:10px;padding-top:7px">IBAN :</div>
+    <div class="col-md-11" style="margin-top:10px">
         <input type="text" value="@Model.IBAN" readonly="readonly" placeholder="IBAN" list="iban" class="form-control" id="IBAN" asp-for="IBAN" name="IBAN" required />
     </div>
     <div class="col-md-1" style="margin-top:10px;padding-top:7px">BIC :</div>
@@ -216,7 +226,7 @@
     <div style="width:150px; color:darkblue; border-color:black">@Model.FactInfo</div>
 
     <pre style="float:right; width:57%;">                                                                   Date: @ViewBag.date</pre>
-
+    <div style="width:150px; color:darkblue; border-color:black">@Model.Reference</div>
     <table style="margin-top:15px; border-color:black">
         <tr>
             <td style="background-color:gray; text-align:center; padding:5px"> Désignation </td>
@@ -292,7 +302,8 @@
 
 
     </pre>
-    <pre>IBAN : @Model.IBAN
+    <pre>Référence Bancaires : @Model.ReferenceBancaires
+    IBAN : @Model.IBAN
     BIC : @Model.BIC
     TVA intracommunautaire : @Model.TVAIntra
     @Model.Mention

@@ -42,6 +42,9 @@
                 @Html.DisplayNameFor(model => model.NomFacture)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Emettrice)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Client)
             </th>
             <th>
@@ -50,12 +53,8 @@
             <th>
                 @Html.DisplayNameFor(model => model.Mission)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Dernier)
-            </th>
+
+
             <th></th>
         </tr>
     </thead>
@@ -64,44 +63,58 @@
         {
 
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.NomFacture)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Client)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MontantHT)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Mission)
-            </td>
+
             @{
                 if (item.Status == "Annulee")
                 {
-                    <td style="color:red">Emise</td>
+                    <td style="color:red">
+                        @Html.DisplayFor(modelItem => item.NomFacture)
+                    </td>
+                    <td style="color:red">
+                        @Html.DisplayFor(modelItem => item.Emettrice)
+                    </td>
+                    <td style="color:red">
+                        @Html.DisplayFor(modelItem => item.Client)
+                    </td>
+                    <td style="color:red">
+                        @Html.DisplayFor(modelItem => item.MontantHT)
+                    </td>
+                    <td style="color:red">
+                        @Html.DisplayFor(modelItem => item.Mission)
+                    </td>
                 }
                 else
                 {
-                    <td>Emise</td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NomFacture)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Emettrice)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Client)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MontantHT)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Mission)
+                    </td>
                 }
             }
-            <td>
-                @Html.DisplayFor(modelItem => item.Dernier)
-            </td>
             @{
                 if (item.Status == "Annulee")
                 {
-                        <td>
-                            @Html.ActionLink("Payée", "Payee", new { id = item.ID }, new { @class = "btn" })
-                        </td>
+                    <td>
+                        @Html.ActionLink("Payée", "Payee", new { id = item.ID }, new { @class = "btn" })
+                    </td>
                 }
                 else
                 {
-        <td>
-            @Html.ActionLink("Faire Avoir", "Annulee", new { id = item.ID }, new { @class = "btn" })
-            @Html.ActionLink("Payée", "Payee", new { id = item.ID }, new { @class = "btn" })
-        </td>
+                    <td>
+                        @Html.ActionLink("Faire Avoir", "Annulee", new { id = item.ID }, new { @class = "btn" })
+                        @Html.ActionLink("Payée", "Payee", new { id = item.ID }, new { @class = "btn" })
+                    </td>
                 }
             }
 
@@ -118,6 +131,9 @@
                 @Html.DisplayNameFor(model => model.NomFacture)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Emettrice)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Client)
             </th>
             <th>
@@ -125,12 +141,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Mission)
-            </th>
-            <th id="statu">
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Dernier)
             </th>
             <th></th>
         </tr>

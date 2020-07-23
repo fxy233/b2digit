@@ -352,6 +352,7 @@ namespace Projet_pilate.Controllers
                 Commentaire = mission.Comment,
                 AdresseMission = mission.AdresseMission,
                 InfoFacturation = mission.InfoFacturation,
+                Reference = mission.Reference,
                 TJInterBC1 = mission.TJInterBC1,
                 TJInterBC2 = mission.TJInterBC2,
                 DelaiPaiement = mission.Delai,
@@ -418,6 +419,7 @@ namespace Projet_pilate.Controllers
                 mission.Comment = model.Commentaire;
                 mission.AdresseMission = model.AdresseMission;
                 mission.InfoFacturation = model.InfoFacturation;
+                mission.Reference = model.Reference;
                 string nom = Request.Form["PrincipalBCID"];
                 int pid = db.Subsidiaries.Single(s => s.Name == nom).SubsidiaryID;
                 mission.PrincipalBCID = pid;

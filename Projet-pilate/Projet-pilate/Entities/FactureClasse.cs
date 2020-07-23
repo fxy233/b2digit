@@ -40,6 +40,8 @@ namespace Projet_pilate.Entities
         public string DesignationFacturation { get; set; }
         public string type { get; set; }
         public int parentID { get; set; }
+        public string reference { get; set; }
+        public string referenceBancaire { get; set; }
 
     }
 

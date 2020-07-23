@@ -366,7 +366,7 @@ namespace Projet_pilate.Controllers
 
 
             //
-            var time = db.MonthActivations.Single().Periode;
+            var time = DateTime.Parse( db.MonthActivations.Single().Periode.ToString("yyyy-MM-01") ).AddMonths(1).AddDays(-1);
             foreach(KeyValuePair<string, double> pair in missionlist)
             {
                 var mission = db.Missions.Single(m => m.Name == pair.Key);
@@ -456,14 +456,17 @@ namespace Projet_pilate.Controllers
                     DesignationFacturation = mission.DesignationFacturation,
                     DateRegelement = reglement,
                     type = "Facture",
+                    reference = mission.Reference,
+                    referenceBancaire = BC.Name,
 
                 };
 
                 db.Factures.Add(facture);
-                Id++;
+                
 
                 if (mission.InterBC1ID != 0)
                 {
+                    Id++;
                     var c = db.Subsidiaries.Single(s => s.SubsidiaryID == mission.InterBC1ID);
                     Facture factureInt = new Facture()
                     {
@@ -479,7 +482,7 @@ namespace Projet_pilate.Controllers
                         NombredUO = nbUO,
                         TJ = mission.TJInterBC1,
                         TVA = db.Infos.ToList().Count == 0 ? 0.2f : (float)db.Infos.Single().TVA,
-                        MontantHT = montant,
+                        MontantHT = nbUO*mission.TJInterBC1,
                         FAE = true,
                         Emise = false,
                         payee = false,
@@ -489,9 +492,47 @@ namespace Projet_pilate.Controllers
                         DesignationFacturation = mission.DesignationFacturation,
                         DateRegelement = reglement,
                         type = "Facture",
+                        reference = mission.Reference,
+                        referenceBancaire = BC.Name,
                     };
                     db.Factures.Add(factureInt);
+                    
+                }
+
+                if (mission.InterBC2ID != 0)
+                {
                     Id++;
+                    var c = db.Subsidiaries.Single(s => s.SubsidiaryID == mission.InterBC2ID);
+                    var bc = db.Subsidiaries.Single(s => s.SubsidiaryID == mission.InterBC1ID);
+                    Facture factureInt = new Facture()
+                    {
+                        mission = mission.Name,
+                        FactureID = Id,
+                        NomFacture = "FAE" + Id,
+                        MoisDeFacturation = time,
+                        InfoFacturation = mission.InfoFacturation,
+                        PrincipalBC = c.Name,
+                        AdresseBC = c.Address,
+                        Client = bc.Name,
+                        AdresseFacturation = bc.Address,
+                        NombredUO = nbUO,
+                        TJ = mission.TJInterBC2,
+                        TVA = db.Infos.ToList().Count == 0 ? 0.2f : (float)db.Infos.Single().TVA,
+                        MontantHT = nbUO * mission.TJInterBC2,
+                        FAE = true,
+                        Emise = false,
+                        payee = false,
+                        annulee = false,
+                        DernierEnregistrer = DateTime.Now,
+                        Delai = mission.Delai,
+                        DesignationFacturation = mission.DesignationFacturation,
+                        DateRegelement = reglement,
+                        type = "Facture",
+                        reference = mission.Reference,
+                        referenceBancaire = BC.Name,
+                    };
+                    db.Factures.Add(factureInt);
+                    
                 }
 
                 db.SaveChanges();
