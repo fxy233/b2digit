@@ -302,12 +302,13 @@ namespace Projet_pilate.Controllers
             {
                 if (!mission.inexist)
                 {
+
                     DetailsMissionViewModel model = new DetailsMissionViewModel()
                     {
                         Id = mission.MissionID,
                         Name = mission.Name,
                         ContactEmail = mission.CompanyContact.Mail,
-                        ClientName = mission.CompanyContact.FirstName + " " + mission.CompanyContact.LastName,
+                        ClientName = mission.CompanyContact.Company.Name,
                         Start = mission.Start,
                         End = mission.End,
                         Fee = mission.Fee,

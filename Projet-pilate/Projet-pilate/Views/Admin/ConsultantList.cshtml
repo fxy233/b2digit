@@ -41,10 +41,15 @@
     });
 </script>
 
+<style>
+    .space{
+        margin-bottom:5px;
+    }
+</style>
 
 
 @Html.Raw(HttpUtility.HtmlDecode((Html.ValidationSummary(false, "", new { @class = "text-danger" })).ToHtmlString()))
-    <table class="display" id="mytable" style="width:50%">
+    <table class="display" id="mytable" style="width:80%">
 
         <thead>
             <tr>
@@ -84,7 +89,7 @@
                 <tr>
                     <td>
                         @Html.DisplayFor(modelItem => item.FirstName)
-                    </td>
+</td>
                     <td>
                         @Html.DisplayFor(modelItem => item.LastName)
                     </td>
@@ -110,8 +115,8 @@
                         @Html.DisplayFor(modelItem => item.Subsidiary)
                     </td>
                     <td>
-                        @Html.ActionLink("Modifier", "EditConsultant", new { id = item.ID }, new { @class = "btn btn-primary btn-large", })
-                        @Html.ActionLink("Supprimer", "DeleteConsultant", new { id = item.ID }, new { @class = "btn btn-primary btn-large", onclick = "return ConfirmationDialog()" })
+                            @Html.ActionLink("Modifier", "EditConsultant", new { id = item.ID }, new { @class = "btn-primary btn space", })
+                            @Html.ActionLink("Supprimer", "DeleteConsultant", new { id = item.ID }, new { @class = "btn-primary btn space", onclick = "return ConfirmationDialog()" })
                     </td>
                 </tr>
             }

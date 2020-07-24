@@ -142,6 +142,8 @@ namespace Projet_pilate.Controllers
 
             foreach (var contact in ContactsList)
             {
+                var manager = db.Managers.Single(man => man.ManagerID == contact.ManagerID);
+                string m = manager.FirstName + " " + manager.LastName;
                 DetailCompanyContactViewModel model = new DetailCompanyContactViewModel()
                 {
                     ID = contact.CompanyContactID,
@@ -151,6 +153,7 @@ namespace Projet_pilate.Controllers
                     LastName = contact.LastName,
                     Position = contact.Position,
                     Phone = contact.PhoneNumber,
+                    Manager = m,
                 };
 
                 models.Add(model);

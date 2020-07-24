@@ -15,10 +15,13 @@
     <li class="@Model.first"><a data-toggle="tab" href="#firstTab">FAE</a></li>
     <li class="@Model.seconde"><a data-toggle="tab" href="#secondTab">Factures facturées</a></li>
     <li class="@Model.third"><a data-toggle="tab" href="#thirdTab">Factures payée</a></li>
+    
 </ul>
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 <div class="tab-content">
     <div id="firstTab" class="tab-pane fade in @Model.first" style="margin-top:40px">@Html.Action("ListeFactures")</div>
     <div id="secondTab" class="tab-pane fade in @Model.seconde" style="margin-top:40px">@Html.Action("FacturesEmise")</div>
     <div id="thirdTab" class="tab-pane fade in @Model.third" style="margin-top:40px">@Html.Action("FacturesPayee")</div>
+    
+
 </div>

@@ -22,6 +22,9 @@
             Adresse de facturation
         </th>
         <th>
+            Mail de facturation
+        </th>
+        <th>
             Code postal
         </th>
         <th>
@@ -40,6 +43,9 @@
         @Html.DisplayFor(modelItem => item.Address)
     </td>
     <td>
+        @Html.DisplayFor(modelItem => item.Mail)
+    </td>
+    <td>
         @Html.DisplayFor(modelItem => item.PostalCode)
     </td>
     <td>
@@ -48,13 +54,13 @@
 
     @if (User.IsInRole("Super-Administrateur") || User.IsInRole("Administrateur"))
     {
-<td>
-    @Html.ActionLink("Modifier", "Edit", new { id = item.ID }, new { @class = "btn btn-primary btn-large" })
-    @*@Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-primary btn-large" })*@
-    @Html.ActionLink("Supprimer", "Delete", new { id = item.ID }, new { @class = "btn btn-primary btn-large", onclick = "return ConfirmationDialog()" })
-</td>
+        <td>
+            @Html.ActionLink("Modifier", "Edit", new { id = item.ID }, new { @class = "btn btn-primary btn-large" })
+            @*@Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-primary btn-large" })*@
+            @Html.ActionLink("Supprimer", "Delete", new { id = item.ID }, new { @class = "btn btn-primary btn-large", onclick = "return ConfirmationDialog()" })
+        </td>
     }
-        
+
 
 </tr>
     }

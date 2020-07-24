@@ -81,6 +81,7 @@ namespace Projet_pilate.Controllers
                     Address = company.Address,
                     PostalCode = company.PostalCode,
                     City = company.City,
+                    Mail = company.MailFacturation,
                 };
 
                 models.Add(model);

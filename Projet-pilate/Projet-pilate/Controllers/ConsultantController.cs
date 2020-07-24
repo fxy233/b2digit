@@ -367,8 +367,14 @@ namespace Projet_pilate.Controllers
 
             //
             var time = DateTime.Parse( db.MonthActivations.Single().Periode.ToString("yyyy-MM-01") ).AddMonths(1).AddDays(-1);
+            var missionNames = db.Missions.Select(m => m.Name).ToList();
             foreach(KeyValuePair<string, double> pair in missionlist)
             {
+                if (!missionNames.Contains(pair.Key))
+                {
+                    continue;
+                }
+
                 var mission = db.Missions.Single(m => m.Name == pair.Key);
                 var BC = db.Subsidiaries.Single(s => s.SubsidiaryID == mission.PrincipalBCID);
                 var contact = db.CompanyContacts.Single(c => c.CompanyContactID == mission.CompanyContactID);

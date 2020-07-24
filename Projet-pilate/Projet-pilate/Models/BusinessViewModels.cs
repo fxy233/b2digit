@@ -53,6 +53,9 @@ namespace Projet_pilate.Models
         [Display(Name = "Ville")]
         public string City { get; set; }
 
+        [Display(Name = "Mail de facturation")]
+        public string Mail { get; set; }
+
     }
 
     public class UpdateCompanyViewModel
@@ -145,7 +148,7 @@ namespace Projet_pilate.Models
         [Display(Name = "Email du contact")]
         public string ContactEmail { get; set; }
 
-        [Display(Name = "Nom du contact")]
+        [Display(Name = "Nom du client")]
         public string ClientName { get; set; }
 
         [Display(Name = "Consultant")]
@@ -237,8 +240,10 @@ namespace Projet_pilate.Models
 
         [Display(Name = "Téléphone")]
         public string Phone { get; set; }
-    }
 
+        [Display(Name = "Manager")]
+        public string Manager { get; set; }
+    }
 
     public class UpdateCompanyContactViewModel
     {
