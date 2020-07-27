@@ -25,6 +25,7 @@ using NPOI.SS.Formula.Functions;
 using System.Text;
 using System.Net.Mail;
 using System.Net;
+using DocumentFormat.OpenXml.Office.CustomUI;
 
 namespace Projet_pilate.Controllers
 {
@@ -46,15 +47,21 @@ namespace Projet_pilate.Controllers
                 {
                     continue;
                 }
+
+                var M = db.Missions.Single(m => m.Name == f.mission);
+                var C = db.Consultants.Single(c => c.ConsultantID == M.ConsultantID);
+
                 FactureSimpleViewModel model = new FactureSimpleViewModel()
                 {
                     ID = f.FactureID,
                     NomFacture = f.NomFacture,
                     Client = f.Client,
-                    MontantHT = f.MontantHT.ToString(),
+                    MontantHT = ((1 + f.TVA) * f.MontantHT).ToString(),
                     Mission = f.mission,
                     Dernier = f.DernierEnregistrer,
                     Emettrice = f.PrincipalBC,
+                    Consultant = C.FirstName + " " + C.LastName,
+                    MoisSaisie = f.MoisDeFacturation.ToString("MM-yyyy"),
                 };
 
                 string s = "FAE";
@@ -134,15 +141,19 @@ namespace Projet_pilate.Controllers
                 {
                     continue;
                 }
+                var M = db.Missions.Single(m => m.Name == f.mission);
+                var C = db.Consultants.Single(c => c.ConsultantID == M.ConsultantID);
                 FactureSimpleViewModel model = new FactureSimpleViewModel()
                 {
                     ID = f.FactureID,
                     NomFacture = f.NomFacture,
                     Client = f.Client,
-                    MontantHT = f.MontantHT.ToString(),
+                    MontantHT = ((1 + f.TVA) * f.MontantHT).ToString(),
                     Mission = f.mission,
                     Dernier = f.DernierEnregistrer,
                     Emettrice = f.PrincipalBC,
+                    Consultant = C.FirstName + " " + C.LastName,
+                    MoisSaisie = f.MoisDeFacturation.ToString("MM-yyyy"),
                 };
 
                 string s = "FAE";
@@ -723,32 +734,7 @@ namespace Projet_pilate.Controllers
         public FileResult Export(string GridHtml)
         {
 
-            /*Document document = new Document(PageSize.A4);
-            byte[] result;
-            List<string> cssFiles = new List<string>();
-            cssFiles.Add(@"/Content/bootstrap.css");
-            using (var ms = new MemoryStream())
-            {
-                PdfWriter writer = PdfWriter.GetInstance(document, ms);
-                writer.CloseStream = false;
-                document.Open();
-                HtmlPipelineContext htmlContext = new HtmlPipelineContext(null);
-                htmlContext.SetTagFactory(Tags.GetHtmlTagProcessorFactory());
 
-                ICSSResolver cssResolver = XMLWorkerHelper.GetInstance().GetDefaultCssResolver(false);
-                cssFiles.ForEach(i => cssResolver.AddCssFile(System.Web.HttpContext.Current.Server.MapPath(i), true));
-
-                IPipeline pipeline = new CssResolverPipeline(cssResolver, new HtmlPipeline(htmlContext, new PdfWriterPipeline(document, writer)));
-
-                XMLWorker worker = new XMLWorker(pipeline, true);
-                XMLParser xmlParser = new XMLParser(worker);
-                xmlParser.Parse(new MemoryStream(Encoding.UTF8.GetBytes(GridHtml)));
-
-
-                var mimeType = "application/pdf";
-                Response.AppendHeader("Content-Disposition", "inline; filename=" + "test.pdf");
-                return File(ms.GetBuffer(), mimeType);
-            }*/
             int id = Int32.Parse(Request.Form["id"]);
             ApplicationDbContext db = new ApplicationDbContext();
             var facture = db.Factures.Single(f => f.FactureID == id);
@@ -768,7 +754,7 @@ namespace Projet_pilate.Controllers
 
             if (interne)
             {
-                facture.NomFacture = "FA" + DateTime.Now.ToString("yyyy-MM") + "-" + sub.FactureID;
+                facture.NomFacture = "FA-" + DateTime.Now.ToString("yyyy-MM") + "-" + sub.FactureID;
             }
             else
             {
@@ -817,23 +803,51 @@ namespace Projet_pilate.Controllers
                 XMLWorkerHelper.GetInstance().ParseXHtml(writer, pdfDoc, sr);
                 pdfDoc.Close();
 
-                /*
-                MemoryStream ms = new MemoryStream(stream.ToArray());
-                System.Net.Mime.ContentType ct = new System.Net.Mime.ContentType(System.Net.Mime.MediaTypeNames.Application.Pdf);
-                System.Net.Mail.Attachment attach = new System.Net.Mail.Attachment(ms, ct);
-                attach.ContentDisposition.FileName = m[0] + ".pdf";
+                
+                
 
-                GMailer.GmailUsername = "fengxy233@gmail.com";
-                GMailer.GmailPassword = "fxyjiayou~";
+                string clientName = facture.Client;
+                string mail = "Rien";
+                foreach (var c in db.Companies.ToList())
+                {
+                    if (c.Name == clientName)
+                    {
+                        mail = c.MailFacturation;
+                        break;
+                    }
+                }
+                if (mail=="Rien")
+                {
+                    foreach (var s in db.Subsidiaries.ToList())
+                    {
+                        if (s.Name == clientName)
+                        {
+                            mail = s.email;
+                            break;
+                        }
+                    }
+                }
+                
+                if (mail != "Rien" && mail != null)
+                {
+                    MemoryStream ms = new MemoryStream(stream.ToArray());
+                    System.Net.Mime.ContentType ct = new System.Net.Mime.ContentType(System.Net.Mime.MediaTypeNames.Application.Pdf);
+                    System.Net.Mail.Attachment attach = new System.Net.Mail.Attachment(ms, ct);
+                    attach.ContentDisposition.FileName = facture.NomFacture + ".pdf";
 
-                GMailer mailer = new GMailer();
-                mailer.ToEmail = "fengxy233@gmail.com";
-                mailer.Subject = "Facture";
-                mailer.Body = "Bonjour,<br /> Nous vous envoyons votre facture.<br /> Cordialement";
-                mailer.IsHtml = true;
-                mailer.attch = attach;
-                mailer.Send();
-                */
+                    GMailer.GmailUsername = "fengxy233@gmail.com";
+                    GMailer.GmailPassword = "fxyjiayou~";
+                    GMailer mailer = new GMailer();
+                    mailer.ToEmail = mail;
+                    mailer.Subject = "Facture";
+                    mailer.Body = "Bonjour,<br /> Nous vous envoyons votre facture.<br /> Cordialement";
+                    mailer.IsHtml = true;
+                    mailer.attch = attach;
+                    mailer.Send();
+                }
+
+                
+                
 
                 //return File(stream.ToArray(), "application/pdf", m[0]+".pdf");
                 return File(stream.ToArray(), "application/pdf", facture.NomFacture + ".pdf");
@@ -1186,15 +1200,19 @@ namespace Projet_pilate.Controllers
                 {
                     continue;
                 }
+                var M = db.Missions.Single(m => m.Name == f.mission);
+                var C = db.Consultants.Single(c => c.ConsultantID == M.ConsultantID);
                 FactureSimpleViewModel model = new FactureSimpleViewModel()
                 {
                     ID = f.FactureID,
                     NomFacture = f.NomFacture,
                     Client = f.Client,
-                    MontantHT = f.MontantHT.ToString(),
+                    MontantHT = ((1+f.TVA)*f.MontantHT).ToString(),
                     Mission = f.mission,
                     Dernier = f.DernierEnregistrer,
                     Emettrice = f.PrincipalBC,
+                    Consultant = C.FirstName + " " + C.LastName,
+                    MoisSaisie = f.MoisDeFacturation.ToString("MM-yyyy"),
                 };
 
                 model.Status = "Payee";

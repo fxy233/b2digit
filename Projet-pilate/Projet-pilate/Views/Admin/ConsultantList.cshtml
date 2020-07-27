@@ -88,19 +88,19 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.FirstName)
-</td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.LastName)
+                        @Html.ActionLink(item.FirstName, "EditConsultant", new { id = item.ID })
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Email)
+                        @Html.ActionLink(item.LastName, "EditConsultant", new { id = item.ID })
+                    </td>
+                    <td>
+                        @Html.ActionLink(item.Email, "EditConsultant", new { id = item.ID })
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.EntryDate)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Status)
+                        @Html.ActionLink(item.Status, "EditConsultant", new { id = item.ID })
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.DailyCost)
@@ -109,13 +109,13 @@
                         @Html.DisplayFor(modelItem => item.MonthlyCost)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.ProfitCenter)
+                        @Html.ActionLink(item.ProfitCenter, "EditConsultant", new { id = item.ID })
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Subsidiary)
+                        @Html.ActionLink(item.Subsidiary, "EditConsultant", new { id = item.ID })
                     </td>
                     <td>
-                            @Html.ActionLink("Modifier", "EditConsultant", new { id = item.ID }, new { @class = "btn-primary btn space", })
+                            @*@Html.ActionLink("Modifier", "EditConsultant", new { id = item.ID }, new { @class = "btn-primary btn space", })*@
                             @Html.ActionLink("Supprimer", "DeleteConsultant", new { id = item.ID }, new { @class = "btn-primary btn space", onclick = "return ConfirmationDialog()" })
                     </td>
                 </tr>
