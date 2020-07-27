@@ -146,33 +146,38 @@ namespace Projet_pilate.Controllers
             profitCenter.Owner = Request.Form["Owner"].ToString();
             owner.ProfitCenters.Add(profitCenter);
 
-            try
+            
+            if (Request.Form["PartOwner"].ToString()!= "Aucun")
             {
-                string partOwnerFirstName = Request.Form["PartOwner"].ToString().Split(' ')[0];
-                string partOwnerLastName = "";
-                int x = 0;
-                foreach (var c in Request.Form["PartOwner"].ToString().Split(' '))
+                try
                 {
-                    if (x == 0)
+                    string partOwnerFirstName = Request.Form["PartOwner"].ToString().Split(' ')[0];
+                    string partOwnerLastName = "";
+                    int x = 0;
+                    foreach (var c in Request.Form["PartOwner"].ToString().Split(' '))
                     {
+                        if (x == 0)
+                        {
+                            x++;
+                            continue;
+                        }
+                        if (x == 1)
+                        {
+                            partOwnerLastName = c;
+                            x++;
+                            continue;
+                        }
+                        partOwnerLastName = partOwnerLastName + " " + c;
                         x++;
-                        continue;
-                    }
-                    if (x == 1)
-                    {
-                        partOwnerLastName = c;
-                        x++;
-                        continue;
-                    }
-                    partOwnerLastName = partOwnerLastName + " " + c;
-                    x++;
 
+                    }
+                    Manager partOwner = db.Managers.SingleOrDefault(m => m.FirstName == partOwnerFirstName && m.LastName == partOwnerLastName);
+                    profitCenter.PartOwner = Request.Form["PartOwner"].ToString();
+                    partOwner.ProfitCenters.Add(profitCenter);
                 }
-                Manager partOwner = db.Managers.SingleOrDefault(m => m.FirstName == partOwnerFirstName && m.LastName == partOwnerLastName);
-                profitCenter.PartOwner = Request.Form["PartOwner"].ToString();
-                partOwner.ProfitCenters.Add(profitCenter);
+                catch (Exception) { }
             }
-            catch (Exception){}
+            
 
             try
             {

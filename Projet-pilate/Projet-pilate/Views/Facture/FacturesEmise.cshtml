@@ -111,10 +111,11 @@
                 }
                 else
                 {
-                    <td>
-                        @Html.ActionLink("Faire Avoir", "Annulee", new { id = item.ID }, new { @class = "btn" })
-                        @Html.ActionLink("Payée", "Payee", new { id = item.ID }, new { @class = "btn" })
-                    </td>
+        <td>
+            @Html.ActionLink("Faire Avoir", "Annulee", new { id = item.ID }, new { @class = "btn" })
+            @Html.ActionLink("Payée", "Payee", new { id = item.ID }, new { @class = "btn" })
+            @Html.ActionLink("Aperçu", "apercu", new { id = item.ID }, new { @class = "btn" })
+        </td>
                 }
             }
 

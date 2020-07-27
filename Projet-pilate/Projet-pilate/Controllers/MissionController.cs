@@ -211,6 +211,7 @@ namespace Projet_pilate.Controllers
 
             model.MissionEncours = missionEncours;
 
+            /*
             if (model.MissionEncours.Count > 0)
             {
                 array = Request.Form["ContactId"].ToString().Split('(');
@@ -242,6 +243,7 @@ namespace Projet_pilate.Controllers
 
                 return View(model);
             }
+            */
 
             employees.Add(consultant);
 
@@ -259,7 +261,7 @@ namespace Projet_pilate.Controllers
                 Creator = sessionUser.FirstName + " " + sessionUser.LastName,
                 //exist = true,
                 AdresseMission = model.AdresseMission,
-                PrincipalBCID = db.Subsidiaries.ToList()[0].SubsidiaryID,
+                PrincipalBCID = 6,
                 DesignationFacturation = model.Name,
                 Delai = "30 jours",
             };
@@ -276,9 +278,9 @@ namespace Projet_pilate.Controllers
 
             var con = mission.ConsultantID==0?null:db.Consultants.Single(c => c.ConsultantID == mission.ConsultantID);
             int interid =con==null?0:db.Subsidiaries.Single(s => s.SubsidiaryID == con.SubsidiaryID).SubsidiaryID;
-            mission.InterBC1ID = interid;
+            mission.InterBC1ID = interid==6?0:interid;
 
-            mission.TJInterBC1 =interid==0? 0:0.93f * mission.Fee;
+            mission.TJInterBC1 = mission.InterBC1ID == 0? 0:0.93f * mission.Fee;
 
             db.Missions.Add(mission);
             db.SaveChanges();

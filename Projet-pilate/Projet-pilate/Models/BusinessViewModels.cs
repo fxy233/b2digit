@@ -31,7 +31,7 @@ namespace Projet_pilate.Models
         [Display(Name = "Ville")]
         public string City { get; set; }
 
-        [Required(ErrorMessage = "Le Mail de facturation doit être renseigné.")]
+        
         [Display(Name = "Mail de Facturation")]
         public string MailFacturation { get; set; }
 

@@ -11,7 +11,7 @@ namespace Projet_pilate.Models
     {
         public int ID { get; set; }
 
-        [Display(Name = "Nom du Facture")]
+        [Display(Name = "Nom de la facture")]
         public string NomFacture { get; set; }
 
         [Display(Name = "Client")]
@@ -29,8 +29,14 @@ namespace Projet_pilate.Models
         [Display(Name = "Dernier Enregistrement")]
         public DateTime Dernier { get; set; }
 
-        [Display(Name = "Nom Emettrice")]
+        [Display(Name = "Société émettrice")]
         public string Emettrice { get; set; }
+
+        [Display(Name = "Consultant")]
+        public string Consultant { get; set; }
+
+        [Display(Name = "Mois de saisie")]
+        public string MoisSaisie { get; set; }
 
     }
 

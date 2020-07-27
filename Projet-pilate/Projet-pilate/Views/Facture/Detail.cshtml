@@ -12,18 +12,15 @@
 {
     <input type="hidden" name="id" value="@Model.ID" />
     <input type="hidden" name="GridHtml" />
-
     <input type="submit" id="btnSubmit" value="Facturée" class="btn btn-primary col-md-offset-11" style="margin-bottom:10px" />
+
 }
 
-@{ ApplicationDbContext db = new ApplicationDbContext();
-    if (db.Factures.Single(f => f.FactureID == Model.ID).payee == false)
-    {
+
         <div class="col-md-offset-11">
             @Html.ActionLink("Modifier", "Modifier", new { id = Model.ID }, new { @class = "btn btn-primary" })
         </div>
-    }
-}
+
 <div class="col-md-offset-11" style="margin-top:10px">
     @Html.ActionLink("Retour", "Factures", null, new { @class = "btn btn-primary" })
 </div>
@@ -104,7 +101,7 @@
                 <th class="col-md-2" style="background-color:cornflowerblue; text-align:center;border-color:white">TOTAL T.T.C</th>
             </tr>
             @{
-
+                ApplicationDbContext db = new ApplicationDbContext();
                 int pid = Model.ID;
                 if (db.Factures.Single(f => f.FactureID == Model.ID).parentID < 0)
                 {

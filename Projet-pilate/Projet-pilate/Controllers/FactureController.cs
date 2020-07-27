@@ -96,6 +96,30 @@ namespace Projet_pilate.Controllers
             return View(model);
         }
 
+        [Route("Facture/Factures2", Name = "Factures2")]
+        public ActionResult Factures2()
+        {
+            OngletViewModel model = new OngletViewModel()
+            {
+                first = "",
+                seconde = "active",
+                third = "",
+            };
+            return View("Factures", model);
+        }
+
+        [Route("Facture/Factures3", Name = "Factures3")]
+        public ActionResult Factures3()
+        {
+            OngletViewModel model = new OngletViewModel()
+            {
+                first = "",
+                seconde = "",
+                third = "active",
+            };
+            return View("Factures", model);
+        }
+
         public ActionResult FacturesEmise()
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -294,9 +318,10 @@ namespace Projet_pilate.Controllers
                 }
             }
 
-            facture.Emise = true;
+            //facture.Emise = true;
 
-            string status = Request.Form["Status"];
+            //string status = Request.Form["Status"];
+            /*
             if (status == "Emise")
             {
                 facture.Emise=true;
@@ -312,6 +337,7 @@ namespace Projet_pilate.Controllers
                 facture.annulee = true;
                 if (facture.Emise == true)
                 {
+                    
                     int id = 0;
                     foreach (var item in db.Factures.ToList())
                     {
@@ -321,11 +347,12 @@ namespace Projet_pilate.Controllers
                         }
                     }
                     id++;
+                    
                     Facture factureAvoir = new Facture()
                     {
                         mission = Request.Form["Mission"],
                         FactureID = id,
-                        NomFacture = "FA-Avoir-"+ DateTime.Now.ToString("yyyy-MM") + "-" +sub.FactureID,
+                        //NomFacture = "FA-Avoir-"+ DateTime.Now.ToString("yyyy-MM") + "-" +sub.FactureID,
                         MoisDeFacturation = DateTime.Now,
                         InfoFacturation = model.FactInfo,
                         PrincipalBC = Request.Form["NomEmettrice"],
@@ -355,7 +382,7 @@ namespace Projet_pilate.Controllers
                     
                 }
             }
-
+            */
 
             string nomMission = Request.Form["Mission"];
             var missionItem = db.Missions.Single(m => m.Name == nomMission);
@@ -372,14 +399,15 @@ namespace Projet_pilate.Controllers
 
             
             
-
+            /*
             if (interne)
             {
-                facture.NomFacture = "FA-Int-"  + DateTime.Now.ToString("yyyy-MM") + "-" + sub.FactureID;
+                facture.NomFacture = "FA"  + DateTime.Now.ToString("yyyy-MM") + "-" + sub.FactureID;
             } else
             {
                 facture.NomFacture = "FA-"  + DateTime.Now.ToString("yyyy-MM") + "-" + sub.FactureID;
             }
+            */
             sub.FactureID++;
             db.SaveChanges();
 
@@ -617,6 +645,78 @@ namespace Projet_pilate.Controllers
             return View(model);
         }
 
+        [Route("Facture/apercu", Name = "apercu")]
+        public ActionResult apercu(int id)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var facture = db.Factures.Single(f => f.FactureID == id);
+            var sub = db.Subsidiaries.Single(s => s.Name == facture.PrincipalBC);
+            string clientInfo = "";
+            string contactClient = "";
+            var slist = db.Subsidiaries.ToList();
+            var clist = db.Companies.ToList();
+
+            ViewBag.NomEmettrice = sub.Name;
+            ViewBag.AdresseEmettrice = sub.Address;
+            ViewBag.VilleEmettrice = sub.PostaleCode + " " + sub.City;
+            ViewBag.MailEmettrice = sub.email;
+            ViewBag.TVA = facture.TVA * 100;
+
+            foreach (var s in slist)
+            {
+                if (s.Name == facture.Client)
+                {
+                    ViewBag.ClientAdresse = s.Address;
+                    ViewBag.ClientVille = s.PostaleCode + " " + s.City;
+                    clientInfo = s.Address + Environment.NewLine + s.PostaleCode + " " + s.City;
+                    contactClient = s.email;
+                }
+            }
+            foreach (var c in clist)
+            {
+                if (c.Name == facture.Client)
+                {
+                    ViewBag.ClientAdresse = c.Address;
+                    ViewBag.ClientVille = c.PostalCode + " " + c.City;
+                    clientInfo = c.Address + Environment.NewLine + c.PostalCode + " " + c.City;
+                    contactClient = c.MailFacturation;
+                }
+            }
+
+            string emetInfo = facture.PrincipalBC + Environment.NewLine + facture.AdresseBC;
+            emetInfo = emetInfo + Environment.NewLine + sub.PostaleCode + " " + sub.City + Environment.NewLine;
+
+            ViewBag.date = facture.MoisDeFacturation.ToString("dd MMMM yyyy", System.Globalization.CultureInfo.CurrentCulture);
+
+            var mission = db.Missions.Single(m => m.Name == facture.mission);
+            FacturePDFViewModel model = new FacturePDFViewModel()
+            {
+                ID = id,
+                EmetInfo = emetInfo,
+                Siren = sub.Siren,
+                ClientName = facture.Client,
+                ClientInfo = clientInfo,
+                ClientContact = contactClient,
+                FactureName = facture.NomFacture,
+                FactInfo = facture.InfoFacturation,
+                Quantite = facture.NombredUO,
+                HTunitaire = facture.TJ,
+                TVA = facture.TVA,
+                type = facture.type,
+                dateReglement = facture.DateRegelement.ToString("dd MMMM yyyy", System.Globalization.CultureInfo.CurrentCulture),
+                IBAN = sub.IBAN,
+                BIC = sub.BIC,
+                TVAIntra = sub.TVAIntra,
+                Mention = db.Infos.ToList().Count == 0 ? "" : db.Infos.Single().Mention,
+                Designation = mission.DesignationFacturation,
+                Reference = facture.reference,
+                ReferenceBancaires = facture.referenceBancaire,
+
+            };
+
+
+            return View(model);
+        }
 
         [HttpPost]
         [ValidateInput(false)]
@@ -668,7 +768,7 @@ namespace Projet_pilate.Controllers
 
             if (interne)
             {
-                facture.NomFacture = "FA-Int-" + DateTime.Now.ToString("yyyy-MM") + "-" + sub.FactureID;
+                facture.NomFacture = "FA" + DateTime.Now.ToString("yyyy-MM") + "-" + sub.FactureID;
             }
             else
             {
@@ -678,10 +778,11 @@ namespace Projet_pilate.Controllers
             sub.FactureID++;
             db.SaveChanges();
 
-
+            /*
             string pattern = @"<p><strong>";
             string[] mc = Regex.Split(GridHtml, pattern);
             string[] m = Regex.Split(mc[1], @"</strong></p>");
+            */
 
             using (MemoryStream stream = new System.IO.MemoryStream())
             {
@@ -734,12 +835,77 @@ namespace Projet_pilate.Controllers
                 mailer.Send();
                 */
 
-                return File(stream.ToArray(), "application/pdf", m[0]+".pdf");
+                //return File(stream.ToArray(), "application/pdf", m[0]+".pdf");
+                return File(stream.ToArray(), "application/pdf", facture.NomFacture + ".pdf");
             }
             
         }
 
 
+        [HttpPost]
+        [ValidateInput(false)]
+        public FileResult Export2(string GridHtml)
+        {
+
+            string pattern = @"<p><strong>";
+            string[] mc = Regex.Split(GridHtml, pattern);
+            string[] m = Regex.Split(mc[1], @"</strong></p>");
+            using (MemoryStream stream = new System.IO.MemoryStream())
+            {
+                StringReader sr = new StringReader(GridHtml);
+                Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 100f, 0f);
+                PdfWriter writer = PdfWriter.GetInstance(pdfDoc, stream);
+                pdfDoc.Open();
+                string arialuniTff = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "ARIALUNI.TTF");
+
+
+                string imageURL = Server.MapPath(".") + "/../Images/logo transparent.png";
+
+                iTextSharp.text.Image jpg = iTextSharp.text.Image.GetInstance(imageURL);
+
+                //Resize image depend upon your need
+
+                jpg.ScaleToFit(140f, 120f);
+
+                //Give space before image
+
+                jpg.SpacingBefore = 14f;
+
+                //Give some space after the image
+
+                jpg.SpacingAfter = 1f;
+
+                jpg.Alignment = Element.ALIGN_LEFT;
+
+
+                pdfDoc.Add(jpg);
+
+                XMLWorkerHelper.GetInstance().ParseXHtml(writer, pdfDoc, sr);
+                pdfDoc.Close();
+
+                /*
+                MemoryStream ms = new MemoryStream(stream.ToArray());
+                System.Net.Mime.ContentType ct = new System.Net.Mime.ContentType(System.Net.Mime.MediaTypeNames.Application.Pdf);
+                System.Net.Mail.Attachment attach = new System.Net.Mail.Attachment(ms, ct);
+                attach.ContentDisposition.FileName = m[0] + ".pdf";
+
+                GMailer.GmailUsername = "fengxy233@gmail.com";
+                GMailer.GmailPassword = "fxyjiayou~";
+
+                GMailer mailer = new GMailer();
+                mailer.ToEmail = "fengxy233@gmail.com";
+                mailer.Subject = "Facture";
+                mailer.Body = "Bonjour,<br /> Nous vous envoyons votre facture.<br /> Cordialement";
+                mailer.IsHtml = true;
+                mailer.attch = attach;
+                mailer.Send();
+                */
+
+               
+                return File(stream.ToArray(), "application/pdf", m[0] + ".pdf");
+            }
+
+        }
 
         public ActionResult Annulee(int id)
         {
@@ -762,7 +928,7 @@ namespace Projet_pilate.Controllers
             {
                 mission = facture.mission,
                 FactureID = Id,
-                NomFacture = "FA"+Id,
+                NomFacture = "FAE-Avoir-"+Id,
                 MoisDeFacturation = DateTime.Now,
                 InfoFacturation = facture.InfoFacturation,
                 PrincipalBC = facture.PrincipalBC,
@@ -900,7 +1066,7 @@ namespace Projet_pilate.Controllers
                 {
                     mission = facturefusionner.mission,
                     FactureID = id,
-                    NomFacture = "FAE" +"-" + id,
+                    NomFacture = "FAE-Fusion-" + id,
                     MoisDeFacturation = db.MonthActivations.Single().Periode,
                     InfoFacturation = facturefusionner.InfoFacturation,
                     PrincipalBC = facturefusionner.PrincipalBC,
@@ -951,7 +1117,7 @@ namespace Projet_pilate.Controllers
                 {
                     mission = facturefusionner.mission,
                     FactureID = id,
-                    NomFacture = "FAE" + "-" + id,
+                    NomFacture = "FAE-Combi"+ id,
                     MoisDeFacturation = db.MonthActivations.Single().Periode,
                     InfoFacturation = facturefusionner.InfoFacturation,
                     PrincipalBC = facturefusionner.PrincipalBC,
@@ -1040,6 +1206,8 @@ namespace Projet_pilate.Controllers
 
             return View(models);
         }
+
+
 
     }
 

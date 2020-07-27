@@ -24,8 +24,8 @@
         </div>
 
         <div class="col-md-1" style="padding-top:7px;padding-left:30px;padding-left:0px; margin-left:0px">Statu : </div>
-        <div class="col-md-5" style=" margin-bottom:40px;">
-            <input type="text" value="@Model.status" placeholder="Status" list="status" class="form-control" id="Status" asp-for="Status" name="Status" required />
+        <div class="col-md-5" style=" margin-bottom:40px;"> 
+            <input type="text" value="@Model.status" placeholder="Status" readonly="readonly" list="status" class="form-control" id="Status" asp-for="Status" name="Status" required />
             <datalist id="status">
                 <option value="FAE"></option>
                 <option value="Emise"></option>

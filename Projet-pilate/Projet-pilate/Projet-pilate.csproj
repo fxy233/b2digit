@@ -659,6 +659,7 @@
     <Content Include="Views\Facture\Factures.cshtml" />
     <Content Include="Views\Facture\FacturesEmise.cshtml" />
     <Content Include="Views\Facture\FacturesPayee.cshtml" />
+    <Content Include="Views\Facture\apercu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
