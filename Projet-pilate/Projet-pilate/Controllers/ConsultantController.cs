@@ -16,6 +16,9 @@ using Microsoft.Ajax.Utilities;
 using System.Data;
 using DocumentFormat.OpenXml.Office.CustomUI;
 using iTextSharp.text.pdf.qrcode;
+using System.Web.Hosting;
+using DocumentFormat.OpenXml.Spreadsheet;
+using NPOI.SS.Formula.Functions;
 
 namespace Projet_pilate.Controllers
 {
@@ -1134,7 +1137,7 @@ namespace Projet_pilate.Controllers
             model.manager = new Dictionary<string, string>();
 
             var consultant = db.Consultants.Single(c => c.ConsultantID == cra.ConsultantID);
-            model.consultant = consultant.FirstName + " " + consultant.LastName;
+            model.consultant = consultant.FirstName[0] + "." + consultant.LastName;
             var activities = cra.Activities.ToList();
 
             foreach (var activity in activities)
@@ -1151,7 +1154,20 @@ namespace Projet_pilate.Controllers
 
                     if (!model.manager.ContainsKey(missionM.Name))
                     {
-                        model.manager.Add(missionM.Name, missionM.Creator);
+                        string[] words = missionM.Creator.Split(' ');
+                        string name = "";
+                        foreach(string item in words)
+                        {
+                            if (name == "")
+                            {
+                                name = item[0] + ".";
+                            }
+                            else
+                            {
+                                name += item + " ";
+                            }
+                        }
+                        model.manager.Add(missionM.Name, name);
                     }
 
                     var dictAPC = model.activityParClient;
@@ -1229,29 +1245,35 @@ namespace Projet_pilate.Controllers
         [HttpPost]
         public FileResult ExportT(int id)
         {
+            ApplicationDbContext db = new ApplicationDbContext();
             using (XLWorkbook wb = new XLWorkbook())
             {
             ActivityExportModel exp = this.GetData(id); ;
-            
 
+                List<int> grays = new List<int>();
             string[] Day = new string[] { "D", "L", "M", "M", "J", "V", "S" };
             int week = Convert.ToInt32(exp.date.DayOfWeek.ToString("d"));
             int jour = Int32.Parse(exp.date.Day.ToString());
             int index = (week +7-(jour - 1) % 7)%7;
             int days = DateTime.DaysInMonth(exp.date.Year, exp.date.Month);
 
-                int x = 1;
+            int x = 1;
 
             foreach (var item in exp.activityParClient)
             {
-                DataTable dt = new DataTable("Grid");
-                dt.Columns.AddRange(new DataColumn[4] { new DataColumn("Periode"), new DataColumn("Client"), new DataColumn("Société émettrice"), new DataColumn("Destinataire") });
-                dt.Rows.Add(exp.periode, exp.consultant, "B2DIGIT", item.Key);
+                DataTable dt = new DataTable(exp.consultant +"-"+ exp.periode+ "-CRA");
+                dt.Columns.AddRange(new DataColumn[2] { new DataColumn("Periode"), new DataColumn(exp.periode) });
+                    dt.Rows.Add("Periode", exp.periode);
+                    dt.Rows.Add("Client", item.Key);
+                    dt.Rows.Add("Société émettrice", "B2DIGIT");
+                    dt.Rows.Add("Destinataire", item.Key);
+                
 
-                string[] weekdays = new string[days+1];
+
+                    string[] weekdays = new string[days+1];
                 //DataColumn[] daterow = new DataColumn[days];
                 DataColumn[] daterow2 = new DataColumn[days+1];
-                daterow2[0] = new DataColumn("Activité");
+                daterow2[0] = new DataColumn(" ");
                 weekdays[0] = "";
                 int nb = item.Value.Count;
                 for (int i=1;i<=days;++i)
@@ -1260,10 +1282,11 @@ namespace Projet_pilate.Controllers
                     weekdays[i]=Day[(index+i-1)%7];
                     
                 }
-                DataTable dt2 = new DataTable("Grid");
-                dt2.Columns.AddRange(daterow2);
+                /*
+                DataTable dt5 = new DataTable(exp.consultant+"-CRA");
+                dt5.Columns.AddRange(daterow2);
                 //dt2.Rows.Add(daterow);
-                dt2.Rows.Add(weekdays);
+                //dt5.Rows.Add(weekdays);
                 foreach(var obj in item.Value)
                 {
                     string[] output = new string[days + 1];
@@ -1272,12 +1295,199 @@ namespace Projet_pilate.Controllers
                     {
                         output[t] = obj.Value[t - 1].ToString();
                     }
-                    dt2.Rows.Add(output);
+                    dt5.Rows.Add(output);
                 }
+                */
+                    DataColumn[] daterow3 = new DataColumn[days + 1];
+                    daterow3[0] = new DataColumn("Activité");
+                    weekdays[0] = "Activité";
+                    nb = item.Value.Count;
+                    for (int i = 1; i <= days; ++i)
+                    {
+                        daterow3[i] = new DataColumn(i.ToString());
+                        weekdays[i] = Day[(index + i - 1) % 7];
+                        if (weekdays[i]=="D"|| weekdays[i] == "S")
+                        {
+                            grays.Add(i);
+                        }
 
-                    wb.Worksheets.Add(x);
-                    wb.Worksheet(x).Cell(1,1).InsertTable(dt);
-                    wb.Worksheet(x).Cell(5, 1).InsertTable(dt2);
+                    }
+
+                    double total = 0;
+                    string mission = "";
+
+                    DataTable dt4 = new DataTable(exp.consultant + "-" + exp.periode + "-CRA");
+                    dt4.Columns.AddRange(daterow3);
+                    dt4.Rows.Add(weekdays);
+                    dt4.Rows.Add(daterow3);
+                    foreach (var obj in item.Value)
+                    {
+                        string[] output = new string[days + 1];
+                        output[0] = obj.Key;
+                        mission = obj.Key;
+                        for (int t = 1; t <= days; ++t)
+                        {
+                            output[t] = obj.Value[t - 1].ToString();
+                            total += obj.Value[t - 1];
+                        }
+                        dt4.Rows.Add(output);
+                    }
+
+                    DataTable dt5 = new DataTable(exp.consultant + "-" + exp.periode + "-CRA");
+                    dt5.Columns.AddRange(new DataColumn[2] { new DataColumn("total"), new DataColumn("quantite") });
+                    dt5.Rows.Add("TOTAL",total);
+
+
+                    //var imagepath = @"C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\Images\logo transparent.png";
+                    var imagepath = HostingEnvironment.MapPath("~/Images/logo transparent.png");
+
+                    var ws = wb.Worksheets.Add(x);
+
+                    var image = ws.AddPicture(imagepath).MoveTo(ws.Cell("A2")).Scale(.2);
+
+                    //ws.AddPicture();
+                    ws.Columns("B").Width = 30;
+                    ws.Columns("C").Width = 30;
+
+                    ws.Cell(8,2).InsertTable(dt);
+
+                    ws.Rows(8, 8).Hide();
+                    ws.Rows(14,14).Hide();
+                    ws.Cell(14, 3).InsertTable(dt4);
+
+
+
+                    double an = DateTime.Now.Year;
+                    var G = an % 19;
+                    var C = Math.Floor(an / 100);
+                    var H = (C - Math.Floor(C / 4) - Math.Floor((8 * C + 13) / 25) + 19 * G + 15) % 30;
+                    var I = H - Math.Floor(H / 28) * (1 - Math.Floor(H / 28) * Math.Floor(29 / (H + 1)) * Math.Floor((21 - G) / 11));
+                    var J = (an * 1 + Math.Floor(an / 4) + I + 2 - C + Math.Floor(C / 4)) % 7;
+                    var L = I - J;
+
+                    var MoisPaques = 3 + Math.Floor((L + 40) / 44);
+                    var JourPaques = L + 28 - 31 * Math.Floor(MoisPaques / 4);
+
+                    /*var Ascension = new Date(an, MoisPaques - 1, JourPaques + 39).toLocaleDateString(undefined, options);
+                    var Pentecote = new Date(an, MoisPaques - 1, JourPaques + 49).toLocaleDateString(undefined, options);
+                    var LundiPentecote = new Date(an, MoisPaques - 1, JourPaques + 50).toLocaleDateString(undefined, options);
+*/
+                    int month = db.MonthActivations.Single().Periode.Month;
+                    if (month==1)
+                    {
+                        grays.Add(1);
+                    }
+                    if (month == MoisPaques)
+                    {
+                        grays.Add((int)JourPaques);
+                        grays.Add((int)JourPaques+1);
+                    }
+                    if (month == 5)
+                    {
+                        grays.Add(1);
+                        grays.Add(8);
+                    }
+                    if (month == 7)
+                    {
+                        grays.Add(14);
+                    }
+                    if (month == 8)
+                    {
+                        grays.Add(15);
+                    }
+                    if (month == 11)
+                    {
+                        grays.Add(1);
+                        grays.Add(11);
+                    }
+                    if (month == 12)
+                    {
+                        grays.Add(25);
+                    }
+
+                    for(int i=1; i<50; i++)
+                    {
+                        for (int j=1; j<50; ++j)
+                        {
+                            ws.Cell(i, j).Style.Fill.BackgroundColor = XLColor.White;
+                        }
+                    }
+
+                    foreach (int i in grays)
+                    {
+                        ws.Cell(15, 3+i).Style.Fill.BackgroundColor = XLColor.LightGray;
+                        ws.Cell(16, 3 + i).Style.Fill.BackgroundColor = XLColor.LightGray;
+                        ws.Cell(17, 3 + i).Style.Fill.BackgroundColor = XLColor.LightGray;
+                    }
+
+                    ws.Cell(19, 3).InsertTable(dt5);
+                    ws.Rows(19, 19).Hide();
+
+                    DataTable dt6 = new DataTable(exp.consultant + "-" + exp.periode + "-CRA");
+                    dt6.Columns.AddRange(new DataColumn[1] { new DataColumn("consultant") });
+                    dt6.Rows.Add("Signature du consultant");
+                    dt6.Rows.Add(exp.consultant);
+
+                    DataTable dt7 = new DataTable(exp.consultant + "-" + exp.periode + "-CRA");
+                    dt7.Columns.AddRange(new DataColumn[1] { new DataColumn("manager")});
+                    dt7.Rows.Add("Signature du manager");
+                    dt7.Rows.Add(exp.manager[mission]);
+
+                    DataTable dt8 = new DataTable(exp.consultant + "-" + exp.periode + "-CRA");
+                    dt8.Columns.AddRange(new DataColumn[1] { new DataColumn("client") });
+                    dt8.Rows.Add("Signature du client");
+
+                    var client = db.CompanyContacts.Single(c=>c.CompanyName== item.Key);
+                    dt8.Rows.Add(client.FirstName[0]+"."+client.LastName);
+
+                    ws.Cell(24, 2).InsertTable(dt6);
+                    ws.Cell(24, 3).InsertTable(dt7);
+                    ws.Cell(32, 2).InsertTable(dt8);
+                    ws.Rows(24, 24).Hide();
+                    ws.Rows(32, 32).Hide();
+
+                    ws.Range("B9:C12").Style.Border.OutsideBorderColor = XLColor.Black; 
+                    ws.Range("B9:C12").Style.Border.InsideBorderColor = XLColor.Black;
+                    ws.Range("B9:C12").Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
+                    ws.Range("B9:C12").Style.Border.InsideBorder = XLBorderStyleValues.Medium;
+                    if (days==31)
+                    {
+                        ws.Range("C15:AH17").Style.Border.OutsideBorderColor = XLColor.Black;
+                        ws.Range("C15:AH17").Style.Border.InsideBorderColor = XLColor.Black;
+                        ws.Range("C15:AH17").Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
+                        ws.Range("C15:AH17").Style.Border.InsideBorder = XLBorderStyleValues.Medium;
+                    }
+                    if (days == 30)
+                    {
+                        ws.Range("C15:AG17").Style.Border.OutsideBorderColor = XLColor.Black;
+                        ws.Range("C15:AG17").Style.Border.InsideBorderColor = XLColor.Black;
+                        ws.Range("C15:AG17").Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
+                        ws.Range("C15:AG17").Style.Border.InsideBorder = XLBorderStyleValues.Medium;
+                    }
+                    if (days == 29)
+                    {
+                        ws.Range("C15:AF17").Style.Border.OutsideBorderColor = XLColor.Black;
+                        ws.Range("C15:AF17").Style.Border.InsideBorderColor = XLColor.Black;
+                        ws.Range("C15:AF17").Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
+                        ws.Range("C15:AF17").Style.Border.InsideBorder = XLBorderStyleValues.Medium;
+                    }
+                    if (days == 28)
+                    {
+                        ws.Range("C15:AE17").Style.Border.OutsideBorderColor = XLColor.Black;
+                        ws.Range("C15:AE17").Style.Border.InsideBorderColor = XLColor.Black;
+                        ws.Range("C15:AE17").Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
+                        ws.Range("C15:AE17").Style.Border.InsideBorder = XLBorderStyleValues.Medium;
+                    }
+                    ws.Range("C20:D20").Style.Border.OutsideBorderColor = XLColor.Black;
+                    ws.Range("C20:D20").Style.Border.InsideBorderColor = XLColor.Black;
+                    ws.Range("C20:D20").Style.Border.OutsideBorder = XLBorderStyleValues.Medium;
+                    ws.Range("C20:D20").Style.Border.InsideBorder = XLBorderStyleValues.Medium;
+
+                    ws.Range("B25:C34").Style.Border.OutsideBorderColor = XLColor.White;
+                    ws.Range("B25:C34").Style.Border.InsideBorderColor = XLColor.White;
+                    ws.Range("B25:C34").Style.Border.OutsideBorder = XLBorderStyleValues.None;
+                    ws.Range("B25:C34").Style.Border.InsideBorder = XLBorderStyleValues.None;
+
                     x++;
                 }
 
@@ -1288,7 +1498,7 @@ namespace Projet_pilate.Controllers
                 using (MemoryStream stream = new MemoryStream())
                 {
                     wb.SaveAs(stream);
-                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Grid.xlsx");
+                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", exp.consultant + "-" + exp.periode + "-CRA" + ".xlsx");
                 }
             }
         }

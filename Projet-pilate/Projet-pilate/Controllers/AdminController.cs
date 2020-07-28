@@ -362,6 +362,30 @@ namespace Projet_pilate.Controllers
 
             foreach (var consultant in consultants)
             {
+                double cost = 0;
+                if (consultant.Status=="Consultant"||consultant.Status=="Salarié")
+                {
+                    if (consultant.DailyCost == 0)
+                    {
+                        cost = consultant.MonthlyCost * 1.5 + consultant.MealCost + consultant.ExceptionalCost + consultant.TravelPackage;
+                        cost = cost * 12 / 218;
+                    } else
+                    {
+                        cost = consultant.DailyCost * 1.5 + consultant.MealCost + consultant.ExceptionalCost + consultant.TravelPackage;
+                    }
+                }
+                if (consultant.Status == "Sous-Traitant")
+                {
+                    if (consultant.DailyCost == 0)
+                    {
+                        cost = consultant.MonthlyCost + consultant.MealCost + consultant.ExceptionalCost + consultant.TravelPackage;
+                        cost = cost * 12 / 218;
+                    }
+                    else
+                    {
+                        cost = consultant.DailyCost + consultant.MealCost + consultant.ExceptionalCost + consultant.TravelPackage;
+                    }
+                }
                 DetailConsultantViewModel model = new DetailConsultantViewModel()
                 {
                     ID = consultant.ConsultantID,
@@ -370,8 +394,8 @@ namespace Projet_pilate.Controllers
                     Email = consultant.Email,
                     EntryDate = consultant.EntryDate,
                     Status = consultant.Status,
-                    DailyCost = consultant.DailyCost,
-                    MonthlyCost = consultant.MonthlyCost,
+                    DailyCost = cost,
+                    //MonthlyCost = consultant.MonthlyCost,
                     ProfitCenter = db.profitCenters.Single(p => p.ProfitCenterID == consultant.ProfitCenterID).Name,
                     Subsidiary = db.Subsidiaries.Single(s=>s.SubsidiaryID==consultant.SubsidiaryID).Name,
                 };

@@ -127,7 +127,7 @@ namespace Projet_pilate.Models
         [Display(Name = "Périodicité")]
         public List<string> Periodicity { get; set; }
 
-        [Display(Name = "Adresse de Mission")]
+        [Display(Name = "Adresse de mission")]
         public string AdresseMission { get; set; }
 
 

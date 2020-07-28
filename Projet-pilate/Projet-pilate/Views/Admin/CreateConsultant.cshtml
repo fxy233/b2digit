@@ -78,7 +78,7 @@
             <label class="col-md-2 control-label" for="Status">Statut</label>
             <div class="col-md-10">
                 <select class="form-control" id="Status" name="Status" required>
-                    <option selected>Consultant</option>
+                    <option selected>Salarié</option>
                     <option>Sous-Traitant</option>
                 </select>
             </div>
@@ -86,39 +86,39 @@
 
 
         <div class="form-group">
-            <label class="col-md-2 control-label" for="Status">Type de coût</label>
+            <label class="col-md-2 control-label" for="Status">Périodicité</label>
             <div class="col-md-10">
 
-                @if (@ViewData["CostType"] == "MonthlyCost" || @ViewData["CostType"] == null)
-                {
-                    <span class="radio">
-                        <label>
-                            <input type="radio" name="CostType" id="MonthlyCost" value="MonthlyCost" checked>
-                            Salaire mensuel
-                        </label>
-                    </span>
-                    <span class="radio">
-                        <label>
-                            <input type="radio" name="CostType" id="DailyCost" value="DailyCost">
-                            Coût journalier
-                        </label>
-                    </span>
-                }
-                else
-                {
-                    <span class="radio">
-                        <label>
-                            <input type="radio" name="CostType" id="MonthlyCost" value="MonthlyCost">
-                            Salaire mensuel
-                        </label>
-                    </span>
-                    <span class="radio">
-                        <label>
-                            <input type="radio" name="CostType" id="DailyCost" value="DailyCost" checked>
-                            Coût journalier
-                        </label>
-                    </span>
-                }
+                @*                @if (@ViewData["CostType"] == "MonthlyCost" || @ViewData["CostType"] == null)
+        {
+            <span class="radio">
+                <label>
+                    <input type="radio" name="CostType" id="MonthlyCost" value="MonthlyCost" checked>
+                    Mensuelle
+                </label>
+            </span>
+            <span class="radio">
+                <label>
+                    <input type="radio" name="CostType" id="DailyCost" value="DailyCost">
+                    Journalière
+                </label>
+            </span>
+        }
+        else
+        {*@
+                <span class="radio">
+                    <label>
+                        <input type="radio" name="CostType" id="MonthlyCost" value="MonthlyCost">
+                        Mensuelle
+                    </label>
+                </span>
+                <span class="radio">
+                    <label>
+                        <input type="radio" name="CostType" id="DailyCost" value="DailyCost">
+                        Journalière
+                    </label>
+                </span>
+        @*}*@
 
             </div>
         </div>
@@ -173,6 +173,12 @@
     var Status = document.getElementById('Status');
     var dailyCost = document.getElementById('DailyCost');
     var monthlyCost = document.getElementById('MonthlyCost');
+
+@*    $(document).ready(function () {
+        $('input[type="radio"]').on('change', function () {
+            $("input[name='CostType']").not(this).prop("checked", false);
+        });
+    });*@
 
     /*
     Status.addEventListener('change', function () {

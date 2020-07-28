@@ -70,8 +70,8 @@
         <div class="col-md-10">
             @Html.LabelFor(model => model.AdresseMission, htmlAttributes: new { @class = "control-label" })
         </div>
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.AdresseMission, new { htmlAttributes = new { @class = "form-control" } })
+        <div class="col-md-10 editor-field">
+            @Html.TextAreaFor(model => model.AdresseMission, new { htmlAttributes = new { @class = "form-control" } })
             @Html.ValidationMessageFor(model => model.AdresseMission, "", new { @class = "text-danger" })
         </div>
     </div>

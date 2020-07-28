@@ -835,8 +835,8 @@ namespace Projet_pilate.Controllers
                     System.Net.Mail.Attachment attach = new System.Net.Mail.Attachment(ms, ct);
                     attach.ContentDisposition.FileName = facture.NomFacture + ".pdf";
 
-                    GMailer.GmailUsername = "fengxy233@gmail.com";
-                    GMailer.GmailPassword = "fxyjiayou~";
+                    GMailer.GmailUsername = "test.envoi@b2digit.com";
+                    GMailer.GmailPassword = "Password01";
                     GMailer mailer = new GMailer();
                     mailer.ToEmail = mail;
                     mailer.Subject = "Facture";

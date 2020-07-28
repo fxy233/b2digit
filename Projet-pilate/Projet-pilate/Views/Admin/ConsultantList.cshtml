@@ -20,7 +20,7 @@
             initComplete: function () {
                 this.api().columns().every(function () {
                     var column = this;
-                    var select = $('<select><option value=""></option></select>')
+                    @*var select = $('<select><option value=""></option></select>')
                         .appendTo($(column.footer()).empty())
                         .on('change', function () {
                             var val = $.fn.dataTable.util.escapeRegex(
@@ -30,7 +30,7 @@
                             column
                                 .search(val ? '^' + val + '$' : '', true, false)
                                 .draw();
-                        });
+                        });*@
 
                     column.data().unique().sort().each(function (d, j) {
                         select.append('<option value="' + d + '">' + d + '</option>')
@@ -45,6 +45,7 @@
     .space{
         margin-bottom:5px;
     }
+
 </style>
 
 
@@ -71,15 +72,16 @@
                 <th>
                     @Html.DisplayNameFor(model => model.DailyCost)
                 </th>
-                <th>
+@*                <th>
                     @Html.DisplayNameFor(model => model.MonthlyCost)
-                </th>
+                </th>*@
                 <th>
                     @Html.DisplayNameFor(model => model.ProfitCenter)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Subsidiary)
                 </th>
+                <th></th>
                 <th></th>
             </tr>
         </thead>
@@ -88,43 +90,46 @@
             {
                 <tr>
                     <td>
-                        @Html.ActionLink(item.FirstName, "EditConsultant", new { id = item.ID })
+                        @Html.DisplayFor(modelItem => item.FirstName)
                     </td>
                     <td>
-                        @Html.ActionLink(item.LastName, "EditConsultant", new { id = item.ID })
+                        @Html.DisplayFor(modelItem => item.LastName)
                     </td>
                     <td>
-                        @Html.ActionLink(item.Email, "EditConsultant", new { id = item.ID })
+                        @Html.DisplayFor(modelItem => item.Email)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.EntryDate)
                     </td>
                     <td>
-                        @Html.ActionLink(item.Status, "EditConsultant", new { id = item.ID })
+                        @Html.DisplayFor(modelItem => item.Status)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.DailyCost)
                     </td>
-                    <td>
+@*                    <td>
                         @Html.DisplayFor(modelItem => item.MonthlyCost)
+                    </td>*@
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProfitCenter)
                     </td>
                     <td>
-                        @Html.ActionLink(item.ProfitCenter, "EditConsultant", new { id = item.ID })
+                        @Html.DisplayFor(modelItem => item.Subsidiary)
                     </td>
                     <td>
-                        @Html.ActionLink(item.Subsidiary, "EditConsultant", new { id = item.ID })
+                            @Html.ActionLink("Modifier", "EditConsultant", new { id = item.ID }, new { @class = "btn-primary btn space", })
+                           
                     </td>
                     <td>
-                            @*@Html.ActionLink("Modifier", "EditConsultant", new { id = item.ID }, new { @class = "btn-primary btn space", })*@
-                            @Html.ActionLink("Supprimer", "DeleteConsultant", new { id = item.ID }, new { @class = "btn-primary btn space", onclick = "return ConfirmationDialog()" })
+                        @Html.ActionLink("Supprimer", "DeleteConsultant", new { id = item.ID }, new { @class = "btn-primary btn space", onclick = "return ConfirmationDialog()" })
                     </td>
                 </tr>
             }
         </tbody>
 
-        <tfoot>
+        @*<tfoot>
             <tr>
-                <th style="border-color:white">
+                <th style="border-color:white; width:20%">
                     @Html.DisplayNameFor(model => model.FirstName)
                 </th>
                 <th style="border-color:white">
@@ -153,7 +158,7 @@
                 </th>
 
             </tr>
-        </tfoot>
+        </tfoot>*@
 
     </table>
 
