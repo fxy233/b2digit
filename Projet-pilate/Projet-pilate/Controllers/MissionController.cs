@@ -261,7 +261,7 @@ namespace Projet_pilate.Controllers
                 Creator = sessionUser.FirstName + " " + sessionUser.LastName,
                 //exist = true,
                 AdresseMission = model.AdresseMission,
-                PrincipalBCID = 6,
+                PrincipalBCID = db.Subsidiaries.ToList()[0].SubsidiaryID,
                 DesignationFacturation = model.Name,
                 Delai = "30 jours",
             };

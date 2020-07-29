@@ -733,12 +733,39 @@ namespace Projet_pilate.Controllers
         [ValidateInput(false)]
         public FileResult Export(string GridHtml)
         {
+            
+            string st = Request.Form["status"];
+            string Tomail = Request.Form["destinataire"];
+            string Objet = Request.Form["objet"];
+            string Content = Request.Form["content"];
+            string expediteur = Request.Form["expediteur"];
+
+            string[] contents = Content.Split('\n');
+            foreach (var s in contents)
+            { 
+                if(s==contents[0])
+                {
+                    Content = s + "<br/>";
+                }
+                else
+                {
+                    Content = Content + s + "<br/>";
+                }
+                     
+            }
 
 
             int id = Int32.Parse(Request.Form["id"]);
             ApplicationDbContext db = new ApplicationDbContext();
             var facture = db.Factures.Single(f => f.FactureID == id);
             facture.Emise = true;
+            if (facture.type != "Avoir")
+            {
+                var cra = db.Cras.Single(c => c.CraID == facture.CraId);
+                cra.Changeable = false;
+                db.SaveChanges();
+            }
+            
 
             Boolean interne = false;
             foreach (var item in db.Subsidiaries.ToList())
@@ -778,8 +805,21 @@ namespace Projet_pilate.Controllers
                 pdfDoc.Open();
                 string arialuniTff = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "ARIALUNI.TTF");
 
+                string[] strs = facture.PrincipalBC.Split(' ');
+                if (strs.Length > 1)
+                {
+                    int i = 0;
+                    foreach(var s in strs)
+                    {
+                        if (i != 0)
+                        {
+                            strs[0] = strs[0] + "_" + s;
+                        }
+                        i++;
+                    }
+                }
 
-                string imageURL = Server.MapPath(".") + "/../Images/logo transparent.png";
+                string imageURL = Server.MapPath(".") + "/../Images/"+strs[0]+"_Facture.png";
 
                 iTextSharp.text.Image jpg = iTextSharp.text.Image.GetInstance(imageURL);
 
@@ -828,19 +868,19 @@ namespace Projet_pilate.Controllers
                     }
                 }
                 
-                if (mail != "Rien" && mail != null)
+                if (mail != "Rien" && mail != null && st == "true")
                 {
                     MemoryStream ms = new MemoryStream(stream.ToArray());
                     System.Net.Mime.ContentType ct = new System.Net.Mime.ContentType(System.Net.Mime.MediaTypeNames.Application.Pdf);
                     System.Net.Mail.Attachment attach = new System.Net.Mail.Attachment(ms, ct);
                     attach.ContentDisposition.FileName = facture.NomFacture + ".pdf";
 
-                    GMailer.GmailUsername = "test.envoi@b2digit.com";
+                    GMailer.GmailUsername = expediteur;
                     GMailer.GmailPassword = "Password01";
                     GMailer mailer = new GMailer();
-                    mailer.ToEmail = mail;
-                    mailer.Subject = "Facture";
-                    mailer.Body = "Bonjour,<br /> Nous vous envoyons votre facture.<br /> Cordialement";
+                    mailer.ToEmail = Tomail;
+                    mailer.Subject = Objet;
+                    mailer.Body = Content;
                     mailer.IsHtml = true;
                     mailer.attch = attach;
                     mailer.Send();
@@ -962,6 +1002,7 @@ namespace Projet_pilate.Controllers
                 DesignationFacturation = facture.DesignationFacturation,
                 DateRegelement = facture.DateRegelement,
                 type = "Avoir",
+                
 
             };
             db.Factures.Add(factureAvoir);
@@ -1010,7 +1051,14 @@ namespace Projet_pilate.Controllers
             {
                 string message = "Vous devez choisir factures à combiner et la méthode de combiner !";
                 ModelState.AddModelError(string.Empty, message);
-                return View("Factures");
+                OngletViewModel model = new OngletViewModel()
+                {
+                    first = "active",
+                    seconde = "",
+                    third = "",
+                };
+
+                return View("Factures", model);
             }
 
             string[] selectionlist = selection.Split(',');
@@ -1020,16 +1068,51 @@ namespace Projet_pilate.Controllers
             {
                 string message = "Vous pouver choisir qu'une méthode pour les combiner !";
                 ModelState.AddModelError(string.Empty, message);
-                return View("Factures");
-            }
-            if (typelist.Length > 1)
-            {
-                string message = "Vous pouver choisir qu'une méthode pour les combiner !";
-                ModelState.AddModelError(string.Empty, message);
-                return View("Factures");
+                OngletViewModel model = new OngletViewModel()
+                {
+                    first = "active",
+                    seconde = "",
+                    third = "",
+                };
+                return View("Factures", model);
             }
 
+
             ApplicationDbContext db = new ApplicationDbContext();
+
+            Boolean able = true;
+            string nomEmettrice = "";
+            string client = "";
+            foreach (var item in selectionlist)
+            {
+                int itemid = Int32.Parse(item);
+                var f = db.Factures.Single(fa => fa.FactureID == itemid);
+                if (nomEmettrice == "")
+                {
+                    nomEmettrice = f.PrincipalBC;
+                    client = f.Client;
+                } else
+                {
+                    if (f.PrincipalBC != nomEmettrice || f.Client != client)
+                    {
+                        able = false;
+                    }
+                }
+            }
+
+            if (!able)
+            {
+                string message = "Vous pouver pas combiner ces factures ! Vérifier que ils ont les même entreprise émettrices et clients.";
+                ModelState.AddModelError(string.Empty, message);
+                OngletViewModel model = new OngletViewModel()
+                {
+                    first = "active",
+                    seconde = "",
+                    third = "",
+                };
+                return View("Factures",model);
+            }
+
 
             var fl = db.Factures.ToList();
             int id = 0;

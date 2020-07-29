@@ -8,6 +8,7 @@
 <h2>Liste des comptes rendu d'activité du mois de @ViewBag.date.ToString("MMMM, yyyy", System.Globalization.CultureInfo.CurrentCulture)</h2>
 
 <p><button onclick="sortTable()">Trier</button></p>
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
 <table class="table" id="mytable">
     <tr>
 

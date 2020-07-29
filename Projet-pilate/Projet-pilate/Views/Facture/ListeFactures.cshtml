@@ -50,7 +50,7 @@
         });
     });
 
-    
+
 
 </script>
 
@@ -63,7 +63,7 @@
 
 @using (Html.BeginForm("fusionner", "Facture", FormMethod.Post))
 {
-    
+
     <div class="col-md-1" style="margin-top:7px ;margin-bottom:30px; padding-left:0px; font-size:medium;font-weight:bolder">Fusionner</div>
     <div class="col-md-3" style="margin-top:7px ;margin-bottom:30px;"><input type="checkbox" name="type" value="fusionner"></div>
     <div class="col-md-1" style="margin-top: 7px; margin-bottom: 30px; font-size: medium; font-weight: bolder">Assembler</div>
@@ -71,7 +71,7 @@
     <div class="col-md-4" style="margin-bottom:30px; padding-left:260px">
         <input type="submit" class="btn btn-primary" value="Combiner" id="valider" />
     </div>
-
+    
     <table class="display" id="mytable" style="width:90%">
 
         <thead>
@@ -106,45 +106,45 @@
             @foreach (var item in Model)
             {
 
-            <tr>
-                <td><input type="checkbox" name="select" value="@item.ID"></td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NomFacture)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Emettrice)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Client)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MontantHT)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Mission)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Consultant)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MoisSaisie)
-                </td>
+                <tr>
+                    <td><input type="checkbox" name="select" value="@item.ID"></td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NomFacture)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Emettrice)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Client)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MontantHT)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Mission)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Consultant)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MoisSaisie)
+                    </td>
 
-                @{
-                    if (item.Status == "Payee" || item.Status == "Annulee")
-                    {
-                        <td>Non modifiable</td>
+                    @{
+                        if (item.Status == "Payee" || item.Status == "Annulee")
+                        {
+                            <td>Non modifiable</td>
+                        }
+                        else
+                        {
+                            <td>
+
+                                @Html.ActionLink("Détail", "Detail", new { id = item.ID }, new { @class = "btn" })
+                            </td>
+                        }
                     }
-                    else
-                    {
-                        <td>
 
-                            @Html.ActionLink("Détail", "Detail", new { id = item.ID }, new { @class = "btn" })
-                        </td>
-                    }
-                }
-
-            </tr>
+                </tr>
 
             }
         </tbody>

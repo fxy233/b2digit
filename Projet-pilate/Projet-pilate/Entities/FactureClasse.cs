@@ -42,6 +42,7 @@ namespace Projet_pilate.Entities
         public int parentID { get; set; }
         public string reference { get; set; }
         public string referenceBancaire { get; set; }
+        public int CraId { get; set; }
 
     }
 

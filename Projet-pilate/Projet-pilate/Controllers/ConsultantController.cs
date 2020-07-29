@@ -102,7 +102,7 @@ namespace Projet_pilate.Controllers
                                                        && c.Month == mois && c.year == annee);
 
 
-            if (cra != null && cra.Changeable == false)
+            if (cra != null && cra.Changeable == true)
             {
 
 
@@ -344,7 +344,7 @@ namespace Projet_pilate.Controllers
                 Satisfaction = Request["satisfaction"].ToString(),
                 Comment = Request["commentaire"].ToString(),
 
-                Changeable = false,
+                Changeable = true,
                 Month = moisConcerne,
                 year = yearStr,
 
@@ -367,7 +367,7 @@ namespace Projet_pilate.Controllers
 
             db.SaveChanges();
 
-
+            int CraID = db.Cras.Single(c => c.ConsultantID == consultant.ConsultantID && c.Month == moisConcerne).CraID;
             //
             var time = DateTime.Parse( db.MonthActivations.Single().Periode.ToString("yyyy-MM-01") ).AddMonths(1).AddDays(-1);
             var missionNames = db.Missions.Select(m => m.Name).ToList();
@@ -377,6 +377,7 @@ namespace Projet_pilate.Controllers
                 {
                     continue;
                 }
+                
 
                 var mission = db.Missions.Single(m => m.Name == pair.Key);
                 var BC = db.Subsidiaries.Single(s => s.SubsidiaryID == mission.PrincipalBCID);
@@ -467,6 +468,7 @@ namespace Projet_pilate.Controllers
                     type = "Facture",
                     reference = mission.Reference,
                     referenceBancaire = BC.Name,
+                    CraId = CraID,
 
                 };
 
@@ -503,6 +505,7 @@ namespace Projet_pilate.Controllers
                         type = "Facture",
                         reference = mission.Reference,
                         referenceBancaire = BC.Name,
+                        CraId = CraID,
                     };
                     db.Factures.Add(factureInt);
                     
@@ -539,6 +542,7 @@ namespace Projet_pilate.Controllers
                         type = "Facture",
                         reference = mission.Reference,
                         referenceBancaire = BC.Name,
+                        CraId = CraID,
                     };
                     db.Factures.Add(factureInt);
                     
@@ -682,6 +686,23 @@ namespace Projet_pilate.Controllers
                         consultantCra.Add(model.ConsultantName);
                         models.Add(model);
                     }
+
+                    if (Missions.Count == 0)
+                    {
+                        ActivityViewModel model = new ActivityViewModel()
+                        {
+                            ID = cra.CraID,
+                            Date = cra.Month + " " + cra.year,
+                            ConsultantName = cra.Consultant.FirstName + " " + cra.Consultant.LastName,
+                            Satisfaction = cra.Satisfaction,
+                            MissionName = "pas de mission",
+                            WorkedDays = 0,
+                            NoBillDays = (float)noBill / 2.0f,
+                            WorkedDaysWE = 0,
+                        };
+                        consultantCra.Add(model.ConsultantName);
+                        models.Add(model);
+                    }
                 }
                 
             }
@@ -707,13 +728,166 @@ namespace Projet_pilate.Controllers
         //[Route("Consultant/DeleteCra")]
         public ActionResult DeleteCra(int id)
         {
+            
             ApplicationDbContext db = new ApplicationDbContext();
-            var cra = db.Cras.Single(c => c.CraID == id);
+            var craD = db.Cras.Single(c => c.CraID == id);
 
-            db.Entry(cra).State = EntityState.Deleted;
-            db.SaveChanges();
+            if (craD.Changeable)
+            {
+                db.Entry(craD).State = EntityState.Deleted;
 
-            return RedirectToAction("ListeCra","Consultant");
+                var facture = db.Factures.Where(f => f.CraId == craD.CraID).ToList();
+                foreach(var f in facture)
+                {
+                    db.Factures.Remove(f);
+                }
+                
+
+                db.SaveChanges();
+
+                return RedirectToAction("ListeCra", "Consultant");
+            } else
+            {
+                List<ActivityViewModel> models = new List<ActivityViewModel>();
+
+                List<Cra> cras = db.Cras.ToList();
+                List<string> consultantCra = new List<string>();
+
+                var currentMonth = db.MonthActivations.Single().Periode.ToString("MMMM", CultureInfo.CurrentCulture);
+                ViewBag.date = db.MonthActivations.Single().Periode;
+
+                foreach (var cra in cras)
+                {
+                    if (cra.Month == currentMonth)
+                    {
+                        var nbProjetMatin = cra.Activities.Select(a => a.Morning).ToList();
+                        var nbProjetApreMidi = cra.Activities.Select(a => a.Afternoon).ToList();
+                        var nbDay = cra.Activities.ToArray();
+                        List<string> Missions = new List<string>(); // création de la liste de mission
+                        List<int> NBJT = new List<int>();
+                        List<int> NBJTWE = new List<int>();
+                        int noBill = 0;
+
+                        foreach (var item in nbDay)
+                        {
+                            if (item.Date.DayOfWeek == DayOfWeek.Saturday || item.Date.DayOfWeek == DayOfWeek.Sunday)
+                            {//on est en WE
+                                if ((item.Morning != "Congés" && item.Morning != "IC" && item.Morning != "Formation" && item.Morning != "Maladie"))
+                                {
+                                    var IndexMission = Missions.IndexOf(item.Morning);
+                                    if (IndexMission < 0)
+                                    {
+                                        Missions.Add(item.Morning.ToString());
+                                        NBJT.Add(0);
+                                        NBJTWE.Add(1);
+                                    }
+                                    else
+                                    {
+                                        NBJTWE[IndexMission]++;
+                                    }
+                                }
+                                if ((item.Afternoon != "Congés" && item.Afternoon != "IC" && item.Afternoon != "Formation" && item.Afternoon != "Maladie"))
+                                {
+                                    var IndexMission = Missions.IndexOf(item.Afternoon);
+                                    if (IndexMission < 0)
+                                    {
+                                        Missions.Add(item.Afternoon.ToString());
+                                        NBJT.Add(0);
+                                        NBJTWE.Add(1);
+                                    }
+                                    else
+                                    {
+                                        NBJTWE[IndexMission]++;
+                                    }
+                                }
+                            }
+                            else
+                            { // on est en jours ouvrés
+                                if ((item.Morning != "Congés" && item.Morning != "IC" && item.Morning != "Formation" && item.Morning != "Maladie"))
+                                {
+                                    var IndexMission = Missions.IndexOf(item.Morning);
+                                    if (IndexMission < 0)
+                                    {
+                                        Missions.Add(item.Morning.ToString());
+                                        NBJT.Add(1);
+                                        NBJTWE.Add(0);
+                                    }
+                                    else
+                                    {
+                                        NBJT[IndexMission] += 1;
+                                    }
+                                }
+
+                                if ((item.Afternoon != "Congés" && item.Afternoon != "IC" && item.Afternoon != "Formation" && item.Afternoon != "Maladie"))
+                                {
+                                    var IndexMission = Missions.IndexOf(item.Afternoon);
+                                    if (IndexMission < 0)
+                                    {
+                                        Missions.Add(item.Afternoon.ToString());
+                                        NBJT.Add(1);
+                                        NBJTWE.Add(0);
+                                    }
+                                    else
+                                    {
+                                        NBJT[IndexMission] += 1;
+                                    }
+                                }
+
+                                if ((item.Morning == "Congés" || item.Morning == "IC" || item.Morning == "Formation" || item.Morning == "Maladie"))
+                                {
+                                    noBill++;
+                                }
+
+                                if ((item.Afternoon == "Congés" || item.Afternoon == "IC" || item.Afternoon == "Formation" || item.Afternoon == "Maladie"))
+                                {
+                                    noBill++;
+                                }
+
+                            }
+                        }
+
+
+                        foreach (var mission in Missions)
+                        {
+                            var IndexOfMission = Missions.IndexOf(mission);
+                            ActivityViewModel model = new ActivityViewModel()
+                            {
+                                ID = cra.CraID,
+                                Date = cra.Month + " " + cra.year,
+                                ConsultantName = cra.Consultant.FirstName + " " + cra.Consultant.LastName,
+                                Satisfaction = cra.Satisfaction,
+                                MissionName = mission,
+                                WorkedDays = (float)NBJT[IndexOfMission] / 2.0f,
+                                NoBillDays = (float)noBill / 2.0f,
+                                WorkedDaysWE = (float)NBJTWE[IndexOfMission] / 2.0f,
+                            };
+                            consultantCra.Add(model.ConsultantName);
+                            models.Add(model);
+                        }
+                    }
+
+                }
+
+                var consultantlist = db.Consultants.ToList();
+                foreach (var c in consultantlist)
+                {
+                    if (!consultantCra.Contains(c.FirstName + " " + c.LastName))
+                    {
+                        ActivityViewModel model = new ActivityViewModel()
+                        {
+                            ConsultantName = c.FirstName + " " + c.LastName,
+                            MissionName = "Rien",
+                        };
+                        models.Add(model);
+                    }
+                }
+                string message = "Vous pouvez pas réinitialiser, ce facture a été émise.";
+                ModelState.AddModelError(string.Empty, message);
+
+                return View("ListeCra", models);
+
+            }
+            
         }
 
         [Route("Consultant/CRAReadOnly")]

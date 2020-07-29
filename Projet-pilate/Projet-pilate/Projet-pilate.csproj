@@ -502,6 +502,10 @@
     <Compile Include="Migrations\202007230910436_reference2.designer.cs">
       <DependentUpon>202007230910436_reference2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202007281909022_craid.cs" />
+    <Compile Include="Migrations\202007281909022_craid.designer.cs">
+      <DependentUpon>202007281909022_craid.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityViewModels.cs" />
@@ -536,7 +540,8 @@
     <Content Include="Images\B2DIGIT_INVERSE.png" />
     <Content Include="Images\B2DIGIT_LOGO.png" />
     <Content Include="Images\B2DIGIT_TRANSPARENT.png" />
-    <Content Include="Images\logo transparent.png" />
+    <Content Include="Images\B2DIGIT_Facture.png" />
+    <Content Include="Images\DMO_Conseil_Facture.png" />
     <Content Include="Scripts\deleteConfirmation.js" />
     <Content Include="Scripts\jquery-3.5.1.js" />
     <Content Include="Scripts\jquery.dataTables.min.css" />
@@ -813,6 +818,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202007230910436_reference2.resx">
       <DependentUpon>202007230910436_reference2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007281909022_craid.resx">
+      <DependentUpon>202007281909022_craid.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
