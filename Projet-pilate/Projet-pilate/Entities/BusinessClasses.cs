@@ -120,6 +120,7 @@ namespace Projet_pilate.Entities
         public string ManagerFirstName { get; set; }
         public string ManagerLastName { get; set; }
         public string email { get; set; }
+        public string motdepasse { get; set; }
 
         [MaxLength(27)]
         public string IBAN { get; set; }

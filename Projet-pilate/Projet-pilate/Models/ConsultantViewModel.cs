@@ -61,11 +61,13 @@ namespace Projet_pilate.Models
         [Display(Name = "Courrier électronique")]
         public string Email { get; set; }
 
+        [Required]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "Date d'entrée")]
         public DateTime EntryDate { get; set; }
 
+        [Required]
         public string Status { get; set; }
 
         [Required]

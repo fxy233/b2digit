@@ -203,7 +203,7 @@
             Facture n°:
         </div>
         <div class="col-md-12">
-            @Html.EditorFor(model => model.FactureName, new { htmlAttributes = new { @class = "form-control", @placeholder = "produire automatiquement", @id = "nomFacture", @readonly = "readonly" } })
+            @Html.EditorFor(model => model.FactureName, new { htmlAttributes = new { @class = "form-control", @placeholder = "nom facture", @id = "nomFacture" } })
         </div>
         <div class="col-md-6">
             @Html.EditorFor(model => model.FactInfo, new { htmlAttributes = new { @class = "form-control", @placeholder = "Information Facturation" } })

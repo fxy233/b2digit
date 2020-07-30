@@ -31,15 +31,17 @@ namespace Projet_pilate.Controllers
                     DetailProfitCenterViewModel model = new DetailProfitCenterViewModel();
                     model.ID = profitCenter.ProfitCenterID;
                     model.Name = profitCenter.Name;
-                    model.Owners = profitCenter.Owner;
-
-                    if (profitCenter.PartOwner == null)
+                    var owner = db.Managers.Single(m=>m.ManagerID==profitCenter.Owner);
+                    model.Owners = owner.FirstName + " " +owner.LastName;
+                     
+                    if (profitCenter.PartOwner == 0 )
                     {
                         model.PartOwners = "Aucun";
                     }
                     else
                     {
-                        model.PartOwners = profitCenter.PartOwner;
+                        var partowner = db.Managers.Single(m => m.ManagerID == profitCenter.PartOwner);
+                        model.PartOwners = partowner.FirstName + " " + partowner.LastName;
                     }
 
                     if (profitCenter.FatherProfitCenter == null)
@@ -143,7 +145,7 @@ namespace Projet_pilate.Controllers
 
             }
             Manager owner = db.Managers.SingleOrDefault(m => m.FirstName == ownerFirstName && m.LastName == ownerLastName);
-            profitCenter.Owner = Request.Form["Owner"].ToString();
+            profitCenter.Owner = owner.ManagerID;
             owner.ProfitCenters.Add(profitCenter);
 
             
@@ -172,7 +174,7 @@ namespace Projet_pilate.Controllers
 
                     }
                     Manager partOwner = db.Managers.SingleOrDefault(m => m.FirstName == partOwnerFirstName && m.LastName == partOwnerLastName);
-                    profitCenter.PartOwner = Request.Form["PartOwner"].ToString();
+                    profitCenter.PartOwner = partOwner.ManagerID;
                     partOwner.ProfitCenters.Add(profitCenter);
                 }
                 catch (Exception) { }
@@ -225,12 +227,15 @@ namespace Projet_pilate.Controllers
             var profitcenter = db.profitCenters.Single(p => p.ProfitCenterID == id);
             
             var father = profitcenter.FatherProfitCenterID==null ? null : db.profitCenters.Single(p => p.ProfitCenterID == profitcenter.FatherProfitCenterID);
+
+            var owner = db.Managers.Single(m => m.ManagerID == profitcenter.Owner);
+            var partowner = profitcenter.PartOwner == 0 ? null : db.Managers.Single(m => m.ManagerID == profitcenter.PartOwner);
             UpdateProfitCenterViewModel model = new UpdateProfitCenterViewModel()
             {
                 ID = profitcenter.ProfitCenterID,
                 Name = profitcenter.Name,
-                Owner = profitcenter.Owner,
-                PartOwner = profitcenter.PartOwner,
+                Owner = owner.FirstName+" " +owner.LastName,
+                PartOwner = partowner==null? "Aucun": partowner.FirstName + " " + partowner.LastName,
                 FatherProfitCenterID = profitcenter.FatherProfitCenterID,
                 FatherProfitCenter = father == null ? "Aucun":father.Name,
                 Cost = profitcenter.Cost,
@@ -277,6 +282,7 @@ namespace Projet_pilate.Controllers
             ApplicationDbContext db = new ApplicationDbContext();
             var profitcenter = db.profitCenters.Single(p => p.ProfitCenterID == model.ID);
 
+            
 
 
             if (!ModelState.IsValid)
@@ -326,9 +332,24 @@ namespace Projet_pilate.Controllers
                 }
 
             }
+
+            int owner = 0;
+            int partowner = 0;
+            foreach(var m in db.Managers.ToList())
+            {
+                if (m.FirstName+" " + m.LastName == model.Owner)
+                {
+                    owner = m.ManagerID; 
+                }
+                if (m.FirstName + " " + m.LastName == model.PartOwner)
+                {
+                    partowner = m.ManagerID;
+                }
+            }
+
             profitcenter.Name = model.Name;
-            profitcenter.Owner = model.Owner;
-            profitcenter.PartOwner = model.PartOwner;
+            profitcenter.Owner = owner;
+            profitcenter.PartOwner = partowner;
             model.FatherProfitCenterID = model.FatherProfitCenter == "Aucun" ? (int?)null : db.profitCenters.Single(p => p.Name == model.FatherProfitCenter).ProfitCenterID;
             profitcenter.FatherProfitCenterID = model.FatherProfitCenterID;
             profitcenter.FatherProfitCenter = profitcenter.FatherProfitCenterID==null?null:db.profitCenters.Single(p=> p.ProfitCenterID==profitcenter.FatherProfitCenterID);
@@ -367,7 +388,7 @@ namespace Projet_pilate.Controllers
                 return View(model);
             }
 
-            if (profitcenter.Owner.ToUpper() == (profitcenter.PartOwner == null ? "Aucun" : profitcenter.PartOwner.ToUpper()))
+            if (profitcenter.Owner == profitcenter.PartOwner && profitcenter.PartOwner!=0)
             {
                 string message = "Un centre de profit ne peut pas avoir son propriétaire en associé.";
                 ModelState.AddModelError(string.Empty, message);
@@ -434,15 +455,17 @@ namespace Projet_pilate.Controllers
                     DetailProfitCenterViewModel model = new DetailProfitCenterViewModel();
                     model.ID = profitCenter.ProfitCenterID;
                     model.Name = profitCenter.Name;
-                    model.Owners = profitCenter.Owner;
+                    var owner = db.Managers.Single(m => m.ManagerID == profitCenter.Owner);
+                    model.Owners = owner.FirstName+" " +owner.LastName;
 
-                    if (profitCenter.PartOwner == null)
+                    if (profitCenter.PartOwner == 0)
                     {
                         model.PartOwners = "Aucun";
                     }
                     else
                     {
-                        model.PartOwners = profitCenter.PartOwner;
+                        var partOwners = db.Managers.Single(m => m.ManagerID == profitCenter.PartOwner);
+                        model.PartOwners = partOwners.FirstName + " " + partOwners.LastName;
                     }
 
                     if (profitCenter.FatherProfitCenter == null)

@@ -18,8 +18,8 @@ namespace Projet_pilate.Entities
         public double Cost { get; set; }
         public double Turnover { get; set; }
 
-        public string Owner { get; set; }
-        public string PartOwner { get; set; }
+        public int Owner { get; set; }
+        public int PartOwner { get; set; }
 
         public int? FatherProfitCenterID { get; set; }
 

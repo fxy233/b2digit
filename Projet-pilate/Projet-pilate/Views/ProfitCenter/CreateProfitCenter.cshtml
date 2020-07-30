@@ -1,5 +1,5 @@
 ﻿@model Projet_pilate.Models.ProfitCenterViewModel
-
+@using Projet_pilate.Models;
 @{
     ViewBag.Title = "CreateProfitCenter";
 }
@@ -40,7 +40,7 @@
             <label class="col-md-2 control-label" for="Status">Associé</label>
             <div class="col-md-10">
                 <select class="form-control" id="PartOwner" name="PartOwner" required>
-                    <option>@ViewData["PartOwner"]</option>
+                    @*<option>@ViewData["PartOwner"]</option>*@
                     <option>Aucun</option>
                     @foreach (var partOwner in Model.PartOwners)
                     {
@@ -56,10 +56,13 @@
             <div class="col-md-10">
                 <select class="form-control" id="FatherProfitCenter" name="FatherProfitCenter" required>
                     <option>Aucun</option>
-                    @foreach (var FatherProfitCenter in Model.FatherProfitCenters)
-                    {
-                        <option value="@FatherProfitCenter">@FatherProfitCenter</option>
+                    @{ ApplicationDbContext db = new ApplicationDbContext();
+                        foreach (var FatherProfitCenter in db.profitCenters.ToList())
+                        {
+                            <option value="@FatherProfitCenter.Name">@FatherProfitCenter.Name</option>
+                        }
                     }
+
                 </select>
             </div>
         </div>

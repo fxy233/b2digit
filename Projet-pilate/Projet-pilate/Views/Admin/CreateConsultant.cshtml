@@ -5,7 +5,6 @@
 }
 
 <h2>Création d'un consultant</h2>
-<h5>Attention : Ne pas mettre d'espace dans le prénom et dans le nom.</h5>
 
 
 @using (Html.BeginForm())
@@ -90,22 +89,22 @@
             <div class="col-md-10">
 
                 @*                @if (@ViewData["CostType"] == "MonthlyCost" || @ViewData["CostType"] == null)
-        {
-            <span class="radio">
-                <label>
-                    <input type="radio" name="CostType" id="MonthlyCost" value="MonthlyCost" checked>
-                    Mensuelle
-                </label>
-            </span>
-            <span class="radio">
-                <label>
-                    <input type="radio" name="CostType" id="DailyCost" value="DailyCost">
-                    Journalière
-                </label>
-            </span>
-        }
-        else
-        {*@
+                    {
+                        <span class="radio">
+                            <label>
+                                <input type="radio" name="CostType" id="MonthlyCost" value="MonthlyCost" checked>
+                                Mensuelle
+                            </label>
+                        </span>
+                        <span class="radio">
+                            <label>
+                                <input type="radio" name="CostType" id="DailyCost" value="DailyCost">
+                                Journalière
+                            </label>
+                        </span>
+                    }
+                    else
+                    {*@
                 <span class="radio">
                     <label>
                         <input type="radio" name="CostType" id="MonthlyCost" value="MonthlyCost">
@@ -118,7 +117,7 @@
                         Journalière
                     </label>
                 </span>
-        @*}*@
+                @*}*@
 
             </div>
         </div>
@@ -163,6 +162,10 @@
         </div>
     </div>
 }
+
+
+@Html.Raw(HttpUtility.HtmlDecode((Html.ValidationSummary(false, "", new { @class = "exception" })).ToHtmlString()))
+
 
 <div>
     @Html.ActionLink("Retour à la liste", "ConsultantList", "Consultant", new { @class = "btn btn-primary btn-large" })

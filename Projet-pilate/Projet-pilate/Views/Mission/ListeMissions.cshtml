@@ -55,7 +55,11 @@
 
                 if (item.ProfitCenter == pc.Name)
                 {
-                    if (pc.Owner == name || pc.PartOwner == name)
+                    var owner = db.Managers.Single(m => m.ManagerID == pc.Owner);
+                    string ownername = owner.FirstName + " " + owner.LastName;
+                    var partowner = db.Managers.Single(m => m.ManagerID == pc.PartOwner);
+                    string partownername = partowner.FirstName + " " + partowner.LastName;
+                    if (ownername == name || partownername == name)
                     {
                         <tr>
                             <td>

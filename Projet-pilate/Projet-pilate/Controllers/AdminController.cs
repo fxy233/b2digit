@@ -454,9 +454,9 @@ namespace Projet_pilate.Controllers
 
             if (!ModelState.IsValid)
             {
-                selectedTypeCost = Request.Form["CostType"].ToString();
+                /*selectedTypeCost = Request.Form["CostType"].ToString();
                 SubsidiaryName = Request.Form["Subsidiary"].ToString();
-                ProfitCenterName = Request.Form["ProfitCenter"].ToString();
+                ProfitCenterName = Request.Form["ProfitCenter"].ToString();*/
                 var profitCenters = db.profitCenters.ToList();
                 var subsidiaries = db.Subsidiaries.ToList();
                 List<string> profitCenterNames = new List<string>();
@@ -475,9 +475,9 @@ namespace Projet_pilate.Controllers
                 model.Subsidiaries = subsidiariesNames;
 
  
-                ViewData["Subsidiary"] = SubsidiaryName;
+                /*ViewData["Subsidiary"] = SubsidiaryName;
                 ViewData["ProfitCenter"] = ProfitCenterName;
-                ViewData["CostType"] = selectedTypeCost;
+                ViewData["CostType"] = selectedTypeCost;*/
 
                 return View(model);
             }
@@ -571,7 +571,8 @@ namespace Projet_pilate.Controllers
                 List<int> pIdlist = new List<int>();
                 foreach (var item in db.profitCenters.ToList())
                 {
-                    if (item.Owner == name)
+                    var manager = db.Managers.Single(m => m.ManagerID == item.Owner);
+                    if (manager.FirstName+" "+manager.LastName == name )
                     {
                         pIdlist.Add(item.ProfitCenterID);
                     }
@@ -594,7 +595,8 @@ namespace Projet_pilate.Controllers
 
                     }
                 }
-                if (name == pc.PartOwner)
+                var partowner = pc.PartOwner==0? null: db.Managers.Single(m => m.ManagerID == pc.PartOwner);
+                if (name == (partowner==null?"Aucun": partowner.FirstName+" "+ partowner.LastName))
                 {
                     ability = true;
                 }
@@ -602,9 +604,34 @@ namespace Projet_pilate.Controllers
                 List<DetailConsultantViewModel> models = new List<DetailConsultantViewModel>();
                 if (!ability)
                 {
+
                     foreach (var c in consultants)
                     {
-                        var subsidiary = db.Subsidiaries.Single(s => s.SubsidiaryID == c.SubsidiaryID);
+                        double cost = 0;
+                        if (c.Status == "Consultant" || c.Status == "Salarié")
+                        {
+                            if (c.DailyCost == 0)
+                            {
+                                cost = c.MonthlyCost * 1.5 + c.MealCost + c.ExceptionalCost + c.TravelPackage;
+                                cost = cost * 12 / 218;
+                            }
+                            else
+                            {
+                                cost = c.DailyCost * 1.5 + c.MealCost + c.ExceptionalCost + c.TravelPackage;
+                            }
+                        }
+                        if (c.Status == "Sous-Traitant")
+                        {
+                            if (c.DailyCost == 0)
+                            {
+                                cost = c.MonthlyCost + c.MealCost + c.ExceptionalCost + c.TravelPackage;
+                                cost = cost * 12 / 218;
+                            }
+                            else
+                            {
+                                cost = c.DailyCost + c.MealCost + c.ExceptionalCost + c.TravelPackage;
+                            }
+                        }
 
                         DetailConsultantViewModel m = new DetailConsultantViewModel()
                         {
@@ -614,9 +641,12 @@ namespace Projet_pilate.Controllers
                             Email = c.Email,
                             EntryDate = c.EntryDate,
                             Status = c.Status,
-                            DailyCost = c.DailyCost,
-                            MonthlyCost = c.MonthlyCost,
+                            DailyCost = cost,
+                            //MonthlyCost = consultant.MonthlyCost,
+                            ProfitCenter = db.profitCenters.Single(p => p.ProfitCenterID == c.ProfitCenterID).Name,
+                            Subsidiary = db.Subsidiaries.Single(s => s.SubsidiaryID == c.SubsidiaryID).Name,
                         };
+
                         models.Add(m);
                     }
 
@@ -849,7 +879,8 @@ namespace Projet_pilate.Controllers
                 List<int> pIdlist = new List<int>();
                 foreach (var item in db.profitCenters.ToList())
                 {
-                    if (item.Owner==name)
+                    var manager = db.Managers.Single(m => m.ManagerID == item.Owner);
+                    if (manager.FirstName + " " + manager.LastName == name)
                     {
                         pIdlist.Add(item.ProfitCenterID);
                     }
@@ -872,7 +903,8 @@ namespace Projet_pilate.Controllers
                         
                     }
                 }
-                if (name == pc.PartOwner)
+                var partowner = db.Managers.Single(m => m.ManagerID == pc.PartOwner);
+                if (name == partowner.FirstName + " " + partowner.LastName)
                 {
                     ability = true;
                 }

@@ -506,6 +506,14 @@
     <Compile Include="Migrations\202007281909022_craid.designer.cs">
       <DependentUpon>202007281909022_craid.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202007300647285_ownerId.cs" />
+    <Compile Include="Migrations\202007300647285_ownerId.designer.cs">
+      <DependentUpon>202007300647285_ownerId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007301054362_updateMDP.cs" />
+    <Compile Include="Migrations\202007301054362_updateMDP.designer.cs">
+      <DependentUpon>202007301054362_updateMDP.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityViewModels.cs" />
@@ -821,6 +829,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202007281909022_craid.resx">
       <DependentUpon>202007281909022_craid.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007300647285_ownerId.resx">
+      <DependentUpon>202007300647285_ownerId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007301054362_updateMDP.resx">
+      <DependentUpon>202007301054362_updateMDP.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

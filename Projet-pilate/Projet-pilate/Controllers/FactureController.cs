@@ -216,6 +216,12 @@ namespace Projet_pilate.Controllers
         {
                         ApplicationDbContext db = new ApplicationDbContext();
                         var facture = db.Factures.Single(f => f.FactureID == id);
+
+            if (facture.Emise == true)
+            {
+                return RedirectToAction("Factures2");
+            }
+                        
                         ViewBag.TVA = facture.TVA * 100;
 
                         FactureCreationViewModel model = new FactureCreationViewModel();
@@ -556,7 +562,7 @@ namespace Projet_pilate.Controllers
             {
                 mission = Request.Form["Mission"],
                 FactureID = id,
-                NomFacture = type + "-" + Request.Form["NomEmettrice"] + "-" + db.MonthActivations.Single().Periode.ToString("yyyy-MMM", System.Globalization.CultureInfo.CurrentCulture) + "-" + id,
+                NomFacture = model.FactureName,
                 MoisDeFacturation = db.MonthActivations.Single().Periode,
                 InfoFacturation = model.FactInfo,
                 PrincipalBC = Request.Form["NomEmettrice"],
@@ -576,6 +582,7 @@ namespace Projet_pilate.Controllers
                 Delai = missionItem.Delai,
                 DesignationFacturation = missionItem.DesignationFacturation,
                 DateRegelement = reglement,
+                CraId=-1,
             };
 
             db.Factures.Add(facture);
@@ -759,7 +766,7 @@ namespace Projet_pilate.Controllers
             ApplicationDbContext db = new ApplicationDbContext();
             var facture = db.Factures.Single(f => f.FactureID == id);
             facture.Emise = true;
-            if (facture.type != "Avoir")
+            if (facture.type != "Avoir" && facture.CraId>0)
             {
                 var cra = db.Cras.Single(c => c.CraID == facture.CraId);
                 cra.Changeable = false;
@@ -779,14 +786,18 @@ namespace Projet_pilate.Controllers
 
             var sub = db.Subsidiaries.Single(s => s.Name == facture.PrincipalBC);
 
-            if (interne)
+            if(facture.CraId>0)
             {
-                facture.NomFacture = "FA-" + DateTime.Now.ToString("yyyy-MM") + "-" + sub.FactureID;
+                if (interne)
+                {
+                    facture.NomFacture = "FA-" + DateTime.Now.ToString("yyyy-MM") + "-" + sub.FactureID;
+                }
+                else
+                {
+                    facture.NomFacture = "FA-" + DateTime.Now.ToString("yyyy-MM") + "-" + sub.FactureID;
+                }
             }
-            else
-            {
-                facture.NomFacture = "FA-" + DateTime.Now.ToString("yyyy-MM") + "-" + sub.FactureID;
-            }
+            
 
             sub.FactureID++;
             db.SaveChanges();
@@ -805,21 +816,26 @@ namespace Projet_pilate.Controllers
                 pdfDoc.Open();
                 string arialuniTff = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "ARIALUNI.TTF");
 
-                string[] strs = facture.PrincipalBC.Split(' ');
-                if (strs.Length > 1)
+                string imageURL = Server.MapPath(".") + "/../Images/B2DIGIT_Facture.png";
+                if (facture.PrincipalBC== "DMO Conseil")
                 {
-                    int i = 0;
-                    foreach(var s in strs)
+                    string[] strs = facture.PrincipalBC.Split(' ');
+                    if (strs.Length > 1)
                     {
-                        if (i != 0)
+                        int i = 0;
+                        foreach (var s in strs)
                         {
-                            strs[0] = strs[0] + "_" + s;
+                            if (i != 0)
+                            {
+                                strs[0] = strs[0] + "_" + s;
+                            }
+                            i++;
                         }
-                        i++;
                     }
-                }
 
-                string imageURL = Server.MapPath(".") + "/../Images/"+strs[0]+"_Facture.png";
+                    imageURL = Server.MapPath(".") + "/../Images/" + strs[0] + "_Facture.png";
+                }
+                
 
                 iTextSharp.text.Image jpg = iTextSharp.text.Image.GetInstance(imageURL);
 
@@ -892,7 +908,13 @@ namespace Projet_pilate.Controllers
                 //return File(stream.ToArray(), "application/pdf", m[0]+".pdf");
                 return File(stream.ToArray(), "application/pdf", facture.NomFacture + ".pdf");
             }
-            
+            /*OngletViewModel model = new OngletViewModel()
+            {
+                first = "",
+                seconde = "active",
+                third = "",
+            };
+            return View("Factures", model);*/
         }
 
 
@@ -1306,6 +1328,63 @@ namespace Projet_pilate.Controllers
 
 
             return View(models);
+        }
+
+        public ActionResult Recalculer(int id)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var facture = db.Factures.Single(f => f.FactureID == id);
+
+            var mission = db.Missions.Single(m => m.Name == facture.mission);
+            var BC = db.Subsidiaries.Single(s => s.SubsidiaryID == mission.PrincipalBCID);
+            var contact = db.CompanyContacts.Single(c => c.CompanyContactID == mission.CompanyContactID);
+            var company = db.Companies.Single(c => c.CompanyID == contact.CompanyID);
+            var time = DateTime.Parse(db.MonthActivations.Single().Periode.ToString("yyyy-MM-01")).AddMonths(1).AddDays(-1);
+            var missionNames = db.Missions.Select(m => m.Name).ToList();
+
+            facture.PrincipalBC = BC.Name;
+            facture.AdresseBC = BC.Address;
+            facture.Client = company.Name;
+            facture.AdresseFacturation = company.Address;
+            facture.TJ = mission.Fee;
+            facture.MontantHT = mission.Fee * facture.NombredUO;
+            facture.Delai = mission.Delai;
+            facture.DesignationFacturation = mission.DesignationFacturation;
+            facture.reference = mission.Reference;
+            facture.referenceBancaire = BC.Name;
+
+            DateTime reglement = DateTime.Now;
+            switch (mission.Delai)
+            {
+                case "30 jours":
+                    reglement = time.AddDays(30);
+                    break;
+                case "30 jours fin de mois":
+                    reglement = time.AddDays(30);
+                    reglement = DateTime.Parse(reglement.ToString("yyyy-MM-01")).AddMonths(1).AddDays(-1);
+                    break;
+                case "45 jours":
+                    reglement = time.AddDays(45);
+                    break;
+                case "45 jours fin de mois":
+                    reglement = time.AddDays(45);
+                    reglement = DateTime.Parse(reglement.ToString("yyyy-MM-01")).AddMonths(1).AddDays(-1);
+                    break;
+                case "60 jours":
+                    reglement = time.AddDays(60);
+                    break;
+                case "60 jours fin de mois":
+                    reglement = time.AddDays(60);
+                    reglement = DateTime.Parse(reglement.ToString("yyyy-MM-01")).AddMonths(1).AddDays(-1);
+                    break;
+                default:
+                    break;
+            }
+            facture.DateRegelement = reglement;
+            db.SaveChanges();
+
+            return RedirectToAction("Detail", "Facture", new { @id = id });
+
         }
 
 
