@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<Projet_pilate.Models.FactureSimpleViewModel>
+@using Projet_pilate.Models;
 @{
     ViewBag.Title = "FacturesEmise";
     Layout = null;
@@ -127,11 +128,13 @@
                 }
             }
             @{
-                if (item.Status == "Annulee")
+                ApplicationDbContext db = new ApplicationDbContext();
+                var facture = db.Factures.Single(f=>f.FactureID==item.ID);
+                if (item.Status == "Annulee"||facture.type=="Avoir")
                 {
                         <td>
                             @Html.ActionLink("Payée", "Payee", new { id = item.ID }, new { @class = "btn" })
-                            
+
                         </td>
                 }
                 else
@@ -139,7 +142,7 @@
                     <td>
                         @Html.ActionLink("Faire Avoir", "Annulee", new { id = item.ID }, new { @class = "btn" })
                         @Html.ActionLink("Payée", "Payee", new { id = item.ID }, new { @class = "btn" })
-                        
+
                     </td>
                 }
             }

@@ -360,7 +360,7 @@
                 }
             </datalist>
         </div>
-        <div class="col-md-12" style="margin-top:10px; margin-bottom:50px">@Html.EditorFor(model => model.Mention, new { htmlAttributes = new { @class = "form-control", @placeholder = "Mention Obligatoire (similaire sur toutes les factures)" } })</div>
+        <div class="col-md-12 editor-field" style="margin-top:10px; margin-bottom:50px">@Html.TextAreaFor(model => model.Mention, new { htmlAttributes = new { @class = "form-control", @placeholder = "Mention Obligatoire (similaire sur toutes les factures)" } })</div>
 
 
     </div>

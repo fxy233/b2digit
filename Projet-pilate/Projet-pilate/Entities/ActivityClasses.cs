@@ -106,6 +106,9 @@ namespace Projet_pilate.Entities
 
         public string Delai { get; set; }
         public string DesignationFacturation { get; set; }
+        public Boolean avoirOdm { get; set; }
+        public DateTime DateFinOdm { get; set; }
+
 
 
         // Foreign key

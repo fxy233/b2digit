@@ -498,7 +498,9 @@ namespace Projet_pilate.Controllers
                 consultant.TravelPackage = model.TravelPackage;
                 consultant.ExceptionalCost = model.ExceptionalCost;
 
-            if (selectedTypeCost == "MonthlyCost")
+
+
+               if (selectedTypeCost == "MonthlyCost")
                 {
                     consultant.MonthlyCost = model.Cost;
                 }
@@ -673,13 +675,15 @@ namespace Projet_pilate.Controllers
       
             };
 
-            if (consultant.Status == "Sous-Traitant")
+            if (consultant.DailyCost == 0)
             {
-                model.Cost = consultant.DailyCost;
+                model.Cost = consultant.MonthlyCost;
+                ViewData["CostType"] = "MonthlyCost";
             }
             else
             {
-                model.Cost = consultant.MonthlyCost;
+                ViewData["CostType"] = "DailyCost";
+                model.Cost = consultant.DailyCost;
             }
 
             var subsidiaries = db.Subsidiaries.ToList();

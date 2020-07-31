@@ -10,8 +10,9 @@ namespace Projet_pilate.Entities
         public int OrdreDeMissionID { get; set; }
         public Boolean ValidationDeAdv { get; set; }
         public Boolean ValidationConsultant { get; set; }
-        public string NomMission { get; set; }
-        public string typeProjet { get; set; }
+        public int MissionID { get; set; }
+        public string fraisAlloue { get; set; }
+        public string environnement { get; set; }
 
     }
 }

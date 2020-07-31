@@ -8,7 +8,7 @@
 
 <h2 style="text-align:center; margin-bottom:30px;">Détail</h2>
 
-@using (Html.BeginForm("Export", "Facture", FormMethod.Post, new { onsubmit="redirect()"}))
+@using (Html.BeginForm("Export", "Facture", FormMethod.Post, new { onsubmit = "redirect()" }))
 {
     <input type="hidden" name="id" value="@Model.ID" />
     <input type="hidden" name="GridHtml" />
@@ -70,7 +70,13 @@
                             <label>From:</label>
                         </div>
                         <div class="col-md-9" style="padding-left:55px">
-                            <input type="text" name="expediteur" id="expediteur" value="@exp" class="form-control " placeholder="expediteur" />
+                            <input type="text" name="expediteur" id="expediteur" value="@exp" class="form-control " placeholder="expediteur" readonly="readonly" />
+                        </div>
+                        <div class="col-md-offset-2 col-md-2" style="padding-top:7px;padding-right:0px;padding-left:0px">
+                            <label>Password:</label>
+                        </div>
+                        <div class="col-md-7" style="padding-left:0px;margin-left:7px;">
+                            <input type="text" name="mdp" id="mdp"  class="form-control " placeholder="mot de passe du mail"  />
                         </div>
                         <div class="col-md-offset-2 col-md-1" style="padding-top:7px;padding-left:0px">
                             <label>To:</label>
@@ -128,7 +134,7 @@
     @Html.ActionLink("  Retour  ", "Factures", null, new { @class = "btn btn-primary" })
 </div>
 
-
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
 <div class="form-group col-md-12">
 
     <div class="col-md-12">
@@ -291,142 +297,144 @@
     <div class="col-md-9" style="margin-top:10px">
         <input type="text" value="@Model.TVAIntra" readonly="readonly" placeholder="TVA intracommunautaire" list="tVAintra" class="form-control" id="TVAintra" asp-for="TVAintra" name="TVAintra" required />
     </div>
-    <div class="col-md-12" style="margin-top:10px; margin-bottom:50px">@Html.EditorFor(model => model.Mention, new { htmlAttributes = new { @class = "form-control", @placeholder = "Mention Obligatoire (similaire sur toutes les factures)", @readonly = "readonly" } })</div>
+    <div class="col-md-12 editor-field" style="margin-top:90px; margin-bottom:50px">@Html.TextAreaFor(model => model.Mention, new { htmlAttributes = new { @class = "form-control", @placeholder = "Mention Obligatoire (similaire sur toutes les factures)", @readonly = "readonly" } })</div>
 
 
-</div>
-
-
-
-<div id="Grid" style="visibility:hidden">
-
-
-    <div style=" padding-bottom: 0px; padding-left:10px">
-        <strong><pre style="background-color:white;border-color:white;margin-bottom:0px;padding-bottom:0px;">@Model.EmetInfo</pre></strong>
     </div>
-    <p style="color:blue; padding-left:10px">@ViewBag.MailEmettrice</p>
-    <p style="color:green; padding-left:10px;">N°SIREN : @Model.Siren</p>
-    <p style="padding-left: 500px; margin-bottom:0px"><strong>@Model.ClientName</strong></p>
-    <div style=" margin-top: 0px; margin-bottom: 0px; padding-left: 500px;">
-        <pre style="background-color:white;border-color:white; margin-top:0px; margin-bottom:0px;margin-left: 500px;">@Model.ClientInfo</pre>
-    </div>
-    <p style="color:blue;padding-left:500px;margin-top:0px;">@Model.ClientContact</p>
-    <pre>
+
+
+
+    <div id="Grid" style="visibility:hidden">
+
+
+        <div style=" padding-bottom: 0px; padding-left:10px">
+            <strong><pre style="background-color:white;border-color:white;margin-bottom:0px;padding-bottom:0px;">@Model.EmetInfo</pre></strong>
+        </div>
+        <p style="color:blue; padding-left:10px">@ViewBag.MailEmettrice</p>
+        <p style="color:green; padding-left:10px;">N°SIREN : @Model.Siren</p>
+        <p style="padding-left: 500px; margin-bottom:0px"><strong>@Model.ClientName</strong></p>
+        <div style=" margin-top: 0px; margin-bottom: 0px; padding-left: 500px;">
+            <pre style="background-color:white;border-color:white; margin-top:0px; margin-bottom:0px;margin-left: 500px;">@Model.ClientInfo</pre>
+        </div>
+        <p style="color:blue;padding-left:500px;margin-top:0px;">@Model.ClientContact</p>
+        <pre>
 
     </pre>
-    @{
-        string s = Model.type == null ? "Facture" : Model.type;
-        < p style = "text-align:center; margin-top:30px; font-size:20px" >< strong > @s </ strong ></ p >
-    }
-
-
-
-    <p>Facture N°:</p>
-    @{
-        var facture = db.Factures.Single(f => f.FactureID == Model.ID);
-        var sub = db.Subsidiaries.Single(Sub => Sub.Name == facture.PrincipalBC);
-        string NomFacture = "FA-" + DateTime.Now.ToString("yyyy-MM") + "-" + sub.FactureID;
-        <p><strong>@NomFacture</strong></p>
-    }
-
-    <div style="width:150px; color:darkblue; border-color:black">@Model.FactInfo</div>
-
-    <pre style="float:right; width:57%;">                                                                   Date: @ViewBag.date</pre>
-    <div style="width:150px; color:darkblue; border-color:black">@Model.Reference</div>
-    <table style="margin-top:15px; border-color:black">
-        <tr>
-            <td style="background-color:gray; text-align:center; padding:5px"> Désignation </td>
-            <td style="background-color:gray; text-align:center; padding:5px"> Unité d'oeuvre </td>
-            <td style="background-color:gray; text-align:center; padding:5px"> Prix unitaire H.T </td>
-            <td style="background-color:gray; text-align:center; padding:5px"> Total H.T </td>
-            <td style="background-color:gray; text-align:center; padding:5px"> Taux TVA </td>
-            <td style="background-color:gray; text-align:center; padding:5px"> Montant TVA </td>
-            <td style="background-color:gray; text-align:center; padding:5px"> TOTAL T.T.C </td>
-        </tr>
         @{
+            string s = Model.type == null ? "Facture" : Model.type;
+            < p style = "text-align:center; margin-top:30px; font-size:20px" >< strong > @s </ strong ></ p >
+        }
 
-            pid = Model.ID;
 
-            if (db.Factures.Single(fa => fa.FactureID == pid).parentID < 0)
-            {
-                foreach (var item in db.Factures.ToList())
+
+        <p>Facture N°:</p>
+        @{
+            var facture = db.Factures.Single(f => f.FactureID == Model.ID);
+            var sub = db.Subsidiaries.Single(Sub => Sub.Name == facture.PrincipalBC);
+            string NomFacture = "FA-" + DateTime.Now.ToString("yyyy-MM") + "-" + sub.FactureID;
+            <p><strong>@NomFacture</strong></p>
+        }
+
+        <div style="width:150px; color:darkblue; border-color:black">@Model.FactInfo</div>
+
+        <pre style="float:right; width:57%;">                                                                   Date: @ViewBag.date</pre>
+        <div style="width:150px; color:darkblue; border-color:black">@Model.Reference</div>
+        <table style="margin-top:15px; border-color:black">
+            <tr>
+                <td style="background-color:gray; text-align:center; padding:5px"> Désignation </td>
+                <td style="background-color:gray; text-align:center; padding:5px"> Unité d'oeuvre </td>
+                <td style="background-color:gray; text-align:center; padding:5px"> Prix unitaire H.T </td>
+                <td style="background-color:gray; text-align:center; padding:5px"> Total H.T </td>
+                <td style="background-color:gray; text-align:center; padding:5px"> Taux TVA </td>
+                <td style="background-color:gray; text-align:center; padding:5px"> Montant TVA </td>
+                <td style="background-color:gray; text-align:center; padding:5px"> TOTAL T.T.C </td>
+            </tr>
+            @{
+
+                pid = Model.ID;
+
+                if (db.Factures.Single(fa => fa.FactureID == pid).parentID < 0)
                 {
-                    if (item.parentID == pid)
+                    foreach (var item in db.Factures.ToList())
                     {
-                        float total = item.NombredUO * item.TJ;
-                        float mtva = total * item.TVA;
-                        float totalTTC = total + mtva;
-                        float tva = 100 * item.TVA;
-                        <tr>
+                        if (item.parentID == pid)
+                        {
+                            float total = item.NombredUO * item.TJ;
+                            float mtva = total * item.TVA;
+                            float totalTTC = total + mtva;
+                            float tva = 100 * item.TVA;
+                            <tr>
 
-                            <td style="text-align:center; padding:5px"> <pre>@item.DesignationFacturation</pre> </td>
-                            <td style="text-align:center; padding:5px"> @item.NombredUO </td>
-                            <td style="text-align:center; padding:5px"> @item.TJ </td>
-                            <td style="text-align:center; padding:5px"> @total </td>
-                            <td style="text-align:center; padding:5px"> @tva </td>
-                            <td style="text-align:center; padding:5px"> @mtva </td>
-                            <td style="text-align:center; padding:5px"> @totalTTC </td>
-                        </tr>
+                                <td style="text-align:center; padding:5px"> <pre>@item.DesignationFacturation</pre> </td>
+                                <td style="text-align:center; padding:5px"> @item.NombredUO </td>
+                                <td style="text-align:center; padding:5px"> @item.TJ </td>
+                                <td style="text-align:center; padding:5px"> @total </td>
+                                <td style="text-align:center; padding:5px"> @tva </td>
+                                <td style="text-align:center; padding:5px"> @mtva </td>
+                                <td style="text-align:center; padding:5px"> @totalTTC </td>
+                            </tr>
+                        }
                     }
                 }
-            }
-            else
-            {
-                <tr>
-                    @{
-                        float total = Model.Quantite * Model.HTunitaire;
-                        float mtva = total * Model.TVA;
-                        float totalTTC = total + mtva;
-                        ViewBag.montantHT = total.ToString();
-                        ViewBag.montantTVA = mtva.ToString();
-                        ViewBag.montantTTC = totalTTC.ToString();
-                        float tva = 100 * Model.TVA;
-                        <td style="text-align:center; padding:5px"> <pre>@Model.Designation</pre> </td>
-                        <td style="text-align:center; padding:5px"> @Model.Quantite </td>
-                        <td style="text-align:center; padding:5px"> @Model.HTunitaire </td>
-                        <td style="text-align:center; padding:5px"> @total </td>
-                        <td style="text-align:center; padding:5px"> @tva</td>
-                        <td style="text-align:center; padding:5px"> @mtva </td>
-                        <td style="text-align:center; padding:5px"> @totalTTC </td>
-                    }
-                </tr>
-            }
+                else
+                {
+                    <tr>
+                        @{
+                            float total = Model.Quantite * Model.HTunitaire;
+                            float mtva = total * Model.TVA;
+                            float totalTTC = total + mtva;
+                            ViewBag.montantHT = total.ToString();
+                            ViewBag.montantTVA = mtva.ToString();
+                            ViewBag.montantTTC = totalTTC.ToString();
+                            float tva = 100 * Model.TVA;
+                            <td style="text-align:center; padding:5px"> <pre>@Model.Designation</pre> </td>
+                            <td style="text-align:center; padding:5px"> @Model.Quantite </td>
+                            <td style="text-align:center; padding:5px"> @Model.HTunitaire </td>
+                            <td style="text-align:center; padding:5px"> @total </td>
+                            <td style="text-align:center; padding:5px"> @tva</td>
+                            <td style="text-align:center; padding:5px"> @mtva </td>
+                            <td style="text-align:center; padding:5px"> @totalTTC </td>
+                        }
+                    </tr>
+                }
 
 
-        }
-    </table>
-    <pre>
+            }
+        </table>
+        <pre>
 
 
     </pre>
 
-    <pre>
+        <pre>
                                                   Montant H.T en Euros              @ViewBag.montantHT €
                                                       Montant TVA en Euros              @ViewBag.montantTVA €
                                                       Net à payer T.T.C en Euros        @ViewBag.montantTTC €
-                                                           Date de règlement:          @Model.dateReglement
+                                                      Date de règlement:                 @Model.dateReglement
     </pre>
-    <pre>
+        <pre>
 
 
     </pre>
-    <pre>Référence Bancaires : @Model.ReferenceBancaires
+        <pre>Référence Bancaires : @Model.ReferenceBancaires
     IBAN : @Model.IBAN
     BIC : @Model.BIC
     TVA intracommunautaire : @Model.TVAIntra
-    @Model.Mention
+  
+
+
     </pre>
+        <pre style="font-size:7px">@Model.Mention</pre>
 
-
-</div>
-
-
-
+    </div>
 
 
 
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript">
+
+
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript">
     var turn = false;
             $(function () {
                 document.getElementById("content").innerHTML = "Bonjour," + '\r\n' + "Nous vous envoyons votre facture." + '\r\n'+ "Cordialement.";
@@ -438,23 +446,23 @@
             });
 
             function redirect() {
-                
+
                 turn = true;
-                
+
             }
     test = function () {
-        
-     
+
+
         if (turn) {
             window.location.href = window.location.href.substr(0, window.location.href.lastIndexOf("Detail"))+"Factures";
-            
+
         }
     }
     function verifier() {
         document.getElementById("status").value = "true";
     }
-</script>
-@*
-    </body>
-    </html>
-*@
+    </script>
+    @*
+        </body>
+        </html>
+    *@

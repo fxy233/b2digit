@@ -81,7 +81,7 @@ namespace Projet_pilate.Models
         [Display(Name = "Ville")]
         public string City { get; set; }
 
-        [Required]
+        
         [Display(Name = "Mail de Facturation")]
         public string MailFacturation { get; set; }
 
@@ -396,6 +396,9 @@ namespace Projet_pilate.Models
         [Display(Name = "Mail de la société")]
         public string email { get; set; }
 
+        [Display(Name = "Mot de passe du mail")]
+        public string motdepasse { get; set; }
+
     }
 
     public class DetailSubsidiaryViewModel
@@ -479,6 +482,10 @@ namespace Projet_pilate.Models
 
         [Display(Name = "Mail de la société")]
         public string email { get; set; }
+
+        [Display(Name = "Mot de passe du mail")]
+        public string motdepasse{ get; set; }
+
     }
 }
 

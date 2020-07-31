@@ -321,7 +321,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Mail\UtityMail.cs" />
+    <Compile Include="Helper\Helper.cs" />
     <Compile Include="Migrations\202004281428311_Initialisation.cs" />
     <Compile Include="Migrations\202004281428311_Initialisation.Designer.cs">
       <DependentUpon>202004281428311_Initialisation.cs</DependentUpon>
@@ -514,6 +514,26 @@
     <Compile Include="Migrations\202007301054362_updateMDP.designer.cs">
       <DependentUpon>202007301054362_updateMDP.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202007302008595_vcode.cs" />
+    <Compile Include="Migrations\202007302008595_vcode.designer.cs">
+      <DependentUpon>202007302008595_vcode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007310820408_frais.cs" />
+    <Compile Include="Migrations\202007310820408_frais.designer.cs">
+      <DependentUpon>202007310820408_frais.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007310840217_frais1.cs" />
+    <Compile Include="Migrations\202007310840217_frais1.designer.cs">
+      <DependentUpon>202007310840217_frais1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007310941029_MissionUpdate1.cs" />
+    <Compile Include="Migrations\202007310941029_MissionUpdate1.designer.cs">
+      <DependentUpon>202007310941029_MissionUpdate1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007311046316_ODMupdate.cs" />
+    <Compile Include="Migrations\202007311046316_ODMupdate.designer.cs">
+      <DependentUpon>202007311046316_ODMupdate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityViewModels.cs" />
@@ -673,6 +693,7 @@
     <Content Include="Views\Facture\FacturesEmise.cshtml" />
     <Content Include="Views\Facture\FacturesPayee.cshtml" />
     <Content Include="Views\Facture\apercu.cshtml" />
+    <Content Include="Views\Mission\ListeOdm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -835,6 +856,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202007301054362_updateMDP.resx">
       <DependentUpon>202007301054362_updateMDP.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007302008595_vcode.resx">
+      <DependentUpon>202007302008595_vcode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007310820408_frais.resx">
+      <DependentUpon>202007310820408_frais.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007310840217_frais1.resx">
+      <DependentUpon>202007310840217_frais1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007310941029_MissionUpdate1.resx">
+      <DependentUpon>202007310941029_MissionUpdate1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007311046316_ODMupdate.resx">
+      <DependentUpon>202007311046316_ODMupdate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

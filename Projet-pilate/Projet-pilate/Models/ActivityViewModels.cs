@@ -93,7 +93,6 @@ namespace Projet_pilate.Models
     {
         public int id { get; set; }
         public string Manager { get; set; }
-        public string typeProjet { get; set; }
 
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
@@ -109,8 +108,28 @@ namespace Projet_pilate.Models
         public string Adresse { get; set; }
         public string Environnement { get; set; }
         public string Mission { get; set; }
+        public string fraisAlloue { get; set; }
 
         
+    }
+
+    public class ListeOdmModel
+    {
+        public int id { get; set; }
+
+        [Display(Name = "Nom de la mission")]
+        public string NomMission { get; set; }
+
+        [Display(Name = "Client")]
+        public string nomConsultant { get; set; }
+
+        [Display(Name = "Consultant")]
+        public string nomClient { get; set; }
+
+        [Display(Name = "Statut")]
+        public string Status { get; set; }
+
+
     }
 
 

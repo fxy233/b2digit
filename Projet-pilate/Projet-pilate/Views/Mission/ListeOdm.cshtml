@@ -1,0 +1,120 @@
+﻿@model IEnumerable < Projet_pilate.Models.ListeOdmModel>
+@{
+    ViewBag.Title = "ListeOdm";
+    Layout = "~/Views/Shared/_particular.cshtml";
+}
+
+<h2>Liste des ordres de mission</h2>
+
+
+
+
+<link href="~/Scripts/jquery.dataTables.min.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#mytable').DataTable({
+            initComplete: function () {
+                this.api().columns().every(function () {
+                    var column = this;
+                    var select = $('<select><option value=""></option></select>')
+                        .appendTo($(column.footer()).empty())
+                        .on('change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex(
+                                $(this).val()
+                            );
+
+                            column
+                                .search(val ? '^' + val + '$' : '', true, false)
+                                .draw();
+                        });
+
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>')
+                    });
+                });
+            }
+        });
+    });
+
+
+
+</script>
+
+
+
+
+    <table class="display" id="mytable" style="width:90%">
+
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.NomMission)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.nomClient)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.nomConsultant)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Status)
+                </th>
+
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NomMission)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.nomClient)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.nomConsultant)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+
+                            <td>
+                                @Html.ActionLink("Détail", "CreationOdm", new { id = item.id }, new { @class = "btn" })
+                            </td>
+                            <td>
+                                @Html.ActionLink("Télécharger", "Recalculer", new { id = item.id }, new { @class = "btn" })
+                            </td>
+
+                </tr>
+
+            }
+        </tbody>
+
+        <tfoot>
+            <tr>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.NomMission)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.nomClient)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.nomConsultant)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Status)
+                </th>
+            </tr>
+        </tfoot>
+
+    </table>
+
+
+

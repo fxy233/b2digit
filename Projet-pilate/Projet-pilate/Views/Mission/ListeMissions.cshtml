@@ -40,6 +40,7 @@
             @Html.DisplayNameFor(model => model.End)
         </th>
         <th> @Html.DisplayNameFor(model => model.Fee)</th>
+        <th></th><th></th><th></th>
     </tr>
 
     @foreach (var item in Model)
@@ -99,39 +100,70 @@
         }
         else
         {
-            <tr>
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.Name)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.ClientName)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.ConsultantName)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.ProfitCenter)
+    </td>
+    @*<td>
+            @Html.DisplayFor(modelItem => item.CreatorName)
+        </td>*@
+    <td>
+        @Html.DisplayFor(modelItem => item.Start)
+    </td>
+    <td>
+        @Html.DisplayFor(model => item.End)
+    </td>
+    <td>
+        @Html.DisplayFor(model => item.Fee)
+    </td>
+    <td>
+        @Html.ActionLink("Modifier", "Edit", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })
+        
+    </td>
+    <td>
+        @Html.ActionLink("Supprimer", "Delete", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })
+    </td>
+
+    @{
+        ApplicationDbContext db = new ApplicationDbContext();
+        var mission = db.Missions.Single(m => m.MissionID == item.Id);
+        var consultant = db.Consultants.Single(c => c.ConsultantID == mission.ConsultantID);
+        if (consultant.Status == "Sous-Traitant")
+        {
+        <td>
+            Interdit de créer un ordre de mission à partir d'une mission d'un sous-traitant
+        </td>
+        }
+        else
+        {
+            if (mission.avoirOdm)
+            {
                 <td>
-                    @Html.DisplayFor(modelItem => item.Name)
+                    Vous avez déjà fait l'ordre de mission pour ce mission.
                 </td>
+            }
+            else
+            {
                 <td>
-                    @Html.DisplayFor(modelItem => item.ClientName)
+                    @Html.ActionLink("Créer un ordre de mission", "CreerODM", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ConsultantName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ProfitCenter)
-                </td>
-                @*<td>
-                        @Html.DisplayFor(modelItem => item.CreatorName)
-                    </td>*@
-                <td>
-                    @Html.DisplayFor(modelItem => item.Start)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => item.End)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => item.Fee)
-                </td>
-                <td>
-                    @Html.ActionLink("Modifier", "Edit", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })
-                    @Html.ActionLink("Supprimer", "Delete", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })
-                    @*Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })*@
-                </td>
+            }
+        }
+
+    }
 
 
-            </tr>
+
+</tr>
         }
 
     }

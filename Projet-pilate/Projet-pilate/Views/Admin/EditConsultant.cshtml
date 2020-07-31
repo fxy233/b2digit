@@ -79,15 +79,23 @@
             <div class="col-md-10">
                 <select class="form-control" id="Status" name="Status" required>
                     <option selected id="StatusByDefault">@Model.Status</option>
-                    <option id="Consultant">Consultant</option>
-                    <option id="SousTraitant">Sous-Traitant</option>
+                    @{
+                        if (@Model.Status == "Salarié")
+                        {
+                            <option id="SousTraitant">Sous-Traitant</option>
+                        }
+                        else
+                        {
+                            <option id="Consultant">Salarié</option>
+                        }
+                    }
                 </select>
             </div>
         </div>
 
 
         <div class="form-group">
-            <label class="col-md-2 control-label" for="Status">Type de coût</label>
+            <label class="col-md-2 control-label" for="Status">Périodicité</label>
             <div class="col-md-10">
 
                 @if (@ViewData["CostType"] == "MonthlyCost" || @ViewData["CostType"] == null)
@@ -95,13 +103,13 @@
                     <span class="radio">
                         <label>
                             <input type="radio" name="CostType" id="MonthlyCost" value="MonthlyCost" checked>
-                            Salaire mensuel
+                            Mensuelle
                         </label>
                     </span>
                     <span class="radio">
                         <label>
                             <input type="radio" name="CostType" id="DailyCost" value="DailyCost">
-                            Coût journalier
+                            Journalière
                         </label>
                     </span>
                 }
@@ -110,13 +118,13 @@
                     <span class="radio">
                         <label>
                             <input type="radio" name="CostType" id="MonthlyCost" value="MonthlyCost">
-                            Salaire mensuel
+                            Mensuelle
                         </label>
                     </span>
                     <span class="radio">
                         <label>
                             <input type="radio" name="CostType" id="DailyCost" value="DailyCost" checked>
-                            Coût journalier
+                            Journalière
                         </label>
                     </span>
                 }
@@ -186,16 +194,16 @@
     var SousTraitant = document.getElementById('SousTraitant');
 
 
-    if (Status.childNodes[1].textContent === "Sous-Traitant") {
+    @*if (Status.childNodes[1].textContent === "Sous-Traitant") {
 
         dailyCost.checked = true;
     } else {
         monthlyCost.checked = true;
-    }
+    }*@
 
 
 
-    Status.addEventListener('change', function () {
+   @* Status.addEventListener('change', function () {
 
         if (!dailyCost.checked === true && !Consultant.selected) {
 
@@ -210,17 +218,17 @@
             monthlyCost.checked = true;
         }
 
-    });
+    });*@
 
-    dailyCost.addEventListener('click', function () {
+    @*dailyCost.addEventListener('click', function () {
 
         SousTraitant.selected = true;
-    });
+    });*@
 
 
-    monthlyCost.addEventListener('click', function () {
+    @*monthlyCost.addEventListener('click', function () {
 
         Consultant.selected = true;
-    });
+    })*@;
 
 </script>

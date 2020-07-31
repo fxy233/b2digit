@@ -582,10 +582,32 @@ namespace Projet_pilate.Controllers
 
         [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
         //GET: /Mission/CreationMission
-        [Route("Mission/CreationOdm", Name = "CreationOdm")]
-        public ActionResult CreationOdm()
+        [Route("Mission/CreationOdm")]
+        public ActionResult CreationOdm(int id)
         {
-            return View();
+            ApplicationDbContext db = new ApplicationDbContext();
+
+            var odm = db.OrdreDeMissions.Single(o => o.OrdreDeMissionID == id);
+            var mission = db.Missions.Single(m => m.MissionID == odm.MissionID);
+            var consultant = db.Consultants.Single(c => c.ConsultantID == mission.ConsultantID);
+            var clientContact = db.CompanyContacts.Single(cc => cc.CompanyContactID == mission.CompanyContactID);
+
+            CreationOdmModel model = new CreationOdmModel()
+            {
+                Manager = mission.Creator,
+                debut = mission.Start,
+                fin = mission.End,
+                nomConsultant = consultant.LastName,
+                prenomConsultant = consultant.FirstName,
+                nomClient = clientContact.CompanyName,
+                Mission = mission.Name,
+                contactClient = clientContact.FirstName+" "+clientContact.LastName,
+                Adresse = mission.AdresseMission,
+                Environnement = odm.environnement,
+                fraisAlloue = odm.fraisAlloue,
+            };
+
+            return View(model);
         }
 
         [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
@@ -595,6 +617,133 @@ namespace Projet_pilate.Controllers
         public ActionResult CreationOdm(CreationOdmModel model)
         {
             return View();
+        }
+
+        public ActionResult CreerODM(int id)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+
+            var M = db.Missions.Single(m=>m.MissionID==id);
+            var consultant = db.Consultants.Single(c=>c.ConsultantID== M.ConsultantID);
+            
+
+            if (consultant.Status== "Sous-Traitant")
+            {
+                List<DetailsMissionViewModel> models = new List<DetailsMissionViewModel>();
+
+                var missions = db.Missions.ToList();
+
+                foreach (var mission in missions)
+                {
+                    if (!mission.inexist)
+                    {
+
+                        DetailsMissionViewModel model = new DetailsMissionViewModel()
+                        {
+                            Id = mission.MissionID,
+                            Name = mission.Name,
+                            ContactEmail = mission.CompanyContact.Mail,
+                            ClientName = mission.CompanyContact.Company.Name,
+                            Start = mission.Start,
+                            End = mission.End,
+                            Fee = mission.Fee,
+                            FreeDay = mission.FreeDay,
+                            Periodicity = mission.Periodicity,
+                            Comment = mission.Comment,
+                            ConsultantName = mission.Consultant.FirstName + " " + mission.Consultant.LastName,
+                            CreatorName = mission.Creator,
+                            ProfitCenter = mission.ProfitCenter.Name,
+                        };
+
+                        models.Add(model);
+                    }
+                }
+
+                string message = "On ne doit pas pouvoir créer un ordre de mission à partir d'une mission d'un sous-traitant !";
+                ModelState.AddModelError(string.Empty, message);
+
+                return View("ListeMissions",models);
+            }
+            else
+            {
+                OrdreDeMission odm = new OrdreDeMission()
+                {
+                    ValidationConsultant = false,
+                    ValidationDeAdv = false,
+                    fraisAlloue = "Pass Navigo, ticket restaurant",
+                    MissionID = id,
+                    environnement = "Site client: absence d'environnement et de travaux dangereux",
+                };
+                M.avoirOdm = true;
+
+                db.OrdreDeMissions.Add(odm);
+                db.SaveChanges();
+
+                List<DetailsMissionViewModel> models = new List<DetailsMissionViewModel>();
+
+                var missions = db.Missions.ToList();
+
+                foreach (var mission in missions)
+                {
+                    if (!mission.inexist)
+                    {
+
+                        DetailsMissionViewModel model = new DetailsMissionViewModel()
+                        {
+                            Id = mission.MissionID,
+                            Name = mission.Name,
+                            ContactEmail = mission.CompanyContact.Mail,
+                            ClientName = mission.CompanyContact.Company.Name,
+                            Start = mission.Start,
+                            End = mission.End,
+                            Fee = mission.Fee,
+                            FreeDay = mission.FreeDay,
+                            Periodicity = mission.Periodicity,
+                            Comment = mission.Comment,
+                            ConsultantName = mission.Consultant.FirstName + " " + mission.Consultant.LastName,
+                            CreatorName = mission.Creator,
+                            ProfitCenter = mission.ProfitCenter.Name,
+                        };
+
+                        models.Add(model);
+                    }
+                }
+
+                string message = "La creation d'un ordre de mission a réussi !";
+                ModelState.AddModelError(string.Empty, message);
+
+                return View("ListeMissions", models);
+            }
+
+           
+        }
+
+
+        [Route("Mission/ListeOdm", Name = "ListeOdm")]
+        public ActionResult ListeOdm()
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+
+            var OdmListe = db.OrdreDeMissions.ToList();
+            List<ListeOdmModel> models = new List<ListeOdmModel>();
+
+            foreach(var odm in OdmListe)
+            {
+                var mission = db.Missions.Single(m => m.MissionID == odm.MissionID);
+                var client = db.CompanyContacts.Single(c => c.CompanyContactID == mission.CompanyContactID).CompanyName;
+                var consultant = db.Consultants.Single(c => c.ConsultantID == mission.ConsultantID);
+                ListeOdmModel model = new ListeOdmModel()
+                {
+                    id = odm.OrdreDeMissionID,
+                    NomMission = mission.Name,
+                    nomClient = client,
+                    nomConsultant = consultant.FirstName+" "+consultant.LastName,
+                    Status = odm.ValidationConsultant==false ? "En attente de la signature" : "Signé par le consultant",
+
+                };
+                models.Add(model);
+            }
+            return View(models);
         }
 
 

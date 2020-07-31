@@ -738,7 +738,7 @@ namespace Projet_pilate.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public FileResult Export(string GridHtml)
+        public ActionResult Export(string GridHtml)
         {
             
             string st = Request.Form["status"];
@@ -746,6 +746,7 @@ namespace Projet_pilate.Controllers
             string Objet = Request.Form["objet"];
             string Content = Request.Form["content"];
             string expediteur = Request.Form["expediteur"];
+            
 
             string[] contents = Content.Split('\n');
             foreach (var s in contents)
@@ -883,23 +884,173 @@ namespace Projet_pilate.Controllers
                         }
                     }
                 }
-                
+
+                var entreprise = db.Subsidiaries.Single(s=>s.Name==facture.PrincipalBC);
+
+                string motdepasse = "";
                 if (mail != "Rien" && mail != null && st == "true")
                 {
+                    motdepasse = Request.Form["mdp"];
+                    string mdp = Projet_pilate.Helper.Helper.EncodePassword(motdepasse, entreprise.VCode);
+                    if (! entreprise.motdepasse.Equals(mdp) )
+                    {
+                        var Sub = db.Subsidiaries.Single(s => s.Name == facture.PrincipalBC);
+                        string clientInfo = "";
+                        string contactClient = "";
+                        var slist = db.Subsidiaries.ToList();
+                        var clist = db.Companies.ToList();
+
+                        ViewBag.NomEmettrice = Sub.Name;
+                        ViewBag.AdresseEmettrice = Sub.Address;
+                        ViewBag.VilleEmettrice = Sub.PostaleCode + " " + Sub.City;
+                        ViewBag.MailEmettrice = Sub.email;
+                        ViewBag.TVA = facture.TVA * 100;
+
+                        foreach (var s in slist)
+                        {
+                            if (s.Name == facture.Client)
+                            {
+                                ViewBag.ClientAdresse = s.Address;
+                                ViewBag.ClientVille = s.PostaleCode + " " + s.City;
+                                clientInfo = s.Address + Environment.NewLine + s.PostaleCode + " " + s.City;
+                                contactClient = s.email;
+                            }
+                        }
+                        foreach (var c in clist)
+                        {
+                            if (c.Name == facture.Client)
+                            {
+                                ViewBag.ClientAdresse = c.Address;
+                                ViewBag.ClientVille = c.PostalCode + " " + c.City;
+                                clientInfo = c.Address + Environment.NewLine + c.PostalCode + " " + c.City;
+                                contactClient = c.MailFacturation;
+                            }
+                        }
+
+                        string emetInfo = facture.PrincipalBC + Environment.NewLine + facture.AdresseBC;
+                        emetInfo = emetInfo + Environment.NewLine + Sub.PostaleCode + " " + Sub.City + Environment.NewLine;
+
+                        ViewBag.date = facture.MoisDeFacturation.ToString("dd MMMM yyyy", System.Globalization.CultureInfo.CurrentCulture);
+
+                        var mission = db.Missions.Single(m => m.Name == facture.mission);
+                        FacturePDFViewModel model = new FacturePDFViewModel()
+                        {
+                            ID = id,
+                            EmetInfo = emetInfo,
+                            Siren = Sub.Siren,
+                            ClientName = facture.Client,
+                            ClientInfo = clientInfo,
+                            ClientContact = contactClient,
+                            FactureName = facture.NomFacture,
+                            FactInfo = facture.InfoFacturation,
+                            Quantite = facture.NombredUO,
+                            HTunitaire = facture.TJ,
+                            TVA = facture.TVA,
+                            type = facture.type,
+                            dateReglement = facture.DateRegelement.ToString("dd MMMM yyyy", System.Globalization.CultureInfo.CurrentCulture),
+                            IBAN = Sub.IBAN,
+                            BIC = Sub.BIC,
+                            TVAIntra = Sub.TVAIntra,
+                            Mention = db.Infos.ToList().Count == 0 ? "" : db.Infos.Single().Mention,
+                            Designation = mission.DesignationFacturation,
+                            Reference = facture.reference,
+                            ReferenceBancaires = facture.referenceBancaire,
+
+                        };
+                        string message = "C'est pas le correct mot de passe !";
+                        ModelState.AddModelError(string.Empty, message);
+
+                        return View("Detail", model);
+                    }
+
                     MemoryStream ms = new MemoryStream(stream.ToArray());
                     System.Net.Mime.ContentType ct = new System.Net.Mime.ContentType(System.Net.Mime.MediaTypeNames.Application.Pdf);
                     System.Net.Mail.Attachment attach = new System.Net.Mail.Attachment(ms, ct);
                     attach.ContentDisposition.FileName = facture.NomFacture + ".pdf";
 
                     GMailer.GmailUsername = expediteur;
-                    GMailer.GmailPassword = "Password01";
+                    GMailer.GmailPassword = motdepasse;
                     GMailer mailer = new GMailer();
                     mailer.ToEmail = Tomail;
                     mailer.Subject = Objet;
                     mailer.Body = Content;
                     mailer.IsHtml = true;
                     mailer.attch = attach;
-                    mailer.Send();
+                    try
+                    {
+                        mailer.Send();
+                    }catch (Exception)
+                    {
+                        var Sub = db.Subsidiaries.Single(s => s.Name == facture.PrincipalBC);
+                        string clientInfo = "";
+                        string contactClient = "";
+                        var slist = db.Subsidiaries.ToList();
+                        var clist = db.Companies.ToList();
+
+                        ViewBag.NomEmettrice = Sub.Name;
+                        ViewBag.AdresseEmettrice = Sub.Address;
+                        ViewBag.VilleEmettrice = Sub.PostaleCode + " " + Sub.City;
+                        ViewBag.MailEmettrice = Sub.email;
+                        ViewBag.TVA = facture.TVA * 100;
+
+                        foreach (var s in slist)
+                        {
+                            if (s.Name == facture.Client)
+                            {
+                                ViewBag.ClientAdresse = s.Address;
+                                ViewBag.ClientVille = s.PostaleCode + " " + s.City;
+                                clientInfo = s.Address + Environment.NewLine + s.PostaleCode + " " + s.City;
+                                contactClient = s.email;
+                            }
+                        }
+                        foreach (var c in clist)
+                        {
+                            if (c.Name == facture.Client)
+                            {
+                                ViewBag.ClientAdresse = c.Address;
+                                ViewBag.ClientVille = c.PostalCode + " " + c.City;
+                                clientInfo = c.Address + Environment.NewLine + c.PostalCode + " " + c.City;
+                                contactClient = c.MailFacturation;
+                            }
+                        }
+
+                        string emetInfo = facture.PrincipalBC + Environment.NewLine + facture.AdresseBC;
+                        emetInfo = emetInfo + Environment.NewLine + Sub.PostaleCode + " " + Sub.City + Environment.NewLine;
+
+                        ViewBag.date = facture.MoisDeFacturation.ToString("dd MMMM yyyy", System.Globalization.CultureInfo.CurrentCulture);
+
+                        var mission = db.Missions.Single(m => m.Name == facture.mission);
+                        FacturePDFViewModel model = new FacturePDFViewModel()
+                        {
+                            ID = id,
+                            EmetInfo = emetInfo,
+                            Siren = Sub.Siren,
+                            ClientName = facture.Client,
+                            ClientInfo = clientInfo,
+                            ClientContact = contactClient,
+                            FactureName = facture.NomFacture,
+                            FactInfo = facture.InfoFacturation,
+                            Quantite = facture.NombredUO,
+                            HTunitaire = facture.TJ,
+                            TVA = facture.TVA,
+                            type = facture.type,
+                            dateReglement = facture.DateRegelement.ToString("dd MMMM yyyy", System.Globalization.CultureInfo.CurrentCulture),
+                            IBAN = Sub.IBAN,
+                            BIC = Sub.BIC,
+                            TVAIntra = Sub.TVAIntra,
+                            Mention = db.Infos.ToList().Count == 0 ? "" : db.Infos.Single().Mention,
+                            Designation = mission.DesignationFacturation,
+                            Reference = facture.reference,
+                            ReferenceBancaires = facture.referenceBancaire,
+
+                        };
+                        string message = "Echec d'envoi du mail !";
+                        ModelState.AddModelError(string.Empty, message);
+
+                        return View("Detail" ,model);
+                        
+                    }
+                    
                 }
 
                 
@@ -934,8 +1085,28 @@ namespace Projet_pilate.Controllers
                 pdfDoc.Open();
                 string arialuniTff = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "ARIALUNI.TTF");
 
+                int id = Int32.Parse(Request.Form["id"]);
+                ApplicationDbContext db = new ApplicationDbContext();
+                var facture = db.Factures.Single(f => f.FactureID == id);
+                string imageURL = Server.MapPath(".") + "/../Images/B2DIGIT_Facture.png";
+                if (facture.PrincipalBC == "DMO Conseil")
+                {
+                    string[] strs = facture.PrincipalBC.Split(' ');
+                    if (strs.Length > 1)
+                    {
+                        int i = 0;
+                        foreach (var s in strs)
+                        {
+                            if (i != 0)
+                            {
+                                strs[0] = strs[0] + "_" + s;
+                            }
+                            i++;
+                        }
+                    }
 
-                string imageURL = Server.MapPath(".") + "/../Images/logo transparent.png";
+                    imageURL = Server.MapPath(".") + "/../Images/" + strs[0] + "_Facture.png";
+                }
 
                 iTextSharp.text.Image jpg = iTextSharp.text.Image.GetInstance(imageURL);
 

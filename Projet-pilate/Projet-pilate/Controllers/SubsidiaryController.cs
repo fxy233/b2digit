@@ -10,6 +10,7 @@ using System.Web.Mvc;
 
 namespace Projet_pilate.Controllers
 {
+
     public class SubsidiaryController : Controller
     {
         // GET: Subsidiary/CreateSubsidiary
@@ -31,6 +32,9 @@ namespace Projet_pilate.Controllers
                 return View(model);
             }
 
+            var keyNew = Projet_pilate.Helper.Helper.GeneratePassword(10);
+            var password = Projet_pilate.Helper.Helper.EncodePassword(model.motdepasse, keyNew);
+
             Subsidiary subsidiary = new Subsidiary()
             {
                 Siren = model.Siren,
@@ -45,6 +49,8 @@ namespace Projet_pilate.Controllers
                 BIC = model.BIC,
                 TVAIntra = model.TVAIntra,
                 email = model.email,
+                motdepasse = password,
+                VCode = keyNew,
             };
 
             db.Subsidiaries.Add(subsidiary);
@@ -99,6 +105,7 @@ namespace Projet_pilate.Controllers
         {
             ApplicationDbContext db = new ApplicationDbContext();
             var subsidiary = db.Subsidiaries.Single(s => s.SubsidiaryID == id);
+            
             UpdateSubsidiaryViewModel model = new UpdateSubsidiaryViewModel()
             {
                 ID = subsidiary.SubsidiaryID,
@@ -113,6 +120,8 @@ namespace Projet_pilate.Controllers
                 BIC = subsidiary.BIC,
                 TVAIntra = subsidiary.TVAIntra,
                 email = subsidiary.email,
+                motdepasse = subsidiary.motdepasse,
+            
             };
 
             return View(model);
@@ -133,6 +142,10 @@ namespace Projet_pilate.Controllers
                 return View(model);
             }
 
+            var keyNew = Projet_pilate.Helper.Helper.GeneratePassword(10);
+            var password = Projet_pilate.Helper.Helper.EncodePassword(model.motdepasse, keyNew);
+
+
             subsidiary.Name = model.Name;
             subsidiary.Siren = model.Siren;
             subsidiary.Address = model.Address;
@@ -144,7 +157,8 @@ namespace Projet_pilate.Controllers
             subsidiary.BIC = model.BIC;
             subsidiary.TVAIntra = model.TVAIntra;
             subsidiary.email = model.email;
-
+            subsidiary.motdepasse = password;
+            subsidiary.VCode = keyNew;
             try
             {
                 db.SaveChanges();
@@ -203,5 +217,8 @@ namespace Projet_pilate.Controllers
         }
 
 
+
     }
+
+
 }

@@ -197,7 +197,7 @@
     <div class="col-md-9" style="margin-top:10px">
         <input type="text" value="@Model.TVAIntra" readonly="readonly" placeholder="TVA intracommunautaire" list="tVAintra" class="form-control" id="TVAintra" asp-for="TVAintra" name="TVAintra" required />
     </div>
-    <div class="col-md-12" style="margin-top:10px; margin-bottom:50px">@Html.EditorFor(model => model.Mention, new { htmlAttributes = new { @class = "form-control", @placeholder = "Mention Obligatoire (similaire sur toutes les factures)", @readonly = "readonly" } })</div>
+    <div class="col-md-12 editor-field" style="margin-top:10px; margin-bottom:50px">@Html.TextAreaFor(model => model.Mention, new { htmlAttributes = new { @class = "form-control", @placeholder = "Mention Obligatoire (similaire sur toutes les factures)", @readonly = "readonly" } })</div>
 
 
 </div>
@@ -302,7 +302,7 @@
                                                   Montant H.T en Euros              @ViewBag.montantHT €
                                                       Montant TVA en Euros              @ViewBag.montantTVA €
                                                       Net à payer T.T.C en Euros        @ViewBag.montantTTC €
-                                                           Date de règlement:          @Model.dateReglement
+                                                      Date de règlement:                 @Model.dateReglement
     </pre>
     <pre>
 
@@ -312,8 +312,11 @@
     IBAN : @Model.IBAN
     BIC : @Model.BIC
     TVA intracommunautaire : @Model.TVAIntra
-    @Model.Mention
+  
+
+
     </pre>
+    <pre style="font-size:7px">@Model.Mention</pre>
 
 
 </div>
