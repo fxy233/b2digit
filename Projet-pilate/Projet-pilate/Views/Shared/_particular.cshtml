@@ -94,7 +94,7 @@
                                 <ul class="dropdown-menu">
                                     <li>@Html.RouteLink("Activation du mois", "ActivationCRA")</li>
                                     <li>@Html.RouteLink("Message d'accueil", "Message")</li>
-                                    
+
                                     <li>@Html.RouteLink("Factures", "Factures")</li>
                                     <li>@Html.RouteLink("Suivis", "Suivis")</li>
                                 </ul>
@@ -128,6 +128,13 @@
 
                         <li>
                             @Html.RouteLink("Saisir votre CRAS", "CRA", new { @class = "dropdown-item" })
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a href="#" class=" nav-link dropdown-toggle" data-toggle="dropdown">Ordre de missions</a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.RouteLink("Liste des ordres de mission", "ListeOdm")</li>
+
+                            </ul>
                         </li>
                     }
                     @if (User.IsInRole("Super-Administrateur") || User.IsInRole("Administrateur-ventes") || User.IsInRole("Administrateur") || User.IsInRole("Manager"))

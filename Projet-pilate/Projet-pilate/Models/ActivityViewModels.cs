@@ -109,8 +109,7 @@ namespace Projet_pilate.Models
         public string Environnement { get; set; }
         public string Mission { get; set; }
         public string fraisAlloue { get; set; }
-
-        
+        public string signature { get; set; }
     }
 
     public class ListeOdmModel

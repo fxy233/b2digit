@@ -1,0 +1,129 @@
+﻿
+@model Projet_pilate.Models.CreationOdmModel
+@using Projet_pilate.Models
+@using System.Globalization
+
+@{
+    ViewBag.Title = "ModifierOdm";
+}
+
+<style>
+    .frais {
+        max-width: 1000px;
+    }
+</style>
+
+<br />
+<br />
+<br />
+<br />
+
+@using (Html.BeginForm())
+{
+
+    <div class="form-group col-md-12">
+        <input id="test" hidden="hidden" value="@Model.fraisAlloue" />
+        <div class="col-md-1" style="padding-top:7px; font-weight:bolder">Manager:  </div>
+        <div class="col-md-11">
+            @Html.EditorFor(model => model.Manager, new { htmlAttributes = new { @class = "form-control" } })
+
+        </div>
+
+        <div class="col-md-2" style="padding-top:7px; font-weight:bolder; margin-top:10px">
+            Date de début:
+        </div>
+        <div class="col-md-4" style="margin-top:10px">
+            @Html.EditorFor(model => model.debut, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+        <div class="col-md-2" style="padding-top:7px; font-weight:bolder; margin-top:10px">
+            Date de fin:
+        </div>
+        <div class="col-md-4" style="margin-top:10px">
+            @Html.EditorFor(model => model.fin, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+
+        <p class="col-md-12" style="background-color:navajowhite;margin-top:30px; text-align: center;">Informations concernant le collaborateur</p>
+
+
+
+        <div class="col-md-1" style="padding-top:7px; font-weight:bolder; margin-top:15px;">Nom:  </div>
+        <div class="col-md-11" style="margin-top:15px">
+            @Html.EditorFor(model => model.nomConsultant, new { htmlAttributes = new { @class = "form-control" } })
+
+        </div>
+        <div class="col-md-1" style="padding-top:7px; font-weight:bolder; margin-top:10px">Prenom:  </div>
+        <div class="col-md-11" style="margin-top:10px;">
+            @Html.EditorFor(model => model.prenomConsultant, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+
+
+
+        <p class="col-md-12" style="background-color:navajowhite;margin-top:30px; text-align: center;">Informations concernant le projet</p>
+
+
+
+        <div class="col-md-2" style="padding-top:7px; font-weight:bolder; margin-top:15px">Nom du client:  </div>
+        <div class="col-md-10" style="margin-top:15px;">
+            @Html.EditorFor(model => model.nomClient, new { htmlAttributes = new { @class = "form-control" } })
+
+        </div>
+
+        <div class="col-md-2" style="padding-top:7px; font-weight:bolder; margin-top:10px">Nom du projet:  </div>
+        <div class="col-md-10" style="margin-top:10px;">
+            @Html.EditorFor(model => model.Mission, new { htmlAttributes = new { @class = "form-control" } })
+
+        </div>
+
+        <div class="col-md-2" style="padding-top:7px; font-weight:bolder; margin-top:10px">Contact Client:  </div>
+        <div class="col-md-10" style="margin-top:10px;">
+            @Html.EditorFor(model => model.contactClient, new { htmlAttributes = new { @class = "form-control" } })
+
+        </div>
+
+        <div class="col-md-3" style="padding-top:7px; font-weight:bolder; margin-top:10px; margin-right:0px;padding-right:0px">Adresse d'intervention:  </div>
+        <div class="col-md-9" style="margin-top:10px; padding-left:0px;margin-left:0px">
+            @Html.EditorFor(model => model.Adresse, new { htmlAttributes = new { @class = "form-control" } })
+
+        </div>
+        <div class="col-md-3" style="padding-top:7px; font-weight:bolder; margin-top:10px; margin-right:0px;padding-right:0px">Environnement Projet:  </div>
+        <div class="col-md-9 form-group" style="margin-top:10px; padding-left:0px;margin-left:0px">
+            @Html.TextAreaFor(model => model.Environnement,4,100, new { htmlAttributes = new { @class = "form-control" } })
+
+        </div>
+
+
+        <p class="col-md-12" style="background-color:navajowhite;margin-top:30px; text-align: center;">Informations concernant les frais alloués</p>
+
+        <div class="col-md-12" style="margin-top:30px;margin-bottom:30px;">
+            <textarea name="frais" id="frais" class="form-control" rows="3" cols="150" style=" width:100%;margin-left:36px; max-width:1010px;">
+            </textarea>
+        </div>
+        <div class="col-md-2" style="padding-top:7px; font-weight:bolder; margin-top:10px;padding-left:50px;">A dater et signer</div>
+        <div class="col-md-offset-2 col-md-8">
+            <textarea name="signature" id="signature" class="form-control" rows="3" cols="100" style=" width:100%;margin-left:36px; max-width:640px;">
+    </textarea>
+        </div>
+
+    </div>
+
+
+    <input type="submit" id="btnSubmit" value=" Valider " class="btn btn-primary" style="margin-top:40px;margin-left:520px " />
+
+}
+
+
+
+
+
+
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        document.getElementById("frais").innerHTML = document.getElementById("test").value;
+    });
+
+
+</script>
+
+

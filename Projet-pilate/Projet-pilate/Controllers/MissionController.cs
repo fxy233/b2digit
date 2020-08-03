@@ -1,8 +1,14 @@
-﻿using Projet_pilate.Entities;
+﻿using iTextSharp.text;
+using iTextSharp.text.pdf;
+using iTextSharp.text.pdf.qrcode;
+using iTextSharp.tool.xml;
+using Projet_pilate.Entities;
 using Projet_pilate.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 
@@ -264,6 +270,7 @@ namespace Projet_pilate.Controllers
                 PrincipalBCID = db.Subsidiaries.ToList()[0].SubsidiaryID,
                 DesignationFacturation = model.Name,
                 Delai = "30 jours",
+                DateFinOdm = model.Start,
             };
 
             var consultantList = db.Consultants.ToList();
@@ -580,45 +587,102 @@ namespace Projet_pilate.Controllers
 
 
 
-        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
-        //GET: /Mission/CreationMission
-        [Route("Mission/CreationOdm")]
-        public ActionResult CreationOdm(int id)
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes,Consultant")]
+        //GET: /Mission/DetailOdm
+        [Route("Mission/DetailOdm")]
+        public ActionResult DetailOdm(int id)
         {
             ApplicationDbContext db = new ApplicationDbContext();
 
             var odm = db.OrdreDeMissions.Single(o => o.OrdreDeMissionID == id);
-            var mission = db.Missions.Single(m => m.MissionID == odm.MissionID);
-            var consultant = db.Consultants.Single(c => c.ConsultantID == mission.ConsultantID);
-            var clientContact = db.CompanyContacts.Single(cc => cc.CompanyContactID == mission.CompanyContactID);
 
             CreationOdmModel model = new CreationOdmModel()
             {
-                Manager = mission.Creator,
-                debut = mission.Start,
-                fin = mission.End,
-                nomConsultant = consultant.LastName,
-                prenomConsultant = consultant.FirstName,
-                nomClient = clientContact.CompanyName,
-                Mission = mission.Name,
-                contactClient = clientContact.FirstName+" "+clientContact.LastName,
-                Adresse = mission.AdresseMission,
+                id = id,
+                Manager = odm.manager,
+                debut = odm.dateDebut,
+                fin = odm.dataFin,
+                nomConsultant = odm.nomConsultant,
+                prenomConsultant = odm.prenomConsultant,
+                nomClient = odm.nomClient,
+                Mission = odm.Mission,
+                contactClient = odm.contactClient,
+                Adresse = odm.missionAdresse,
                 Environnement = odm.environnement,
                 fraisAlloue = odm.fraisAlloue,
+                signature = odm.signature==null?"":odm.signature,
             };
+
+            
 
             return View(model);
         }
 
-        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
-        //GET: /Mission/CreationMission
+/*        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
+        //GET: /Mission/DetailOdm
         [HttpPost]
         [Route("Mission/CreationOdm")]
-        public ActionResult CreationOdm(CreationOdmModel model)
+        public ActionResult DetailOdm(CreationOdmModel model)
         {
-            return View();
+            return View(model);
+        }*/
+
+
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
+        //GET: /Mission/ModifierOdm
+        [Route("Mission/ModifierOdm")]
+        public ActionResult ModifierOdm(int id)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+
+            var odm = db.OrdreDeMissions.Single(o => o.OrdreDeMissionID == id);
+
+
+            CreationOdmModel model = new CreationOdmModel()
+            {
+                id = id,
+                Manager = odm.manager,
+                debut = odm.dateDebut,
+                fin = odm.dataFin,
+                nomConsultant = odm.nomConsultant,
+                prenomConsultant = odm.prenomConsultant,
+                nomClient = odm.nomClient,
+                Mission = odm.Mission,
+                contactClient = odm.contactClient,
+                Adresse = odm.missionAdresse,
+                Environnement = odm.environnement,
+                fraisAlloue = odm.fraisAlloue,
+                signature = odm.signature == null ? "" : odm.signature,
+            };
+            return View(model);
         }
 
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
+        //GET: /Mission/ModifierOdm
+        [HttpPost]
+        [Route("Mission/ModifierOdm")]
+        public ActionResult ModifierOdm(CreationOdmModel model)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var odm = db.OrdreDeMissions.Single(o => o.OrdreDeMissionID == model.id);
+            odm.manager = model.Manager;
+            odm.dateDebut = model.debut;
+            odm.dataFin = model.fin;
+            odm.nomConsultant = model.nomConsultant;
+            odm.prenomConsultant = model.prenomConsultant;
+            odm.nomClient = model.nomClient;
+            odm.Mission = model.Mission;
+            odm.contactClient = model.contactClient;
+            odm.missionAdresse = model.Adresse;
+            odm.environnement = model.Environnement;
+            odm.fraisAlloue = Request.Form["frais"];
+            model.fraisAlloue = odm.fraisAlloue;
+
+            db.SaveChanges();
+            return View("DetailOdm",model);
+        }
+
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
         public ActionResult CreerODM(int id)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -666,12 +730,24 @@ namespace Projet_pilate.Controllers
             }
             else
             {
+
+                var clientContact = db.CompanyContacts.Single(cc => cc.CompanyContactID == M.CompanyContactID);
+
                 OrdreDeMission odm = new OrdreDeMission()
                 {
                     ValidationConsultant = false,
                     ValidationDeAdv = false,
                     fraisAlloue = "Pass Navigo, ticket restaurant",
-                    MissionID = id,
+                    Mission = M.Name,
+                    manager = M.Creator,
+                    dateDebut = M.DateFinOdm,
+                    dataFin = M.End,
+                    nomConsultant = consultant.LastName,
+                    prenomConsultant = consultant.FirstName,
+                    nomClient = clientContact.CompanyName,
+                    contactClient = clientContact.FirstName+" "+clientContact.LastName,
+                    missionAdresse = M.AdresseMission,
+                    signature="",
                     environnement = "Site client: absence d'environnement et de travaux dangereux",
                 };
                 M.avoirOdm = true;
@@ -727,26 +803,213 @@ namespace Projet_pilate.Controllers
             var OdmListe = db.OrdreDeMissions.ToList();
             List<ListeOdmModel> models = new List<ListeOdmModel>();
 
-            foreach(var odm in OdmListe)
+            if (User.IsInRole("Consultant"))
             {
-                var mission = db.Missions.Single(m => m.MissionID == odm.MissionID);
-                var client = db.CompanyContacts.Single(c => c.CompanyContactID == mission.CompanyContactID).CompanyName;
-                var consultant = db.Consultants.Single(c => c.ConsultantID == mission.ConsultantID);
-                ListeOdmModel model = new ListeOdmModel()
+                var user = db.Users.Single(u => u.UserName == User.Identity.Name);
+                foreach (var odm in OdmListe)
                 {
-                    id = odm.OrdreDeMissionID,
-                    NomMission = mission.Name,
-                    nomClient = client,
-                    nomConsultant = consultant.FirstName+" "+consultant.LastName,
-                    Status = odm.ValidationConsultant==false ? "En attente de la signature" : "Signé par le consultant",
+                    if (user.FirstName.ToUpper()!=odm.prenomConsultant.ToUpper()||user.LastName.ToUpper()!=odm.nomConsultant.ToUpper())
+                    {
+                        continue;
+                    }
+                    ListeOdmModel model = new ListeOdmModel()
+                    {
+                        id = odm.OrdreDeMissionID,
+                        NomMission = odm.Mission,
+                        nomClient = odm.nomClient,
+                        nomConsultant = odm.prenomConsultant + " " + odm.nomConsultant,
+                        Status = odm.ValidationConsultant == false ? "En attente de la signature" : "Signé par le consultant",
 
-                };
-                models.Add(model);
+                    };
+                    models.Add(model);
+                }
             }
+            else
+            {
+                foreach (var odm in OdmListe)
+                {
+                    ListeOdmModel model = new ListeOdmModel()
+                    {
+                        id = odm.OrdreDeMissionID,
+                        NomMission = odm.Mission,
+                        nomClient = odm.nomClient,
+                        nomConsultant = odm.prenomConsultant + " " + odm.nomConsultant,
+                        Status = odm.ValidationConsultant == false ? "En attente de la signature" : "Signé par le consultant",
+
+                    };
+                    models.Add(model);
+                }
+            }
+
+            
             return View(models);
         }
 
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes,Consultant")]
+        [HttpPost]
+        [ValidateInput(false)]
+        public FileResult Export(string GridHtml)
+        {
+            var id = Int32.Parse(Request.Form["id"]);
+            ApplicationDbContext db = new ApplicationDbContext();
+            var odm = db.OrdreDeMissions.Single(o => o.OrdreDeMissionID == id);
 
+            using (MemoryStream stream = new System.IO.MemoryStream())
+            {
+                StringReader sr = new StringReader(GridHtml);
+                Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 100f, 0f);
+                PdfWriter writer = PdfWriter.GetInstance(pdfDoc, stream);
+                pdfDoc.Open();
+                string arialuniTff = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "ARIALUNI.TTF");
+
+                /*int id = Int32.Parse(Request.Form["id"]);
+                ApplicationDbContext db = new ApplicationDbContext();
+                var facture = db.Factures.Single(f => f.FactureID == id);
+                */
+                string imageURL = Server.MapPath(".") + "/../Images/B2DIGIT_Facture.png";
+                /*
+                if (facture.PrincipalBC == "DMO Conseil")
+                {
+                    string[] strs = facture.PrincipalBC.Split(' ');
+                    if (strs.Length > 1)
+                    {
+                        int i = 0;
+                        foreach (var s in strs)
+                        {
+                            if (i != 0)
+                            {
+                                strs[0] = strs[0] + "_" + s;
+                            }
+                            i++;
+                        }
+                    }
+
+                    imageURL = Server.MapPath(".") + "/../Images/" + strs[0] + "_Facture.png";
+                }
+                */
+                iTextSharp.text.Image jpg = iTextSharp.text.Image.GetInstance(imageURL);
+
+                //Resize image depend upon your need
+
+                jpg.ScaleToFit(140f, 120f);
+
+                //Give space before image
+
+                jpg.SpacingBefore = 14f;
+
+                //Give some space after the image
+
+                jpg.SpacingAfter = 1f;
+
+                jpg.Alignment = Element.ALIGN_LEFT;
+
+
+                pdfDoc.Add(jpg);
+
+                XMLWorkerHelper.GetInstance().ParseXHtml(writer, pdfDoc, sr);
+                pdfDoc.Close();
+
+
+                return File(stream.ToArray(), "application/pdf", "ODM-"+odm.Mission+"-"+odm.dataFin.ToString("MM-yyyy")+".pdf");
+            }
+
+        }
+
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
+        [Route("Mission/CreationOdm")]
+        public ActionResult CreationOdm()
+        {
+            CreationOdmModel model = new CreationOdmModel();
+            model.debut = DateTime.Now;
+            model.fin = DateTime.Now;
+
+            model.fraisAlloue = "Pass Navigo ticket restaurant";
+            model.Environnement = "Site client: absence d'environnement et de travaux dangereux";
+
+            return View(model);
+        }
+
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
+        //GET: /Mission/CreationOdm
+        [HttpPost]
+        [Route("Mission/CreationOdm")]
+        public ActionResult CreationOdm(CreationOdmModel model)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+
+            if (DateTime.Compare(model.debut,model.fin)>=0)
+            {
+                CreationOdmModel model3 = new CreationOdmModel();
+                model3.debut = DateTime.Now;
+                model3.fin = DateTime.Now;
+
+                model3.fraisAlloue = "Pass Navigo ticket restaurant";
+                model3.Environnement = "Site client: absence d'environnement et de travaux dangereux";
+
+                string message = "Le date du fin doit être après le date du debut !";
+                ModelState.AddModelError(string.Empty, message);
+
+                return View(model3);
+            }
+
+            OrdreDeMission odm = new OrdreDeMission()
+            {
+                ValidationConsultant = false,
+                ValidationDeAdv = false,
+                fraisAlloue = Request.Form["frais"],
+                Mission = Request.Form["Mission"],
+                manager = Request.Form["Manager"],
+                dateDebut = model.debut,
+                dataFin = model.fin,
+                nomConsultant = Request.Form["nomConsultant"],
+                prenomConsultant = Request.Form["prenomConsultant"],
+                nomClient = Request.Form["nomClient"],
+                contactClient = Request.Form["contactClient"],
+                missionAdresse = Request.Form["Adresse"],
+                signature = "",
+                environnement =model.Environnement,
+            };
+
+            db.OrdreDeMissions.Add(odm);
+            db.SaveChanges();
+
+            CreationOdmModel model2 = new CreationOdmModel()
+            {
+                id = odm.OrdreDeMissionID,
+                Manager = odm.manager,
+                debut = odm.dateDebut,
+                fin = odm.dataFin,
+                nomConsultant = odm.nomConsultant,
+                prenomConsultant = odm.prenomConsultant,
+                nomClient = odm.nomClient,
+                Mission = odm.Mission,
+                contactClient = odm.contactClient,
+                Adresse = odm.missionAdresse,
+                Environnement = odm.environnement,
+                fraisAlloue = odm.fraisAlloue,
+                signature = odm.signature == null ? "" : odm.signature,
+            };
+            return View("DetailOdm", model2);
+        }
+
+        [Authorize(Roles = "Consultant")]
+        [Route("Mission/Signer")]
+        public ActionResult Signer (int id)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+
+            var odm = db.OrdreDeMissions.Single(o => o.OrdreDeMissionID == id);
+            odm.ValidationConsultant = true;
+            odm.signature = "Lu et approuvé le "+DateTime.Now.ToString("dd MMMM yyyy", System.Globalization.CultureInfo.CurrentCulture)+",  " + odm.prenomConsultant+" "+odm.nomConsultant;
+
+            var mission = db.Missions.Single(m => m.Name == odm.Mission);
+            mission.avoirOdm = false;
+            mission.DateFinOdm = mission.End;
+
+            db.SaveChanges();
+
+            return RedirectToAction("ListeOdm");
+        }
     }
 }
 

@@ -495,6 +495,12 @@ namespace Projet_pilate.Controllers
             return RedirectToAction("ProfitCenterList", "ProfitCenter");
         }
 
+        [Route("ProfitCenter/Rapports", Name = "Rapports")]
+        public ActionResult Rapports()
+        {
+            return View();
+        }
+
     }
 }
 
