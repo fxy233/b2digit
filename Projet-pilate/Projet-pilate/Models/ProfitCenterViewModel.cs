@@ -83,4 +83,27 @@ namespace Projet_pilate.Models
 
 
     }
+
+    public class SuiviDetailViewModel
+    {
+        public int ID { get; set; }
+
+        [Display(Name = "Consultant")]
+        public string Consultant { get; set; }
+
+        [Display(Name = "Mission")]
+        public string Mission { get; set; }
+
+        [Display(Name = "Client")]
+        public string Client { get; set; }
+
+        [Display(Name = "NBJ")]
+        public float Nbj { get; set; }
+
+        [Display(Name = "TJ")]
+        public float Tj { get; set; }
+
+        [Display(Name = "CA")]
+        public float CA { get; set; }
+    }
 }

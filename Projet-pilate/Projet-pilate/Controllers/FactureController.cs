@@ -205,11 +205,7 @@ namespace Projet_pilate.Controllers
             return View();
         }*/
 
-        [Route("Facture/Suivis", Name = "Suivis")]
-        public ActionResult Suivis()
-        {
-             return View();
-        }
+
 
         [Route("Facture/Modifier", Name = "Modifier")]
         public ActionResult Modifier(int id)

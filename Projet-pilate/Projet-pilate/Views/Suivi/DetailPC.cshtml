@@ -1,0 +1,163 @@
+﻿@model IEnumerable<Projet_pilate.Models.SuiviDetailViewModel>
+@using Projet_pilate.Models;
+@{
+    Layout = null;
+}
+
+    <script>
+    $(document).ready(function () {
+        var str = "#" + "@ViewBag.id";
+        console.log(str);
+        $(str).DataTable({
+            initComplete: function () {
+                this.api().columns().every(function () {
+                    var column = this;
+                    var select = $('<select><option value=""></option></select>')
+                        .appendTo($(column.footer()).empty())
+                        .on('change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex(
+                                $(this).val()
+                            );
+
+                            column
+                                .search(val ? '^' + val + '$' : '', true, false)
+                                .draw();
+                        });
+
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>')
+                    });
+                });
+            }
+        });
+    });
+    </script>
+
+<style>
+    .btnp {
+        width: 120px;
+    }
+</style>
+
+
+<table class="display" id="@ViewBag.id" style="width:90%">
+
+    <thead>
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Consultant)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Mission)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Client)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nbj)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tj)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CA)
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+
+            
+                ApplicationDbContext db = new ApplicationDbContext();
+                var mission = db.Missions.Single(m => m.Name == item.Mission);
+                if (mission.ProfitCenterID != ViewBag.id2)
+                {
+                    <tr>
+
+                        <td style="color:red">
+                            @Html.DisplayFor(modelItem => item.Consultant)
+                        </td>
+                        <td style="color:red">
+                            @Html.DisplayFor(modelItem => item.Mission)
+                        </td>
+                        <td style="color:red">
+                            @Html.DisplayFor(modelItem => item.Client)
+                        </td>
+                        <td style="color:red">
+                            @Html.DisplayFor(modelItem => item.Nbj)
+                        </td>
+                        <td style="color:red">
+                            @Html.DisplayFor(modelItem => item.Tj)
+                        </td>
+                        <td style="color:red">
+                            @Html.DisplayFor(modelItem => item.CA)
+                        </td>
+
+
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Consultant)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Mission)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Client)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Nbj)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Tj)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CA)
+                        </td>
+
+
+                    </tr>
+                }
+            
+
+
+
+        }
+    </tbody>
+
+    <tfoot>
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Consultant)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Mission)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Client)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nbj)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tj)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CA)
+            </th>
+        </tr>
+    </tfoot>
+
+</table>
+
+
+
+

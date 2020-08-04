@@ -310,6 +310,7 @@
     <Compile Include="Controllers\MissionController.cs" />
     <Compile Include="Controllers\ProfitCenterController.cs" />
     <Compile Include="Controllers\SubsidiaryController.cs" />
+    <Compile Include="Controllers\SuiviController.cs" />
     <Compile Include="Entities\ActivityClasses.cs" />
     <Compile Include="Entities\BusinessClasses.cs" />
     <Compile Include="Entities\CompanyClasses.cs" />
@@ -542,6 +543,18 @@
     <Compile Include="Migrations\202008030657026_odmAjouter.designer.cs">
       <DependentUpon>202008030657026_odmAjouter.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202008032019203_updateSuivi.cs" />
+    <Compile Include="Migrations\202008032019203_updateSuivi.designer.cs">
+      <DependentUpon>202008032019203_updateSuivi.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202008032110312_updateSuivi2.cs" />
+    <Compile Include="Migrations\202008032110312_updateSuivi2.designer.cs">
+      <DependentUpon>202008032110312_updateSuivi2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202008040818393_upSuivi.cs" />
+    <Compile Include="Migrations\202008040818393_upSuivi.designer.cs">
+      <DependentUpon>202008040818393_upSuivi.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityViewModels.cs" />
@@ -688,7 +701,7 @@
     <Content Include="Views\Consultant\test.cshtml" />
     <Content Include="Views\Consultant\ExportTest.cshtml" />
     <Content Include="Views\Facture\ListeFactures.cshtml" />
-    <Content Include="Views\Facture\Suivis.cshtml" />
+    <Content Include="Views\Suivi\Suivis.cshtml" />
     <Content Include="Views\Facture\CreerFact.cshtml" />
     <Content Include="Views\Facture\Detail.cshtml" />
     <Content Include="Views\Shared\_particular.cshtml" />
@@ -703,8 +716,8 @@
     <Content Include="Views\Facture\apercu.cshtml" />
     <Content Include="Views\Mission\ListeOdm.cshtml" />
     <Content Include="Views\Mission\ModifierOdm.cshtml" />
-    <Content Include="Views\ProfitCenter\Rapports.cshtml" />
     <Content Include="Views\Mission\CreationOdm.cshtml" />
+    <Content Include="Views\Suivi\DetailPC.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -888,6 +901,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202008030657026_odmAjouter.resx">
       <DependentUpon>202008030657026_odmAjouter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008032019203_updateSuivi.resx">
+      <DependentUpon>202008032019203_updateSuivi.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008032110312_updateSuivi2.resx">
+      <DependentUpon>202008032110312_updateSuivi2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008040818393_upSuivi.resx">
+      <DependentUpon>202008040818393_upSuivi.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

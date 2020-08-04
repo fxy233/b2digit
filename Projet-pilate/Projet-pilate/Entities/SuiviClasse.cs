@@ -9,15 +9,17 @@ namespace Projet_pilate.Entities
     {
         //Primary key
         public int SuiviID { get; set; }
-        public DateTime MoisDeFacturation { get; set; }
+        //public DateTime MoisDeFacturation { get; set; }
+        public string statu { get; set; }
         public int SubsidiaryID { get; set; }
         public int ProfitCenterID { get; set; }
         public string NomMission { get; set; }
         public string Consultant { get; set; }
         public float NombredUO { get; set; }
         public float TJ { get; set; }
-        public float cout { get; set; }
-        public float CJ { get; set; }
-        public float Frais { get; set; }
+        public float mensuelConsultant { get; set; }
+        public float mensuelManager { get; set; }
+        public float fraisConsultant { get; set; }
+        public float fraisManager { get; set; }
     }
 }

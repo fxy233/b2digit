@@ -354,6 +354,19 @@ namespace Projet_pilate.Controllers
             string id = User.Identity.Name;
             Consultant consultant = db.Consultants.Single(u => u.Email == id);
 
+
+            double coutM = consultant.DailyCost == 0 ? consultant.MonthlyCost  : consultant.MonthlyCost * 218 / 12;
+            ;
+            /*if (consultant.Status== "Salarié")
+            {
+                coutM = consultant.DailyCost == 0 ? consultant.MonthlyCost * 1.5 + consultant.MealCost + consultant.ExceptionalCost + consultant.TravelPackage : (consultant.MonthlyCost * 1.5 + consultant.MealCost + consultant.ExceptionalCost + consultant.TravelPackage)*218/12 ;
+            }
+            else
+            {
+                coutM = consultant.DailyCost == 0 ? consultant.MonthlyCost + consultant.MealCost + consultant.ExceptionalCost + consultant.TravelPackage : (consultant.MonthlyCost + consultant.MealCost + consultant.ExceptionalCost + consultant.TravelPackage) * 218 / 12;
+            }
+*/
+
             cra.Consultant = consultant;
             cra.Activities = activities;
 
@@ -371,12 +384,18 @@ namespace Projet_pilate.Controllers
             //
             var time = DateTime.Parse( db.MonthActivations.Single().Periode.ToString("yyyy-MM-01") ).AddMonths(1).AddDays(-1);
             var missionNames = db.Missions.Select(m => m.Name).ToList();
+
+
+            float missionTotal = 0;
+            float missionHorsPC = 0;
+
             foreach(KeyValuePair<string, double> pair in missionlist)
             {
                 if (!missionNames.Contains(pair.Key))
                 {
                     continue;
                 }
+                
                 
 
                 var mission = db.Missions.Single(m => m.Name == pair.Key);
@@ -473,6 +492,8 @@ namespace Projet_pilate.Controllers
                 };
 
                 db.Factures.Add(facture);
+
+
                 
 
                 if (mission.InterBC1ID != 0)
@@ -548,6 +569,22 @@ namespace Projet_pilate.Controllers
                     
                 }
 
+
+
+                //
+                missionTotal += (float)pair.Value;
+                var pcid = db.Consultants.Single(c => c.ConsultantID == mission.ConsultantID).ProfitCenterID;
+                if(mission.ProfitCenterID != pcid)
+                {
+                    missionHorsPC += (float)pair.Value;
+                }
+
+                //
+
+
+
+
+
                 db.SaveChanges();
 
 
@@ -555,12 +592,171 @@ namespace Projet_pilate.Controllers
             }
 
 
+            var pc = db.profitCenters.Single(p => p.ProfitCenterID == consultant.ProfitCenterID);
+            var manager = db.Managers.Single(m => m.ManagerID == pc.Owner);
 
-            //
+            if ( missionTotal == 0)
+            {
+                Suivi suivi = new Suivi()
+                {
+                    statu = "FAE",
+                    ProfitCenterID = consultant.ProfitCenterID,
+                    NomMission = "IC",
+                    Consultant = consultant.FirstName + " " + consultant.LastName,
+                    NombredUO = 0,
+                    TJ = 0,
+                    mensuelConsultant = (float)coutM,
+                    mensuelManager = (float)manager.MonthlyCost,
+                    fraisConsultant = (float)(consultant.MealCost+consultant.TravelPackage+consultant.ExceptionalCost),
+                    fraisManager = (float)(manager.MealCost+manager.TravelPackage+manager.ExceptionalCost),
+                };
+                db.Suivis.Add(suivi);
+                db.SaveChanges();
+            }
+            else
+            {
+                if (missionHorsPC == 0)
+                {
+                    foreach (KeyValuePair<string, double> pair in missionlist)
+                    {
+                        if (!missionNames.Contains(pair.Key))
+                        {
+                            continue;
+                        }
+                        var mission = db.Missions.Single(m => m.Name == pair.Key);
+                        float montant = 0f;
+                        float nbUO = 0f;
+                        switch (mission.Periodicity)
+                        {
+                            case "Jours":
+                                nbUO = (float)pair.Value;
+                                montant = nbUO * mission.Fee;
+                                break;
+                            case "Mois":
+                                nbUO = 1;
+                                montant = nbUO * mission.Fee;
+                                break;
+                            case "Trimestre":
+                                nbUO = 1.0f / 3;
+                                montant = nbUO * mission.Fee;
+                                break;
+                            default:
+                                break;
+                        }
+
+                        Suivi suivi = new Suivi()
+                        {
+                            statu = "FAE",
+                            ProfitCenterID = consultant.ProfitCenterID,
+                            NomMission = pair.Key,
+                            Consultant = consultant.FirstName + " " + consultant.LastName,
+                            NombredUO = nbUO,
+                            TJ = mission.Fee,
+                            mensuelConsultant = (float)coutM,
+                            mensuelManager = (float)manager.MonthlyCost,
+                            fraisConsultant = (float)(consultant.MealCost + consultant.TravelPackage + consultant.ExceptionalCost),
+                            fraisManager = (float)(manager.MealCost + manager.TravelPackage + manager.ExceptionalCost),
+                        };
+
+                        db.Suivis.Add(suivi);
+                        db.SaveChanges();
+                    }
+                }
+                else
+                {
+                    foreach (KeyValuePair<string, double> pair in missionlist)
+                    {
+                        if (!missionNames.Contains(pair.Key))
+                        {
+                            continue;
+                        }
+                        var mission = db.Missions.Single(m => m.Name == pair.Key);
+                        float montant = 0f;
+                        float nbUO = 0f;
+                        switch (mission.Periodicity)
+                        {
+                            case "Jours":
+                                nbUO = (float)pair.Value;
+                                montant = nbUO * mission.Fee;
+                                break;
+                            case "Mois":
+                                nbUO = 1;
+                                montant = nbUO * mission.Fee;
+                                break;
+                            case "Trimestre":
+                                nbUO = 1.0f / 3;
+                                montant = nbUO * mission.Fee;
+                                break;
+                            default:
+                                break;
+                        }
+
+                        if(mission.ProfitCenterID != consultant.ProfitCenterID)
+                        {
+                            Suivi suivi = new Suivi()
+                            {
+                                statu = "FAE",
+                                ProfitCenterID = mission.ProfitCenterID,
+                                NomMission = pair.Key,
+                                Consultant = consultant.FirstName + " " + consultant.LastName,
+                                NombredUO = nbUO,
+                                TJ = mission.Fee/2,
+                                mensuelConsultant = (float)(coutM*pair.Value/(2* missionTotal)),
+                                mensuelManager = (float)manager.MonthlyCost,
+                                fraisConsultant = (float)((consultant.MealCost + consultant.TravelPackage + consultant.ExceptionalCost) * pair.Value / (2 * missionTotal)),
+                                fraisManager = (float)(manager.MealCost + manager.TravelPackage + manager.ExceptionalCost),
+                            };
+                            Suivi suivi2 = new Suivi()
+                            {
+                                statu = "FAE",
+                                ProfitCenterID = consultant.ProfitCenterID,
+                                NomMission = pair.Key,
+                                Consultant = consultant.FirstName + " " + consultant.LastName,
+                                NombredUO = nbUO,
+                                TJ = mission.Fee / 2,
+                                mensuelConsultant = (float)(coutM * pair.Value / (2 * missionTotal)),
+                                mensuelManager = (float)manager.MonthlyCost,
+                                fraisConsultant = (float)((consultant.MealCost + consultant.TravelPackage + consultant.ExceptionalCost) * pair.Value / (2 * missionTotal)),
+                                fraisManager = (float)(manager.MealCost + manager.TravelPackage + manager.ExceptionalCost),
+                            };
+
+
+                            db.Suivis.Add(suivi);
+                            db.Suivis.Add(suivi2);
+                            db.SaveChanges();
+                        }
+                        else
+                        {
+                            Suivi suivi = new Suivi()
+                            {
+                                statu = "FAE",
+                                ProfitCenterID = consultant.ProfitCenterID,
+                                NomMission = pair.Key,
+                                Consultant = consultant.FirstName + " " + consultant.LastName,
+                                NombredUO = nbUO,
+                                TJ = mission.Fee,
+                                mensuelConsultant = (float)(coutM*pair.Value/missionTotal),
+                                mensuelManager = (float)manager.MonthlyCost,
+                                fraisConsultant = (float)((consultant.MealCost + consultant.TravelPackage + consultant.ExceptionalCost)*pair.Value/missionTotal),
+                                fraisManager = (float)(manager.MealCost + manager.TravelPackage + manager.ExceptionalCost),
+                            };
+                            db.Suivis.Add(suivi);
+                            db.SaveChanges();
+                        }
+                        
+                    }
+                }
+            }
 
 
 
-            return RedirectToAction("CRA");
+            
+
+                //
+
+
+
+                return RedirectToAction("CRA");
 
         }
 

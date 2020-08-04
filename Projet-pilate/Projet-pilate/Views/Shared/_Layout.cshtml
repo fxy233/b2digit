@@ -98,7 +98,7 @@
                                     <li>@Html.RouteLink("Message d'accueil", "Message")</li>
 
                                     <li>@Html.RouteLink("Factures", "Factures")</li>
-                                    <li>@Html.RouteLink("Suivis", "Suivis")</li>
+                                    
                                 </ul>
                             </li>
 
@@ -146,6 +146,19 @@
                             <ul class="dropdown-menu">
                                 <li>@Html.RouteLink("Suivi des CRAs", "SuiviCra")</li>
                                 <li>@Html.RouteLink("Liste des CRAS du mois", "ListeCra")</li>
+
+                            </ul>
+                        </li>
+
+                    }
+                    @if (User.IsInRole("Super-Administrateur") || User.IsInRole("Administrateur") || User.IsInRole("Manager"))
+                    {
+                        <li class="nav-item dropdown">
+                            <a href="#" class=" nav-link dropdown-toggle" data-toggle="dropdown">Suivis</a>
+                            <ul class="dropdown-menu">
+                                
+                                <li>@Html.RouteLink("Suivis", "Suivis")</li>
+                                
 
                             </ul>
                         </li>
