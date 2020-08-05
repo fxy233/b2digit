@@ -1,4 +1,5 @@
-﻿using Projet_pilate.Models;
+﻿using Projet_pilate.Entities;
+using Projet_pilate.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,15 +60,24 @@ namespace Projet_pilate.Controllers
 
         [Authorize(Roles = "Administrateur, Super-Administrateur,Manager")]
         [Route("Suivi/DetailPC", Name = "DetailPC")]
-        public ActionResult DetailPC(int id)
+        public ActionResult DetailPC(int id, string statu)
         {
             ApplicationDbContext db = new ApplicationDbContext();
 
             List<SuiviDetailViewModel> models = new List<SuiviDetailViewModel>();
 
+            List<string> clist = new List<string>();
+            float catotal = 0f;
+            float cmtotal = 0f;
+            float fraistotal = 0f;
+
             var suivis = db.Suivis.Where(s=>s.ProfitCenterID==id).ToList();
             foreach(var s in suivis)
             {
+                if (s.statu!= statu && statu!="Produit")
+                {
+                    continue;
+                }
                 var mission = db.Missions.Single(m => m.Name == s.NomMission);
                 var companycontact = db.CompanyContacts.Single(c => c.CompanyContactID == mission.CompanyContactID);
                 SuiviDetailViewModel model = new SuiviDetailViewModel()
@@ -80,13 +90,74 @@ namespace Projet_pilate.Controllers
                     Tj = s.TJ,
                     CA = s.NombredUO*s.TJ,
                 };
+
+                catotal += model.CA;
+                cmtotal += s.mensuelConsultant;
+                fraistotal += s.fraisConsultant;
+
                 models.Add(model);
             }
 
-            ViewBag.id = "table"+id;
+            var user = db.Users.Single(u => u.UserName == User.Identity.Name);
+            Manager manager = null;
+            foreach(var m in db.Managers.ToList())
+            {
+                if (m.FirstName.ToUpper() == user.FirstName.ToUpper() && m.LastName.ToUpper() == user.LastName.ToUpper())
+                {
+                    manager = m;
+                    break;
+                }
+            }
+
+            
+
+            
+            if (manager.role == "BM")
+            {
+                double CM = catotal * 0.9 - cmtotal * 1.7 - fraistotal; 
+                if (statu == "FAE")
+                {
+                    ViewBag.message = "Rapport total pour FAE: " + CM.ToString() + " euros";
+                }
+                if (statu == "Facture")
+                {
+                    ViewBag.message = "Rapport total réel: " + CM.ToString() + " euros";
+                }
+                if (statu == "Produit")
+                {
+                    ViewBag.message = "Rapport total en théorie: " + CM.ToString() + " euros";
+                }
+            }
+            else
+            {
+                double TM = catotal * 0.93 - cmtotal * 1.6 - fraistotal - manager.MonthlyCost * 1.55 - manager.MealCost - manager.TravelPackage - manager.ExceptionalCost;
+                if (statu == "FAE")
+                {
+                    ViewBag.message = "Rapport total pour FAE: " + TM.ToString() + " euros";
+                }
+                if (statu == "Facture")
+                {
+                    ViewBag.message = "Rapport total réel: " + TM.ToString() + " euros";
+                }
+
+                if (statu == "Produit")
+                {
+                    ViewBag.message = "Rapport total en théorie: " + TM.ToString() + " euros";
+                }
+            }
+
+            ViewBag.id = "table"+id+statu;
             ViewBag.id2 = id;
             return View(models);
         }
 
+
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager")]
+        [Route("Suivi/PCView", Name = "PCView")]
+        public ActionResult PCView(int id)
+        {
+            ViewBag.id = id;
+            return View();
+        }
     }
 }

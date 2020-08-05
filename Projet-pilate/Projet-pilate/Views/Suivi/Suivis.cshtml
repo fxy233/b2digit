@@ -44,11 +44,11 @@
             {
                 if (x == 1)
                 {
-                    <div id="@pc.ProfitCenterID" class="tab-pane fade in active" style="margin-top:40px">@Html.Action("DetailPC", "Suivi", new { id = pc.ProfitCenterID })</div>
+                    <div id="@pc.ProfitCenterID" class="tab-pane fade in active" style="margin-top:40px">@Html.Action("PCView", "Suivi", new { id = pc.ProfitCenterID })</div>
                 }
                 else
                 {
-                    <div id="@pc.ProfitCenterID" class="tab-pane fade in" style="margin-top:40px">@Html.Action("DetailPC", "Suivi", new { id = pc.ProfitCenterID })</div>
+                    <div id="@pc.ProfitCenterID" class="tab-pane fade in" style="margin-top:40px">@Html.Action("PCView", "Suivi", new { id = pc.ProfitCenterID })</div>
                 }
                 x++;
             }

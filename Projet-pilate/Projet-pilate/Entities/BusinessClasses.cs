@@ -87,6 +87,7 @@ namespace Projet_pilate.Entities
         public double MealCost { get; set; }
         public double TravelPackage { get; set; }
         public double ExceptionalCost { get; set; }
+        public string role { get; set; }
 
 
         // Foreign Key

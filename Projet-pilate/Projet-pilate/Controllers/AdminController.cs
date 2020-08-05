@@ -153,7 +153,7 @@ namespace Projet_pilate.Controllers
             manager.TravelPackage = model.TravelPackage;
             manager.ExceptionalCost = model.ExceptionalCost;
             manager.MonthlyCost = model.Cost;
-
+            manager.role = Request.Form["role"];
             subsidiary.Managers.Add(manager);
          
             try
@@ -202,8 +202,8 @@ namespace Projet_pilate.Controllers
                 MealCost = manager.MealCost,
                 TravelPackage = manager.TravelPackage,
                 ExceptionalCost = manager.ExceptionalCost,
-                Subsidiary = manager.Subsidiary.Name
-
+                Subsidiary = manager.Subsidiary.Name,
+                role = manager.role,
             };
 
             var subsidiaries = db.Subsidiaries.ToList();
@@ -256,7 +256,7 @@ namespace Projet_pilate.Controllers
             manager.TravelPackage = model.TravelPackage;
             manager.ExceptionalCost = model.ExceptionalCost;
             manager.MonthlyCost = model.Cost;
-
+            manager.role = Request.Form["role"];
 
             var currentSubsidiary = manager.Subsidiary;
             currentSubsidiary.Managers.Remove(manager);

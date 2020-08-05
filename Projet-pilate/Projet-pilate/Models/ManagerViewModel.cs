@@ -79,6 +79,7 @@ namespace Projet_pilate.Models
         public double ExceptionalCost { get; set; }
 
         public string Subsidiary { get; set; }
+        public string role { get; set; }
 
         public List<string> Subsidiaries { get; set; }
 
@@ -130,7 +131,7 @@ namespace Projet_pilate.Models
         public double ExceptionalCost { get; set; }
 
         public string Subsidiary { get; set; }
-
+        public string role { get; set; }
         public List<string> Subsidiaries { get; set; }
 
     }

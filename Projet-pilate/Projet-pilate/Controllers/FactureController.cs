@@ -799,6 +799,14 @@ namespace Projet_pilate.Controllers
             sub.FactureID++;
             db.SaveChanges();
 
+
+            //
+
+
+
+
+            //
+
             /*
             string pattern = @"<p><strong>";
             string[] mc = Regex.Split(GridHtml, pattern);

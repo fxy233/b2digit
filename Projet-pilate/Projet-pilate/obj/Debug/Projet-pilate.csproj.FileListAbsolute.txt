@@ -1204,3 +1204,4 @@ C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Proj
 C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\obj\Debug\Projet_pilate.Migrations.updateSuivi.resources
 C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\obj\Debug\Projet_pilate.Migrations.updateSuivi2.resources
 C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\obj\Debug\Projet_pilate.Migrations.upSuivi.resources
+C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\obj\Debug\Projet_pilate.Migrations.upManagers.resources

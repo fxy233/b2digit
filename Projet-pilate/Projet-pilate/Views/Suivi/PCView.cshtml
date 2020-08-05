@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewBag.Title = "PCView";
+    Layout = null;
+}
+
+    <ul class="nav nav-tabs">
+        @{
+            var str = "#FAE" + ViewBag.id;
+            var str2 = "#Facture" + ViewBag.id;
+            var str3 = "#Produit" + ViewBag.id;
+            <li class="active"><a data-toggle="tab" href=@str>FAE</a></li>
+            <li><a data-toggle="tab" href=@str2>Facturé</a></li>
+            <li><a data-toggle="tab" href=@str3>Produit</a></li>
+        }
+    </ul>
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+<div class="tab-content">
+    @{
+        var s = "FAE" + ViewBag.id;
+        var s2 = "Facture" + ViewBag.id;
+        var s3 = "Produit" + ViewBag.id;
+        <div id="@s" class="tab-pane fade in active" style="margin-top:40px">@Html.Action("DetailPC", "Suivi", new { id = ViewBag.id, statu = "FAE" })</div>
+        <div id="@s2" class="tab-pane fade in" style="margin-top:40px">@Html.Action("DetailPC", "Suivi", new { id = ViewBag.id, statu = "Facture" })</div>
+        <div id="@s3" class="tab-pane fade in" style="margin-top:40px">@Html.Action("DetailPC", "Suivi", new { id = ViewBag.id, statu = "Produit" })</div>
+
+    }
+
+
+</div>
