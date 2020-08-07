@@ -801,8 +801,15 @@ namespace Projet_pilate.Controllers
 
 
             //
-
-
+            var suivilist = db.Suivis.ToList();
+            foreach(var s in suivilist)
+            {
+                if(s.NomMission==facture.mission)
+                {
+                    s.statu = "Facture";
+                }
+            }
+            db.SaveChanges();
 
 
             //

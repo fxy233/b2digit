@@ -21,5 +21,6 @@ namespace Projet_pilate.Entities
         public float mensuelManager { get; set; }
         public float fraisConsultant { get; set; }
         public float fraisManager { get; set; }
+        public int craID { get; set; }
     }
 }

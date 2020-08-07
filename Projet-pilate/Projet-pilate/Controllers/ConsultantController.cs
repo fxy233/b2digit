@@ -19,6 +19,7 @@ using iTextSharp.text.pdf.qrcode;
 using System.Web.Hosting;
 using DocumentFormat.OpenXml.Spreadsheet;
 using NPOI.SS.Formula.Functions;
+using Projet_pilate.Migrations;
 
 namespace Projet_pilate.Controllers
 {
@@ -461,7 +462,7 @@ namespace Projet_pilate.Controllers
                 }
                 Id++;
 
-                Facture facture = new Facture()
+                Entities.Facture facture = new Entities.Facture()
                 {
                     mission = mission.Name,
                     FactureID = Id,
@@ -500,7 +501,7 @@ namespace Projet_pilate.Controllers
                 {
                     Id++;
                     var c = db.Subsidiaries.Single(s => s.SubsidiaryID == mission.InterBC1ID);
-                    Facture factureInt = new Facture()
+                    Entities.Facture factureInt = new Entities.Facture()
                     {
                         mission = mission.Name,
                         FactureID = Id,
@@ -537,7 +538,7 @@ namespace Projet_pilate.Controllers
                     Id++;
                     var c = db.Subsidiaries.Single(s => s.SubsidiaryID == mission.InterBC2ID);
                     var bc = db.Subsidiaries.Single(s => s.SubsidiaryID == mission.InterBC1ID);
-                    Facture factureInt = new Facture()
+                    Entities.Facture factureInt = new Entities.Facture()
                     {
                         mission = mission.Name,
                         FactureID = Id,
@@ -597,7 +598,7 @@ namespace Projet_pilate.Controllers
 
             if ( missionTotal == 0)
             {
-                Suivi suivi = new Suivi()
+                Entities.Suivi suivi = new Entities.Suivi()
                 {
                     statu = "FAE",
                     ProfitCenterID = consultant.ProfitCenterID,
@@ -609,6 +610,8 @@ namespace Projet_pilate.Controllers
                     mensuelManager = (float)manager.MonthlyCost,
                     fraisConsultant = (float)(consultant.MealCost+consultant.TravelPackage+consultant.ExceptionalCost),
                     fraisManager = (float)(manager.MealCost+manager.TravelPackage+manager.ExceptionalCost),
+                    craID = CraID,
+
                 };
                 db.Suivis.Add(suivi);
                 db.SaveChanges();
@@ -644,7 +647,7 @@ namespace Projet_pilate.Controllers
                                 break;
                         }
 
-                        Suivi suivi = new Suivi()
+                        Entities.Suivi suivi = new Entities.Suivi()
                         {
                             statu = "FAE",
                             ProfitCenterID = consultant.ProfitCenterID,
@@ -656,6 +659,8 @@ namespace Projet_pilate.Controllers
                             mensuelManager = (float)manager.MonthlyCost,
                             fraisConsultant = (float)(consultant.MealCost + consultant.TravelPackage + consultant.ExceptionalCost),
                             fraisManager = (float)(manager.MealCost + manager.TravelPackage + manager.ExceptionalCost),
+                            craID = CraID,
+
                         };
 
                         db.Suivis.Add(suivi);
@@ -693,7 +698,7 @@ namespace Projet_pilate.Controllers
 
                         if(mission.ProfitCenterID != consultant.ProfitCenterID)
                         {
-                            Suivi suivi = new Suivi()
+                            Entities.Suivi suivi = new Entities.Suivi()
                             {
                                 statu = "FAE",
                                 ProfitCenterID = mission.ProfitCenterID,
@@ -705,8 +710,10 @@ namespace Projet_pilate.Controllers
                                 mensuelManager = (float)manager.MonthlyCost,
                                 fraisConsultant = (float)((consultant.MealCost + consultant.TravelPackage + consultant.ExceptionalCost) * pair.Value / (2 * missionTotal)),
                                 fraisManager = (float)(manager.MealCost + manager.TravelPackage + manager.ExceptionalCost),
+                                craID = CraID,
+
                             };
-                            Suivi suivi2 = new Suivi()
+                            Entities.Suivi suivi2 = new Entities.Suivi()
                             {
                                 statu = "FAE",
                                 ProfitCenterID = consultant.ProfitCenterID,
@@ -718,6 +725,8 @@ namespace Projet_pilate.Controllers
                                 mensuelManager = (float)manager.MonthlyCost,
                                 fraisConsultant = (float)((consultant.MealCost + consultant.TravelPackage + consultant.ExceptionalCost) * pair.Value / (2 * missionTotal)),
                                 fraisManager = (float)(manager.MealCost + manager.TravelPackage + manager.ExceptionalCost),
+                                craID = CraID,
+
                             };
 
 
@@ -727,7 +736,7 @@ namespace Projet_pilate.Controllers
                         }
                         else
                         {
-                            Suivi suivi = new Suivi()
+                            Entities.Suivi suivi = new Entities.Suivi()
                             {
                                 statu = "FAE",
                                 ProfitCenterID = consultant.ProfitCenterID,
@@ -739,6 +748,8 @@ namespace Projet_pilate.Controllers
                                 mensuelManager = (float)manager.MonthlyCost,
                                 fraisConsultant = (float)((consultant.MealCost + consultant.TravelPackage + consultant.ExceptionalCost)*pair.Value/missionTotal),
                                 fraisManager = (float)(manager.MealCost + manager.TravelPackage + manager.ExceptionalCost),
+                                craID = CraID,
+
                             };
                             db.Suivis.Add(suivi);
                             db.SaveChanges();
@@ -937,7 +948,13 @@ namespace Projet_pilate.Controllers
                 {
                     db.Factures.Remove(f);
                 }
-                
+
+                var suivi = db.Suivis.Where(f => f.craID == craD.CraID).ToList();
+                foreach (var s in suivi)
+                {
+                    db.Suivis.Remove(s);
+                }
+
 
                 db.SaveChanges();
 

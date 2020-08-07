@@ -559,6 +559,10 @@
     <Compile Include="Migrations\202008050703509_upManagers.designer.cs">
       <DependentUpon>202008050703509_upManagers.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202008060632463_upSuivCra.cs" />
+    <Compile Include="Migrations\202008060632463_upSuivCra.designer.cs">
+      <DependentUpon>202008060632463_upSuivCra.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityViewModels.cs" />
@@ -918,6 +922,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202008050703509_upManagers.resx">
       <DependentUpon>202008050703509_upManagers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008060632463_upSuivCra.resx">
+      <DependentUpon>202008060632463_upSuivCra.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
