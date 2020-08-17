@@ -929,6 +929,8 @@ namespace Projet_pilate.Controllers
                             Status = consultant.Status,
                             DailyCost = consultant.DailyCost,
                             MonthlyCost = consultant.MonthlyCost,
+                            ProfitCenter = db.profitCenters.Single(p => p.ProfitCenterID == consultant.ProfitCenterID).Name,
+                            Subsidiary = db.Subsidiaries.Single(s => s.SubsidiaryID == consultant.SubsidiaryID).Name,
                         };
                         models.Add(model);
                     }
@@ -961,6 +963,8 @@ namespace Projet_pilate.Controllers
                         Status = consultant.Status,
                         DailyCost = consultant.DailyCost,
                         MonthlyCost = consultant.MonthlyCost,
+                        ProfitCenter = db.profitCenters.Single(p => p.ProfitCenterID == consultant.ProfitCenterID).Name,
+                        Subsidiary = db.Subsidiaries.Single(s => s.SubsidiaryID == consultant.SubsidiaryID).Name,
                     };
                     models.Add(model);
                 }
@@ -983,6 +987,8 @@ namespace Projet_pilate.Controllers
                     Status = consultant.Status,
                     DailyCost = consultant.DailyCost,
                     MonthlyCost = consultant.MonthlyCost,
+                    ProfitCenter = db.profitCenters.Single(p => p.ProfitCenterID == consultant.ProfitCenterID).Name,
+                    Subsidiary = db.Subsidiaries.Single(s => s.SubsidiaryID == consultant.SubsidiaryID).Name,
                 };
                 models.Add(model);
             }

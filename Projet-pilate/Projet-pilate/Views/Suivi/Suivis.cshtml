@@ -1,4 +1,5 @@
-﻿@using Projet_pilate.Models;
+﻿@model Projet_pilate.Models.PeriodeViewModel
+@using Projet_pilate.Models;
 @{
     ViewBag.Title = "Suivis";
     Layout = "~/Views/Shared/_particular.cshtml";
@@ -8,51 +9,76 @@
 <link href="~/Scripts/jquery.dataTables.min.css" rel="stylesheet" />
 <script type="text/javascript" src="~/Scripts/jquery-3.5.1.js"></script>
 <script type="text/javascript" src="~/Scripts/jquery.dataTables.min.js"></script>
-
-
-<ul class="nav nav-tabs">
-    @{
-        ApplicationDbContext db = new ApplicationDbContext();
-        int x = 1;
-        foreach (var pc in db.profitCenters.ToList())
-        {
-            if (ViewBag.listPC.Contains(pc.ProfitCenterID))
-            {
-                if (x == 1)
-                {
-                    string href = "#" + pc.ProfitCenterID;
-                    <li class="active"><a data-toggle="tab" href="@href">@pc.Name</a></li>
-                }
-                else
-                {
-                    string href = "#" + pc.ProfitCenterID;
-                    <li><a data-toggle="tab" href="@href">@pc.Name</a></li>
-                }
-                x++;
-            }
-        }
-    }
-
-</ul>
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-<div class="tab-content">
-    @{
-        x = 1;
-        foreach (var pc in db.profitCenters.ToList())
-        {
-            if (ViewBag.listPC.Contains(pc.ProfitCenterID))
+@using (Html.BeginForm("Suivis", "Suivi", new { debut = Model.debut, fin = Model.fin }))
+{
+
+    <div class="form-group" style="margin-bottom:15px;">
+        <div class="col-md-1" style="padding-top:7px; padding-left:20px;">
+            From:
+        </div>
+        <div class="col-md-3" style="padding-left:0px;">
+            @Html.EditorFor(model => model.debut, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.debut, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group" style="margin-bottom:15px;">
+        <div class="col-md-1" style="padding-top:7px; padding-left:20px;">
+            To
+        </div>
+        <div class="col-md-3" style="padding-left:0px;">
+            @Html.EditorFor(model => model.fin, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.fin, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="col-md-offset-1 col-md-2" style="margin-bottom:15px;">
+        <input type="submit" value="Valider" class="btn btn-primary btn-large " />
+    </div>
+
+    <ul class="nav nav-tabs">
+        @{
+            ApplicationDbContext db = new ApplicationDbContext();
+            int x = 1;
+            foreach (var pc in db.profitCenters.ToList())
             {
-                if (x == 1)
+                if (ViewBag.listPC.Contains(pc.ProfitCenterID))
                 {
-                    <div id="@pc.ProfitCenterID" class="tab-pane fade in active" style="margin-top:40px">@Html.Action("PCView", "Suivi", new { id = pc.ProfitCenterID })</div>
+                    if (x == 1)
+                    {
+                        string href = "#" + pc.ProfitCenterID;
+                        <li class="active"><a data-toggle="tab" href="@href">@pc.Name</a></li>
+                    }
+                    else
+                    {
+                        string href = "#" + pc.ProfitCenterID;
+                        <li><a data-toggle="tab" href="@href">@pc.Name</a></li>
+                    }
+                    x++;
                 }
-                else
-                {
-                    <div id="@pc.ProfitCenterID" class="tab-pane fade in" style="margin-top:40px">@Html.Action("PCView", "Suivi", new { id = pc.ProfitCenterID })</div>
-                }
-                x++;
             }
         }
-    }
-</div>
 
+    </ul>
+    @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
+    <div class="tab-content">
+        @{
+            x = 1;
+            foreach (var pc in db.profitCenters.ToList())
+            {
+                if (ViewBag.listPC.Contains(pc.ProfitCenterID))
+                {
+                    if (x == 1)
+                    {
+                        <div id="@pc.ProfitCenterID" class="tab-pane fade in active" style="margin-top:40px">@Html.Action("PCView", "Suivi", new { id = pc.ProfitCenterID, debut = Model.debut, fin = Model.fin })</div>
+                    }
+                    else
+                    {
+                        <div id="@pc.ProfitCenterID" class="tab-pane fade in" style="margin-top:40px">@Html.Action("PCView", "Suivi", new { id = pc.ProfitCenterID, debut = Model.debut, fin = Model.fin })</div>
+                    }
+                    x++;
+                }
+            }
+        }
+    </div>
+
+}

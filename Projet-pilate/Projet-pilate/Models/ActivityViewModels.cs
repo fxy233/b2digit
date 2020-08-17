@@ -73,6 +73,7 @@ namespace Projet_pilate.Models
     {
         public int id { get; set; }
         public string consultant { get; set; }
+        public string societe { get; set; }
 
         public DateTime date { get; set; }
 

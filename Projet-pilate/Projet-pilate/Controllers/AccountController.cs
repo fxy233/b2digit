@@ -55,12 +55,26 @@ namespace Projet_pilate.Controllers
         }
 
         //
-        // GET: /Account/Login
+        // GET: /Account/
+
+
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+
+            ApplicationDbContext db = new ApplicationDbContext();
+            //
+            if (db.Users.ToList().Count == 0)
+            {
+                return RedirectToAction("RegisterSuperAdmin");
+            }
+            else
+            {
+                return View();
+            }
+            //
+            
         }
 
         //
@@ -831,6 +845,7 @@ namespace Projet_pilate.Controllers
                     AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
 
                     var admin = await UserManager.FindByIdAsync(adminId);
+                    admin = admin == null ? user : admin;
                     await SignInManager.SignInAsync(admin, isPersistent: false, rememberBrowser: false);
 
               

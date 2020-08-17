@@ -20,9 +20,11 @@
         var s = "FAE" + ViewBag.id;
         var s2 = "Facture" + ViewBag.id;
         var s3 = "Produit" + ViewBag.id;
-        <div id="@s" class="tab-pane fade in active" style="margin-top:40px">@Html.Action("DetailPC", "Suivi", new { id = ViewBag.id, statu = "FAE" })</div>
-        <div id="@s2" class="tab-pane fade in" style="margin-top:40px">@Html.Action("DetailPC", "Suivi", new { id = ViewBag.id, statu = "Facture" })</div>
-        <div id="@s3" class="tab-pane fade in" style="margin-top:40px">@Html.Action("DetailPC", "Suivi", new { id = ViewBag.id, statu = "Produit" })</div>
+        
+        
+        <div id="@s" class="tab-pane fade in active" style="margin-top:40px">@Html.Action("DetailPC", "Suivi", new { id = ViewBag.id, statu = "FAE", debut = ViewBag.debut, fin = ViewBag.fin })</div>
+        <div id="@s2" class="tab-pane fade in" style="margin-top:40px">@Html.Action("DetailPC", "Suivi", new { id = ViewBag.id, statu = "Facture", debut = ViewBag.debut, fin = ViewBag.fin })</div>
+        <div id="@s3" class="tab-pane fade in" style="margin-top:40px">@Html.Action("DetailPC", "Suivi", new { id = ViewBag.id, statu = "Produit", debut = ViewBag.debut, fin = ViewBag.fin })</div>
 
     }
 

@@ -1,4 +1,5 @@
-﻿using Projet_pilate.Entities;
+﻿using Foolproof;
+using Projet_pilate.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -105,5 +106,20 @@ namespace Projet_pilate.Models
 
         [Display(Name = "CA")]
         public float CA { get; set; }
+
+        public float Cout { get; set; }
+
     }
-}
+
+    public class PeriodeViewModel
+    {
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM}", ApplyFormatInEditMode = true)]
+        public DateTime debut { get; set; }
+
+        [DataType(DataType.Date)]
+        [GreaterThan("debut", ErrorMessage = "La date de fin ne peut être inférieure ou égale à la date de début de recherche !")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM}", ApplyFormatInEditMode = true)]
+        public DateTime fin { get; set; }
+    }
+ }

@@ -1,10 +1,11 @@
 ﻿@model IEnumerable<Projet_pilate.Models.SuiviDetailViewModel>
 @using Projet_pilate.Models;
+@using Projet_pilate.Entities;
 @{
     Layout = null;
 }
 
-    <script>
+<script>
     $(document).ready(function () {
         var str = "#" + "@ViewBag.id";
         console.log(str);
@@ -31,7 +32,7 @@
             }
         });
     });
-    </script>
+</script>
 
 <style>
     .btnp {
@@ -64,69 +65,106 @@
             <th>
                 @Html.DisplayNameFor(model => model.CA)
             </th>
-
+            @{
+                ApplicationDbContext db = new ApplicationDbContext();
+                var user = db.Users.Single(u => u.UserName == User.Identity.Name);
+                Manager manager = null;
+                foreach (var m in db.Managers.ToList())
+                {
+                    if (m.FirstName.ToUpper() == user.FirstName.ToUpper() && m.LastName.ToUpper() == user.LastName.ToUpper())
+                    {
+                        manager = m;
+                        break;
+                    }
+                }
+                if (manager == null)
+                {
+                    <th>
+                        DM
+                    </th>
+                }
+                else
+                {
+                    if (manager.role == "BM")
+                    {
+                        <th>
+                            CM
+                        </th>
+                    }
+                    else
+                    {
+                        <th>
+                            TM
+                        </th>
+                    }
+                }
+            }
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
 
-            
-                ApplicationDbContext db = new ApplicationDbContext();
-                var mission = db.Missions.Single(m => m.Name == item.Mission);
-                if (mission.ProfitCenterID != ViewBag.id2)
-                {
-                    <tr>
 
-                        <td style="color:red">
-                            @Html.DisplayFor(modelItem => item.Consultant)
-                        </td>
-                        <td style="color:red">
-                            @Html.DisplayFor(modelItem => item.Mission)
-                        </td>
-                        <td style="color:red">
-                            @Html.DisplayFor(modelItem => item.Client)
-                        </td>
-                        <td style="color:red">
-                            @Html.DisplayFor(modelItem => item.Nbj)
-                        </td>
-                        <td style="color:red">
-                            @Html.DisplayFor(modelItem => item.Tj)
-                        </td>
-                        <td style="color:red">
-                            @Html.DisplayFor(modelItem => item.CA)
-                        </td>
+           
+            var mission = db.Missions.Single(m => m.Name == item.Mission);
+            if (mission.ProfitCenterID != ViewBag.id2)
+            {
+        <tr>
 
+            <td style="color:red">
+                @Html.DisplayFor(modelItem => item.Consultant)
+            </td>
+            <td style="color:red">
+                @Html.DisplayFor(modelItem => item.Mission)
+            </td>
+            <td style="color:red">
+                @Html.DisplayFor(modelItem => item.Client)
+            </td>
+            <td style="color:red">
+                @Html.DisplayFor(modelItem => item.Nbj)
+            </td>
+            <td style="color:red">
+                @Html.DisplayFor(modelItem => item.Tj)
+            </td>
+            <td style="color:red">
+                @Html.DisplayFor(modelItem => item.CA)
+            </td>
+            <td style="color:red">
+                @Html.DisplayFor(modelItem => item.Cout)
+            </td>
 
-                    </tr>
-                }
-                else
-                {
-                    <tr>
+        </tr>
+            }
+            else
+            {
+    <tr>
 
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Consultant)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Mission)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Client)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Nbj)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Tj)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.CA)
-                        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Consultant)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Mission)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Client)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nbj)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Tj)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CA)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Cout)
+        </td>
 
+    </tr>
+            }
 
-                    </tr>
-                }
-            
 
 
 
@@ -154,6 +192,40 @@
             <th>
                 @Html.DisplayNameFor(model => model.CA)
             </th>
+            @{
+                user = db.Users.Single(u => u.UserName == User.Identity.Name);
+                manager = null;
+                foreach (var m in db.Managers.ToList())
+                {
+                    if (m.FirstName.ToUpper() == user.FirstName.ToUpper() && m.LastName.ToUpper() == user.LastName.ToUpper())
+                    {
+                        manager = m;
+                        break;
+                    }
+                }
+                if (manager == null)
+                {
+                    <th>
+                        DM
+                    </th>
+                }
+                else
+                {
+                    if (manager.role == "BM")
+                    {
+                        <th>
+                            CM
+                        </th>
+                    }
+                    else
+                    {
+                        <th>
+                            TM
+                        </th>
+                    }
+                }
+
+            }
         </tr>
     </tfoot>
 

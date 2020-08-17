@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Projet_pilate.Models;
+<!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -9,12 +10,12 @@
     @Scripts.Render("~/bundles/modernizr")
 
     <style type="text/css">
-    img{
-        width:50px;
-        margin-bottom:0;
-        position:relative;
-        bottom:16px;
-    }
+        img {
+            width: 50px;
+            margin-bottom: 0;
+            position: relative;
+            bottom: 16px;
+        }
     </style>
 
 </head>
@@ -27,11 +28,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-              
 
-            <a href="@Url.Action("Index", "Home")" title="List View" class="navbar-brand">
-                <img alt="List View" src="@Url.Content("~/Images/B2DIGIT_INVERSE.png" )">
-            </a>
+
+                <a href="@Url.Action("Index", "Home")" title="List View" class="navbar-brand">
+                    <img alt="List View" src="@Url.Content("~/Images/B2DIGIT_INVERSE.png" )">
+                </a>
 
             </div>
             <div class="navbar-collapse collapse" style="margin-left:0px;padding-left:0px; padding-top:8px;padding-right:0px;">
@@ -98,7 +99,7 @@
                                     <li>@Html.RouteLink("Message d'accueil", "Message")</li>
 
                                     <li>@Html.RouteLink("Factures", "Factures")</li>
-                                    
+
                                 </ul>
                             </li>
 
@@ -151,21 +152,27 @@
                         </li>
 
                     }
-                    @if (User.IsInRole("Super-Administrateur") || User.IsInRole("Administrateur") || User.IsInRole("Manager"))
+                    @if (User.IsInRole("Super-Administrateur") ||  User.IsInRole("Administrateur") || User.IsInRole("Manager"))
                     {
+                        ApplicationDbContext db = new ApplicationDbContext();
+
+
+                        DateTime fin = db.MonthActivations.Single().Periode;
+                        DateTime debut = new DateTime(fin.Year, 1, 1,0,0,0);
+
                         <li class="nav-item dropdown">
                             <a href="#" class=" nav-link dropdown-toggle" data-toggle="dropdown">Suivis</a>
                             <ul class="dropdown-menu">
-                                
-                                <li>@Html.RouteLink("Suivis", "Suivis")</li>
-                                
+
+                                <li>@Html.RouteLink("Suivis", "Suivis", new { debut = debut, fin = fin })</li>
+
 
                             </ul>
                         </li>
 
                     }
                 </ul>
-                    @Html.Partial("_LoginPartial")
+                @Html.Partial("_LoginPartial")
             </div>
         </div>
     </div>

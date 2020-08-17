@@ -563,6 +563,10 @@
     <Compile Include="Migrations\202008060632463_upSuivCra.designer.cs">
       <DependentUpon>202008060632463_upSuivCra.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202008170610205_dateSuivi.cs" />
+    <Compile Include="Migrations\202008170610205_dateSuivi.designer.cs">
+      <DependentUpon>202008170610205_dateSuivi.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityViewModels.cs" />
@@ -925,6 +929,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202008060632463_upSuivCra.resx">
       <DependentUpon>202008060632463_upSuivCra.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008170610205_dateSuivi.resx">
+      <DependentUpon>202008170610205_dateSuivi.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

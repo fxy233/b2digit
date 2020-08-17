@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Projet_pilate.Models;
+<!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -6,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - B2DIGIT</title>
     @Styles.Render("~/Content/css")
-@*    @Scripts.Render("~/bundles/modernizr")*@
+    @*    @Scripts.Render("~/bundles/modernizr")*@
 
     <style type="text/css">
         img {
@@ -121,13 +122,19 @@
 
                     }
 
-                    @if (User.IsInRole("Super-Administrateur") || User.IsInRole("Administrateur") || User.IsInRole("Manager"))
+                    @if (User.IsInRole("Super-Administrateur")  || User.IsInRole("Administrateur") || User.IsInRole("Manager"))
                     {
+                        ApplicationDbContext db = new ApplicationDbContext();
+
+
+                        DateTime fin = db.MonthActivations.Single().Periode;
+                        DateTime debut = new DateTime(fin.Year, 1, 1, 0, 0, 0);
+
                         <li class="nav-item dropdown">
                             <a href="#" class=" nav-link dropdown-toggle" data-toggle="dropdown">Suivis</a>
                             <ul class="dropdown-menu">
 
-                                <li>@Html.RouteLink("Suivis", "Suivis")</li>
+                                <li>@Html.RouteLink("Suivis", "Suivis", new { debut = debut, fin = fin })</li>
 
 
                             </ul>
@@ -174,7 +181,7 @@
         </footer>
     </div>
 
-@*    @Scripts.Render("~/bundles/jquery")*@
+    @*    @Scripts.Render("~/bundles/jquery")*@
     @Scripts.Render("~/bundles/bootstrap")
 
 

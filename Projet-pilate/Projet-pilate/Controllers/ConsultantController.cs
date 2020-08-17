@@ -356,7 +356,7 @@ namespace Projet_pilate.Controllers
             Consultant consultant = db.Consultants.Single(u => u.Email == id);
 
 
-            double coutM = consultant.DailyCost == 0 ? consultant.MonthlyCost  : consultant.MonthlyCost * 218 / 12;
+            double coutM = consultant.DailyCost == 0 ? consultant.MonthlyCost  : consultant.DailyCost * 218 / 12;
             ;
             /*if (consultant.Status== "Salarié")
             {
@@ -600,7 +600,7 @@ namespace Projet_pilate.Controllers
             {
                 Entities.Suivi suivi = new Entities.Suivi()
                 {
-                    statu = "FAE",
+                    statu = "Produit",
                     ProfitCenterID = consultant.ProfitCenterID,
                     NomMission = "IC",
                     Consultant = consultant.FirstName + " " + consultant.LastName,
@@ -608,10 +608,10 @@ namespace Projet_pilate.Controllers
                     TJ = 0,
                     mensuelConsultant = (float)coutM,
                     mensuelManager = (float)manager.MonthlyCost,
-                    fraisConsultant = (float)(consultant.MealCost+consultant.TravelPackage+consultant.ExceptionalCost),
-                    fraisManager = (float)(manager.MealCost+manager.TravelPackage+manager.ExceptionalCost),
+                    fraisConsultant = (float)(consultant.MealCost + consultant.TravelPackage + consultant.ExceptionalCost),
+                    fraisManager = (float)(manager.MealCost + manager.TravelPackage + manager.ExceptionalCost),
                     craID = CraID,
-
+                    date = db.MonthActivations.Single().Periode,
                 };
                 db.Suivis.Add(suivi);
                 db.SaveChanges();
@@ -655,12 +655,12 @@ namespace Projet_pilate.Controllers
                             Consultant = consultant.FirstName + " " + consultant.LastName,
                             NombredUO = nbUO,
                             TJ = mission.Fee,
-                            mensuelConsultant = (float)coutM,
+                            mensuelConsultant = (float)(coutM * pair.Value / missionTotal),
                             mensuelManager = (float)manager.MonthlyCost,
-                            fraisConsultant = (float)(consultant.MealCost + consultant.TravelPackage + consultant.ExceptionalCost),
+                            fraisConsultant = (float)((consultant.MealCost + consultant.TravelPackage + consultant.ExceptionalCost) * pair.Value / missionTotal),
                             fraisManager = (float)(manager.MealCost + manager.TravelPackage + manager.ExceptionalCost),
                             craID = CraID,
-
+                            date = db.MonthActivations.Single().Periode,
                         };
 
                         db.Suivis.Add(suivi);
@@ -711,7 +711,7 @@ namespace Projet_pilate.Controllers
                                 fraisConsultant = (float)((consultant.MealCost + consultant.TravelPackage + consultant.ExceptionalCost) * pair.Value / (2 * missionTotal)),
                                 fraisManager = (float)(manager.MealCost + manager.TravelPackage + manager.ExceptionalCost),
                                 craID = CraID,
-
+                                date = db.MonthActivations.Single().Periode,
                             };
                             Entities.Suivi suivi2 = new Entities.Suivi()
                             {
@@ -726,7 +726,7 @@ namespace Projet_pilate.Controllers
                                 fraisConsultant = (float)((consultant.MealCost + consultant.TravelPackage + consultant.ExceptionalCost) * pair.Value / (2 * missionTotal)),
                                 fraisManager = (float)(manager.MealCost + manager.TravelPackage + manager.ExceptionalCost),
                                 craID = CraID,
-
+                                date = db.MonthActivations.Single().Periode,
                             };
 
 
@@ -749,7 +749,7 @@ namespace Projet_pilate.Controllers
                                 fraisConsultant = (float)((consultant.MealCost + consultant.TravelPackage + consultant.ExceptionalCost)*pair.Value/missionTotal),
                                 fraisManager = (float)(manager.MealCost + manager.TravelPackage + manager.ExceptionalCost),
                                 craID = CraID,
-
+                                date = db.MonthActivations.Single().Periode,
                             };
                             db.Suivis.Add(suivi);
                             db.SaveChanges();
@@ -1396,107 +1396,6 @@ namespace Projet_pilate.Controllers
             return RedirectToAction("ListeCra", "Consultant");
         }
 
-        [Route("Consultant/ExportTest", Name = "ExportTest")]
-        public ActionResult ExportTest(int id)
-        {
-            ApplicationDbContext db = new ApplicationDbContext();
-            var cra = db.Cras.Single(c => c.CraID == id);
-            ActivityExportModel model = new ActivityExportModel();
-
-            model.id = id;
-            model.periode = cra.Month + " " + cra.year;
-            model.activityParClient = new Dictionary<string, Dictionary<string, double[]>>();
-            model.manager = new Dictionary<string, string>();
-
-            var consultant = db.Consultants.Single(c => c.ConsultantID == cra.ConsultantID);
-            model.consultant = consultant.FirstName + " " + consultant.LastName;
-            var activities = cra.Activities.ToList();
-
-            foreach (var activity in activities)
-            {
-                int jour = Int32.Parse(activity.Date.Day.ToString());
-                var morning = activity.Morning;
-                var afternoon = activity.Afternoon;
-
-                if (morning != "Formation" && morning != "Maladie" && morning != "Congés" && morning != "IC")
-                {
-                    var missionM = db.Missions.Single(m => m.Name == morning);
-                    var compM = db.CompanyContacts.Single(c => c.CompanyContactID == missionM.CompanyContactID);
-
-                    if (!model.manager.ContainsKey(missionM.Name))
-                    {
-                        model.manager.Add(missionM.Name, missionM.Creator);
-                    }
-
-                    var dictAPC = model.activityParClient;
-
-                    if (dictAPC.ContainsKey(compM.CompanyName))
-                    {
-                        var dictM = dictAPC[compM.CompanyName];
-                        if (dictM.ContainsKey(missionM.Name))
-                        {
-                            dictM[missionM.Name][jour - 1] += 0.5;
-                        }
-                        else
-                        {
-                            var tab = new double[31];
-                            dictM.Add(missionM.Name, tab);
-                            dictM[missionM.Name][jour - 1] += 0.5;
-                        }
-                    }
-                    else
-                    {
-                        dictAPC.Add(compM.CompanyName, new Dictionary<string, double[]>());
-                        var dictM = dictAPC[compM.CompanyName];
-                        var tab = new double[31];
-                        dictM.Add(missionM.Name, tab);
-                        dictM[missionM.Name][jour - 1] += 0.5;
-                    }
-                }
-
-
-                if (afternoon != "Formation" && afternoon != "Maladie" && afternoon != "Congés" && afternoon != "IC")
-                {
-                    var missionA = db.Missions.Single(m => m.Name == afternoon);
-
-                    var compA = db.CompanyContacts.Single(c => c.CompanyContactID == missionA.CompanyContactID);
-
-                    if (!model.manager.ContainsKey(missionA.Name))
-                    {
-                        model.manager.Add(missionA.Name, missionA.Creator);
-                    }
-
-                    var dictAPC = model.activityParClient;
-
-                    if (dictAPC.ContainsKey(compA.CompanyName))
-                    {
-                        var dictA = dictAPC[compA.CompanyName];
-                        if (dictA.ContainsKey(missionA.Name))
-                        {
-                            dictA[missionA.Name][jour - 1] += 0.5;
-                        }
-                        else
-                        {
-                            var tab = new double[31];
-                            dictA.Add(missionA.Name, tab);
-                            dictA[missionA.Name][jour - 1] += 0.5;
-                        }
-                    }
-                    else
-                    {
-                        dictAPC.Add(compA.CompanyName, new Dictionary<string, double[]>());
-                        var dictA = dictAPC[compA.CompanyName];
-                        var tab = new double[31];
-                        dictA.Add(missionA.Name, tab);
-                        dictA[missionA.Name][jour - 1] += 0.5;
-                    }
-                }
-            }
-
-            
-
-            return View(model);
-        }
 
 
         [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
@@ -1522,7 +1421,7 @@ namespace Projet_pilate.Controllers
             model.periode = cra.Month + " " + cra.year;
             model.activityParClient = new Dictionary<string, Dictionary<string, double[]>>();
             model.manager = new Dictionary<string, string>();
-
+            model.societe = "rien";
             var consultant = db.Consultants.Single(c => c.ConsultantID == cra.ConsultantID);
             model.consultant = consultant.FirstName[0] + "." + consultant.LastName;
             var activities = cra.Activities.ToList();
@@ -1537,6 +1436,11 @@ namespace Projet_pilate.Controllers
                 if (morning != "Formation" && morning!= "Maladie" && morning != "Congés" && morning != "IC")
                 {
                     var missionM = db.Missions.Single(m => m.Name == morning);
+
+                    if(model.societe=="rien")
+                    {
+                        model.societe = db.Subsidiaries.Single(s => s.SubsidiaryID == missionM.PrincipalBCID).Name;
+                    }
                     var compM = db.CompanyContacts.Single(c => c.CompanyContactID == missionM.CompanyContactID);
 
                     if (!model.manager.ContainsKey(missionM.Name))
@@ -1724,13 +1628,40 @@ namespace Projet_pilate.Controllers
                     dt5.Columns.AddRange(new DataColumn[2] { new DataColumn("total"), new DataColumn("quantite") });
                     dt5.Rows.Add("TOTAL",total);
 
+                    var imagepath = HostingEnvironment.MapPath("~/Images/B2DIGIT_Facture.png");
+                    /*string imageURL = Server.MapPath(".") + "~/Images/B2DIGIT_Facture.png";*/
+                    if (exp.societe == "DMO Conseil")
+                    {
+                        string[] strs = exp.societe.Split(' ');
+                        if (strs.Length > 1)
+                        {
+                            int i = 0;
+                            foreach (var s in strs)
+                            {
+                                if (i != 0)
+                                {
+                                    strs[0] = strs[0] + "_" + s;
+                                }
+                                i++;
+                            }
+                        }
 
-                    //var imagepath = @"C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\Images\logo transparent.png";
-                    var imagepath = HostingEnvironment.MapPath("~/Images/logo transparent.png");
+                        imagepath = HostingEnvironment.MapPath("~/Images/" + strs[0] + "_Facture.png");
+                    }
+
+                    
 
                     var ws = wb.Worksheets.Add(x);
+                    if (exp.societe == "DMO Conseil")
+                    {
+                        var image = ws.AddPicture(imagepath).MoveTo(ws.Cell("B3")).Scale(.1);
+                    }
+                    else
+                    {
 
-                    var image = ws.AddPicture(imagepath).MoveTo(ws.Cell("A2")).Scale(.2);
+                        var image = ws.AddPicture(imagepath).MoveTo(ws.Cell("A2")).Scale(.2);
+                    }
+                   
 
                     //ws.AddPicture();
                     ws.Columns("B").Width = 30;
