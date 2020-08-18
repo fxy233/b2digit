@@ -937,6 +937,30 @@ namespace Projet_pilate.Controllers
         {
             ApplicationDbContext db = new ApplicationDbContext();
 
+            Boolean exist = false;
+            foreach(var c in db.Consultants.ToList())
+            {
+                if (c.FirstName==model.prenomConsultant&&c.LastName==model.nomConsultant)
+                {
+                    exist = true;
+                    break;
+                }
+            }
+            if(!exist)
+            {
+                CreationOdmModel model3 = new CreationOdmModel();
+                model3.debut = DateTime.Now;
+                model3.fin = DateTime.Now;
+
+                model3.fraisAlloue = "Pass Navigo ticket restaurant";
+                model3.Environnement = "Site client: absence d'environnement et de travaux dangereux";
+
+                string message = "Ce consultant n'existe pas !";
+                ModelState.AddModelError(string.Empty, message);
+
+                return View(model3);
+            }
+
             if (DateTime.Compare(model.debut,model.fin)>=0)
             {
                 CreationOdmModel model3 = new CreationOdmModel();

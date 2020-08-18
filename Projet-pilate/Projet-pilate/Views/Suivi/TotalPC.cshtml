@@ -1,0 +1,178 @@
+﻿@model IEnumerable<Projet_pilate.Models.SuiviTotalViewModel>
+@using Projet_pilate.Models;
+@using Projet_pilate.Entities;
+@{
+    Layout = null;
+}
+
+<script>
+    $(document).ready(function () {
+        var str = "#" + "@ViewBag.id";
+        console.log(str);
+        $(str).DataTable({
+            initComplete: function () {
+                this.api().columns().every(function () {
+                    var column = this;
+                    var select = $('<select><option value=""></option></select>')
+                        .appendTo($(column.footer()).empty())
+                        .on('change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex(
+                                $(this).val()
+                            );
+
+                            column
+                                .search(val ? '^' + val + '$' : '', true, false)
+                                .draw();
+                        });
+
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>')
+                    });
+                });
+            }
+        });
+    });
+</script>
+
+<style>
+    .btnp {
+        width: 120px;
+    }
+</style>
+
+
+<table class="display" id="@ViewBag.id" style="width:90%">
+
+    <thead>
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.mois)
+            </th>
+            @{
+                ApplicationDbContext db = new ApplicationDbContext();
+                var user = db.Users.Single(u => u.UserName == User.Identity.Name);
+                Manager manager = null;
+                foreach (var m in db.Managers.ToList())
+                {
+                    if (m.FirstName.ToUpper() == user.FirstName.ToUpper() && m.LastName.ToUpper() == user.LastName.ToUpper())
+                    {
+                        manager = m;
+                        break;
+                    }
+                }
+                if (manager == null)
+                {
+                    <th>
+                        DM facturé
+                    </th>
+                    <th>
+                        DM en théorie
+                    </th>
+                }
+                else
+                {
+                    if (manager.role == "BM")
+                    {
+        <th>
+            CM facturé
+        </th>
+
+        <th>
+            CM en théorie
+        </th>
+                    }
+                    else
+                    {
+        <th>
+            TM facturé
+        </th>
+
+        <th>
+            TM en théorie
+        </th>
+                    }
+                }
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+
+                <tr>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.mois)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.coutreel)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.couttheorie)
+                    </td>
+
+                </tr>
+
+        }
+    </tbody>
+
+    <tfoot>
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.mois)
+            </th>
+            @{
+                
+                user = db.Users.Single(u => u.UserName == User.Identity.Name);
+                manager = null;
+                foreach (var m in db.Managers.ToList())
+                {
+                    if (m.FirstName.ToUpper() == user.FirstName.ToUpper() && m.LastName.ToUpper() == user.LastName.ToUpper())
+                    {
+                        manager = m;
+                        break;
+                    }
+                }
+                if (manager == null)
+                {
+                    <th>
+                        DM facturé
+                    </th>
+                    <th>
+                        DM en théorie
+                    </th>
+                }
+                else
+                {
+                    if (manager.role == "BM")
+                    {
+                        <th>
+                            CM facturé
+                        </th>
+
+                        <th>
+                            CM en théorie
+                        </th>
+                    }
+                    else
+                    {
+                        <th>
+                            TM facturé
+                        </th>
+
+                        <th>
+                            TM en théorie
+                        </th>
+                    }
+                }
+            }
+        </tr>
+    </tfoot>
+
+</table>
+
+
+
+

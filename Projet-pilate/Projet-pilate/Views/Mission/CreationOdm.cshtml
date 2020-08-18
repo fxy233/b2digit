@@ -4,7 +4,7 @@
     ViewBag.Title = "CreationOdm";
 }
 
-<h2>CreationOdm</h2>
+<h2>Création d'un ordre de mission</h2>
 
 
 <style>
@@ -71,8 +71,8 @@
                 @{
                     foreach (var item in db.Consultants.ToList())
                     {
-                        <option value="@item.LastName"></option>
-                        @*foreach (var m in db.Missions.ToList())
+                        @*<option value="@item.LastName"></option>*@
+                        foreach (var m in db.Missions.ToList())
                             {
                                 if (item.ConsultantID == m.ConsultantID)
                                 {
@@ -80,20 +80,20 @@
                                     <option value="@item.LastName" id="@s"></option>
                                 }
 
-                            };*@
+                            };
                     };
                 }
             </datalist>
         </div>
-        <div class="col-md-1" style="padding-top:7px; font-weight:bolder; margin-top:10px">Prenom:  </div>
+        <div class="col-md-1" style="padding-top:7px; font-weight:bolder; margin-top:10px">Prénom:  </div>
         <div class="col-md-11" style="margin-top:10px;">
             <input type="text" placeholder="Prenom" list="prenom" class="form-control" id="prenomConsultant" asp-for="prenomConsultant" name="prenomConsultant" required />
             <datalist id="prenom">
                 @{
                     foreach (var item in db.Consultants.ToList())
                     {
-                        <option value="@item.FirstName"></option>
-                        @* foreach (var m in db.Missions.ToList())
+@*                        <option value="@item.FirstName"></option>
+*@                        foreach (var m in db.Missions.ToList())
                             {
                                 if (item.ConsultantID == m.ConsultantID)
                                 {
@@ -101,7 +101,7 @@
                                     <option value="@item.FirstName" id="s"></option>
                                 }
 
-                            };*@
+                            };
                     };
                 }
             </datalist>

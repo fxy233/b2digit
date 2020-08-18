@@ -600,7 +600,7 @@ namespace Projet_pilate.Controllers
             {
                 Entities.Suivi suivi = new Entities.Suivi()
                 {
-                    statu = "Produit",
+                    statu = "Facture",
                     ProfitCenterID = consultant.ProfitCenterID,
                     NomMission = "IC",
                     Consultant = consultant.FirstName + " " + consultant.LastName,
@@ -1628,8 +1628,8 @@ namespace Projet_pilate.Controllers
                     dt5.Columns.AddRange(new DataColumn[2] { new DataColumn("total"), new DataColumn("quantite") });
                     dt5.Rows.Add("TOTAL",total);
 
+
                     var imagepath = HostingEnvironment.MapPath("~/Images/B2DIGIT_Facture.png");
-                    /*string imageURL = Server.MapPath(".") + "~/Images/B2DIGIT_Facture.png";*/
                     if (exp.societe == "DMO Conseil")
                     {
                         string[] strs = exp.societe.Split(' ');

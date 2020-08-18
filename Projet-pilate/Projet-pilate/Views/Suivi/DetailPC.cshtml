@@ -65,6 +65,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.CA)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.mois)
+            </th>
             @{
                 ApplicationDbContext db = new ApplicationDbContext();
                 var user = db.Users.Single(u => u.UserName == User.Identity.Name);
@@ -104,65 +107,102 @@
     <tbody>
         @foreach (var item in Model)
         {
+            if (item.Mission == "IC"||item.Mission=="Aucun")
+            {
+                <tr>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Consultant)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Mission)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Client)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nbj)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Tj)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CA)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.mois)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Cout)
+                    </td>
+
+                </tr>
+                continue;
+            }
 
 
-           
             var mission = db.Missions.Single(m => m.Name == item.Mission);
             if (mission.ProfitCenterID != ViewBag.id2)
             {
-        <tr>
+                <tr>
 
-            <td style="color:red">
-                @Html.DisplayFor(modelItem => item.Consultant)
-            </td>
-            <td style="color:red">
-                @Html.DisplayFor(modelItem => item.Mission)
-            </td>
-            <td style="color:red">
-                @Html.DisplayFor(modelItem => item.Client)
-            </td>
-            <td style="color:red">
-                @Html.DisplayFor(modelItem => item.Nbj)
-            </td>
-            <td style="color:red">
-                @Html.DisplayFor(modelItem => item.Tj)
-            </td>
-            <td style="color:red">
-                @Html.DisplayFor(modelItem => item.CA)
-            </td>
-            <td style="color:red">
-                @Html.DisplayFor(modelItem => item.Cout)
-            </td>
+                    <td style="color:red">
+                        @Html.DisplayFor(modelItem => item.Consultant)
+                    </td>
+                    <td style="color:red">
+                        @Html.DisplayFor(modelItem => item.Mission)
+                    </td>
+                    <td style="color:red">
+                        @Html.DisplayFor(modelItem => item.Client)
+                    </td>
+                    <td style="color:red">
+                        @Html.DisplayFor(modelItem => item.Nbj)
+                    </td>
+                    <td style="color:red">
+                        @Html.DisplayFor(modelItem => item.Tj)
+                    </td>
+                    <td style="color:red">
+                        @Html.DisplayFor(modelItem => item.CA)
+                    </td>
+                    <td style="color:red">
+                        @Html.DisplayFor(modelItem => item.mois)
+                    </td>
+                    <td style="color:red">
+                        @Html.DisplayFor(modelItem => item.Cout)
+                    </td>
 
-        </tr>
+                </tr>
             }
             else
             {
-    <tr>
+                <tr>
 
-        <td>
-            @Html.DisplayFor(modelItem => item.Consultant)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Mission)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Client)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Nbj)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Tj)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CA)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Cout)
-        </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Consultant)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Mission)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Client)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nbj)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Tj)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CA)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.mois)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Cout)
+                    </td>
 
-    </tr>
+                </tr>
             }
 
 
@@ -191,6 +231,9 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CA)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.mois)
             </th>
             @{
                 user = db.Users.Single(u => u.UserName == User.Identity.Name);

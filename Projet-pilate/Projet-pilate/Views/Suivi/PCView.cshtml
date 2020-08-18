@@ -9,9 +9,13 @@
             var str = "#FAE" + ViewBag.id;
             var str2 = "#Facture" + ViewBag.id;
             var str3 = "#Produit" + ViewBag.id;
-            <li class="active"><a data-toggle="tab" href=@str>FAE</a></li>
+            var str4 = "#rapport" + ViewBag.id;
+            <li class="active"><a data-toggle="tab" href=@str3>Produit</a></li>
+
             <li><a data-toggle="tab" href=@str2>Facturé</a></li>
-            <li><a data-toggle="tab" href=@str3>Produit</a></li>
+            <li><a data-toggle="tab" href=@str>FAE</a></li>
+            <li><a data-toggle="tab" href=@str4>Rapport par mois</a></li>
+
         }
     </ul>
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -20,11 +24,12 @@
         var s = "FAE" + ViewBag.id;
         var s2 = "Facture" + ViewBag.id;
         var s3 = "Produit" + ViewBag.id;
-        
-        
-        <div id="@s" class="tab-pane fade in active" style="margin-top:40px">@Html.Action("DetailPC", "Suivi", new { id = ViewBag.id, statu = "FAE", debut = ViewBag.debut, fin = ViewBag.fin })</div>
+        var s4 = "rapport" + ViewBag.id;
+
+        <div id="@s3" class="tab-pane fade in active" style="margin-top:40px">@Html.Action("DetailPC", "Suivi", new { id = ViewBag.id, statu = "Produit", debut = ViewBag.debut, fin = ViewBag.fin })</div>
         <div id="@s2" class="tab-pane fade in" style="margin-top:40px">@Html.Action("DetailPC", "Suivi", new { id = ViewBag.id, statu = "Facture", debut = ViewBag.debut, fin = ViewBag.fin })</div>
-        <div id="@s3" class="tab-pane fade in" style="margin-top:40px">@Html.Action("DetailPC", "Suivi", new { id = ViewBag.id, statu = "Produit", debut = ViewBag.debut, fin = ViewBag.fin })</div>
+        <div id="@s" class="tab-pane fade in " style="margin-top:40px">@Html.Action("DetailPC", "Suivi", new { id = ViewBag.id, statu = "FAE", debut = ViewBag.debut, fin = ViewBag.fin })</div>
+        <div id="@s4" class="tab-pane fade in " style="margin-top:40px">@Html.Action("TotalPC", "Suivi", new { id = ViewBag.id, debut = ViewBag.debut, fin = ViewBag.fin })</div>
 
     }
 

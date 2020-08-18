@@ -731,6 +731,7 @@
     <Content Include="Views\Mission\CreationOdm.cshtml" />
     <Content Include="Views\Suivi\DetailPC.cshtml" />
     <Content Include="Views\Suivi\PCView.cshtml" />
+    <Content Include="Views\Suivi\TotalPC.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

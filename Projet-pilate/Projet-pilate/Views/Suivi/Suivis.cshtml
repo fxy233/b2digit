@@ -10,8 +10,17 @@
 <script type="text/javascript" src="~/Scripts/jquery-3.5.1.js"></script>
 <script type="text/javascript" src="~/Scripts/jquery.dataTables.min.js"></script>
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-@using (Html.BeginForm("Suivis", "Suivi", new { debut = Model.debut, fin = Model.fin }))
+@using (Html.BeginForm("Suivis", "Suivi", new { start = Model.debut, end = Model.fin }, FormMethod.Post))
 {
+    ApplicationDbContext db = new ApplicationDbContext();
+    if (Model.debut == null)
+    {
+        Model.debut = new DateTime(db.MonthActivations.Single().Periode.Year, 1, 1, 0, 0, 0);
+    }
+    if(Model.fin == null)
+    {
+        Model.fin = db.MonthActivations.Single().Periode;
+    }
 
     <div class="form-group" style="margin-bottom:15px;">
         <div class="col-md-1" style="padding-top:7px; padding-left:20px;">
@@ -37,7 +46,7 @@
 
     <ul class="nav nav-tabs">
         @{
-            ApplicationDbContext db = new ApplicationDbContext();
+            
             int x = 1;
             foreach (var pc in db.profitCenters.ToList())
             {

@@ -107,6 +107,9 @@ namespace Projet_pilate.Models
         [Display(Name = "CA")]
         public float CA { get; set; }
 
+        [Display(Name = "Mois concerné")]
+        public string mois { get; set; }
+
         public float Cout { get; set; }
 
     }
@@ -114,12 +117,21 @@ namespace Projet_pilate.Models
     public class PeriodeViewModel
     {
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime debut { get; set; }
 
         [DataType(DataType.Date)]
-        [GreaterThan("debut", ErrorMessage = "La date de fin ne peut être inférieure ou égale à la date de début de recherche !")]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime fin { get; set; }
     }
- }
+
+    public class SuiviTotalViewModel
+    {
+        [Display(Name = "Mois concerné")]
+        public string mois { get; set; }
+
+        public float coutreel { get; set; }
+        public float couttheorie { get; set; }
+    }
+
+}

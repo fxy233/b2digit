@@ -120,10 +120,10 @@ namespace Projet_pilate.Models
         [Display(Name = "Nom de la mission")]
         public string NomMission { get; set; }
 
-        [Display(Name = "Client")]
+        [Display(Name = "Consultant")]
         public string nomConsultant { get; set; }
 
-        [Display(Name = "Consultant")]
+        [Display(Name = "Client")]
         public string nomClient { get; set; }
 
         [Display(Name = "Statut")]

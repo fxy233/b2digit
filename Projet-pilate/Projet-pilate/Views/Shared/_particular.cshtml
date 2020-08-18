@@ -100,7 +100,14 @@
                                 </ul>
                             </li>
 
+                            <li>@Html.RouteLink("Liste des ordres de mission", "ListeOdm")</li>
+
                         }
+
+
+
+
+
 
                         <li class="nav-item dropdown">
                             <a href="#" class=" nav-link dropdown-toggle" data-toggle="dropdown">Business</a>
@@ -111,34 +118,8 @@
                             </ul>
                         </li>
 
-                        <li class="nav-item dropdown">
-                            <a href="#" class=" nav-link dropdown-toggle" data-toggle="dropdown">Ordre de missions</a>
-                            <ul class="dropdown-menu">
-                                <li>@Html.RouteLink("Liste des ordres de mission", "ListeOdm")</li>
-
-                            </ul>
-                        </li>
 
 
-                    }
-
-                    @if (User.IsInRole("Super-Administrateur")  || User.IsInRole("Administrateur") || User.IsInRole("Manager"))
-                    {
-                        ApplicationDbContext db = new ApplicationDbContext();
-
-
-                        DateTime fin = db.MonthActivations.Single().Periode;
-                        DateTime debut = new DateTime(fin.Year, 1, 1, 0, 0, 0);
-
-                        <li class="nav-item dropdown">
-                            <a href="#" class=" nav-link dropdown-toggle" data-toggle="dropdown">Suivis</a>
-                            <ul class="dropdown-menu">
-
-                                <li>@Html.RouteLink("Suivis", "Suivis", new { debut = debut, fin = fin })</li>
-
-
-                            </ul>
-                        </li>
 
                     }
 
@@ -148,14 +129,11 @@
                         <li>
                             @Html.RouteLink("Saisir votre CRAS", "CRA", new { @class = "dropdown-item" })
                         </li>
-                        <li class="nav-item dropdown">
-                            <a href="#" class=" nav-link dropdown-toggle" data-toggle="dropdown">Ordre de missions</a>
-                            <ul class="dropdown-menu">
-                                <li>@Html.RouteLink("Liste des ordres de mission", "ListeOdm")</li>
+                        <li>@Html.RouteLink("Liste des ordres de mission", "ListeOdm")</li>
 
-                            </ul>
-                        </li>
                     }
+
+
                     @if (User.IsInRole("Super-Administrateur") || User.IsInRole("Administrateur-ventes") || User.IsInRole("Administrateur") || User.IsInRole("Manager"))
                     {
                         <li class="nav-item dropdown">
@@ -165,6 +143,27 @@
                                 <li>@Html.RouteLink("Liste des CRAS du mois", "ListeCra")</li>
                             </ul>
                         </li>
+
+                    }
+
+                    @if (User.IsInRole("Super-Administrateur") || User.IsInRole("Administrateur") || User.IsInRole("Manager") || User.IsInRole("Administrateur-ventes"))
+                    {
+                        ApplicationDbContext db = new ApplicationDbContext();
+
+
+                        DateTime f = db.MonthActivations.Single().Periode;
+                        DateTime d = new DateTime(f.Year, 1, 1, 0, 0, 0);
+
+                        <li class="nav-item">@Html.RouteLink("Suivis", "Suivis", new { start = d, end = f })</li>
+                        @*<li class="nav-item dropdown">
+                <a href="#" class=" nav-link dropdown-toggle" data-toggle="dropdown">Suivis</a>
+                <ul class="dropdown-menu">
+
+                    <li>@Html.RouteLink("Suivis", "Suivis", new { debut = debut, fin = fin })</li>
+
+
+                </ul>
+            </li>*@
 
                     }
                 </ul>
