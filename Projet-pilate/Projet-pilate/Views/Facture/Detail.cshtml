@@ -297,7 +297,7 @@
     <div class="col-md-9" style="margin-top:10px">
         <input type="text" value="@Model.TVAIntra" readonly="readonly" placeholder="TVA intracommunautaire" list="tVAintra" class="form-control" id="TVAintra" asp-for="TVAintra" name="TVAintra" required />
     </div>
-    <div class="col-md-12 editor-field" style="margin-top:90px; margin-bottom:50px">@Html.TextAreaFor(model => model.Mention, new { htmlAttributes = new { @class = "form-control", @placeholder = "Mention Obligatoire (similaire sur toutes les factures)", @readonly = "readonly" } })</div>
+    <div class="col-md-12 editor-field" style="margin-top:90px; margin-bottom:50px">@Html.TextAreaFor(model => model.Mention, new {@readonly="readonly" })</div>
 
 
     </div>
@@ -426,7 +426,7 @@
     </pre>
         <pre style="font-size:7px">@Model.Mention</pre>
 
-    </div>
+</div>
 
 
 
@@ -437,9 +437,10 @@
     <script type="text/javascript">
     var turn = false;
             $(function () {
-                document.getElementById("content").innerHTML = "Bonjour," + c + "Nous vous envoyons votre facture." + '\r\n'+ "Cordialement.";
+                document.getElementById("content").innerHTML = "Bonjour," + "Nous vous envoyons votre facture." + '\r\n'+ "Cordialement.";
         $("#btnSubmit").click(function () {
             $("input[name='GridHtml']").val($("#Grid").html());
+            console.log(document.getElementsByTagName("GridHtml"))
         });
         console.log($("#Grid").html());
         @*$("#exampleModal").modal("show");*@

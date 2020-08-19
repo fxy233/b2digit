@@ -129,6 +129,8 @@ namespace Projet_pilate.Models
         [Display(Name = "Statut")]
         public string Status { get; set; }
 
+        [Display(Name = "Date de début")]
+        public string debut { get; set; }
 
     }
 

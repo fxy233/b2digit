@@ -489,7 +489,7 @@ namespace Projet_pilate.Controllers
                     reference = mission.Reference,
                     referenceBancaire = BC.Name,
                     CraId = CraID,
-
+                    mention = db.Infos.ToList().Count==0? "" : db.Infos.Single().Mention,
                 };
 
                 db.Factures.Add(facture);
@@ -528,6 +528,8 @@ namespace Projet_pilate.Controllers
                         reference = mission.Reference,
                         referenceBancaire = BC.Name,
                         CraId = CraID,
+                        mention = db.Infos.ToList().Count == 0 ? "" : db.Infos.Single().Mention,
+
                     };
                     db.Factures.Add(factureInt);
                     
@@ -565,6 +567,8 @@ namespace Projet_pilate.Controllers
                         reference = mission.Reference,
                         referenceBancaire = BC.Name,
                         CraId = CraID,
+                        mention = db.Infos.ToList().Count == 0 ? "" : db.Infos.Single().Mention,
+
                     };
                     db.Factures.Add(factureInt);
                     

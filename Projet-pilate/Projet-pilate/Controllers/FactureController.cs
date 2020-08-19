@@ -285,7 +285,7 @@ namespace Projet_pilate.Controllers
                         model.IBAN = emettrice.IBAN;
                         model.BIC = emettrice.BIC;
                         model.TVAintra = emettrice.TVAIntra;
-                        model.Mention = db.Infos.Single().Mention;
+                        model.Mention = facture.mention;
                         model.mission = facture.mission;
             model.dateReglement = facture.DateRegelement;
             model.Reference = facture.reference;
@@ -439,6 +439,7 @@ namespace Projet_pilate.Controllers
             facture.DateRegelement = model.dateReglement;
             facture.reference = model.Reference;
             facture.referenceBancaire = model.ReferenceBancaire;
+            facture.mention = model.Mention;
             
             if (facture.parentID < 0)
             {
@@ -489,8 +490,12 @@ namespace Projet_pilate.Controllers
             ApplicationDbContext db = new ApplicationDbContext();
             ViewBag.TVA = db.Infos.ToList().Count == 0 ? 0 : db.Infos.Single().TVA;
 
+            FactureCreationViewModel model = new FactureCreationViewModel()
+            {
+                Mention = db.Infos.ToList().Count==0 ? " " : db.Infos.Single().Mention,
+            };
 
-            return View();
+            return View(model);
         }
 
         [Route("Facture/CreerFact")]
@@ -648,7 +653,7 @@ namespace Projet_pilate.Controllers
                 IBAN = sub.IBAN,
                 BIC = sub.BIC,
                 TVAIntra = sub.TVAIntra,
-                Mention = db.Infos.ToList().Count == 0 ? "" : db.Infos.Single().Mention,
+                Mention = facture.mention,
                 Designation = mission.DesignationFacturation,
                 Reference = facture.reference,
                 ReferenceBancaires = facture.referenceBancaire,

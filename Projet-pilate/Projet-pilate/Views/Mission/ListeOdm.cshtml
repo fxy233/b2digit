@@ -86,6 +86,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Status)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.debut)
+            </th>
 
             <th></th>
         </tr>
@@ -94,25 +97,28 @@
         @foreach (var item in Model)
         {
 
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NomMission)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.nomClient)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.nomConsultant)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.NomMission)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.nomClient)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.nomConsultant)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.debut)
+            </td>
 
-                <td>
-                    @Html.ActionLink("Détail", "DetailOdm", new { id = item.id }, new { @class = "btn" })
-                </td>
+            <td>
+                @Html.ActionLink("Détail", "DetailOdm", new { id = item.id }, new { @class = "btn" })
+            </td>
 
-            </tr>
+        </tr>
 
         }
     </tbody>
@@ -132,6 +138,10 @@
             <th>
                 @Html.DisplayNameFor(model => model.Status)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.debut)
+            </th>
+
         </tr>
     </tfoot>
 

@@ -819,7 +819,7 @@ namespace Projet_pilate.Controllers
                         nomClient = odm.nomClient,
                         nomConsultant = odm.prenomConsultant + " " + odm.nomConsultant,
                         Status = odm.ValidationConsultant == false ? "En attente de la signature" : "Signé par le consultant",
-
+                        debut = odm.dateDebut.ToString("yyyy-MM"),
                     };
                     models.Add(model);
                 }
@@ -835,7 +835,7 @@ namespace Projet_pilate.Controllers
                         nomClient = odm.nomClient,
                         nomConsultant = odm.prenomConsultant + " " + odm.nomConsultant,
                         Status = odm.ValidationConsultant == false ? "En attente de la signature" : "Signé par le consultant",
-
+                        debut = odm.dateDebut.ToString("yyyy-MM"),
                     };
                     models.Add(model);
                 }
