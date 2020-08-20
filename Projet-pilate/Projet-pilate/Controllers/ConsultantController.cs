@@ -2083,6 +2083,118 @@ namespace Projet_pilate.Controllers
 
         }
 
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes,Manager")]
+        //[Route("Consultant/test", Name = "test")]
+        public ActionResult test2()
+        {
+            ViewBag.listMonth = new string[] { " Jan ", " Fév ", " Mar ", " Avr ", " Mai ", " Juin ", " Juil ", " Aou ", " Sep ", " Oct ", " Nov ", " Dec " };
+            ApplicationDbContext db = new ApplicationDbContext();
+            List<ConsultantCraModelNew> models = new List<ConsultantCraModelNew>();
+            ViewBag.debut = db.MonthActivations.Single().Periode;
+
+            var consultants = db.Consultants.ToList();
+
+            foreach (var consultant in consultants)
+            {
+
+                ConsultantCraModelNew model = new ConsultantCraModelNew()
+                {
+                    ID = consultant.ConsultantID,
+                    Consultant = consultant.FirstName + " " + consultant.LastName,
+                    MissionsList = new List<string>(),
+                    NbParMission = new Dictionary<string, Dictionary<string, double[]>>(),
+                    DureeMission = new Dictionary<string, int[]>(),
+                };
+                var missionList = db.Missions.ToList();
+
+                foreach (var mission in missionList)
+                {
+                    if (mission.ConsultantID == consultant.ConsultantID)
+                    {
+                        if (mission.Start < ViewBag.debut)
+                        {
+                            ViewBag.debut = mission.Start;
+                        }
+
+                        model.MissionsList.Add(mission.Name);
+                        int end = Int32.Parse(mission.End.Year.ToString());
+                        int start = Int32.Parse(mission.Start.Year.ToString());
+
+                        var dict = new Dictionary<string, double[]>();
+                        for (int i = start; i <= end; ++i)
+                        {
+                            double[] list = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+                            dict.Add(i.ToString(), list);
+                        }
+                        model.NbParMission.Add(mission.Name, dict);
+                        model.DureeMission.Add(mission.Name, new int[] { Int32.Parse(mission.Start.Year.ToString()), Int32.Parse(mission.Start.Month.ToString()), Int32.Parse(mission.End.Year.ToString()), Int32.Parse(mission.End.Month.ToString()) });
+                    }
+                }
+
+                var cras = db.Cras.ToList();
+
+                foreach (var cra in cras)
+                {
+                    if (cra.ConsultantID == consultant.ConsultantID)
+                    {
+                        var activities = db.Activities.ToList();
+
+                        foreach (var activity in activities)
+                        {
+
+                            if (activity.CraID == cra.CraID)
+                            {
+                                switch (activity.Morning)
+                                {
+                                    case "IC":
+                                        break;
+                                    case "Formation":
+                                        break;
+                                    case "Maladie":
+                                        break;
+                                    case "Congés":
+                                        break;
+                                    default:
+                                        if (model.MissionsList.Contains(activity.Morning))
+                                        {
+                                            model.NbParMission[activity.Morning][activity.Date.Year.ToString()][Int32.Parse(activity.Date.Month.ToString()) - 1] += 0.5;
+
+                                        }
+
+                                        break;
+                                }
+                                switch (activity.Afternoon)
+                                {
+                                    case "IC":
+                                        break;
+                                    case "Formation":
+                                        break;
+                                    case "Maladie":
+                                        break;
+                                    case "Congés":
+                                        break;
+                                    default:
+                                        if (model.MissionsList.Contains(activity.Afternoon))
+                                        {
+                                            model.NbParMission[activity.Afternoon][activity.Date.Year.ToString()][Int32.Parse(activity.Date.Month.ToString()) - 1] += 0.5;
+
+                                        }
+                                        break;
+                                }
+                            }
+
+                        }
+                    }
+                }
+
+
+                models.Add(model);
+            }
+
+            return View(models);
+
+        }
+
 
     }
 }

@@ -8,6 +8,7 @@
 <script>
     $(document).ready(function () {
         $('#mytable1').DataTable({
+            stateSave: true,
             initComplete: function () {
                 this.api().columns().every(function () {
                     var column = this;

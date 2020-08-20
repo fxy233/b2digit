@@ -27,6 +27,7 @@
             $("input[name='type']").not(this).prop("checked", false);
         });
         $('#mytable').DataTable({
+            stateSave: true,
             initComplete: function () {
                 this.api().columns().every(function () {
                     var column = this;

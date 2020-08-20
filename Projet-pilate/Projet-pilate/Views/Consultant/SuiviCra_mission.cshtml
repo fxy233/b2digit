@@ -1,121 +1,186 @@
 ﻿@model List<Projet_pilate.Models.ConsultantCraModel>
 @{
     ViewBag.Title = "SuiviCra_mission";
-    Layout = null;
+    //Layout = null;
+    Layout = "~/Views/Shared/_particular.cshtml";
 }
 
+<link href="~/Scripts/jquery.dataTables.min.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#mytable').DataTable({
+            initComplete: function () {
+                this.api().columns().every(function () {
+                    var column = this;
+                    @*var select = $('<select><option value=""></option></select>')
+                        .appendTo($(column.footer()).empty())
+                        .on('change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex(
+                                $(this).val()
+                            );
 
-<table class="table">
-    <tr>
-        <th>
-            Consultant
-        </th>
-        <th>
-            Projet
-        </th>
-        @{
-            var mCurrent = int.Parse(DateTime.Now.Month.ToString());
-            for (var i = 0; i < 12; ++i)
-            {
-                if (i == 11)
-                {
-                    <th style="color:red;">
-                        @ViewBag.listMonth[mCurrent % 12]
-                    </th>
-                }
-                else
-                {
-                    <th>
-                        @ViewBag.listMonth[mCurrent % 12]
-                    </th>
-                }
+                            column
+                                .search(val ? '^' + val + '$' : '', true, false)
+                                .draw();
+                        });*@
 
-                mCurrent++;
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>')
+                    });
+                });
             }
-        }
-    </tr>
-    @foreach (var item in Model)
-    {
-        if (item.MissionsList.Count() == 0)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Consultant)
-                </td>
-                <td>
-                    Pas de projet
-                </td>
-                @for (int i = 1; i <= 12; ++i)
-                {
-                    <td></td>
-                }
+        });
+    });
+</script>
 
-            </tr>
-        }
-        else
+<table class="display" id="mytable" style="width:80%">
+
+    <thead>
+        <tr>
+            <th>
+                Consultant
+            </th>
+            <th>
+                Projet
+            </th>
+            @{
+                var mCurrent = int.Parse(DateTime.Now.Month.ToString());
+                for (var i = 0; i < 12; ++i)
+                {
+                    if (i == 11)
+                    {
+                        <th style="color:red;">
+                            @ViewBag.listMonth[mCurrent % 12]
+                        </th>
+                    }
+                    else
+                    {
+                        <th>
+                            @ViewBag.listMonth[mCurrent % 12]
+                        </th>
+                    }
+
+                    mCurrent++;
+                }
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
         {
-            foreach (var mission in item.MissionsList)
+            if (item.MissionsList.Count() == 0)
             {
                 <tr>
                     <td>
                         @Html.DisplayFor(modelItem => item.Consultant)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => mission)
+                        Pas de projet
                     </td>
-                    @{
-                        var mC = int.Parse(DateTime.Now.Month.ToString());
-                        var yC = Int32.Parse(@DateTime.Now.Year.ToString());
-                        var nbDuree = item.DureeMission[mission];
-                        for (var i = 0; i < 12; ++i)
-                        {
-                            var annee = (mC % 12) + 1 < mC ? yC : yC - 1;
-                            Boolean earlier = annee < nbDuree[0] || ((mC % 12) + 1 < nbDuree[1] && annee == nbDuree[0]);
-                            Boolean later = annee > nbDuree[2] || ((mC % 12) + 1 > nbDuree[3] && annee == nbDuree[2]);
-                            if (earlier || later)
-                            {
-                                <td></td>
-                            }
-                            else
-                            {
-                                if (i == 11)
-                                {
-                                    <td style="color: red;">
-                                        @Html.DisplayFor(modelItem => item.NbParMission[mission][mC % 12])
-                                    </td>
-                                }
-                                else
-                                {
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.NbParMission[mission][mC % 12])
-                                    </td>
-                                }
-                            }
+                    @for (int i = 1; i <= 12; ++i)
+                    {
+                        <td></td>
+                    }
 
-                            mC++;
-                        }
-
-                        @*int month = 1;
-                            foreach (var nb in item.NbParMission[mission])
+                </tr>
+            }
+            else
+            {
+                foreach (var mission in item.MissionsList)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Consultant)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => mission)
+                        </td>
+                        @{
+                            var mC = int.Parse(DateTime.Now.Month.ToString());
+                            var yC = Int32.Parse(@DateTime.Now.Year.ToString());
+                            var nbDuree = item.DureeMission[mission];
+                            for (var i = 0; i < 12; ++i)
                             {
-                                if ((month < item.DureeMission[mission][1] && Int32.Parse(@DateTime.Now.Year.ToString()) <= item.DureeMission[mission][0]) || (month > item.DureeMission[mission][3] && Int32.Parse(@DateTime.Now.Year.ToString()) >= item.DureeMission[mission][2]))
+                                var annee = (mC % 12) + 1 < mC ? yC : yC - 1;
+                                Boolean earlier = annee < nbDuree[0] || ((mC % 12) + 1 < nbDuree[1] && annee == nbDuree[0]);
+                                Boolean later = annee > nbDuree[2] || ((mC % 12) + 1 > nbDuree[3] && annee == nbDuree[2]);
+                                if (earlier || later)
                                 {
                                     <td></td>
                                 }
                                 else
                                 {
-                                    <td>
-                                        @Html.DisplayFor(modelItem => nb)
-                                    </td>
+                                    if (i == 11)
+                                    {
+                                        <td style="color: red;">
+                                            @Html.DisplayFor(modelItem => item.NbParMission[mission][mC % 12])
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.NbParMission[mission][mC % 12])
+                                        </td>
+                                    }
                                 }
-                                month += 1;
-                            }*@
-                    }
-                </tr>
+
+                                mC++;
+                            }
+
+                            @*int month = 1;
+                                foreach (var nb in item.NbParMission[mission])
+                                {
+                                    if ((month < item.DureeMission[mission][1] && Int32.Parse(@DateTime.Now.Year.ToString()) <= item.DureeMission[mission][0]) || (month > item.DureeMission[mission][3] && Int32.Parse(@DateTime.Now.Year.ToString()) >= item.DureeMission[mission][2]))
+                                    {
+                                        <td></td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            @Html.DisplayFor(modelItem => nb)
+                                        </td>
+                                    }
+                                    month += 1;
+                                }*@
+                        }
+                    </tr>
+                }
             }
+
         }
-    }
+    </tbody>
 
+    <tfoot>
+        <tr>
+            <th>
+                Consultant
+            </th>
+            <th>
+                Projet
+            </th>
+            @{
+                mCurrent = int.Parse(DateTime.Now.Month.ToString());
+                for (var i = 0; i < 12; ++i)
+                {
+                    if (i == 11)
+                    {
+                        <th style="color:red;">
+                            @ViewBag.listMonth[mCurrent % 12]
+                        </th>
+                    }
+                    else
+                    {
+                        <th>
+                            @ViewBag.listMonth[mCurrent % 12]
+                        </th>
+                    }
 
+                    mCurrent++;
+                }
+            }
+        </tr>
+    </tfoot>
 
 </table>

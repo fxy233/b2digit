@@ -10,6 +10,7 @@
         var str = "#" + "@ViewBag.id";
         console.log(str);
         $(str).DataTable({
+            stateSave: true,
             initComplete: function () {
                 this.api().columns().every(function () {
                     var column = this;

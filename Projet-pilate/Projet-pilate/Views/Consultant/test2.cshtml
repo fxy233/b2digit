@@ -3,69 +3,74 @@
     ViewBag.Title = "test";
     Layout = null;
 }
-<link href="~/Scripts/jquery.dataTables.min.css" rel="stylesheet" />
-<script type="text/javascript" src="~/Scripts/jquery-3.5.1.js"></script>
-<script type="text/javascript" src="~/Scripts/jquery.dataTables.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $('#mytable').DataTable({
-            stateSave: true,
-            initComplete: function () {
-                this.api().columns().every(function () {
-                    var column = this;
-                    var select = $('<select><option value=""></option></select>')
-                        .appendTo($(column.footer()).empty())
-                        .on('change', function () {
-                            var val = $.fn.dataTable.util.escapeRegex(
-                                $(this).val()
-                            );
 
-                            column
-                                .search(val ? '^' + val + '$' : '', true, false)
-                                .draw();
-                        });
 
-                    column.data().unique().sort().each(function (d, j) {
-                        select.append('<option value="' + d + '">' + d + '</option>')
-                    });
-                });
+
+<div class="col-md-12">
+    <div style="width:30%;float:left;clear:both;">
+
+        <table id="Table1" width="100%" class="table">
+            <tr>
+                <th>
+                    Consultant
+                </th>
+                <th>
+                    Projet
+                </th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                if (item.MissionsList.Count() == 0)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Consultant)
+                        </td>
+                        <td>
+                            Pas de projet
+                        </td>
+
+
+
+                    </tr>
+
+                }
+                else
+                {
+                    foreach (var mission in item.MissionsList)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Consultant)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => mission)
+                            </td>
+
+
+                        </tr>
+                    }
+                }
             }
-        });
+        </table>
+    </div>
 
-        
+    <div style="width:70%;float:left;overflow-x:scroll;">
+        @{
+            var n = 0;
+            DateTime s = ViewBag.debut;
+            DateTime e = DateTime.Now;
+            while (!(s.Year == e.Year && s.Month == e.Month))
+            {
+                n++;
+                s = s.AddMonths(1);
+            };
+            n = (int)(n * 7.5);
+            string str = n.ToString() + "%";
 
-    });
-
-</script>
-
-
-
-
-
-
-<div style="width:100%;float:left;overflow-x:scroll;">
-    @{
-        var n = 0;
-        DateTime s = ViewBag.debut;
-        DateTime e = DateTime.Now;
-        while (!(s.Year == e.Year && s.Month == e.Month))
-        {
-            n++;
-            s = s.AddMonths(1);
-        };
-        n += 2;
-        n = (int)(n * 7.5);
-        string str = n.ToString() + "%";
-
-        <table id="mytable" class="display" width="@str">
-            <thead>
+            <table id="Table2" class="table" width="@str">
                 <tr>
-                    <th>
-                        Consultant
-                    </th>
-                    <th>
-                        Projet
-                    </th>
+
                     @for (int start = Int32.Parse(ViewBag.debut.Year.ToString()); start <= Int32.Parse(DateTime.Now.Year.ToString()); start++)
                     {
                         <th style="color:green; text-align:center"> @start  </th>
@@ -131,22 +136,13 @@
 
                     }
                 </tr>
-            </thead>
-            <tbody>
                 @foreach (var item in Model)
                 {
                     if (item.MissionsList.Count() == 0)
                     {
                         <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Consultant)
-                            </td>
-                            <td>
-                                Pas de projet
-                            </td>
                             @for (int start = Int32.Parse(ViewBag.debut.Year.ToString()); start <= Int32.Parse(DateTime.Now.Year.ToString()); start++)
                             {
-
                                 <td> </td>
 
                                 if (start == Int32.Parse(ViewBag.debut.Year.ToString()) && start == Int32.Parse(DateTime.Now.Year.ToString()))
@@ -205,12 +201,6 @@
                         foreach (var mission in item.MissionsList)
                         {
                             <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Consultant)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => mission)
-                                </td>
 
                                 @{
                                     int missionstartyear = item.DureeMission[mission][0];
@@ -335,13 +325,32 @@
                         }
                     }
                 }
-            </tbody>
-        </table>
-    }
+            </table>
+        }
+    </div>
+
 </div>
 
 
+<script>
+    $(document).ready(function () {
+        var arr1 = [];
+        var arr2 = [];
+        $("#Table1 tr").each(function (e) {
 
+            arr1[e] = $(this).height();
+        });
+        $("#Table2 tr").each(function (e) {
+            arr2[e] = $(this).height();
+        });
 
-
-
+        console.log(arr1);
+        for (var i = 0; i < arr1.length; i++) {
+            if (arr1[i] >= arr2[i]) {
+                $("#Table2 tr:eq(" + i + ")").css("height", arr1[i]);
+            } else {
+                $("#Table1 tr:eq(" + i + ")").css("height", arr2[i]);
+            }
+        }
+    });
+</script>
