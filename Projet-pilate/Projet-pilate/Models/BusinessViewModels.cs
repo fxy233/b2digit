@@ -483,6 +483,7 @@ namespace Projet_pilate.Models
         [Display(Name = "Mail de la société")]
         public string email { get; set; }
 
+        [Required]
         [Display(Name = "Mot de passe du mail")]
         public string motdepasse{ get; set; }
 

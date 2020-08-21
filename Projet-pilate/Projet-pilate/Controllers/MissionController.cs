@@ -452,7 +452,7 @@ namespace Projet_pilate.Controllers
             //return View(model);
         }
 
-        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager")]
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager, Administrateur-ventes")]
         public ActionResult ValidationMissions()
         {
             string name = Request.Form["name"].ToString();
@@ -499,7 +499,7 @@ namespace Projet_pilate.Controllers
             return RedirectToAction("ListeMissions", "Mission");
         }
 
-        [Authorize(Roles = "Administrateur, Super-Administrateur")]
+        [Authorize(Roles = "Administrateur, Super-Administrateur, Administrateur-ventes")]
         [Route("Mission/Delete", Name = "Delete")]
         public ActionResult Delete(int id)
         {

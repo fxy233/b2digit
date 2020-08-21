@@ -9,27 +9,9 @@
 <script>
     $(document).ready(function () {
         $('#mytable').DataTable({
+            "scrollX": true,
             stateSave: true,
-            initComplete: function () {
-                this.api().columns().every(function () {
-                    var column = this;
-                    var select = $('<select><option value=""></option></select>')
-                        .appendTo($(column.footer()).empty())
-                        .on('change', function () {
-                            var val = $.fn.dataTable.util.escapeRegex(
-                                $(this).val()
-                            );
-
-                            column
-                                .search(val ? '^' + val + '$' : '', true, false)
-                                .draw();
-                        });
-
-                    column.data().unique().sort().each(function (d, j) {
-                        select.append('<option value="' + d + '">' + d + '</option>')
-                    });
-                });
-            }
+            
         });
 
         
@@ -37,7 +19,6 @@
     });
 
 </script>
-
 
 
 
@@ -204,7 +185,7 @@
                     {
                         foreach (var mission in item.MissionsList)
                         {
-                            <tr>
+                            <tr data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom">
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Consultant)
                                 </td>
@@ -261,9 +242,9 @@
                                             {
                                                 if (start < item.DureeMission[mission][2] || (start == item.DureeMission[mission][2] && m <= item.DureeMission[mission][3]))
                                                 {
-                                                    <td style="text-align:center">
-                                                        @Html.DisplayFor(modelItem => item.NbParMission[mission][start.ToString()][m - 1])
-                                                    </td>
+                            <td style="text-align:center">
+                                <a href="#" title="@item.Consultant">@Html.DisplayFor(modelItem => item.NbParMission[mission][start.ToString()][m - 1])</a>
+</td>
                                                 }
                                                 else
                                                 {
@@ -281,9 +262,10 @@
                                             {
                                                 if (start < item.DureeMission[mission][2] || (start == item.DureeMission[mission][2] && m <= item.DureeMission[mission][3]))
                                                 {
-                                                    <td style="text-align:center">
-                                                        @Html.DisplayFor(modelItem => item.NbParMission[mission][start.ToString()][m - 1])
-                                                    </td>
+                            <td style="text-align:center">
+                                <a href="#" title="@item.Consultant">@Html.DisplayFor(modelItem => item.NbParMission[mission][start.ToString()][m - 1])</a>
+
+</td>
                                                 }
                                                 else
                                                 {
@@ -300,9 +282,9 @@
                                             {
                                                 if (start < item.DureeMission[mission][2] || (start == item.DureeMission[mission][2] && m <= item.DureeMission[mission][3]))
                                                 {
-                                                    <td style="text-align:center">
-                                                        @Html.DisplayFor(modelItem => item.NbParMission[mission][start.ToString()][m - 1])
-                                                    </td>
+                            <td style="text-align:center">
+                                <a href="#" title="@item.Consultant">@Html.DisplayFor(modelItem => item.NbParMission[mission][start.ToString()][m - 1])</a>
+</td>
                                                 }
                                                 else
                                                 {
@@ -317,9 +299,9 @@
                                         {
                                             if (start < item.DureeMission[mission][2] || (start == item.DureeMission[mission][2] && m <= item.DureeMission[mission][3]))
                                             {
-                                                <td style="text-align:center">
-                                                    @Html.DisplayFor(modelItem => item.NbParMission[mission][start.ToString()][m - 1])
-                                                </td>
+                            <td style="text-align:center" >
+                                <a href="#" title="@item.Consultant">@Html.DisplayFor(modelItem => item.NbParMission[mission][start.ToString()][m - 1])</a>
+</td>
                                             }
                                             else
                                             {

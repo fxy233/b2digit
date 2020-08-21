@@ -27,7 +27,12 @@ namespace Projet_pilate.Helper
             var allowedCharCount = allowedChars.Length;
             for (var i = 0; i <= length - 1; i++)
             {
-                chars[i] = allowedChars[Convert.ToInt32((allowedChars.Length) * randNum.NextDouble())];
+                int a = Convert.ToInt32((allowedChars.Length) * randNum.NextDouble());
+                if (a == allowedChars.Length)
+                {
+                    a = a - 1;
+                }
+                chars[i] = allowedChars[a];
             }
             return new string(chars);
         }

@@ -11,32 +11,52 @@
     @Html.ActionLink("Créer un consultant", "CreateConsultant", "Consultant", new { @class = "btn btn-primary btn-large" })
 </p>
 
+<style>
+    tr.group,
+    tr.group:hover {
+        background-color: #ddd !important;
+    }
+</style>
 <link href="~/Scripts/jquery.dataTables.min.css" rel="stylesheet" />
 <script type="text/javascript" src="~/Scripts/jquery-3.5.1.js"></script>
 <script type="text/javascript" src="~/Scripts/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function () {
-        $('#mytable').DataTable({
+        var groupColumn = 7;
+        var table = $('#mytable').DataTable({
             stateSave: true,
-            initComplete: function () {
-                this.api().columns().every(function () {
-                    var column = this;
-                    @*var select = $('<select><option value=""></option></select>')
-                        .appendTo($(column.footer()).empty())
-                        .on('change', function () {
-                            var val = $.fn.dataTable.util.escapeRegex(
-                                $(this).val()
-                            );
+            "columnDefs": [
+                { "visible": false, "targets": groupColumn }
+            ],
+            "order": [[groupColumn, 'asc']],
+            "displayLength": 25,
+            "drawCallback": function (settings) {
+                var api = this.api();
+                var rows = api.rows({ page: 'current' }).nodes();
+                var last = null;
 
-                            column
-                                .search(val ? '^' + val + '$' : '', true, false)
-                                .draw();
-                        });*@
+                api.column(groupColumn, { page: 'current' }).data().each(function (group, i) {
+                    if (last !== group) {
+                        $(rows).eq(i).before(
+                            '<tr class="group"><td colspan="8">' + group + '</td></tr>'
+                        );
 
-                    column.data().unique().sort().each(function (d, j) {
-                        select.append('<option value="' + d + '">' + d + '</option>')
-                    });
+                        last = group;
+                    }
                 });
+            }
+        });
+
+        
+
+        // Order by the grouping
+        $('#mytable tbody').on('click', 'tr.group', function () {
+            var currentOrder = table.order()[0];
+            if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
+                table.order([groupColumn, 'desc']).draw();
+            }
+            else {
+                table.order([groupColumn, 'asc']).draw();
             }
         });
     });
@@ -50,7 +70,7 @@
 
 
 @Html.Raw(HttpUtility.HtmlDecode((Html.ValidationSummary(false, "", new { @class = "text-danger" })).ToHtmlString()))
-<table class="display" id="mytable" style="width:80%">
+<table class="display" id="mytable" style="width:95%">
 
     <thead>
         <tr>

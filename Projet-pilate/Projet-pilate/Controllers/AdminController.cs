@@ -219,7 +219,7 @@ namespace Projet_pilate.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "Administrateur, Super-Administrateur")]
+        [Authorize(Roles = "Administrateur, Super-Administrateur, Administrateur-ventes")]
         // POST: /Admin/EditManager
         [HttpPost]
         [Route("Admin/EditManager")]
@@ -291,7 +291,7 @@ namespace Projet_pilate.Controllers
 
 
 
-        [Authorize(Roles = "Administrateur, Super-Administrateur")]
+        [Authorize(Roles = "Administrateur, Super-Administrateur, Administrateur-ventes")]
         public ActionResult DeleteManager(int id)
         {
             ApplicationDbContext db = new ApplicationDbContext();
