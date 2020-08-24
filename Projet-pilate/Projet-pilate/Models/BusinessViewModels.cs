@@ -337,6 +337,9 @@ namespace Projet_pilate.Models
         [Display(Name = "Délai de Paiement")]
         public string DelaiPaiement { get; set; }
 
+        [Display(Name = "Centre de profit")]
+        public string ProfitCentre { get; set; }
+
 
     }
 

@@ -283,30 +283,24 @@ namespace Projet_pilate.Controllers
 
             int mid = db.profitCenters.Single(p => p.ProfitCenterID == id).Owner;
             var managerPC = db.Managers.Single(m => m.ManagerID == mid);
+            int pid = db.profitCenters.Single(p => p.ProfitCenterID == id).PartOwner;
+            Manager managerPC2 = null;
+            try
+            {
+                managerPC2 = db.Managers.Single(m => m.ManagerID == pid);
+            }
+            catch (Exception)
+            {
+
+            }
 
             DateTime a = new DateTime(debut.Year, debut.Month, 1);
-            while (DateTime.Compare(a,fin)<=0)
+            while (DateTime.Compare(a,fin)<=0 )
             {
-                if (manager == null)
+                
+                if (manager == null )
                 {
-                    SuiviDetailViewModel m = new SuiviDetailViewModel();
-                    m.Consultant = managerPC.FirstName + " " + managerPC.LastName;
-                    m.Mission = "Aucun";
-                    m.Client = "Aucun";
-                    m.Nbj = 0;
-                    m.Tj = 0;
-                    m.CA = 0;
-                    m.mois = a.ToString("MMMM-yyyy", System.Globalization.CultureInfo.CurrentCulture);
-                    m.Cout = (float)(-managerPC.MonthlyCost * 1.5 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost);
-                    models.Add(m);
-                }
-                else
-                {
-                    if (manager.role == "BM")
-                    {
-
-                    }
-                    else
+                    if (DateTime.Compare(a, managerPC.EntryDate) >= 0)
                     {
                         SuiviDetailViewModel m = new SuiviDetailViewModel();
                         m.Consultant = managerPC.FirstName + " " + managerPC.LastName;
@@ -316,8 +310,66 @@ namespace Projet_pilate.Controllers
                         m.Tj = 0;
                         m.CA = 0;
                         m.mois = a.ToString("MMMM-yyyy", System.Globalization.CultureInfo.CurrentCulture);
-                        m.Cout = (float)(-managerPC.MonthlyCost * 1.55 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost);
+                        m.Cout = (float)(-managerPC.MonthlyCost * 1.5 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost);
                         models.Add(m);
+                    }
+                    
+                    if (managerPC2 != null)
+                    {
+                        if (DateTime.Compare(a, managerPC2.EntryDate) >= 0)
+                        {
+                            SuiviDetailViewModel m2 = new SuiviDetailViewModel();
+                            m2.Consultant = managerPC2.FirstName + " " + managerPC2.LastName;
+                            m2.Mission = "Aucun";
+                            m2.Client = "Aucun";
+                            m2.Nbj = 0;
+                            m2.Tj = 0;
+                            m2.CA = 0;
+                            m2.mois = a.ToString("MMMM-yyyy", System.Globalization.CultureInfo.CurrentCulture);
+                            m2.Cout = (float)(-managerPC2.MonthlyCost * 1.5 - managerPC2.MealCost - managerPC2.TravelPackage - managerPC2.ExceptionalCost);
+                            models.Add(m2);
+                        }
+                        
+                    }
+                }
+                else
+                {
+                    if (manager.role == "BM")
+                    {
+
+                    }
+                    else
+                    {
+                        if (DateTime.Compare(a, managerPC.EntryDate) >= 0)
+                        {
+                            SuiviDetailViewModel m = new SuiviDetailViewModel();
+                            m.Consultant = managerPC.FirstName + " " + managerPC.LastName;
+                            m.Mission = "Aucun";
+                            m.Client = "Aucun";
+                            m.Nbj = 0;
+                            m.Tj = 0;
+                            m.CA = 0;
+                            m.mois = a.ToString("MMMM-yyyy", System.Globalization.CultureInfo.CurrentCulture);
+                            m.Cout = (float)(-managerPC.MonthlyCost * 1.55 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost);
+                            models.Add(m);
+                        }
+                        if (managerPC2 != null)
+                        {
+                            if (DateTime.Compare(a, managerPC2.EntryDate) >= 0)
+                            {
+                                SuiviDetailViewModel m2 = new SuiviDetailViewModel();
+                                m2.Consultant = managerPC2.FirstName + " " + managerPC2.LastName;
+                                m2.Mission = "Aucun";
+                                m2.Client = "Aucun";
+                                m2.Nbj = 0;
+                                m2.Tj = 0;
+                                m2.CA = 0;
+                                m2.mois = a.ToString("MMMM-yyyy", System.Globalization.CultureInfo.CurrentCulture);
+                                m2.Cout = (float)(-managerPC2.MonthlyCost * 1.55 - managerPC2.MealCost - managerPC2.TravelPackage - managerPC2.ExceptionalCost);
+                                models.Add(m2);
+                            }
+
+                        }
                     }
                 }
                 a = a.AddMonths(1);
@@ -484,14 +536,37 @@ namespace Projet_pilate.Controllers
 
             int mid = db.profitCenters.Single(p => p.ProfitCenterID == id).Owner;
             var managerPC = db.Managers.Single(m => m.ManagerID == mid);
+            int pid = db.profitCenters.Single(p => p.ProfitCenterID == id).PartOwner;
+            Manager managerPC2 = null;
+            try
+            {
+                managerPC2 = db.Managers.Single(m => m.ManagerID == pid);
+            }
+            catch (Exception)
+            {
+
+            }
 
             DateTime b = new DateTime(debut.Year, debut.Month, 1);
             while (DateTime.Compare(b, fin) <= 0)
             {
+                
                 if (manager == null)
                 {
-                    dicts[b.ToString("yyyy-MM")].coutreel += (float)(-managerPC.MonthlyCost * 1.5 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost);
-                    dicts[b.ToString("yyyy-MM")].couttheorie += (float)(-managerPC.MonthlyCost * 1.5 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost);
+                    if (DateTime.Compare(b, managerPC.EntryDate) >= 0)
+                    {
+                        dicts[b.ToString("yyyy-MM")].coutreel += (float)(-managerPC.MonthlyCost * 1.5 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost);
+                        dicts[b.ToString("yyyy-MM")].couttheorie += (float)(-managerPC.MonthlyCost * 1.5 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost);
+                    }
+                    if (managerPC2 != null)
+                    {
+                        if (DateTime.Compare(b, managerPC2.EntryDate) >= 0)
+                        {
+                            dicts[b.ToString("yyyy-MM")].coutreel += (float)(-managerPC2.MonthlyCost * 1.5 - managerPC2.MealCost - managerPC2.TravelPackage - managerPC2.ExceptionalCost);
+                            dicts[b.ToString("yyyy-MM")].couttheorie += (float)(-managerPC2.MonthlyCost * 1.5 - managerPC2.MealCost - managerPC2.TravelPackage - managerPC2.ExceptionalCost);
+                        }
+
+                    }
                 }
                 else
                 {
@@ -501,9 +576,20 @@ namespace Projet_pilate.Controllers
                     }
                     else
                     {
-                        dicts[b.ToString("yyyy-MM")].coutreel += (float)(-managerPC.MonthlyCost * 1.55 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost);
-                        dicts[b.ToString("yyyy-MM")].couttheorie += (float)(-managerPC.MonthlyCost * 1.55 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost);
+                        if (DateTime.Compare(b, managerPC.EntryDate) >= 0)
+                        {
+                            dicts[b.ToString("yyyy-MM")].coutreel += (float)(-managerPC.MonthlyCost * 1.55 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost);
+                            dicts[b.ToString("yyyy-MM")].couttheorie += (float)(-managerPC.MonthlyCost * 1.55 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost);
+                        }
+                        if (managerPC2 != null)
+                        {
+                            if (DateTime.Compare(b, managerPC2.EntryDate) >= 0)
+                            {
+                                dicts[b.ToString("yyyy-MM")].coutreel += (float)(-managerPC2.MonthlyCost * 1.55 - managerPC2.MealCost - managerPC2.TravelPackage - managerPC2.ExceptionalCost);
+                                dicts[b.ToString("yyyy-MM")].couttheorie += (float)(-managerPC2.MonthlyCost * 1.55 - managerPC2.MealCost - managerPC2.TravelPackage - managerPC2.ExceptionalCost);
+                            }
 
+                        }
                     }
                 }
                 b = b.AddMonths(1);

@@ -56,10 +56,23 @@
 
                 if (item.ProfitCenter == pc.Name)
                 {
-                    var owner = db.Managers.Single(m => m.ManagerID == pc.Owner);
-                    string ownername = owner.FirstName + " " + owner.LastName;
-                    var partowner = db.Managers.Single(m => m.ManagerID == pc.PartOwner);
-                    string partownername = partowner.FirstName + " " + partowner.LastName;
+                    string ownername = "Aucun";
+                    string partownername = "Aucun";
+                    try
+                    {
+                        var owner = db.Managers.Single(m => m.ManagerID == pc.Owner);
+                        ownername = owner.FirstName + " " + owner.LastName;
+                    }catch (Exception)
+                    {}
+                    try
+                    {
+                        var partowner = db.Managers.Single(m => m.ManagerID == pc.PartOwner);
+                        partownername = partowner.FirstName + " " + partowner.LastName;
+                    }
+                    catch (Exception)
+                    {}
+
+
                     if (ownername == name || partownername == name)
                     {
                         <tr>

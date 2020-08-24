@@ -83,6 +83,23 @@
 <div class="col-md-6">
     <div class="form-group">
         <div class="col-md-10">
+            @Html.LabelFor(model => model.ProfitCentre, htmlAttributes: new { @class = "control-label" })
+        </div>
+        <div class="col-md-10">
+            <input type="text" value="@Model.ProfitCentre" list="profitCentre" class="form-control" id="ProfitCentre" asp-for="ProfitCentre" name="ProfitCentre" required />
+            <datalist id="profitCentre">
+                @{ ApplicationDbContext db = new ApplicationDbContext();
+                    foreach (var s in db.profitCenters.ToList())
+                    {
+                        @*<option value="@s.SubsidiaryID">@s.Name</option>*@
+                        <option value="@s.Name"></option>
+                    };
+                }
+            </datalist>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-10">
             @Html.LabelFor(model => model.InfoFacturation, htmlAttributes: new { @class = "control-label" })
         </div>
         <div class="col-md-10">
@@ -136,9 +153,7 @@
             <input type="text" value="@ViewData["principalBCID"]" list="principalBCID" class="form-control" id="PrincipalBCID" asp-for="PrincipalBCID" name="PrincipalBCID" required />
             <datalist id="principalBCID">
                 @*<option selected>@ViewData["contact"]</option>*@
-                @{
-                    @*                        <option selected>@ViewData["principalBCID"]</option>
-                    *@ ApplicationDbContext db = new ApplicationDbContext();
+                @{  db = new ApplicationDbContext();
                     foreach (var s in db.Subsidiaries.ToList())
                     {
                         @*<option value="@s.SubsidiaryID">@s.Name</option>*@

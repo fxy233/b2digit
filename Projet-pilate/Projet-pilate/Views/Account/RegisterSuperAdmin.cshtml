@@ -8,15 +8,24 @@
 
 @{
     ApplicationDbContext db = new ApplicationDbContext();
-    var users = db.Users.ToList();
     Boolean exist = false;
-    foreach (var u in users)
+    if (db.Users.ToList().Count == 0)
     {
-        if (u.Position == "Super-Administrateur")
+    }
+    else
+    {
+        var users = db.Users.ToList();
+        foreach (var u in users)
         {
-            exist = true;
+            if (u.Position == "Super-Administrateur")
+            {
+                exist = true;
+            }
         }
     }
+
+
+
 
     if (exist)
     {

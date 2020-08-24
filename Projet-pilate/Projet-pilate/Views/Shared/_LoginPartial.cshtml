@@ -15,8 +15,14 @@
             @{
                 ApplicationDbContext db = new ApplicationDbContext();
                 var id = User.Identity.GetUserId();
-                var user = db.Users.Single(u => u.Id == id);
-                string name = user.FirstName + " " + user.LastName;
+                string name = "";
+                try
+                {
+                    var user = db.Users.Single(u => u.Id == id);
+                    name = user.FirstName + " " + user.LastName;
+                }
+                catch (Exception) { }
+
                 <a href="#">Bonjour @name !</a>
             }
 

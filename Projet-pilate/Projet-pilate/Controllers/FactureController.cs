@@ -1372,7 +1372,7 @@ namespace Projet_pilate.Controllers
                 {
                     mission = facturefusionner.mission,
                     FactureID = id,
-                    NomFacture = "FAE-Fusion-" + id,
+                    NomFacture = "FAE-" + id,
                     MoisDeFacturation = db.MonthActivations.Single().Periode,
                     InfoFacturation = facturefusionner.InfoFacturation,
                     PrincipalBC = facturefusionner.PrincipalBC,
@@ -1423,7 +1423,7 @@ namespace Projet_pilate.Controllers
                 {
                     mission = facturefusionner.mission,
                     FactureID = id,
-                    NomFacture = "FAE-Combi"+ id,
+                    NomFacture = "FAE-"+ id,
                     MoisDeFacturation = db.MonthActivations.Single().Periode,
                     InfoFacturation = facturefusionner.InfoFacturation,
                     PrincipalBC = facturefusionner.PrincipalBC,

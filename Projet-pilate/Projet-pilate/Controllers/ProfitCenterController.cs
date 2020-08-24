@@ -40,8 +40,14 @@ namespace Projet_pilate.Controllers
                     }
                     else
                     {
+                        try { 
                         var partowner = db.Managers.Single(m => m.ManagerID == profitCenter.PartOwner);
                         model.PartOwners = partowner.FirstName + " " + partowner.LastName;
+                        }
+                        catch (Exception)
+                        {
+                            model.PartOwners = "Aucun";
+                        }
                     }
 
                     if (profitCenter.FatherProfitCenter == null)
@@ -229,19 +235,38 @@ namespace Projet_pilate.Controllers
             var father = profitcenter.FatherProfitCenterID==null ? null : db.profitCenters.Single(p => p.ProfitCenterID == profitcenter.FatherProfitCenterID);
 
             var owner = db.Managers.Single(m => m.ManagerID == profitcenter.Owner);
-            var partowner = profitcenter.PartOwner == 0 ? null : db.Managers.Single(m => m.ManagerID == profitcenter.PartOwner);
-            UpdateProfitCenterViewModel model = new UpdateProfitCenterViewModel()
+            UpdateProfitCenterViewModel model = new UpdateProfitCenterViewModel();
+            try
             {
-                ID = profitcenter.ProfitCenterID,
-                Name = profitcenter.Name,
-                Owner = owner.FirstName+" " +owner.LastName,
-                PartOwner = partowner==null? "Aucun": partowner.FirstName + " " + partowner.LastName,
-                FatherProfitCenterID = profitcenter.FatherProfitCenterID,
-                FatherProfitCenter = father == null ? "Aucun":father.Name,
-                Cost = profitcenter.Cost,
-                Turnover = profitcenter.Turnover
-                              
-            };
+                var partowner = profitcenter.PartOwner == 0 ? null : db.Managers.Single(m => m.ManagerID == profitcenter.PartOwner);
+                model = new UpdateProfitCenterViewModel()
+                {
+                    ID = profitcenter.ProfitCenterID,
+                    Name = profitcenter.Name,
+                    Owner = owner.FirstName + " " + owner.LastName,
+                    PartOwner = partowner == null ? "Aucun" : partowner.FirstName + " " + partowner.LastName,
+                    FatherProfitCenterID = profitcenter.FatherProfitCenterID,
+                    FatherProfitCenter = father == null ? "Aucun" : father.Name,
+                    Cost = profitcenter.Cost,
+                    Turnover = profitcenter.Turnover
+
+                };
+            }
+            catch (Exception)
+            {
+                model = new UpdateProfitCenterViewModel()
+                {
+                    ID = profitcenter.ProfitCenterID,
+                    Name = profitcenter.Name,
+                    Owner = owner.FirstName + " " + owner.LastName,
+                    PartOwner = "Aucun",
+                    FatherProfitCenterID = profitcenter.FatherProfitCenterID,
+                    FatherProfitCenter = father == null ? "Aucun" : father.Name,
+                    Cost = profitcenter.Cost,
+                    Turnover = profitcenter.Turnover
+
+                };
+            }
 
             List<string> managerNames = new List<string>();
             List<int> managerID = new List<int>();

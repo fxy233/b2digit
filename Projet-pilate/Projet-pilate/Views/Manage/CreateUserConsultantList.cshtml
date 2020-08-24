@@ -101,9 +101,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Status)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DailyCost)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -126,9 +123,6 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DailyCost)
                 </td>
                 <td>
                     @Html.RouteLink("Créer un identifiant pour ce consultant", "CreateUserConsultant", new { id = item.ID }, new { @class = "btn btn-primary btn-large" })
@@ -154,10 +148,7 @@
             <th style="border-color:white">
                 @Html.DisplayNameFor(model => model.Status)
             </th>
-            <th style="border-color:white">
-                @Html.DisplayNameFor(model => model.DailyCost)
-            </th>
-            
+
         </tr>
     </tfoot>
 

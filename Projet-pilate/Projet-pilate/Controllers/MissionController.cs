@@ -273,6 +273,36 @@ namespace Projet_pilate.Controllers
                 DateFinOdm = model.Start,
             };
 
+            if (User.IsInRole("Manager"))
+            {
+                var user = db.Users.Single(u => u.UserName == User.Identity.Name);
+                foreach(var m in db.Managers.ToList())
+                {
+                    if (m.FirstName.ToUpper() == user.FirstName.ToUpper() && m.LastName.ToUpper() == user.LastName.ToUpper())
+                    {
+                        foreach(var p in db.profitCenters.ToList())
+                        {
+                            if (p.Owner == m.ManagerID)
+                            {
+                                mission.ProfitCenter = p;
+                                mission.ProfitCenterID = p.ProfitCenterID;
+                                break;
+                            }
+                        }
+                        foreach (var p in db.profitCenters.ToList())
+                        {
+                            if (p.PartOwner == m.ManagerID)
+                            {
+                                mission.ProfitCenter = p;
+                                mission.ProfitCenterID = p.ProfitCenterID;
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+
             var consultantList = db.Consultants.ToList();
             
             foreach(var c in consultantList)
@@ -367,6 +397,7 @@ namespace Projet_pilate.Controllers
                 TJInterBC2 = mission.TJInterBC2,
                 DelaiPaiement = mission.Delai,
                 DesignationFacturation = mission.DesignationFacturation,
+                ProfitCentre = db.profitCenters.Single(p=>p.ProfitCenterID==mission.ProfitCenterID).Name,
             };
 
             ViewData["PrincipalBCID"] = mission.PrincipalBCID==0?"Rien": db.Subsidiaries.Single(s=>s.SubsidiaryID==mission.PrincipalBCID).Name;
@@ -443,6 +474,14 @@ namespace Projet_pilate.Controllers
                 mission.TJInterBC2 = model.TJInterBC2;
                 mission.DesignationFacturation = model.DesignationFacturation;
                 mission.Delai = Request.Form["DelaiPaiement"]; ;
+
+                foreach(var pc in db.profitCenters.ToList())
+            {
+                if (pc.Name == Request.Form["ProfitCentre"])
+                {
+                    mission.ProfitCenterID = pc.ProfitCenterID;
+                }
+            }
 
                 db.SaveChanges();
 
