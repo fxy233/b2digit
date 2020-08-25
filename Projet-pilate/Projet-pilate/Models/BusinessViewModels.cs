@@ -340,6 +340,15 @@ namespace Projet_pilate.Models
         [Display(Name = "Centre de profit")]
         public string ProfitCentre { get; set; }
 
+        [Display(Name = "Business Company émettrice")]
+        public string PrincipalBCID1 { get; set; }
+
+        [Display(Name = "Business Company Intermédiaire 1")]
+        public string InterBC1ID1 { get; set; }
+
+        [Display(Name = "Business Company Intermédiaire N°2")]
+        public string InterBC2ID1 { get; set; }
+
 
     }
 

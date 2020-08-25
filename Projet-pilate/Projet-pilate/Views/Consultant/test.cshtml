@@ -24,21 +24,8 @@
 
 
 
-<div style="width:100%;float:left;overflow-x:scroll;">
-    @{
-        var n = 0;
-        DateTime s = ViewBag.debut;
-        DateTime e = DateTime.Now;
-        while (!(s.Year == e.Year && s.Month == e.Month))
-        {
-            n++;
-            s = s.AddMonths(1);
-        };
-        n += 2;
-        n = (int)(n * 7.5);
-        string str = n.ToString() + "%";
 
-        <table id="mytable" class="display" width="@str">
+        <table id="mytable" class="display nowrap" style="width:100%">
             <thead>
                 <tr>
                     <th>
@@ -320,7 +307,7 @@
             </tbody>
         </table>
     }
-</div>
+
 
 
 

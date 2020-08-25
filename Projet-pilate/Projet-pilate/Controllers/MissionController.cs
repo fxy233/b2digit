@@ -400,9 +400,9 @@ namespace Projet_pilate.Controllers
                 ProfitCentre = db.profitCenters.Single(p=>p.ProfitCenterID==mission.ProfitCenterID).Name,
             };
 
-            ViewData["PrincipalBCID"] = mission.PrincipalBCID==0?"Rien": db.Subsidiaries.Single(s=>s.SubsidiaryID==mission.PrincipalBCID).Name;
-            ViewData["interBC1ID"] = mission.InterBC1ID == 0 ? "Rien" : db.Subsidiaries.Single(s => s.SubsidiaryID == mission.InterBC1ID).Name;
-            ViewData["interBC2ID"] = mission.InterBC2ID == 0 ? "Rien" : db.Subsidiaries.Single(s => s.SubsidiaryID == mission.InterBC2ID).Name;
+            model.PrincipalBCID1 = mission.PrincipalBCID==0?"Aucun": db.Subsidiaries.Single(s=>s.SubsidiaryID==mission.PrincipalBCID).Name;
+            model.InterBC1ID1 = mission.InterBC1ID == 0 ? "Aucun" : db.Subsidiaries.Single(s => s.SubsidiaryID == mission.InterBC1ID).Name;
+            model.InterBC2ID1 = mission.InterBC2ID == 0 ? "Aucun" : db.Subsidiaries.Single(s => s.SubsidiaryID == mission.InterBC2ID).Name;
 
 
             return View(model);
@@ -435,9 +435,23 @@ namespace Projet_pilate.Controllers
                 }
             }
 
-/*            if (ModelState.IsValid)
-            {*/
-                if (mission.Name != model.Name)
+            if (model.PrincipalBCID1== model.InterBC1ID1)
+            {
+                string message = "Business Company émettrice ne doit pas être le même que Business Company Intermédiaire !";
+                ModelState.AddModelError(string.Empty, message);
+                return View(model);
+            }
+
+            if (model.PrincipalBCID1 == model.InterBC2ID1 || model.InterBC1ID1 == model.InterBC2ID1)
+            {
+                string message = "Business Company émettrice ne doit pas être le même que Business Company Intermédiaire !";
+                ModelState.AddModelError(string.Empty, message);
+                return View(model);
+            }
+
+            /*            if (ModelState.IsValid)
+                        {*/
+            if (mission.Name != model.Name)
                 {
                     var activities = db.Activities.ToList();
                     foreach(var act in activities)
@@ -454,6 +468,7 @@ namespace Projet_pilate.Controllers
                     }
                 }
 
+
                 mission.End = model.NewEnd;
                 mission.Name = model.Name;
                 mission.Fee = model.Fee;
@@ -461,23 +476,23 @@ namespace Projet_pilate.Controllers
                 mission.AdresseMission = model.AdresseMission;
                 mission.InfoFacturation = model.InfoFacturation;
                 mission.Reference = model.Reference;
-                string nom = Request.Form["PrincipalBCID"];
+                string nom = model.PrincipalBCID1;
                 int pid = db.Subsidiaries.Single(s => s.Name == nom).SubsidiaryID;
                 mission.PrincipalBCID = pid;
-                string nomI = Request.Form["InterBC1ID"];
-                int Iid = nomI=="Rien"? 0 : db.Subsidiaries.Single(s => s.Name == nomI).SubsidiaryID;
+                string nomI = model.InterBC1ID1;
+                int Iid = nomI=="Aucun"? 0 : db.Subsidiaries.Single(s => s.Name == nomI).SubsidiaryID;
                 mission.InterBC1ID = Iid;
                 mission.TJInterBC1 = model.TJInterBC1;
-                string nomI2 = Request.Form["InterBC2ID"];
-                int I2id = nomI2 == "Rien" ? 0 : db.Subsidiaries.Single(s => s.Name == nomI2).SubsidiaryID;
+                string nomI2 = model.InterBC2ID1;
+                int I2id = nomI2 == "Aucun" ? 0 : db.Subsidiaries.Single(s => s.Name == nomI2).SubsidiaryID;
                 mission.InterBC2ID = I2id;
                 mission.TJInterBC2 = model.TJInterBC2;
                 mission.DesignationFacturation = model.DesignationFacturation;
-                mission.Delai = Request.Form["DelaiPaiement"]; ;
+                mission.Delai = model.DelaiPaiement ;
 
                 foreach(var pc in db.profitCenters.ToList())
             {
-                if (pc.Name == Request.Form["ProfitCentre"])
+                if (pc.Name == model.ProfitCentre)
                 {
                     mission.ProfitCenterID = pc.ProfitCenterID;
                 }
@@ -575,6 +590,11 @@ namespace Projet_pilate.Controllers
                         }
                     }
                 }
+
+                if (DateTime.Compare(missionDelete.End.AddMonths(1), DateTime.Now) >= 0)
+            {
+                recent = true;
+            }
 
                 if(!recent)
                 {

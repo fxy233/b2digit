@@ -11,15 +11,13 @@ namespace Projet_pilate.Controllers
 {
     public class SuiviController : Controller
     {
-        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager")]
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager,Administrateur-ventes")]
         [Route("Suivi/Suivis", Name = "Suivis")]
         public ActionResult Suivis(DateTime start, DateTime end)
         {
             ApplicationDbContext db = new ApplicationDbContext();
 
-
             var user = db.Users.Single(u => u.UserName == User.Identity.Name);
-
             var managerid = -1;
 
             foreach (var m in db.Managers.ToList())
@@ -103,7 +101,7 @@ namespace Projet_pilate.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager")]
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager,Administrateur-ventes")]
         [Route("Suivi/Suivis")]
         public ActionResult Suivis(PeriodeViewModel model)
         {
@@ -184,7 +182,7 @@ namespace Projet_pilate.Controllers
 
         }
 
-        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager")]
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager, Administrateur-ventes")]
         [Route("Suivi/DetailPC", Name = "DetailPC")]
         public ActionResult DetailPC(int id, string statu,DateTime debut,DateTime fin)
         {
@@ -425,7 +423,7 @@ namespace Projet_pilate.Controllers
         }
 
 
-        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager")]
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager,Administrateur-ventes")]
         [Route("Suivi/PCView", Name = "PCView")]
         public ActionResult PCView(int id, DateTime debut, DateTime fin)
         {
@@ -436,7 +434,7 @@ namespace Projet_pilate.Controllers
         }
 
 
-        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager")]
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Manager,Administrateur-ventes")]
         [Route("Suivi/TotalPC", Name = "TotalPC")]
         public ActionResult TotalPC(int id, DateTime debut, DateTime fin)
         {

@@ -85,148 +85,144 @@
         <div class="col-md-10">
             @Html.LabelFor(model => model.ProfitCentre, htmlAttributes: new { @class = "control-label" })
         </div>
-        <div class="col-md-10">
-            <input type="text" value="@Model.ProfitCentre" list="profitCentre" class="form-control" id="ProfitCentre" asp-for="ProfitCentre" name="ProfitCentre" required />
-            <datalist id="profitCentre">
-                @{ ApplicationDbContext db = new ApplicationDbContext();
-                    foreach (var s in db.profitCenters.ToList())
-                    {
-                        @*<option value="@s.SubsidiaryID">@s.Name</option>*@
-                        <option value="@s.Name"></option>
-                    };
-                }
-            </datalist>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-10">
-            @Html.LabelFor(model => model.InfoFacturation, htmlAttributes: new { @class = "control-label" })
-        </div>
-        <div class="col-md-10">
-            @Html.TextAreaFor(model => model.InfoFacturation, 4, 40, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.InfoFacturation, "", new { @class = "text-danger" })
-        </div>
-    </div>
+            <div class="col-md-10">
+                <select class="form-control" id="ProfitCentre" name="ProfitCentre" required>
 
-    <div class="form-group">
-        <div class="col-md-10">
-            @Html.LabelFor(model => model.Reference, htmlAttributes: new { @class = "control-label" })
+                    <option selected>@Model.ProfitCentre</option>
+                    @{  ApplicationDbContext db = new ApplicationDbContext();
+                        foreach (var s in db.profitCenters.ToList())
+                        {
+                                        <option class="ProfitCentre" value="@s.Name">@s.Name</option>
+                            }
+                        }
+                </select>
+            </div>
         </div>
-        <div class="col-md-10">
-            @Html.TextAreaFor(model => model.Reference, 3, 40, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Reference, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <div class="col-md-10">
+                @Html.LabelFor(model => model.InfoFacturation, htmlAttributes: new { @class = "control-label" })
+            </div>
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.InfoFacturation, 4, 40, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.InfoFacturation, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        <div class="col-md-10">
-            @Html.LabelFor(model => model.DesignationFacturation, htmlAttributes: new { @class = "control-label" })
+        <div class="form-group">
+            <div class="col-md-10">
+                @Html.LabelFor(model => model.Reference, htmlAttributes: new { @class = "control-label" })
+            </div>
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Reference, 3, 40, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Reference, "", new { @class = "text-danger" })
+            </div>
         </div>
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.DesignationFacturation, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.DesignationFacturation, "", new { @class = "text-danger" })
-        </div>
-    </div>
 
-    <div class="form-group">
-        <div class="col-md-10">
-            @Html.LabelFor(model => model.DelaiPaiement, htmlAttributes: new { @class = "control-label" })
+        <div class="form-group">
+            <div class="col-md-10">
+                @Html.LabelFor(model => model.DesignationFacturation, htmlAttributes: new { @class = "control-label" })
+            </div>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DesignationFacturation, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DesignationFacturation, "", new { @class = "text-danger" })
+            </div>
         </div>
-        <div class="col-md-10">
-            <input type="text" value="@Model.DelaiPaiement" list="delaiPaiement" class="form-control" id="DelaiPaiement" asp-for="DelaiPaiement" name="DelaiPaiement" required />
-            <datalist id="delaiPaiement">
-                <option value="30 jours"></option>
-                <option value="30 jours fin de mois"></option>
-                <option value="45 jours"></option>
-                <option value="45 jours fin de mois"></option>
-                <option value="60 jours"></option>
-                <option value="60 jours fin de mois"></option>
-            </datalist>
-        </div>
-    </div>
 
-    <div class="form-group">
-        <div class="col-md-10">
-            @Html.LabelFor(model => model.PrincipalBCID, htmlAttributes: new { @class = "control-label" })
-        </div>
-        <div class="col-md-10">
-            <input type="text" value="@ViewData["principalBCID"]" list="principalBCID" class="form-control" id="PrincipalBCID" asp-for="PrincipalBCID" name="PrincipalBCID" required />
-            <datalist id="principalBCID">
-                @*<option selected>@ViewData["contact"]</option>*@
-                @{  db = new ApplicationDbContext();
-                    foreach (var s in db.Subsidiaries.ToList())
-                    {
-                        @*<option value="@s.SubsidiaryID">@s.Name</option>*@
-                        <option value="@s.Name"></option>
-                    };
-                }
-            </datalist>
-        </div>
-    </div>
+        <div class="form-group">
+            <div class="col-md-10">
+                @Html.LabelFor(model => model.DelaiPaiement, htmlAttributes: new { @class = "control-label" })
+            </div>
+            <div class="col-md-10">
+                <select class="form-control" id="DelaiPaiement" name="DelaiPaiement" required>
 
-    <div class="form-group">
-        <div class="col-md-10">
-            @Html.LabelFor(model => model.InterBC1ID, htmlAttributes: new { @class = "control-label" })
+                    <option selected>@Model.DelaiPaiement</option>
+                    <option class="DelaiPaiement" value="30 jours">30 jours</option>
+                    <option class="DelaiPaiement" value="30 jours fin de mois">30 jours fin de mois</option>
+                    <option class="DelaiPaiement" value="45 jours">45 jours</option>
+                    <option class="DelaiPaiement" value="45 jours fin de mois">45 jours fin de mois</option>
+                    <option class="DelaiPaiement" value="60 jours">60 jours</option>
+                    <option class="DelaiPaiement" value="60 jours fin de mois">60 jours fin de mois</option>
+                    
+                </select>              
+            </div>
         </div>
-        <div class="col-md-10">
-            @*@Html.EditorFor(model => model.InterBC1ID, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.InterBC1ID, "", new { @class = "text-danger" })
-            *@
-            <input type="text" value="@ViewData["interBC1ID"]" list="interBC1ID" class="form-control" id="InterBC1ID" asp-for="InterBC1ID" name="InterBC1ID" required />
-            <datalist id="interBC1ID">
-                @{
-                    @*<option selected>@ViewData["interBC1ID"]</option>*@
-                    foreach (var s in db.Subsidiaries.ToList())
-                    {
-                        <option value="@s.Name"></option>
-                    };
-                    <option value="Rien"></option>
-                }
-            </datalist>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-10">
-            @Html.LabelFor(model => model.TJInterBC1, htmlAttributes: new { @class = "control-label" })
-        </div>
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.TJInterBC1, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.TJInterBC1, "", new { @class = "text-danger" })
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-10">
-            @Html.LabelFor(model => model.InterBC2ID, htmlAttributes: new { @class = "control-label" })
-        </div>
-        <div class="col-md-10">
-            @*@Html.EditorFor(model => model.InterBC2ID, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.InterBC2ID, "", new { @class = "text-danger" })
-            *@
-            <input type="text" value="@ViewData["interBC2ID"]" list="interBC2ID" class="form-control" id="InterBC2ID" asp-for="InterBC2ID" name="InterBC2ID" required />
-            <datalist id="interBC2ID">
-                @*<option selected>@ViewData["contact"]</option>*@
-                @{
-                    @*<option selected>@ViewData["interBC2ID"]</option>*@
-                    foreach (var s in db.Subsidiaries.ToList())
-                    {
-                        <option value="@s.Name"></option>
-                    };
-                    <option value="Rien"></option>
-                }
-            </datalist>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-10">
-            @Html.LabelFor(model => model.TJInterBC2, htmlAttributes: new { @class = "control-labe" })
-        </div>
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.TJInterBC2, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.TJInterBC2, "", new { @class = "text-danger" })
-        </div>
-    </div>
 
-</div>
+        <div class="form-group">
+            <div class="col-md-10">
+                @Html.LabelFor(model => model.PrincipalBCID1, htmlAttributes: new { @class = "control-label" })
+            </div>
+            <div class="col-md-10">
+                <select class="form-control" id="PrincipalBCID1" name="PrincipalBCID1" required>
+
+                    <option selected>@Model.PrincipalBCID1</option>
+                    @{ 
+                        foreach (var s in db.Subsidiaries.ToList())
+                        {
+                            <option class="PrincipalBCID1" value="@s.Name">@s.Name</option>
+                        }
+                    }
+                </select>
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-10">
+                @Html.LabelFor(model => model.InterBC1ID1, htmlAttributes: new { @class = "control-label" })
+            </div>
+            <div class="col-md-10">
+                <select class="form-control" id="InterBC1ID1" name="InterBC1ID1" required>
+
+                    <option selected>@Model.InterBC1ID1</option>
+                    @{
+                        foreach (var s in db.Subsidiaries.ToList())
+                        {
+                            <option class="InterBC1ID1" value="@s.Name">@s.Name</option>
+                        }
+                        <option class="InterBC1ID1" value="Aucun"></option>
+                    }
+                </select>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-10">
+                @Html.LabelFor(model => model.TJInterBC1, htmlAttributes: new { @class = "control-label" })
+            </div>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TJInterBC1, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TJInterBC1, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-10">
+                @Html.LabelFor(model => model.InterBC2ID1, htmlAttributes: new { @class = "control-label" })
+            </div>
+            <div class="col-md-10">
+                <select class="form-control" id="InterBC2ID1" name="InterBC2ID1" required>
+
+                    <option selected>@Model.InterBC2ID1</option>
+                    @{
+                        foreach (var s in db.Subsidiaries.ToList())
+                        {
+                            <option class="InterBC2ID1" value="@s.Name">@s.Name</option>
+                        }
+                        <option class="InterBC2ID1" value="Aucun"></option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-10">
+                @Html.LabelFor(model => model.TJInterBC2, htmlAttributes: new { @class = "control-labe" })
+            </div>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TJInterBC2, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TJInterBC2, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+    </div>
 
 }
 
