@@ -310,12 +310,14 @@ namespace Projet_pilate.Controllers
                 if (c.FirstName+" "+c.LastName == SelectedConsultant)
                 {
                     mission.ConsultantID = c.ConsultantID;
+
                 }
             }
 
             var con = mission.ConsultantID==0?null:db.Consultants.Single(c => c.ConsultantID == mission.ConsultantID);
             int interid =con==null?0:db.Subsidiaries.Single(s => s.SubsidiaryID == con.SubsidiaryID).SubsidiaryID;
-            mission.InterBC1ID = interid==6?0:interid;
+            mission.InterBC1ID = interid==mission.PrincipalBCID?0:interid;
+
 
             mission.TJInterBC1 = mission.InterBC1ID == 0? 0:0.93f * mission.Fee;
 
@@ -844,7 +846,7 @@ namespace Projet_pilate.Controllers
                     }
                 }
 
-                string message = "La creation d'un ordre de mission a réussi !";
+                string message = "La creation de l'ordre de mission a réussi !";
                 ModelState.AddModelError(string.Empty, message);
 
                 return View("ListeMissions", models);

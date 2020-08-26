@@ -791,6 +791,64 @@ namespace Projet_pilate.Controllers
 
             foreach (var cra in cras)
             {
+                if (User.IsInRole("Manager"))
+                {
+
+                    Consultant consultant = cra.Consultant;
+                    
+
+                    var email = User.Identity.Name;
+                    var user = db.Users.Single(u => u.Email == email);
+                    string name = user.FirstName + " " + user.LastName;
+                    List<int> pIdlist = new List<int>();
+                    foreach (var obj in db.profitCenters.ToList())
+                    {
+                        var manager = db.Managers.Single(m => m.ManagerID == obj.Owner);
+
+                        if (manager.FirstName + " " + manager.LastName == name)
+                        {
+                            pIdlist.Add(obj.ProfitCenterID);
+                        }
+                        try
+                        {
+                            var manager2 = db.Managers.Single(m => m.ManagerID == obj.PartOwner);
+
+                            if (manager2.FirstName + " " + manager2.LastName == name)
+                            {
+                                pIdlist.Add(obj.ProfitCenterID);
+                            }
+                        }
+                        catch (Exception) { }
+
+
+                    }
+
+                    Boolean ability = false;
+                    var pc = db.profitCenters.Single(pp => pp.ProfitCenterID == consultant.ProfitCenterID);
+                    if (pIdlist.Count != 0)
+                    {
+                        foreach (var p in pIdlist)
+                        {
+                            if (pc.ProfitCenterID == p)
+                            {
+                                ability = true;
+                                break;
+                            }
+                            if (p == pc.FatherProfitCenterID)
+                            {
+                                ability = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!ability)
+                    {
+                       continue;
+                    }
+
+                }
+
+
                 if (cra.Month == currentMonth)
                 {
                     var nbProjetMatin = cra.Activities.Select(a => a.Morning).ToList();
@@ -921,6 +979,61 @@ namespace Projet_pilate.Controllers
             var consultantlist = db.Consultants.ToList();
             foreach (var c in consultantlist)
             {
+                if (User.IsInRole("Manager"))
+                {
+
+
+
+                    var email = User.Identity.Name;
+                    var user = db.Users.Single(u => u.Email == email);
+                    string name = user.FirstName + " " + user.LastName;
+                    List<int> pIdlist = new List<int>();
+                    foreach (var obj in db.profitCenters.ToList())
+                    {
+                        var manager = db.Managers.Single(m => m.ManagerID == obj.Owner);
+
+                        if (manager.FirstName + " " + manager.LastName == name)
+                        {
+                            pIdlist.Add(obj.ProfitCenterID);
+                        }
+                        try
+                        {
+                            var manager2 = db.Managers.Single(m => m.ManagerID == obj.PartOwner);
+
+                            if (manager2.FirstName + " " + manager2.LastName == name)
+                            {
+                                pIdlist.Add(obj.ProfitCenterID);
+                            }
+                        }
+                        catch (Exception) { }
+
+
+                    }
+
+                    Boolean ability = false;
+                    var pc = db.profitCenters.Single(pp => pp.ProfitCenterID == c.ProfitCenterID);
+                    if (pIdlist.Count != 0)
+                    {
+                        foreach (var p in pIdlist)
+                        {
+                            if (pc.ProfitCenterID == p)
+                            {
+                                ability = true;
+                                break;
+                            }
+                            if (p == pc.FatherProfitCenterID)
+                            {
+                                ability = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!ability)
+                    {
+                       continue;
+                    }
+
+                }
                 if (!consultantCra.Contains(c.FirstName + " " + c.LastName))
                 {
                     ActivityViewModel model = new ActivityViewModel()
@@ -932,6 +1045,9 @@ namespace Projet_pilate.Controllers
                 }
             }
 
+
+            
+            
             return View(models);
         }
 
@@ -1301,7 +1417,7 @@ namespace Projet_pilate.Controllers
 
             foreach (var consultant in consultants)
             {
-
+                
                 ConsultantCraModel model = new ConsultantCraModel()
                 {
                     ID = consultant.ConsultantID,
@@ -1402,7 +1518,7 @@ namespace Projet_pilate.Controllers
 
 
 
-        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes,Consultant")]
         //problème de manager
         [Route("Consultant/Export", Name = "Export")]
         public ActionResult Export(int id)
@@ -1413,7 +1529,7 @@ namespace Projet_pilate.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes,Consultant")]
         public ActivityExportModel GetData(int id)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -1536,7 +1652,7 @@ namespace Projet_pilate.Controllers
             return models;*/
         }
 
-        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes,Consultant")]
         [HttpPost]
         public FileResult ExportT(int id)
         {
@@ -1888,7 +2004,57 @@ namespace Projet_pilate.Controllers
 
             foreach (var consultant in consultants)
             {
+                if (User.IsInRole("Manager"))
+                {
+                    var email = User.Identity.Name;
+                    var user = db.Users.Single(u => u.Email == email);
+                    string name = user.FirstName + " " + user.LastName;
+                    List<int> pIdlist = new List<int>();
+                    foreach (var obj in db.profitCenters.ToList())
+                    {
+                        var manager = db.Managers.Single(m => m.ManagerID == obj.Owner);
 
+                        if (manager.FirstName + " " + manager.LastName == name)
+                        {
+                            pIdlist.Add(obj.ProfitCenterID);
+                        }
+                        try
+                        {
+                            var manager2 = db.Managers.Single(m => m.ManagerID == obj.PartOwner);
+
+                            if (manager2.FirstName + " " + manager2.LastName == name)
+                            {
+                                pIdlist.Add(obj.ProfitCenterID);
+                            }
+                        }
+                        catch (Exception) { }
+
+
+                    }
+
+                    Boolean ability = false;
+                    var pc = db.profitCenters.Single(pp => pp.ProfitCenterID == consultant.ProfitCenterID);
+                    if (pIdlist.Count != 0)
+                    {
+                        foreach (var p in pIdlist)
+                        {
+                            if (pc.ProfitCenterID == p)
+                            {
+                                ability = true;
+                                break;
+                            }
+                            if (p == pc.FatherProfitCenterID)
+                            {
+                                ability = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!ability)
+                    {
+                        continue;
+                    }
+                }
                 ConsultantCraModelNew model = new ConsultantCraModelNew()
                 {
                     ID = consultant.ConsultantID,
@@ -2001,6 +2167,57 @@ namespace Projet_pilate.Controllers
 
             foreach (var consultant in consultants)
             {
+                if (User.IsInRole("Manager"))
+                {
+                    var email = User.Identity.Name;
+                    var user = db.Users.Single(u => u.Email == email);
+                    string name = user.FirstName + " " + user.LastName;
+                    List<int> pIdlist = new List<int>();
+                    foreach (var obj in db.profitCenters.ToList())
+                    {
+                        var manager = db.Managers.Single(m => m.ManagerID == obj.Owner);
+
+                        if (manager.FirstName + " " + manager.LastName == name)
+                        {
+                            pIdlist.Add(obj.ProfitCenterID);
+                        }
+                        try
+                        {
+                            var manager2 = db.Managers.Single(m => m.ManagerID == obj.PartOwner);
+
+                            if (manager2.FirstName + " " + manager2.LastName == name)
+                            {
+                                pIdlist.Add(obj.ProfitCenterID);
+                            }
+                        }
+                        catch (Exception) { }
+
+
+                    }
+
+                    Boolean ability = false;
+                    var pc = db.profitCenters.Single(pp => pp.ProfitCenterID == consultant.ProfitCenterID);
+                    if (pIdlist.Count != 0)
+                    {
+                        foreach (var p in pIdlist)
+                        {
+                            if (pc.ProfitCenterID == p)
+                            {
+                                ability = true;
+                                break;
+                            }
+                            if (p == pc.FatherProfitCenterID)
+                            {
+                                ability = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!ability)
+                    {
+                        continue;
+                    }
+                }
 
                 ConsultantCraModel model = new ConsultantCraModel()
                 {
@@ -2096,7 +2313,57 @@ namespace Projet_pilate.Controllers
 
             foreach (var consultant in consultants)
             {
+                if (User.IsInRole("Manager"))
+                {
+                    var email = User.Identity.Name;
+                    var user = db.Users.Single(u => u.Email == email);
+                    string name = user.FirstName + " " + user.LastName;
+                    List<int> pIdlist = new List<int>();
+                    foreach (var obj in db.profitCenters.ToList())
+                    {
+                        var manager = db.Managers.Single(m => m.ManagerID == obj.Owner);
 
+                        if (manager.FirstName + " " + manager.LastName == name)
+                        {
+                            pIdlist.Add(obj.ProfitCenterID);
+                        }
+                        try
+                        {
+                            var manager2 = db.Managers.Single(m => m.ManagerID == obj.PartOwner);
+
+                            if (manager2.FirstName + " " + manager2.LastName == name)
+                            {
+                                pIdlist.Add(obj.ProfitCenterID);
+                            }
+                        }
+                        catch (Exception) { }
+
+
+                    }
+
+                    Boolean ability = false;
+                    var pc = db.profitCenters.Single(pp => pp.ProfitCenterID == consultant.ProfitCenterID);
+                    if (pIdlist.Count != 0)
+                    {
+                        foreach (var p in pIdlist)
+                        {
+                            if (pc.ProfitCenterID == p)
+                            {
+                                ability = true;
+                                break;
+                            }
+                            if (p == pc.FatherProfitCenterID)
+                            {
+                                ability = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!ability)
+                    {
+                        continue;
+                    }
+                }
                 ConsultantCraModelNew model = new ConsultantCraModelNew()
                 {
                     ID = consultant.ConsultantID,

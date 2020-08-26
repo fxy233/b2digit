@@ -37,9 +37,13 @@
     }
     else
     {
-        <div class="col-md-offset-11" style="margin-bottom:10px;padding-left:13px;">
-            @Html.ActionLink("Modifier", "ModifierOdm", new { id = Model.id }, new { @class = "btn btn-primary" })
-        </div>
+        if (Model.signature == "")
+        {
+<div class="col-md-offset-11" style="margin-bottom:10px;padding-left:13px;">
+    @Html.ActionLink("Modifier", "ModifierOdm", new { id = Model.id }, new { @class = "btn btn-primary" })
+</div>
+        }
+        
     }
 
 
@@ -231,10 +235,10 @@
 
 
 </pre>
-<div>
+    <div>
 <pre>           </pre><label style="font-size:13px">A dater et signer: </label><pre style="display: inline-block;">             @Model.signature </pre>
 
-</div>
+    </div>
 <pre>
 
 

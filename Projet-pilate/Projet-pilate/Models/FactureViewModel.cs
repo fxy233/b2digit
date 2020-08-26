@@ -17,7 +17,7 @@ namespace Projet_pilate.Models
         [Display(Name = "Client")]
         public string Client { get; set; }
 
-        [Display(Name = "Montant")]
+        [Display(Name = "TTC")]
         public string MontantHT { get; set; }
 
         [Display(Name = "Mission")]

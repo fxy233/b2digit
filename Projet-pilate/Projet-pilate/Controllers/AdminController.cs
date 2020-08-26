@@ -574,10 +574,12 @@ namespace Projet_pilate.Controllers
                 foreach (var item in db.profitCenters.ToList())
                 {
                     var manager = db.Managers.Single(m => m.ManagerID == item.Owner);
+
                     if (manager.FirstName+" "+manager.LastName == name )
                     {
                         pIdlist.Add(item.ProfitCenterID);
                     }
+
                 }
                 var pc = db.profitCenters.Single(p => p.ProfitCenterID == consultant.ProfitCenterID);
                 Boolean ability = false;

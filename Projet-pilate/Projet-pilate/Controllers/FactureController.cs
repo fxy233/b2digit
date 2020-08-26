@@ -56,12 +56,12 @@ namespace Projet_pilate.Controllers
                     ID = f.FactureID,
                     NomFacture = f.NomFacture,
                     Client = f.Client,
-                    MontantHT = ((1 + f.TVA) * f.MontantHT).ToString(),
+                    MontantHT = ((1 + f.TVA) * f.MontantHT).ToString() + " €",
                     Mission = f.mission,
                     Dernier = f.DernierEnregistrer,
                     Emettrice = f.PrincipalBC,
                     Consultant = C.FirstName + " " + C.LastName,
-                    MoisSaisie = f.MoisDeFacturation.ToString("MM-yyyy"),
+                    MoisSaisie = f.MoisDeFacturation.ToString("yyyy-MM"),
                 };
 
                 string s = "FAE";
@@ -148,12 +148,12 @@ namespace Projet_pilate.Controllers
                     ID = f.FactureID,
                     NomFacture = f.NomFacture,
                     Client = f.Client,
-                    MontantHT = ((1 + f.TVA) * f.MontantHT).ToString(),
+                    MontantHT = ((1 + f.TVA) * f.MontantHT).ToString() + " €",
                     Mission = f.mission,
                     Dernier = f.DernierEnregistrer,
                     Emettrice = f.PrincipalBC,
                     Consultant = C.FirstName + " " + C.LastName,
-                    MoisSaisie = f.MoisDeFacturation.ToString("MM-yyyy"),
+                    MoisSaisie = f.MoisDeFacturation.ToString("yyyy-MM"),
                 };
 
                 string s = "FAE";
@@ -788,7 +788,7 @@ namespace Projet_pilate.Controllers
 
             var sub = db.Subsidiaries.Single(s => s.Name == facture.PrincipalBC);
 
-            if(facture.CraId>0)
+            if(facture.CraId>0 || facture.CraId==-999)
             {
                 if (interne)
                 {
@@ -1366,7 +1366,7 @@ namespace Projet_pilate.Controllers
 
             if (typelist[0] == "fusionner")
             {
-                
+
 
                 Facture facture = new Facture()
                 {
@@ -1392,6 +1392,7 @@ namespace Projet_pilate.Controllers
                     Delai = facturefusionner.Delai,
                     DesignationFacturation = facturefusionner.DesignationFacturation,
                     DateRegelement = reglement,
+                    CraId = -999,
                 };
 
                 foreach(var item in selectionlist)
@@ -1443,6 +1444,8 @@ namespace Projet_pilate.Controllers
                     Delai = facturefusionner.Delai,
                     DesignationFacturation = facturefusionner.DesignationFacturation,
                     DateRegelement = reglement,
+                    CraId = -999,
+
                 };
 
                 foreach (var item in selectionlist)
@@ -1499,12 +1502,12 @@ namespace Projet_pilate.Controllers
                     ID = f.FactureID,
                     NomFacture = f.NomFacture,
                     Client = f.Client,
-                    MontantHT = ((1+f.TVA)*f.MontantHT).ToString(),
+                    MontantHT = ((1+f.TVA)*f.MontantHT).ToString()+ " €",
                     Mission = f.mission,
                     Dernier = f.DernierEnregistrer,
                     Emettrice = f.PrincipalBC,
                     Consultant = C.FirstName + " " + C.LastName,
-                    MoisSaisie = f.MoisDeFacturation.ToString("MM-yyyy"),
+                    MoisSaisie = f.MoisDeFacturation.ToString("yyyy-MM"),
                 };
 
                 model.Status = "Payee";

@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<Projet_pilate.Models.DetailConsultantViewModel>
+@using Projet_pilate.Models;
 
 @{
     ViewBag.Title = "ConsultantList";
@@ -22,43 +23,12 @@
 <script type="text/javascript" src="~/Scripts/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function () {
-        var groupColumn = 7;
         var table = $('#mytable').DataTable({
             stateSave: true,
-            "columnDefs": [
-                { "visible": false, "targets": groupColumn }
-            ],
-            "order": [[groupColumn, 'asc']],
-            "displayLength": 25,
-            "drawCallback": function (settings) {
-                var api = this.api();
-                var rows = api.rows({ page: 'current' }).nodes();
-                var last = null;
 
-                api.column(groupColumn, { page: 'current' }).data().each(function (group, i) {
-                    if (last !== group) {
-                        $(rows).eq(i).before(
-                            '<tr class="group"><td colspan="8">' + group + '</td></tr>'
-                        );
-
-                        last = group;
-                    }
-                });
-            }
         });
 
-        
 
-        // Order by the grouping
-        $('#mytable tbody').on('click', 'tr.group', function () {
-            var currentOrder = table.order()[0];
-            if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
-                table.order([groupColumn, 'desc']).draw();
-            }
-            else {
-                table.order([groupColumn, 'asc']).draw();
-            }
-        });
     });
 </script>
 
@@ -108,42 +78,115 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FirstName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.LastName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EntryDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DailyCost)
-                </td>
-                @*                    <td>
-                        @Html.DisplayFor(modelItem => item.MonthlyCost)
-                    </td>*@
-                <td>
-                    @Html.DisplayFor(modelItem => item.ProfitCenter)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Subsidiary)
-                </td>
-                <td>
-                    @Html.ActionLink("Modifier", "EditConsultant", new { id = item.ID }, new { @class = "btn-primary btn space", })
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EntryDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DailyCost)
+            </td>
+            @*                    <td>
+            @Html.DisplayFor(modelItem => item.MonthlyCost)
+        </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.ProfitCenter)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Subsidiary)
+            </td>
 
-                </td>
-                <td>
-                    @Html.ActionLink("Supprimer", "DeleteConsultant", new { id = item.ID }, new { @class = "btn-primary btn space", onclick = "return ConfirmationDialog()" })
-                </td>
-            </tr>
+            @{
+                ApplicationDbContext db = new ApplicationDbContext();
+                if (User.IsInRole("Manager"))
+                {
+                    var email = User.Identity.Name;
+                    var user = db.Users.Single(u => u.Email == email);
+                    string name = user.FirstName + " " + user.LastName;
+                    List<int> pIdlist = new List<int>();
+                    foreach (var obj in db.profitCenters.ToList())
+                    {
+                        var manager = db.Managers.Single(m => m.ManagerID == obj.Owner);
+
+                        if (manager.FirstName + " " + manager.LastName == name)
+                        {
+                            pIdlist.Add(obj.ProfitCenterID);
+                        }
+                        try
+                        {
+                            var manager2 = db.Managers.Single(m => m.ManagerID == obj.PartOwner);
+
+                            if (manager2.FirstName + " " + manager2.LastName == name)
+                            {
+                                pIdlist.Add(obj.ProfitCenterID);
+                            }
+                        }
+                        catch (Exception) { }
+
+
+                    }
+
+                    Boolean ability = false;
+                    var pc = db.profitCenters.Single(pp => pp.Name == item.ProfitCenter);
+                    if (pIdlist.Count != 0)
+                    {
+                        foreach (var p in pIdlist)
+                        {
+                            if (pc.ProfitCenterID == p)
+                            {
+                                ability = true;
+                                break;
+                            }
+                            if (p == pc.FatherProfitCenterID)
+                            {
+                                ability = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (ability)
+                    {
+                        <td>
+                            @Html.ActionLink("Modifier", "EditConsultant", new { id = item.ID }, new { @class = "btn-primary btn space", })
+
+                        </td>
+                        <td>
+                            @Html.ActionLink("Supprimer", "DeleteConsultant", new { id = item.ID }, new { @class = "btn-primary btn space", onclick = "return ConfirmationDialog()" })
+                        </td>
+                    }
+                    else
+                    {
+                        <td></td>
+                        <td></td>
+                    }
+
+                }
+                else
+                {
+                    <td>
+                        @Html.ActionLink("Modifier", "EditConsultant", new { id = item.ID }, new { @class = "btn-primary btn space", })
+
+                    </td>
+                    <td>
+                        @Html.ActionLink("Supprimer", "DeleteConsultant", new { id = item.ID }, new { @class = "btn-primary btn space", onclick = "return ConfirmationDialog()" })
+                    </td>
+                }
+            }
+
+
+        </tr>
         }
     </tbody>
 
