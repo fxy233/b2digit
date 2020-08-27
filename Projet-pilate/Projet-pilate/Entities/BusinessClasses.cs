@@ -43,7 +43,8 @@ namespace Projet_pilate.Entities
         public double MealCost { get; set; }
         public double TravelPackage { get; set; }
         public double ExceptionalCost { get; set; }
-
+        public Boolean quit { get; set; }
+        public DateTime QuitDate { get; set; }
 
         // Foreign key
         public int ProfitCenterID { get; set; }
@@ -88,6 +89,9 @@ namespace Projet_pilate.Entities
         public double TravelPackage { get; set; }
         public double ExceptionalCost { get; set; }
         public string role { get; set; }
+
+        public Boolean quit { get; set; }
+        public DateTime QuitDate { get; set; }
 
 
         // Foreign Key

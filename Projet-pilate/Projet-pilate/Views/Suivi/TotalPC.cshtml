@@ -4,32 +4,62 @@
 @{
     Layout = null;
 }
-
+    <style>
+        th {
+            white-space: nowrap;
+        }
+    </style>
 <script>
     $(document).ready(function () {
         var str = "#" + "@ViewBag.id";
-        console.log(str);
         $(str).DataTable({
             stateSave: true,
-            initComplete: function () {
-                this.api().columns().every(function () {
-                    var column = this;
-                    var select = $('<select><option value=""></option></select>')
-                        .appendTo($(column.footer()).empty())
-                        .on('change', function () {
-                            var val = $.fn.dataTable.util.escapeRegex(
-                                $(this).val()
-                            );
+            "footerCallback": function (row, data, start, end, display) {
+                var api = this.api(), data;
 
-                            column
-                                .search(val ? '^' + val + '$' : '', true, false)
-                                .draw();
-                        });
+                // Remove the formatting to get integer data for summation
+                var intVal = function (i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                            i : 0;
+                };
 
-                    column.data().unique().sort().each(function (d, j) {
-                        select.append('<option value="' + d + '">' + d + '</option>')
-                    });
-                });
+                // Total over all pages
+                total = api
+                    .column(1)
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+                total2 = api
+                    .column(2)
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                // Total over this page
+                pageTotal = api
+                    .column(1, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+                pageTotal2 = api
+                    .column(2, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                // Update footer
+                $(api.column(1).footer()).html(
+                    pageTotal + '€ ( ' + total + '€ total)'
+                );
+                $(api.column(2).footer()).html(
+                    pageTotal2 + '€ ( ' + total2 + '€ total)'
+                );
             }
         });
     });
@@ -120,55 +150,9 @@
 
     <tfoot>
         <tr>
-
-            <th>
-                @Html.DisplayNameFor(model => model.mois)
-            </th>
-            @{
-                
-                user = db.Users.Single(u => u.UserName == User.Identity.Name);
-                manager = null;
-                foreach (var m in db.Managers.ToList())
-                {
-                    if (m.FirstName.ToUpper() == user.FirstName.ToUpper() && m.LastName.ToUpper() == user.LastName.ToUpper())
-                    {
-                        manager = m;
-                        break;
-                    }
-                }
-                if (manager == null)
-                {
-                    <th>
-                        DM facturé
-                    </th>
-                    <th>
-                        DM en théorie
-                    </th>
-                }
-                else
-                {
-                    if (manager.role == "BM")
-                    {
-                        <th>
-                            CM facturé
-                        </th>
-
-                        <th>
-                            CM en théorie
-                        </th>
-                    }
-                    else
-                    {
-                        <th>
-                            TM facturé
-                        </th>
-
-                        <th>
-                            TM en théorie
-                        </th>
-                    }
-                }
-            }
+            <th colspan="1" style="text-align:right">Total:</th>
+            <th></th>
+            <th></th>
         </tr>
     </tfoot>
 

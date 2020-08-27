@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "SubsidiaryList";
+    Layout = "~/Views/Shared/_particular.cshtml";
 }
 
 <h2>Liste des Business Companies </h2>
@@ -13,64 +14,81 @@
     </p>
 }
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Siren)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Address)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PostaleCode)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.City)
-        </th>
-        <th>
-            Responsable
-            @*Html.DisplayNameFor(model => model.ManagerFirstName)
-            @Html.DisplayNameFor(model => model.ManagerLastName)*@
-        </th>
-        <th></th>
-    </tr>
+<link href="~/Scripts/jquery.dataTables.min.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#mytable').DataTable({
+            stateSave: true,
+        });
+    });
 
-    @foreach (var item in Model)
-    {
-<tr>
-    <td>
-        @Html.DisplayFor(modelItem => item.Siren)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Name)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Address)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.PostaleCode)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.City)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.ManagerFirstName)
-        @Html.DisplayFor(modelItem => item.ManagerLastName)
-    </td>
-    @if (!User.IsInRole("Administrateur-ventes"))
-    {
-<td>
-    @Html.ActionLink("Modifier", "Edit", new { id = item.ID }, new { @class = "btn btn-primary btn-large" })
-    @Html.ActionLink("Supprimer", "Delete", new { id = item.ID }, new { @class = "btn btn-primary btn-large", onclick = "return ConfirmationDialog()" })
-</td>
-    }
 
-</tr>
-            }
-        </table>
+
+</script>
+
+<table class="display" id="mytable" style="width:90%">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Siren)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PostaleCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.City)
+            </th>
+            <th>
+                Responsable
+                @*Html.DisplayNameFor(model => model.ManagerFirstName)
+                @Html.DisplayNameFor(model => model.ManagerLastName)*@
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Siren)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PostaleCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.City)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ManagerFirstName)
+                    @Html.DisplayFor(modelItem => item.ManagerLastName)
+                </td>
+                @if (!User.IsInRole("Administrateur-ventes"))
+                {
+                    <td>
+                        @Html.ActionLink("Modifier", "Edit", new { id = item.ID }, new { @class = "btn btn-primary btn-large" })
+                        @Html.ActionLink("Supprimer", "Delete", new { id = item.ID }, new { @class = "btn btn-primary btn-large", onclick = "return ConfirmationDialog()" })
+                    </td>
+                }
+
+            </tr>
+        }
+    </tbody>
+</table>
 
 @Html.Raw(HttpUtility.HtmlDecode((Html.ValidationSummary(false, "", new { @class = "exception" })).ToHtmlString()))
 

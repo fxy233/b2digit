@@ -1,4 +1,5 @@
 ﻿@model Projet_pilate.Models.UpdateCompanyContactViewModel
+@using Projet_pilate.Models
 
 @{
     ViewBag.Title = "EditCompanyContact";
@@ -9,16 +10,16 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Id)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.CompanyName, htmlAttributes: new { @class = "control-label col-md-2"})
+            @Html.LabelFor(model => model.CompanyName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.CompanyName, new { htmlAttributes = new { @class = "form-control",@readonly = "readonly" } })
+                @Html.EditorFor(model => model.CompanyName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                 @Html.ValidationMessageFor(model => model.CompanyName, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -28,6 +29,24 @@
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Mail, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Mail, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Manager</label>
+            <div class="col-md-10">
+                <select class="form-control" id="Manager"  name="Manager" required>
+                    <option selected>@Model.Manager</option>
+                    @{
+                        ApplicationDbContext db = new ApplicationDbContext();
+
+                        foreach (var manager in db.Managers.ToList())
+                        {
+                            string str = manager.FirstName + " " + manager.LastName;
+                            <option class="Manager" value="@str">@str</option>
+                        }
+                    }
+                </select>
             </div>
         </div>
 

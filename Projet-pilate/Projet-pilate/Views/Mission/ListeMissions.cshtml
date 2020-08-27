@@ -2,6 +2,8 @@
 @using Projet_pilate.Models
 @{
     ViewBag.Title = "ListeMissions";
+    Layout = "~/Views/Shared/_particular.cshtml";
+
 }
 
 <h2>Liste des missions</h2>
@@ -14,172 +16,185 @@
 }
 
 @Html.Raw(HttpUtility.HtmlDecode((Html.ValidationSummary(false, "", new { @class = "text-danger" })).ToHtmlString()))
+<link href="~/Scripts/jquery.dataTables.min.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#mytable').DataTable({
+            stateSave: true,
+        });
+    });
+</script>
 
-
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ClientName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ConsultantName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ProfitCenter)
-        </th>
-        @*<th>
+<table class="display" id="mytable" style="width:90%">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClientName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ConsultantName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProfitCenter)
+            </th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.CreatorName)
             </th>*@
-        <th>
-            @Html.DisplayNameFor(model => model.Start)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.End)
-        </th>
-        <th> @Html.DisplayNameFor(model => model.Fee)</th>
-        <th></th><th></th><th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
-        if (User.IsInRole("Manager"))
+            <th>
+                @Html.DisplayNameFor(model => model.Start)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.End)
+            </th>
+            <th> @Html.DisplayNameFor(model => model.Fee)</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
         {
-            ApplicationDbContext db = new ApplicationDbContext();
-            var pclist = db.profitCenters.ToList();
-            var user = db.Users.Single(u => u.Email == User.Identity.Name);
-            string name = user.FirstName + " " + user.LastName;
-            foreach (var pc in pclist)
+            if (User.IsInRole("Manager"))
             {
-
-                if (item.ProfitCenter == pc.Name)
+                ApplicationDbContext db = new ApplicationDbContext();
+                var pclist = db.profitCenters.ToList();
+                var user = db.Users.Single(u => u.Email == User.Identity.Name);
+                string name = user.FirstName + " " + user.LastName;
+                foreach (var pc in pclist)
                 {
-                    string ownername = "Aucun";
-                    string partownername = "Aucun";
-                    try
+
+                    if (item.ProfitCenter == pc.Name)
                     {
-                        var owner = db.Managers.Single(m => m.ManagerID == pc.Owner);
-                        ownername = owner.FirstName + " " + owner.LastName;
-                    }catch (Exception)
-                    {}
-                    try
-                    {
-                        var partowner = db.Managers.Single(m => m.ManagerID == pc.PartOwner);
-                        partownername = partowner.FirstName + " " + partowner.LastName;
-                    }
-                    catch (Exception)
-                    {}
+                        string ownername = "Aucun";
+                        string partownername = "Aucun";
+                        try
+                        {
+                            var owner = db.Managers.Single(m => m.ManagerID == pc.Owner);
+                            ownername = owner.FirstName + " " + owner.LastName;
+                        }
+                        catch (Exception)
+                        { }
+                        try
+                        {
+                            var partowner = db.Managers.Single(m => m.ManagerID == pc.PartOwner);
+                            partownername = partowner.FirstName + " " + partowner.LastName;
+                        }
+                        catch (Exception)
+                        { }
 
 
-                    if (ownername == name || partownername == name)
-                    {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ClientName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ConsultantName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ProfitCenter)
-                            </td>
-                            @*<td>
+                        if (ownername == name || partownername == name)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ClientName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ConsultantName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ProfitCenter)
+                                </td>
+                                @*<td>
                                     @Html.DisplayFor(modelItem => item.CreatorName)
                                 </td>*@
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Start)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(model => item.End)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(model => item.Fee)
-                            </td>
-                            
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Start)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(model => item.End)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(model => item.Fee)
+                                </td>
 
 
-                        </tr>
-                        break;
+
+                            </tr>
+                            break;
+                        }
                     }
+
                 }
 
             }
-
-        }
-        else
-        {
-<tr>
-    <td>
-        @Html.DisplayFor(modelItem => item.Name)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.ClientName)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.ConsultantName)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.ProfitCenter)
-    </td>
-    @*<td>
-            @Html.DisplayFor(modelItem => item.CreatorName)
-        </td>*@
-    <td>
-        @Html.DisplayFor(modelItem => item.Start)
-    </td>
-    <td>
-        @Html.DisplayFor(model => item.End)
-    </td>
-    <td>
-        @Html.DisplayFor(model => item.Fee)
-    </td>
-    <td>
-        @Html.ActionLink("Modifier", "Edit", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })
-        
-    </td>
-    <td>
-        @Html.ActionLink("Supprimer", "Delete", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })
-    </td>
-
-    @{
-        ApplicationDbContext db = new ApplicationDbContext();
-        var mission = db.Missions.Single(m => m.MissionID == item.Id);
-        var consultant = db.Consultants.Single(c => c.ConsultantID == mission.ConsultantID);
-        if (consultant.Status == "Sous-Traitant")
-        {
-        <td>
-            
-        </td>
-        }
-        else
-        {
-            if (mission.avoirOdm||DateTime.Compare(mission.End,mission.DateFinOdm)==0)
-            {
-                <td>
-                    Vous avez déjà fait l'ordre de mission pour cette mission.
-                </td>
-            }
             else
             {
-                <td>
-                    @Html.ActionLink("Créer un ordre de mission", "CreerODM", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })
-                </td>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ClientName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ConsultantName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProfitCenter)
+                    </td>
+                    @*<td>
+                        @Html.DisplayFor(modelItem => item.CreatorName)
+                    </td>*@
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Start)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => item.End)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => item.Fee)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Modifier", "Edit", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })
+
+                    </td>
+                    <td>
+                        @Html.ActionLink("Supprimer", "Delete", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })
+                    </td>
+
+                    @{
+                        ApplicationDbContext db = new ApplicationDbContext();
+                        var mission = db.Missions.Single(m => m.MissionID == item.Id);
+                        var consultant = db.Consultants.Single(c => c.ConsultantID == mission.ConsultantID);
+                        if (consultant.Status == "Sous-Traitant")
+                        {
+                            <td>
+                            </td>
+                        }
+                        else
+                        {
+                            if (mission.avoirOdm || DateTime.Compare(mission.End, mission.DateFinOdm) == 0)
+                            {
+                                <td>
+                                    Vous avez déjà fait l'ordre de mission pour cette mission.
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    @Html.ActionLink("Créer un ordre de mission", "CreerODM", new { id = item.Id }, new { @class = "btn btn-primary btn-large" })
+                                </td>
+                            }
+                        }
+
+                    }
+
+
+
+                </tr>
             }
+
         }
-
-    }
-
-
-
-</tr>
-        }
-
-    }
-
+    </tbody>
 </table>
 

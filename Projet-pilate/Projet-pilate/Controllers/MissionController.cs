@@ -71,16 +71,16 @@ namespace Projet_pilate.Controllers
 
                     array = Request.Form["ContactId"].ToString().Split('(');
                     array2 = array[0].Split(' ');
-                    
-                    foreach(var item in list)
+
+                    foreach (var item in list)
                     {
-                        if (item.FirstName == array2[0] && item.LastName == array2[1] && item.CompanyName == array[1].Split(')')[0]) 
+                        if (item.FirstName + " " + item.LastName == array[0] && item.CompanyName == array[1].Split(')')[0])
                         {
                             nomContact = item.Mail;
-                            
+
                         }
                     }
-      
+
                     SelectedConsultant = Request.Form["ConsultantId"].ToString();
                     periodicite = Request.Form["PeriodeId"].ToString();
 
@@ -110,10 +110,10 @@ namespace Projet_pilate.Controllers
                 array2 = array[0].Split(' ');
                 foreach (var item in list)
                 {
-                    if (item.FirstName == array2[0] && item.LastName == array2[1] && item.CompanyName == array[1].Split(')')[0])
+                    if (item.FirstName + " " + item.LastName == array[0] && item.CompanyName == array[1].Split(')')[0])
                     {
                         nomContact = item.Mail;
-                       
+
                     }
                 }
                 SelectedConsultant = Request.Form["ConsultantId"].ToString();
@@ -141,10 +141,10 @@ namespace Projet_pilate.Controllers
             array2 = array[0].Split(' ');
             foreach (var item in list)
             {
-                if (item.FirstName == array2[0] && item.LastName == array2[1] && item.CompanyName == array[1].Split(')')[0])
+                if (item.FirstName + " " + item.LastName == array[0] && item.CompanyName == array[1].Split(')')[0])
                 {
                     nomContact = item.Mail;
-                    
+
                 }
             }
             SelectedConsultant = Request.Form["ConsultantId"].ToString();
@@ -167,7 +167,7 @@ namespace Projet_pilate.Controllers
                 array2 = array[0].Split(' ');
                 foreach (var item in list)
                 {
-                    if (item.FirstName == array2[0] && item.LastName == array2[1] && item.CompanyName == array[1].Split(')')[0])
+                    if (item.FirstName +" "+ item.LastName == array[0] && item.CompanyName == array[1].Split(')')[0])
                     {
                         nomContact = item.Mail;
                         
@@ -253,6 +253,8 @@ namespace Projet_pilate.Controllers
 
             employees.Add(consultant);
 
+            string cmpname = array[1].Split(')')[0];
+
             Mission mission = new Mission()
             {
                 Name = model.Name,
@@ -262,7 +264,7 @@ namespace Projet_pilate.Controllers
                 Start = model.Start,
                 End = model.End,
                 Periodicity = periodicite,
-                CompanyContact = db.CompanyContacts.SingleOrDefault(c => c.Mail == nomContact),
+                CompanyContact = db.CompanyContacts.SingleOrDefault(c => c.Mail == nomContact && c.CompanyName== cmpname),
                 ProfitCenter = consultant.ProfitCenter,
                 Creator = sessionUser.FirstName + " " + sessionUser.LastName,
                 //exist = true,
@@ -441,13 +443,15 @@ namespace Projet_pilate.Controllers
             {
                 string message = "Business Company émettrice ne doit pas être le même que Business Company Intermédiaire !";
                 ModelState.AddModelError(string.Empty, message);
+                ViewBag.date = mission.End.ToString("yyyy-MM-dd");
                 return View(model);
             }
 
-            if (model.PrincipalBCID1 == model.InterBC2ID1 || model.InterBC1ID1 == model.InterBC2ID1)
+            if (model.PrincipalBCID1 == model.InterBC2ID1 || (model.InterBC1ID1 == model.InterBC2ID1 && model.InterBC1ID1 != "Aucun"))
             {
                 string message = "Business Company émettrice ne doit pas être le même que Business Company Intermédiaire !";
                 ModelState.AddModelError(string.Empty, message);
+                ViewBag.date = mission.End.ToString("yyyy-MM-dd");
                 return View(model);
             }
 
@@ -482,7 +486,7 @@ namespace Projet_pilate.Controllers
                 int pid = db.Subsidiaries.Single(s => s.Name == nom).SubsidiaryID;
                 mission.PrincipalBCID = pid;
                 string nomI = model.InterBC1ID1;
-                int Iid = nomI=="Aucun"? 0 : db.Subsidiaries.Single(s => s.Name == nomI).SubsidiaryID;
+                int Iid = nomI=="Aucun" ? 0 : db.Subsidiaries.Single(s => s.Name == nomI).SubsidiaryID;
                 mission.InterBC1ID = Iid;
                 mission.TJInterBC1 = model.TJInterBC1;
                 string nomI2 = model.InterBC2ID1;

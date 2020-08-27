@@ -257,6 +257,10 @@ namespace Projet_pilate.Models
         public string Mail { get; set; }
 
         [Required]
+        [Display(Name = "Manager")]
+        public string Manager { get; set; }
+
+        [Required]
         [Display(Name = "Prénom")]
         public string FirstName { get; set; }
 

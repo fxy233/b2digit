@@ -54,6 +54,10 @@ namespace Projet_pilate.Controllers
                 managerName = Request.Form["ManagerId"].ToString().Split(' ');
                 managerFirstName = managerName[0];
                 managerLastName = managerName[1];
+                for(int i=2;i<managerName.Length;i++ )
+                {
+                    managerLastName = managerLastName + " " + managerName[i];
+                }
 
                 List<Manager> managers = db.Managers.ToList();
                 List<string> managerNames = new List<string>();
@@ -77,7 +81,10 @@ namespace Projet_pilate.Controllers
             managerName = Request.Form["ManagerId"].ToString().Split(' ');
             managerFirstName = managerName[0];
             managerLastName = managerName[1];
-
+            for (int i = 2; i < managerName.Length; i++)
+            {
+                managerLastName = managerLastName + " " + managerName[i];
+            }
 
             Company company = db.Companies.SingleOrDefault(c => c.Name == companyName);
             Manager manager = db.Managers.SingleOrDefault(c => c.FirstName == managerFirstName
@@ -220,6 +227,7 @@ namespace Projet_pilate.Controllers
                  LastName = companyContact.LastName,
                  Position = companyContact.Position,
                  Phone = companyContact.PhoneNumber,
+                 Manager = companyContact.Manager.FirstName+" "+companyContact.Manager.LastName,
 
             };
             
@@ -266,6 +274,14 @@ namespace Projet_pilate.Controllers
             companyContact.LastName = model.LastName;
             companyContact.Position = model.Position;
             companyContact.PhoneNumber = model.Phone;
+            foreach(var obj in db.Managers.ToList())
+            {
+                if (model.Manager == obj.FirstName+" " + obj.LastName)
+                {
+                    companyContact.ManagerID = obj.ManagerID;
+                    companyContact.Manager = obj;
+                }            
+            }
 
             db.SaveChanges();
 

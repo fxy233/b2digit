@@ -1,4 +1,5 @@
 ﻿@model Projet_pilate.Models.RegisterCompanyContactViewModel
+@using Projet_pilate.Models;
 
 @{
     ViewBag.Title = "CreationClient";
@@ -10,86 +11,106 @@
 {
     @Html.AntiForgeryToken()
 
-<div class="form-horizontal">
+    <div class="form-horizontal">
 
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    @Html.HiddenFor(model => model.ID)
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ID)
 
 
-    <div class="form-group">
-        <label class="control-label col-md-2">Entreprise</label>
-        <div class="col-md-10">
-            <select class="form-control" id="clientId" asp-for="CompanyId" name="CompanyId" required>
-                <option selected>@ViewData["companyName"]</option>
-                @foreach (var company in Model.CompanyNames)
-                {
-                    <option value="@company">@company</option>
-                }
-            </select>
+        <div class="form-group">
+            <label class="control-label col-md-2">Entreprise</label>
+            <div class="col-md-10">
+                <select class="form-control" id="clientId" asp-for="CompanyId" name="CompanyId" required>
+                    <option selected>@ViewData["companyName"]</option>
+                    @foreach (var company in Model.CompanyNames)
+                    {
+                        <option value="@company">@company</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Manager</label>
+            <div class="col-md-10">
+                <select class="form-control" id="clientId" asp-for="ManagerId" name="ManagerId" required>
+                    @{
+                        if (User.IsInRole("Manager"))
+                        {
+                            ApplicationDbContext db = new ApplicationDbContext();
+                            var email = User.Identity.Name;
+                            var user = db.Users.Single(u => u.Email == email);
+                            string name = user.FirstName + " " + user.LastName;
+                            foreach (var obj in db.Managers.ToList())
+                            {
+                                if (obj.FirstName + " " + obj.LastName == name)
+                                {
+                                    <option selected>@name</option>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            <option selected>@ViewData["managerName"]</option>
+                        }
+                        foreach (var manager in Model.ManagerNames)
+                        {
+                            <option value="@manager">@manager</option>
+                        }
+                    }
+
+                </select>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Mail, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Mail, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Mail, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Position, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Position, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Position, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Enregistrer" class="btn btn-primary btn-large" />
+            </div>
         </div>
     </div>
-    
-    <div class="form-group">
-        <label class="control-label col-md-2">Manager</label>
-        <div class="col-md-10">
-            <select class="form-control" id="clientId" asp-for="ManagerId" name="ManagerId" required>
-                <option selected>@ViewData["managerName"]</option>
-                @foreach (var manager in Model.ManagerNames)
-                {
-                    <option value="@manager">@manager</option>
-                }
-            </select>
-        </div>
-    </div>
-
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Mail, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Mail, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Mail, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Position, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Position, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Position, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Enregistrer" class="btn btn-primary btn-large" />
-        </div>
-    </div>
-</div>
 }
 
 <div>

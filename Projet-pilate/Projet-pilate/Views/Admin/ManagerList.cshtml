@@ -2,6 +2,8 @@
 
 @{
     ViewBag.Title = "ManagerList";
+    Layout = "~/Views/Shared/_particular.cshtml";
+
 }
 
 <h2>Liste des managers</h2>
@@ -13,67 +15,79 @@
     </p>
 }
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LastName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Email)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EntryDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Subsidiary)
-        </th>
-
-        @if (User.IsInRole("Administrateur"))
-        {
-            <th>
-                @Html.DisplayNameFor(model => model.MonthlyCost)
-            </th>
-        }
-
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
+<link href="~/Scripts/jquery.dataTables.min.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#mytable').DataTable({
+            stateSave: true,
+        });
+    });
+</script>
+<table class="display" id="mytable" style="width:90%">
+    <thead>
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EntryDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Subsidiary)
-            </td>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EntryDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Subsidiary)
+            </th>
 
             @if (User.IsInRole("Administrateur"))
             {
-                <td>
-                    @Html.DisplayFor(modelItem => item.MonthlyCost)
-                </td>
+                <th>
+                    @Html.DisplayNameFor(model => model.MonthlyCost)
+                </th>
             }
 
-            <td>
-                @Html.ActionLink("Modifier", "EditManager", new { id = item.ID }, new { @class = "btn btn-primary btn-large" }) 
-                @Html.ActionLink("Supprimer", "DeleteManager", new { id = item.ID }, new { @class = "btn btn-primary btn-large", onclick = "return ConfirmationDialog()" })
-            </td>
+            <th></th>
         </tr>
-    }
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EntryDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subsidiary)
+                </td>
 
+                @if (User.IsInRole("Administrateur"))
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MonthlyCost)
+                    </td>
+                }
+
+                <td>
+                    @Html.ActionLink("Modifier", "EditManager", new { id = item.ID }, new { @class = "btn btn-primary btn-large" })
+                    @Html.ActionLink("Supprimer", "DeleteManager", new { id = item.ID }, new { @class = "btn btn-primary btn-large", onclick = "return ConfirmationDialog()" })
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
 
 @Html.Raw(HttpUtility.HtmlDecode((Html.ValidationSummary(false, "", new { @class = "exception" })).ToHtmlString()))

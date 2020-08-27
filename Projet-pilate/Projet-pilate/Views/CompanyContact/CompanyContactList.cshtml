@@ -2,6 +2,8 @@
 
 @{
     ViewBag.Title = "ListeClients";
+    Layout = "~/Views/Shared/_particular.cshtml";
+
 }
 
 <h2>Liste de contacts client</h2>
@@ -14,71 +16,83 @@
     </p>
 }
 
+<link href="~/Scripts/jquery.dataTables.min.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#mytable').DataTable({
+            stateSave: true,
+        });
+    });
+</script>
 
-<table class="table">
-    <tr>
-        <th>
-            Email
-        </th>
-        <th>
-            Entreprise
-        </th>
-        <th>
-            Prénom
-        </th>
-        <th>
-            Nom
-        </th>
-        <th>
-            Position
-        </th>
-        <th>
-            Téléphone
-        </th>
-        <th>
-            Manager
-        </th>
-        <th></th>
-    </tr>
+<table class="display" id="mytable" style="width:90%">
+    <thead>
+        <tr>
+            <th>
+                Email
+            </th>
+            <th>
+                Entreprise
+            </th>
+            <th>
+                Prénom
+            </th>
+            <th>
+                Nom
+            </th>
+            <th>
+                Position
+            </th>
+            <th>
+                Téléphone
+            </th>
+            <th>
+                Manager
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Mail)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompanyName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Position)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Phone)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Manager)
+                </td>
+                @if (User.IsInRole("Super-Administrateur") || User.IsInRole("Administrateur"))
+                {
+                    <td>
 
-    @foreach (var item in Model)
-    {
-<tr>
-    <td>
-        @Html.DisplayFor(modelItem => item.Mail)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.CompanyName)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.FirstName)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.LastName)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Position)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Phone)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Manager)
-    </td>
-    @if (User.IsInRole("Super-Administrateur") || User.IsInRole("Administrateur"))
-    {
-        <td>
-
-            @Html.ActionLink("Modifier", "EditCompanyContact", new { id = item.ID }, new { @class = "btn btn-primary btn-large" })
-            @*@Html.ActionLink("Details", "Details", new { id = item.CompanyContactID }, new { @class = "btn btn-primary btn-large" })*@
-            @Html.ActionLink("Supprimer", "DeleteCompanyContact", new { id = item.ID }, new { @class = "btn btn-primary btn-large", id = "suppression", onclick = "return ConfirmationDialog()" })
-        </td>
-    }
+                        @Html.ActionLink("Modifier", "EditCompanyContact", new { id = item.ID }, new { @class = "btn btn-primary btn-large" })
+</td><td>                        @Html.ActionLink("Supprimer", "DeleteCompanyContact", new { id = item.ID }, new { @class = "btn btn-primary btn-large", id = "suppression", onclick = "return ConfirmationDialog()" })
+                    </td>
+                }
 
 
-</tr>
-    }
-
+            </tr>
+        }
+    </tbody>
 </table>
 
 @Html.Raw(HttpUtility.HtmlDecode((Html.ValidationSummary(false, "", new { @class = "exception" })).ToHtmlString()))

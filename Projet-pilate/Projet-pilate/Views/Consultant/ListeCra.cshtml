@@ -3,38 +3,56 @@
 
 @{
     ViewBag.Title = "ListeCra";
+    Layout = "~/Views/Shared/_particular.cshtml";
+
 }
 
 <h2>Liste des comptes rendu d'activité du mois de @ViewBag.date.ToString("MMMM, yyyy", System.Globalization.CultureInfo.CurrentCulture)</h2>
 
-<p><button onclick="sortTable()">Trier</button></p>
-@Html.ValidationSummary(true, "", new { @class = "text-danger" })
-<table class="table" id="mytable">
-    <tr>
 
-        <th>
-            @Html.DisplayNameFor(model => model.ConsultantName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Satisfaction)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.NoBillDays)
-        </th>
-        @*<th>
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+<link href="~/Scripts/jquery.dataTables.min.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#mytable').DataTable({
+            stateSave: true,
+        });
+    });
+</script>
+
+<table class="display" id="mytable" style="width:90%">
+    <thead>
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.ConsultantName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Satisfaction)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NoBillDays)
+            </th>
+            @*<th>
                 Detail
             </th>*@
-        <th>
-            @Html.DisplayNameFor(model => model.MissionName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.WorkedDays)
-        </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MissionName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WorkedDays)
+            </th>
 
-        <th>
-            @Html.DisplayNameFor(model => model.WorkedDaysWE)
-        </th>
-    </tr>
+            <th>
+                @Html.DisplayNameFor(model => model.WorkedDaysWE)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
 
     @{string Previous = "";
 
@@ -43,14 +61,20 @@
 
             if (item.MissionName == "Rien")
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ConsultantName)
-                    </td>
-                    <td>
-                        Ce consultant n'a pas encore saisi son CRA pendant le mois actif
-                    </td>
-                </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ConsultantName)
+                </td>
+                <td>
+                    Ce consultant n'a pas encore saisi son CRA pendant le mois actif
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+
+            </tr>
             }
             else
             {
@@ -103,98 +127,7 @@
 
 
     }
-    @*@{
-            Dictionary<string, List<Projet_pilate.Models.ActivityViewModel>> list = new Dictionary<string, List<Projet_pilate.Models.ActivityViewModel>>();
-
-            string PreviousConsultant = "";
-            foreach (var item in Model)
-            {
-                if (item.ConsultantName != PreviousConsultant)
-                {
-                    List<Projet_pilate.Models.ActivityViewModel> l = new List<Projet_pilate.Models.ActivityViewModel>();
-                    l.Add(item);
-                    list.Add(item.ConsultantName,l);
-                }
-                else
-                {
-                    list[item.ConsultantName].Add(item);
-                }
-                PreviousConsultant = item.ConsultantName;
-            }
-
-            foreach (var item in list)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Value[0].ConsultantName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Value[0].Satisfaction)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Value[0].NoBillDays)
-                    </td>
-
-                    <td>
-                        <div style="width: 800px; height:100px; overflow:scroll;">
-                            <table style="text-align: left;">
-                                <tr>
-                                    @foreach (var obj in item.Value)
-                                    {
-                                        <th style="padding-right: 7px">
-                                            <div style="width:200px">
-                                                @Html.DisplayNameFor(model => model.MissionName)
-                                            </div>
-                                        </th>
-
-                                        <th style="padding-right: 7px">
-                                            <div style="width:200px">
-                                                @Html.DisplayNameFor(model => model.WorkedDays)
-                                            </div>
-                                        </th>
-
-                                        <th style="padding-right: 7px">
-                                            <div style="width:200px">
-                                                @Html.DisplayNameFor(model => model.WorkedDaysWE)
-                                            </div>
-                                        </th>
-                                    }
-                                </tr>
-                                <tr>
-                                    @foreach (var obj in item.Value)
-                                    {
-                                        <td style="padding-right:7px">
-                                            @Html.DisplayFor(modelItem => obj.MissionName)
-                                        </td>
-
-                                        <td style="padding-right:7px">
-                                            @Html.DisplayFor(modelItem => obj.WorkedDays)
-                                        </td>
-
-                                        <td style="padding-right:7px">
-                                            @Html.DisplayFor(modelItem => obj.WorkedDaysWE)
-                                        </td>
-                                    }
-                                </tr>
-                            </table>
-                        </div>
-                    </td>
-
-                    <td>
-                        @if ((User.IsInRole("Super-Administrateur") || User.IsInRole("Administrateur")) || User.IsInRole("Administrateur-ventes"))
-                        {
-
-                            @Html.ActionLink("Réinitialiser CRA", "DeleteCra", "Consultant", new { id = item.Value[0].ID }, new { @class = "btn btn-primary btn-large supp" })
-                            @Html.ActionLink("Réinitialiser CRA", "DeleteCra", "Consultant", new { id = item.Value[0].ID }, new { @class = "btn btn-primary btn-large action" })
-                            @Html.ActionLink("Détail", "CRAReadOnly", new { id = item.Value[0].ID }, new { @class = "btn btn-primary btn-large" })
-                            @Html.ActionLink("Détail", "CRAReadOnly", new { id = item.Value[0].ID }, new { @class = "btn btn-primary btn-large action" })
-                        }
-
-                    </td>
-                </tr>
-
-            }
-        }*@
+    </tbody>
 
 </table>
 
@@ -219,7 +152,6 @@
 </div>
 
 
-<script src="~/Scripts/jquery-3.3.1.min.js"></script>
 
 <script>
 
