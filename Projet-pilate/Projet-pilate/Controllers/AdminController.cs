@@ -155,7 +155,7 @@ namespace Projet_pilate.Controllers
             manager.MonthlyCost = model.Cost;
             manager.role = Request.Form["role"];
             subsidiary.Managers.Add(manager);
-         
+
             try
             {
                 db.SaveChanges();

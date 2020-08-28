@@ -234,7 +234,7 @@ namespace Projet_pilate.Controllers
                     model.Client = "Aucun";
                     model.Nbj = s.NombredUO;
                     model.Tj = s.TJ;
-                    model.CA = s.NombredUO * s.TJ;
+                    model.CA = (int)(s.NombredUO * s.TJ);
                     model.mois = s.date.ToString("yyyy-MM");
                 }
                 else
@@ -250,7 +250,7 @@ namespace Projet_pilate.Controllers
                     model.Client = companycontact.CompanyName;
                     model.Nbj = s.NombredUO;
                     model.Tj = s.TJ;
-                    model.CA = s.NombredUO * s.TJ;
+                    model.CA = (int)(s.NombredUO * s.TJ);
                     model.mois = s.date.ToString("yyyy-MM");
                     
                 }
@@ -258,18 +258,18 @@ namespace Projet_pilate.Controllers
 
                 if (manager == null)
                 {
-                    model.Cout = (float)(model.CA - s.mensuelConsultant * 1.5 - s.fraisConsultant);
+                    model.Cout = (int)(model.CA - s.mensuelConsultant * 1.5 - s.fraisConsultant);
                 }
                 else
                 {
                     if (manager.role == "BM")
                     {
-                        model.Cout = (float)(model.CA * 0.9 - s.mensuelConsultant * 1.7 - s.fraisConsultant);
+                        model.Cout = (int)(model.CA * 0.9 - s.mensuelConsultant * 1.7 - s.fraisConsultant);
 
                     }
                     else
                     {
-                        model.Cout = (float)(model.CA * 0.93 - s.mensuelConsultant * 1.6 - s.fraisConsultant);
+                        model.Cout = (int)(model.CA * 0.93 - s.mensuelConsultant * 1.6 - s.fraisConsultant);
                     }
                 }
 
@@ -308,7 +308,7 @@ namespace Projet_pilate.Controllers
                         m.Tj = 0;
                         m.CA = 0;
                         m.mois = a.ToString("yyyy-MM");
-                        m.Cout = (float)(-managerPC.MonthlyCost  * 1.5 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost)*(DateTime.DaysInMonth(a.Year, a.Month)-managerPC.EntryDate.Day+1)/DateTime.DaysInMonth(a.Year,a.Month);
+                        m.Cout = (int)(-managerPC.MonthlyCost  * 1.5 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost)*(DateTime.DaysInMonth(a.Year, a.Month)-managerPC.EntryDate.Day+1)/DateTime.DaysInMonth(a.Year,a.Month);
                         models.Add(m);
                     }
                     if (DateTime.Compare(a, managerPC.EntryDate) > 0)
@@ -321,7 +321,7 @@ namespace Projet_pilate.Controllers
                         m.Tj = 0;
                         m.CA = 0;
                         m.mois = a.ToString("yyyy-MM");
-                        m.Cout = (float)(-managerPC.MonthlyCost * 1.5 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost);
+                        m.Cout = (int)(-managerPC.MonthlyCost * 1.5 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost);
                         models.Add(m);
                     }
                     
@@ -337,7 +337,7 @@ namespace Projet_pilate.Controllers
                             m.Tj = 0;
                             m.CA = 0;
                             m.mois = a.ToString("yyyy-MM");
-                            m.Cout = (float)(-managerPC2.MonthlyCost * 1.5 - managerPC2.MealCost - managerPC2.TravelPackage - managerPC2.ExceptionalCost) * (DateTime.DaysInMonth(a.Year, a.Month) - managerPC2.EntryDate.Day + 1) / DateTime.DaysInMonth(a.Year, a.Month);
+                            m.Cout = (int)(-managerPC2.MonthlyCost * 1.5 - managerPC2.MealCost - managerPC2.TravelPackage - managerPC2.ExceptionalCost) * (DateTime.DaysInMonth(a.Year, a.Month) - managerPC2.EntryDate.Day + 1) / DateTime.DaysInMonth(a.Year, a.Month);
                             models.Add(m);
                         }
                         if (DateTime.Compare(a, managerPC2.EntryDate) > 0)
@@ -350,7 +350,7 @@ namespace Projet_pilate.Controllers
                             m2.Tj = 0;
                             m2.CA = 0;
                             m2.mois = a.ToString("yyyy-MM");
-                            m2.Cout = (float)(-managerPC2.MonthlyCost * 1.5 - managerPC2.MealCost - managerPC2.TravelPackage - managerPC2.ExceptionalCost);
+                            m2.Cout = (int)(-managerPC2.MonthlyCost * 1.5 - managerPC2.MealCost - managerPC2.TravelPackage - managerPC2.ExceptionalCost);
                             models.Add(m2);
                         }
                         
@@ -374,7 +374,7 @@ namespace Projet_pilate.Controllers
                             m.Tj = 0;
                             m.CA = 0;
                             m.mois = a.ToString("yyyy-MM");
-                            m.Cout = (float)(-managerPC.MonthlyCost * 1.55 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost) * (DateTime.DaysInMonth(a.Year, a.Month) - managerPC.EntryDate.Day + 1) / DateTime.DaysInMonth(a.Year, a.Month);
+                            m.Cout = (int)(-managerPC.MonthlyCost * 1.55 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost) * (DateTime.DaysInMonth(a.Year, a.Month) - managerPC.EntryDate.Day + 1) / DateTime.DaysInMonth(a.Year, a.Month);
                             models.Add(m);
                         }
                         if (DateTime.Compare(a, managerPC.EntryDate) > 0)
@@ -387,7 +387,7 @@ namespace Projet_pilate.Controllers
                             m.Tj = 0;
                             m.CA = 0;
                             m.mois = a.ToString("yyyy-MM");
-                            m.Cout = (float)(-managerPC.MonthlyCost * 1.55 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost);
+                            m.Cout = (int)(-managerPC.MonthlyCost * 1.55 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost);
                             models.Add(m);
                         }
                         if (managerPC2 != null)
@@ -402,7 +402,7 @@ namespace Projet_pilate.Controllers
                                 m.Tj = 0;
                                 m.CA = 0;
                                 m.mois = a.ToString("yyyy-MM");
-                                m.Cout = (float)(-managerPC2.MonthlyCost * 1.55 - managerPC2.MealCost - managerPC2.TravelPackage - managerPC2.ExceptionalCost) * (DateTime.DaysInMonth(a.Year, a.Month) - managerPC2.EntryDate.Day + 1) / DateTime.DaysInMonth(a.Year, a.Month);
+                                m.Cout = (int)(-managerPC2.MonthlyCost * 1.55 - managerPC2.MealCost - managerPC2.TravelPackage - managerPC2.ExceptionalCost) * (DateTime.DaysInMonth(a.Year, a.Month) - managerPC2.EntryDate.Day + 1) / DateTime.DaysInMonth(a.Year, a.Month);
                                 models.Add(m);
                             }
                             if (DateTime.Compare(a, managerPC2.EntryDate) > 0)
@@ -415,7 +415,7 @@ namespace Projet_pilate.Controllers
                                 m2.Tj = 0;
                                 m2.CA = 0;
                                 m2.mois = a.ToString("yyyy-MM");
-                                m2.Cout = (float)(-managerPC2.MonthlyCost * 1.55 - managerPC2.MealCost - managerPC2.TravelPackage - managerPC2.ExceptionalCost);
+                                m2.Cout = (int)(-managerPC2.MonthlyCost * 1.55 - managerPC2.MealCost - managerPC2.TravelPackage - managerPC2.ExceptionalCost);
                                 models.Add(m2);
                             }
 
@@ -636,6 +636,8 @@ namespace Projet_pilate.Controllers
 
             foreach(KeyValuePair<string, SuiviTotalViewModel> entry in dicts)
             {
+                entry.Value.coutreel = (int)entry.Value.coutreel;
+                entry.Value.couttheorie = (int)entry.Value.couttheorie;
                 models.Add(entry.Value);
             }
 

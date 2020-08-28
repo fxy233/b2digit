@@ -409,9 +409,11 @@ namespace Projet_pilate.Models
         [Display(Name = "TVA Intracommunautaire")]
         public string TVAIntra { get; set; }
 
+        [Required]
         [Display(Name = "Mail de la société")]
         public string email { get; set; }
 
+        [Required]
         [Display(Name = "Mot de passe du mail")]
         public string motdepasse { get; set; }
 
@@ -496,6 +498,7 @@ namespace Projet_pilate.Models
         [Display(Name = "TVA Intracommunautaire")]
         public string TVAIntra { get; set; }
 
+        [Required]
         [Display(Name = "Mail de la société")]
         public string email { get; set; }
 

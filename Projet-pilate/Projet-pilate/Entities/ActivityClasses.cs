@@ -9,12 +9,6 @@ using System.Web.Mvc.Routing.Constraints;
 namespace Projet_pilate.Entities
 {
 
-    public class MonthCloture
-    {
-        // Primary key
-        public int MonthClotureID { get; set; }
-        public DateTime Periode { get; set; }
-    }
     public class MonthActivation
     {
         // Primary key

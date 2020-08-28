@@ -146,7 +146,6 @@ namespace Projet_pilate.Models
         public DbSet<Cra> Cras { get; set; }
         public DbSet<Activity> Activities { get; set; }
         public DbSet<MonthActivation> MonthActivations { get; set; }
-        public DbSet<MonthCloture> MonthClotures { get; set; }
         public DbSet<Message> Messages { get; set; }
 
         public DbSet<Facture> Factures { get; set; }

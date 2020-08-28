@@ -319,127 +319,32 @@ namespace Projet_pilate.Controllers
             var facture = db.Factures.Single(f => f.FactureID == model.ID);
             string nm = Request.Form["NomEmettrice"];
             var sub = db.Subsidiaries.Single(s => s.Name == nm);
-            string type = Request.Form["Type"] == "Facture" ? "Fact" : "FactAvoir";
-            var namefacture = Request.Form["ClientName"];
 
-            foreach (var item in db.Subsidiaries.ToList())
-            {
-                if (item.Name == namefacture)
-                {
-                    type = type + "Int";
-                    break;
-                }
-            }
-
-            //facture.Emise = true;
-
-            //string status = Request.Form["Status"];
-            /*
-            if (status == "Emise")
-            {
-                facture.Emise=true;
-            }
-
-            if ( status == "Payee")
-            {
-                facture.payee = true;
-            }
-
-            if ( status == "Annulee")
-            {
-                facture.annulee = true;
-                if (facture.Emise == true)
-                {
-                    
-                    int id = 0;
-                    foreach (var item in db.Factures.ToList())
-                    {
-                        if (item.FactureID > id)
-                        {
-                            id = item.FactureID;
-                        }
-                    }
-                    id++;
-                    
-                    Facture factureAvoir = new Facture()
-                    {
-                        mission = Request.Form["Mission"],
-                        FactureID = id,
-                        //NomFacture = "FA-Avoir-"+ DateTime.Now.ToString("yyyy-MM") + "-" +sub.FactureID,
-                        MoisDeFacturation = DateTime.Now,
-                        InfoFacturation = model.FactInfo,
-                        PrincipalBC = Request.Form["NomEmettrice"],
-                        AdresseBC = Request.Form["AdresseEmettrice"],
-                        Client = Request.Form["ClientName"],
-                        AdresseFacturation = Request.Form["ClientAdresse"],
-                        NombredUO = model.Quantite,
-                        TJ = -model.HTunitaire,
-                        TVA = (float)Int32.Parse(Request.Form["TVA"]) / 100,
-                        MontantHT = -model.HTunitaire * model.Quantite,
-                        FAE = true,
-                        Emise = false,
-                        payee = false,
-                        annulee = false,
-                        DernierEnregistrer = DateTime.Now,
-                        Delai = facture.Delai,
-                        DesignationFacturation = facture.DesignationFacturation,
-                        DateRegelement = model.dateReglement,
-                        reference =model.Reference,
-                        referenceBancaire = model.ReferenceBancaire,
-                        type = "Avoir",
-
-                };
-                    db.Factures.Add(factureAvoir);
-                    sub.FactureID++;
-                    db.SaveChanges();
-                    
-                }
-            }
-            */
 
             string nomMission = Request.Form["Mission"];
             var missionItem = db.Missions.Single(m => m.Name == nomMission);
-
-            Boolean interne = false;
-            foreach(var item in db.Subsidiaries.ToList())
-            {
-                if (item.Name == Request.Form["ClientName"])
-                {
-                    interne = true;
-                    break;
-                }
-            }
-
-            
-            
-            /*
-            if (interne)
-            {
-                facture.NomFacture = "FA"  + DateTime.Now.ToString("yyyy-MM") + "-" + sub.FactureID;
-            } else
-            {
-                facture.NomFacture = "FA-"  + DateTime.Now.ToString("yyyy-MM") + "-" + sub.FactureID;
-            }
-            */
+      
+           
             sub.FactureID++;
             db.SaveChanges();
 
 
             facture.mission = Request.Form["Mission"];
-            facture.MoisDeFacturation = db.MonthActivations.Single().Periode;
+            facture.MoisDeFacturation = model.date;
             facture.InfoFacturation = model.FactInfo;
             facture.PrincipalBC = Request.Form["NomEmettrice"];
             facture.AdresseBC = Request.Form["AdresseEmettrice"];
             facture.Client = Request.Form["ClientName"];
             facture.AdresseFacturation = Request.Form["ClientAdresse"];
             facture.type = Request.Form["Type"];
-                facture.DernierEnregistrer = DateTime.Now;
-                facture.Delai = missionItem.Delai;
-                facture.DesignationFacturation = missionItem.DesignationFacturation;
+            facture.DernierEnregistrer = DateTime.Now;
+            facture.Delai = missionItem.Delai;
+            facture.DesignationFacturation = missionItem.DesignationFacturation;
             facture.DateRegelement = model.dateReglement;
             facture.reference = model.Reference;
             facture.referenceBancaire = model.ReferenceBancaire;
             facture.mention = model.Mention;
+
             
             if (facture.parentID < 0)
             {
@@ -563,7 +468,7 @@ namespace Projet_pilate.Controllers
             {
                 mission = Request.Form["Mission"],
                 FactureID = id,
-                NomFacture = model.FactureName,
+                NomFacture = model.FactureName==null? "FAE-" + id : model.FactureName,
                 MoisDeFacturation = db.MonthActivations.Single().Periode,
                 InfoFacturation = model.FactInfo,
                 PrincipalBC = Request.Form["NomEmettrice"],
@@ -575,7 +480,7 @@ namespace Projet_pilate.Controllers
                 TVA = (float)model.TVA/100,
                 MontantHT = model.HTunitaire* model.Quantite,
                 type = Request.Form["Type"],
-                FAE = false,
+                FAE = true,
                 Emise = false,
                 payee = false,
                 annulee = false,
@@ -596,6 +501,7 @@ namespace Projet_pilate.Controllers
         public ActionResult Detail(int id)
         {
             ApplicationDbContext db = new ApplicationDbContext();
+            try { 
             var facture = db.Factures.Single(f => f.FactureID == id);
             var sub = db.Subsidiaries.Single(s => s.Name == facture.PrincipalBC);
             string clientInfo = "";
@@ -662,6 +568,8 @@ namespace Projet_pilate.Controllers
 
 
             return View(model);
+            }
+            catch (Exception) { return RedirectToAction("Factures"); }
         }
 
         [Route("Facture/apercu", Name = "apercu")]
@@ -776,28 +684,12 @@ namespace Projet_pilate.Controllers
             }
             
 
-            Boolean interne = false;
-            foreach (var item in db.Subsidiaries.ToList())
-            {
-                if (item.Name == facture.Client)
-                {
-                    interne = true;
-                    break;
-                }
-            }
-
             var sub = db.Subsidiaries.Single(s => s.Name == facture.PrincipalBC);
 
             if(facture.CraId>0 || facture.CraId==-999)
             {
-                if (interne)
-                {
                     facture.NomFacture = "FA-" + DateTime.Now.ToString("yyyy-MM") + "-" + sub.FactureID;
-                }
-                else
-                {
-                    facture.NomFacture = "FA-" + DateTime.Now.ToString("yyyy-MM") + "-" + sub.FactureID;
-                }
+
             }
             
 
@@ -1542,6 +1434,17 @@ namespace Projet_pilate.Controllers
             facture.DesignationFacturation = mission.DesignationFacturation;
             facture.reference = mission.Reference;
             facture.referenceBancaire = BC.Name;
+            var info = db.Infos.ToList().Count == 0 ? null : db.Infos.ToList()[0];
+            if (info == null)
+            {
+                facture.TVA = (float)0.2;
+                facture.mention = "Aucun";
+            }
+            else
+            {
+                facture.TVA = (float)info.TVA;
+                facture.mention = info.Mention;
+            }
 
             DateTime reglement = DateTime.Now;
             switch (mission.Delai)

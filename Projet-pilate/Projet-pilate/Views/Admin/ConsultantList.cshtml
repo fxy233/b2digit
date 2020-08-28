@@ -139,16 +139,17 @@
 
                     Boolean ability = false;
                     var pc = db.profitCenters.Single(pp => pp.Name == item.ProfitCenter);
-                    if (pIdlist.Count != 0)
+
+                    if (pIdlist.Contains(pc.ProfitCenterID))
                     {
-                        foreach (var p in pIdlist)
+                        ability = true;
+                    }
+                    else
+                    {
+                        while (pc.FatherProfitCenterID != null)
                         {
-                            if (pc.ProfitCenterID == p)
-                            {
-                                ability = true;
-                                break;
-                            }
-                            if (p == pc.FatherProfitCenterID)
+                            pc = pc.FatherProfitCenter;
+                            if (pIdlist.Contains(pc.ProfitCenterID))
                             {
                                 ability = true;
                                 break;
