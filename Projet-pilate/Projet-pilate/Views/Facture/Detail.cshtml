@@ -189,7 +189,7 @@
             <label>@Model.FactureName</label>
         </div>
         <div class="col-md-6">
-            <label>@Model.FactInfo</label>
+            <textarea style="border:none">@Model.FactInfo</textarea>
         </div>
         <div class="col-md-offset-2 col-md-1" style="padding-left:50px">
             <label>Date:</label>
@@ -198,7 +198,7 @@
             <label>@ViewBag.date</label>
         </div>
         <div class="col-md-12">
-            <label>@Model.Reference</label>
+            <textarea style="border:none">@Model.Reference</textarea>
         </div>
 
 
@@ -311,124 +311,154 @@
     <div id="Grid" style="visibility:hidden">
 
 
-        <div style=" padding-bottom: 0px; padding-left:10px">
-            <strong><pre style="background-color:white;border-color:white;margin-bottom:0px;padding-bottom:0px;">@Model.EmetInfo</pre></strong>
-        </div>
-        <p style="color:blue; padding-left:10px">@ViewBag.MailEmettrice</p>
-        <p style="color:green; padding-left:10px;">N°SIREN : @Model.Siren</p>
-        <p style="padding-left: 500px; margin-bottom:0px"><strong>@Model.ClientName</strong></p>
-        <div style=" margin-top: 0px; margin-bottom: 0px; padding-left: 500px;">
-            <pre style="background-color:white;border-color:white; margin-top:0px; margin-bottom:0px;margin-left: 500px;">@Model.ClientInfo</pre>
-        </div>
-        <p style="color:blue;padding-left:500px;margin-top:0px;">@Model.ClientContact</p>
-        <pre>
+    <strong><p style="background-color:white;border-color:white;margin-bottom:0px;padding-bottom:0px; font-family:Calibri">@ViewBag.NomEmettrice</p></strong>
+    <p style="background-color: white; border-color: white; margin-bottom: 0px; padding-bottom: 0px; font-family: Calibri">@ViewBag.AdresseEmettrice</p>
+    <p style="background-color: white; border-color: white; margin-bottom: 0px; padding-bottom: 0px; font-family: Calibri">@ViewBag.VilleEmettrice</p>
+    <p style="color:blue;margin-top:0px;padding-top:0px;font-size:small;padding-bottom:0px;margin-bottom:0px; font-family: Calibri">@ViewBag.MailEmettrice</p>
+    <p style="margin-top:4px;padding-top:0px; color:green;font-family:Calibri">N°SIREN : @Model.Siren</p>
+    <p style="padding-left: 530px; margin-bottom:0px;font-family:Calibri"><strong>@Model.ClientName</strong></p>
+    <div style=" margin-top: 0px; margin-bottom: 0px; padding-left: 530px;font-family:Calibri">
+        <pre style="background-color:white;border-color:white; margin-top:0px; margin-bottom:0px;margin-left: 530px;font-family:Calibri">@Model.ClientInfo</pre>
+    </div>
+    <p style="font-size:smaller; color:blue;padding-left:530px;margin-top:0px;font-family:Calibri">@Model.ClientContact</p>
+    <pre>
 
     </pre>
+    @{
+        string s = Model.type == null ? "Facture" : Model.type;
+        <p style="text-align:center;background-color:lightgray; font-weight:bolder; margin-top:30px; font-size:30px;font-family:Calibri">@s</p>
+    }
+
+
+
+    <p style="font-family: Calibri">Facture N°:</p>
+    @{
+        var facture = db.Factures.Single(f => f.FactureID == Model.ID);
+        var sub = db.Subsidiaries.Single(Sub => Sub.Name == facture.PrincipalBC);
+        string NomFacture = "FA-" + DateTime.Now.ToString("yyyy-MM") + "-" + sub.FactureID;
+        <p style="font-family:Calibri"><strong style="font-family:Calibri">@NomFacture</strong></p>
+    }
+
+<U><pre style="width:150px;font-size:small; color:darkblue; border-color:black;font-family:Calibri">@Model.FactInfo</pre></U>
+    <pre>
+
+</pre>
+    <U><pre style="width:150px; color:darkblue;font-size:small; border-color:black;font-family:Calibri">@Model.Reference</pre></U>
+    <pre style="float:right; font-family:Calibri">                                                                                                                                                                              Date:              @ViewBag.date</pre>
+
+    <table style="margin-top:15px;border:medium; border-color:black;font-family:Calibri">
+        <tr>
+            <td style="border:medium;border-color:black; background-color:lightslategray; text-align:center; padding:5px;font-family:Calibri"> Désignation </td>
+            <td style="border: medium; border-color: black; background-color: lightslategray; text-align: center; padding: 5px; font-family: Calibri"> Unité d'oeuvre </td>
+            <td style="border: medium; border-color: black; background-color: lightslategray; text-align: center; padding: 5px; font-family: Calibri"> Prix unitaire H.T </td>
+            <td style="border: medium; border-color: black; background-color: lightslategray; text-align: center; padding: 5px; font-family: Calibri"> Total H.T </td>
+            <td style="background-color:lightslategray;border:medium;border-color:black; text-align:center; padding:5px;font-family:Calibri"> Taux TVA </td>
+            <td style="background-color:lightslategray;border:medium;border-color:black; text-align:center; padding:5px;font-family:Calibri"> Montant TVA </td>
+            <td style="background-color:lightslategray;border:medium;border-color:black; text-align:center; padding:5px;font-family:Calibri"> TOTAL T.T.C </td>
+        </tr>
         @{
-            string s = Model.type == null ? "Facture" : Model.type;
-            < p style = "text-align:center; margin-top:30px; font-size:20px" >< strong > @s </ strong ></ p >
-        }
 
+            pid = Model.ID;
 
-
-        <p>Facture N°:</p>
-        @{
-            var facture = db.Factures.Single(f => f.FactureID == Model.ID);
-            var sub = db.Subsidiaries.Single(Sub => Sub.Name == facture.PrincipalBC);
-            string NomFacture = "FA-" + DateTime.Now.ToString("yyyy-MM") + "-" + sub.FactureID;
-            <p><strong>@NomFacture</strong></p>
-        }
-
-        <div style="width:150px; color:darkblue; border-color:black">@Model.FactInfo</div>
-
-        <pre style="float:right; width:57%;">                                                                   Date: @ViewBag.date</pre>
-        <div style="width:150px; color:darkblue; border-color:black">@Model.Reference</div>
-        <table style="margin-top:15px; border-color:black">
-            <tr>
-                <td style="background-color:gray; text-align:center; padding:5px"> Désignation </td>
-                <td style="background-color:gray; text-align:center; padding:5px"> Unité d'oeuvre </td>
-                <td style="background-color:gray; text-align:center; padding:5px"> Prix unitaire H.T </td>
-                <td style="background-color:gray; text-align:center; padding:5px"> Total H.T </td>
-                <td style="background-color:gray; text-align:center; padding:5px"> Taux TVA </td>
-                <td style="background-color:gray; text-align:center; padding:5px"> Montant TVA </td>
-                <td style="background-color:gray; text-align:center; padding:5px"> TOTAL T.T.C </td>
-            </tr>
-            @{
-
-                pid = Model.ID;
-
-                if (db.Factures.Single(fa => fa.FactureID == pid).parentID < 0)
+            if (db.Factures.Single(fa => fa.FactureID == pid).parentID < 0)
+            {
+                foreach (var item in db.Factures.ToList())
                 {
-                    foreach (var item in db.Factures.ToList())
+                    if (item.parentID == pid)
                     {
-                        if (item.parentID == pid)
-                        {
-                            float total = item.NombredUO * item.TJ;
-                            float mtva = total * item.TVA;
-                            float totalTTC = total + mtva;
-                            float tva = 100 * item.TVA;
-                            <tr>
+                        float total = item.NombredUO * item.TJ;
+                        float mtva = total * item.TVA;
+                        float totalTTC = total + mtva;
+                        float tva = 100 * item.TVA;
+                        <tr>
 
-                                <td style="text-align:center; padding:5px"> <pre>@item.DesignationFacturation</pre> </td>
-                                <td style="text-align:center; padding:5px"> @item.NombredUO </td>
-                                <td style="text-align:center; padding:5px"> @item.TJ </td>
-                                <td style="text-align:center; padding:5px"> @total </td>
-                                <td style="text-align:center; padding:5px"> @tva </td>
-                                <td style="text-align:center; padding:5px"> @mtva </td>
-                                <td style="text-align:center; padding:5px"> @totalTTC </td>
-                            </tr>
-                        }
+                            <td style="text-align:center; padding:5px;font-family:Calibri"> <pre>@item.DesignationFacturation</pre> </td>
+                            <td style="text-align:center; padding:5px;font-family:Calibri"> @item.NombredUO </td>
+                            <td style="text-align:center; padding:5px;font-family:Calibri"> @item.TJ </td>
+                            <td style="text-align:center; padding:5px;font-family:Calibri"> @total </td>
+                            <td style="text-align:center; padding:5px;font-family:Calibri"> @tva </td>
+                            <td style="text-align:center; padding:5px;font-family:Calibri"> @mtva </td>
+                            <td style="text-align:center; padding:5px;font-family:Calibri"> @totalTTC </td>
+                        </tr>
                     }
                 }
-                else
-                {
-                    <tr>
-                        @{
-                            float total = Model.Quantite * Model.HTunitaire;
-                            float mtva = total * Model.TVA;
-                            float totalTTC = total + mtva;
-                            ViewBag.montantHT = total.ToString();
-                            ViewBag.montantTVA = mtva.ToString();
-                            ViewBag.montantTTC = totalTTC.ToString();
-                            float tva = 100 * Model.TVA;
-                            <td style="text-align:center; padding:5px"> <pre>@Model.Designation</pre> </td>
-                            <td style="text-align:center; padding:5px"> @Model.Quantite </td>
-                            <td style="text-align:center; padding:5px"> @Model.HTunitaire </td>
-                            <td style="text-align:center; padding:5px"> @total </td>
-                            <td style="text-align:center; padding:5px"> @tva</td>
-                            <td style="text-align:center; padding:5px"> @mtva </td>
-                            <td style="text-align:center; padding:5px"> @totalTTC </td>
-                        }
-                    </tr>
-                }
-
-
             }
-        </table>
-        <pre>
+            else
+            {
+                <tr>
+                    @{
+                        float total = Model.Quantite * Model.HTunitaire;
+                        float mtva = total * Model.TVA;
+                        float totalTTC = total + mtva;
+                        ViewBag.montantHT = total.ToString();
+                        ViewBag.montantTVA = mtva.ToString();
+                        ViewBag.montantTTC = totalTTC.ToString();
+                        float tva = 100 * Model.TVA;
+                        <td style="text-align:center; padding:5px;font-family:Calibri"> <pre>@Model.Designation</pre> </td>
+                        <td style="text-align:center; padding:5px;font-family:Calibri"> @Model.Quantite </td>
+                        <td style="text-align:center; padding:5px;font-family:Calibri"> @Model.HTunitaire </td>
+                        <td style="text-align:center; padding:5px;font-family:Calibri"> @total </td>
+                        <td style="text-align:center; padding:5px;font-family:Calibri"> @tva</td>
+                        <td style="text-align:center; padding:5px;font-family:Calibri"> @mtva </td>
+                        <td style="text-align:center; padding:5px;font-family:Calibri"> @totalTTC </td>
+                    }
+                </tr>
+                        }
+
+
+        }
+    </table>
+    <pre>
 
 
     </pre>
+    @{ float mtvaC = Model.TVA * 100;
+    <pre style="font-family: Calibri">
+                                                                                                                          Montant H.T en Euros                                               @ViewBag.montantHT €
 
-        <pre>
-                                                  Montant H.T en Euros              @ViewBag.montantHT €
-                                                      Montant TVA en Euros              @ViewBag.montantTVA €
-                                                      Net à payer T.T.C en Euros        @ViewBag.montantTTC €
-                                                      Date de règlement:                 @Model.dateReglement
+
+                                                                                                                                     Montant TVA @mtvaC en Euros                                        @ViewBag.montantTVA €
+
+
+                                                                                                                                     <strong>Net à payer T.T.C en Euros</strong>                                                                                                                                                                                
     </pre>
-        <pre>
+   }
+    <pre style="font-family: Calibri">                                     <strong>@ViewBag.montantTTC €</strong></pre>
+    <pre>
+
+
+</pre>
+    <pre style="font-family: Calibri">
+
+                                                                                                                                              Date de règlement:        <strong>@Model.dateReglement</strong>
+
 
 
     </pre>
-        <pre>Référence Bancaires : @Model.ReferenceBancaires
-    IBAN : @Model.IBAN
-    BIC : @Model.BIC
-    TVA intracommunautaire : @Model.TVAIntra
+    <pre>
+
+
+</pre>
+    <pre style="font-family: Calibri">Référence Bancaires : @Model.ReferenceBancaires
+<strong>IBAN : @Model.IBAN</strong></pre>
+    <pre style="font-family: Calibri">
+
+</pre>
+    <pre style="font-family: Calibri"><strong>BIC : @Model.BIC</strong></pre>
+    <pre style="font-family: Calibri">
+
+
+
+</pre>
+    <pre style="font-size:smaller;font-family: Calibri">
+TVA intracommunautaire : @Model.TVAIntra
+</pre>
+
   
 
 
-    </pre>
-        <pre style="font-size:7px">@Model.Mention</pre>
+    
+
 
 </div>
 

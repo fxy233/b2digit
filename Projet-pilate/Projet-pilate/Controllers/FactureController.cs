@@ -27,6 +27,7 @@ using System.Net.Mail;
 using System.Net;
 using DocumentFormat.OpenXml.Office.CustomUI;
 
+
 namespace Projet_pilate.Controllers
 {
     public class FactureController : Controller
@@ -709,18 +710,12 @@ namespace Projet_pilate.Controllers
             db.SaveChanges();
 
 
-            //
 
-            /*
-            string pattern = @"<p><strong>";
-            string[] mc = Regex.Split(GridHtml, pattern);
-            string[] m = Regex.Split(mc[1], @"</strong></p>");
-            */
 
             using (MemoryStream stream = new System.IO.MemoryStream())
             {
                 StringReader sr = new StringReader(GridHtml);
-                Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 100f, 0f);
+                Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 10f, 10f);
                 PdfWriter writer = PdfWriter.GetInstance(pdfDoc, stream);
                 pdfDoc.Open();
                 string arialuniTff = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "ARIALUNI.TTF");
@@ -766,6 +761,17 @@ namespace Projet_pilate.Controllers
                 pdfDoc.Add(jpg);
 
                 XMLWorkerHelper.GetInstance().ParseXHtml(writer, pdfDoc, sr);
+                PdfContentByte cb = writer.DirectContent;
+                cb.BeginText();
+
+                cb.SetFontAndSize(BaseFont.CreateFont(), 10f);
+                // we draw some text on a certain position
+                cb.SetTextMatrix(10, 40);
+                cb.ShowText(facture.mention);
+
+                // we tell the contentByte, we've finished drawing text
+                cb.EndText();
+
                 pdfDoc.Close();
 
                 
@@ -981,21 +987,22 @@ namespace Projet_pilate.Controllers
         [ValidateInput(false)]
         public FileResult Export2(string GridHtml)
         {
+            int id = Int32.Parse(Request.Form["id"]);
+            ApplicationDbContext db = new ApplicationDbContext();
+            var facture = db.Factures.Single(f => f.FactureID == id);
 
-            string pattern = @"<p><strong>";
+            string pattern = @"<p style=""font-family:Calibri""><strong style=""font-family:Calibri"">";
             string[] mc = Regex.Split(GridHtml, pattern);
             string[] m = Regex.Split(mc[1], @"</strong></p>");
             using (MemoryStream stream = new System.IO.MemoryStream())
             {
                 StringReader sr = new StringReader(GridHtml);
-                Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 100f, 0f);
+                Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 10f, 10f);
                 PdfWriter writer = PdfWriter.GetInstance(pdfDoc, stream);
                 pdfDoc.Open();
                 string arialuniTff = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "ARIALUNI.TTF");
 
-                int id = Int32.Parse(Request.Form["id"]);
-                ApplicationDbContext db = new ApplicationDbContext();
-                var facture = db.Factures.Single(f => f.FactureID == id);
+                
                 string imageURL = Server.MapPath(".") + "/../Images/B2DIGIT_Facture.png";
                 if (facture.PrincipalBC == "DMO Conseil")
                 {
@@ -1022,13 +1029,10 @@ namespace Projet_pilate.Controllers
 
                 jpg.ScaleToFit(140f, 120f);
 
-                //Give space before image
-
-                jpg.SpacingBefore = 14f;
 
                 //Give some space after the image
-
-                jpg.SpacingAfter = 1f;
+                jpg.SpacingBefore = 10f;
+                jpg.SpacingAfter = 2f;
 
                 jpg.Alignment = Element.ALIGN_LEFT;
 
@@ -1036,25 +1040,24 @@ namespace Projet_pilate.Controllers
                 pdfDoc.Add(jpg);
 
                 XMLWorkerHelper.GetInstance().ParseXHtml(writer, pdfDoc, sr);
+
+
+                // we grab the ContentByte and do some stuff with it
+                PdfContentByte cb = writer.DirectContent;
+
+                // we tell the ContentByte we're ready to draw text
+                cb.BeginText();
+
+                cb.SetFontAndSize(BaseFont.CreateFont() ,10f);
+                // we draw some text on a certain position
+                cb.SetTextMatrix(10, 40);
+                cb.ShowText(facture.mention);
+
+                // we tell the contentByte, we've finished drawing text
+                cb.EndText();
+
+
                 pdfDoc.Close();
-
-                /*
-                MemoryStream ms = new MemoryStream(stream.ToArray());
-                System.Net.Mime.ContentType ct = new System.Net.Mime.ContentType(System.Net.Mime.MediaTypeNames.Application.Pdf);
-                System.Net.Mail.Attachment attach = new System.Net.Mail.Attachment(ms, ct);
-                attach.ContentDisposition.FileName = m[0] + ".pdf";
-
-                GMailer.GmailUsername = "fengxy233@gmail.com";
-                GMailer.GmailPassword = "fxyjiayou~";
-
-                GMailer mailer = new GMailer();
-                mailer.ToEmail = "fengxy233@gmail.com";
-                mailer.Subject = "Facture";
-                mailer.Body = "Bonjour,<br /> Nous vous envoyons votre facture.<br /> Cordialement";
-                mailer.IsHtml = true;
-                mailer.attch = attach;
-                mailer.Send();
-                */
 
                
                 return File(stream.ToArray(), "application/pdf", m[0] + ".pdf");
@@ -1434,6 +1437,7 @@ namespace Projet_pilate.Controllers
             facture.DesignationFacturation = mission.DesignationFacturation;
             facture.reference = mission.Reference;
             facture.referenceBancaire = BC.Name;
+            facture.InfoFacturation = mission.InfoFacturation;
             var info = db.Infos.ToList().Count == 0 ? null : db.Infos.ToList()[0];
             if (info == null)
             {

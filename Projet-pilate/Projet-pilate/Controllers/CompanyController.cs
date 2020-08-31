@@ -90,9 +90,8 @@ namespace Projet_pilate.Controllers
             return View(models);
         }
 
-        [Authorize(Roles = "Administrateur, Super-Administrateur")]
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
         // GET: /Company/Edit
-        [AllowAnonymous]
         public ActionResult Edit(int id)
         {
 
@@ -112,7 +111,7 @@ namespace Projet_pilate.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "Administrateur, Super-Administrateur")]
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
         [HttpPost]
         public ActionResult Edit(UpdateCompanyViewModel model)
         {

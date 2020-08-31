@@ -314,10 +314,10 @@ namespace Projet_pilate.Models
         [Display(Name = "Commentaire")]
         public string Commentaire { get; set; }
 
-        [Display(Name = "InfoFacturation")]
+        [Display(Name = "Information de facturation")]
         public string InfoFacturation { get; set; }
 
-        [Display(Name = "Référence")]
+        [Display(Name = "Références")]
         public string Reference { get; set; }
 
         [Display(Name = "Business Company émettrice")]
@@ -373,8 +373,9 @@ namespace Projet_pilate.Models
         [Display(Name = "Adresse")]
         public string Address { get; set; }
 
-        [Required]
-        [StringLength(5)]
+        [Required(ErrorMessage = "Le code postale doit être renseigné.")]
+        [RegularExpression("(?:0[1-9]|[13-8][0-9]|2[ab1-9]|9[0-5])(?:[0-9]{3})?|9[78][1-9](?:[0-9]{2})?",
+                            ErrorMessage = "Le code postal doit correspondre au format 00000.")]
         [Display(Name = "Code postal")]
         public string PostaleCode { get; set; }
 
@@ -463,8 +464,9 @@ namespace Projet_pilate.Models
         [Display(Name = "Adresse")]
         public string Address { get; set; }
 
-        [Required]
-        [StringLength(5)]
+        [Required(ErrorMessage = "Le code postale doit être renseigné.")]
+        [RegularExpression("(?:0[1-9]|[13-8][0-9]|2[ab1-9]|9[0-5])(?:[0-9]{3})?|9[78][1-9](?:[0-9]{2})?",
+                            ErrorMessage = "Le code postal doit correspondre au format 00000.")]
         [Display(Name = "Code postal")]
         public string PostaleCode { get; set; }
 

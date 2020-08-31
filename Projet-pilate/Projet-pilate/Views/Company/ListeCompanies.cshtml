@@ -71,9 +71,15 @@
                 {
                     <td>
                         @Html.ActionLink("Modifier", "Edit", new { id = item.ID }, new { @class = "btn btn-primary btn-large" })
-                        @*@Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-primary btn-large" })*@
                         @Html.ActionLink("Supprimer", "Delete", new { id = item.ID }, new { @class = "btn btn-primary btn-large", onclick = "return ConfirmationDialog()" })
                     </td>
+                } 
+                @if (User.IsInRole("Administrateur-ventes"))
+                {
+            <td>
+                @Html.ActionLink("Modifier", "Edit", new { id = item.ID }, new { @class = "btn btn-primary btn-large" })
+
+            </td>
                 }
 
 
