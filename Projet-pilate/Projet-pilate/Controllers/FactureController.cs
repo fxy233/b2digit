@@ -994,10 +994,16 @@ namespace Projet_pilate.Controllers
             string pattern = @"<p style=""font-family:Calibri""><strong style=""font-family:Calibri"">";
             string[] mc = Regex.Split(GridHtml, pattern);
             string[] m = Regex.Split(mc[1], @"</strong></p>");
+
+            string pattern2 = @"<p>Facture</p>";
+            string[] sGrid = Regex.Split(GridHtml, pattern2);
+            string pattern3 = @"<p>table</p>";
+            string[] sGrid2 = Regex.Split(sGrid[1], pattern3);
+
             using (MemoryStream stream = new System.IO.MemoryStream())
             {
-                StringReader sr = new StringReader(GridHtml);
-                Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 10f, 10f);
+                StringReader sr = new StringReader(sGrid[0]);
+                Document pdfDoc = new Document(PageSize.A4, 40f, 40f, 40f, 40f);
                 PdfWriter writer = PdfWriter.GetInstance(pdfDoc, stream);
                 pdfDoc.Open();
                 string arialuniTff = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "ARIALUNI.TTF");
@@ -1039,8 +1045,20 @@ namespace Projet_pilate.Controllers
 
                 pdfDoc.Add(jpg);
 
+
                 XMLWorkerHelper.GetInstance().ParseXHtml(writer, pdfDoc, sr);
 
+                PdfPTable table2 = new PdfPTable(1);
+                float[] fw = { 100f };
+                table2.SetTotalWidth(fw);
+                PdfPCell cell2 = new PdfPCell(new Phrase(facture.type, new Font(Font.NORMAL, 15, Font.BOLD)));
+                
+                cell2.Colspan = 1;
+                cell2.HorizontalAlignment = Element.ALIGN_CENTER;
+                cell2.BackgroundColor = BaseColor.LIGHT_GRAY;
+                cell2.BorderColor = BaseColor.WHITE;
+                table2.AddCell(cell2);
+                pdfDoc.Add(table2);
 
                 // we grab the ContentByte and do some stuff with it
                 PdfContentByte cb = writer.DirectContent;
@@ -1050,11 +1068,151 @@ namespace Projet_pilate.Controllers
 
                 cb.SetFontAndSize(BaseFont.CreateFont() ,10f);
                 // we draw some text on a certain position
-                cb.SetTextMatrix(10, 40);
+                cb.SetTextMatrix(40, 50);                
                 cb.ShowText(facture.mention);
 
                 // we tell the contentByte, we've finished drawing text
                 cb.EndText();
+
+                StringReader sr2 = new StringReader(sGrid2[0]);
+
+                XMLWorkerHelper.GetInstance().ParseXHtml(writer, pdfDoc, sr2);
+
+
+                PdfPTable table = new PdfPTable(8);
+                float[] f = { 100f, 60f, 100f,30f, 60f, 60f, 60f, 60f };
+            
+                table.SetTotalWidth(f);
+                PdfPCell cell = new PdfPCell(new Phrase("Désignation",new Font(Font.NORMAL,9,Font.BOLD)));
+                cell.BackgroundColor = BaseColor.LIGHT_GRAY;
+                cell.Colspan = 1;
+                cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                table.AddCell(cell);
+                cell = new PdfPCell(new Phrase("Quantité", new Font(Font.NORMAL, 9, Font.BOLD)));
+                cell.BackgroundColor = BaseColor.LIGHT_GRAY;
+
+                cell.Colspan = 1;
+                cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                table.AddCell(cell);
+                cell = new PdfPCell(new Phrase("Prix unitaire H.T", new Font(Font.NORMAL, 9, Font.BOLD)));
+                cell.BackgroundColor = BaseColor.LIGHT_GRAY;
+
+                cell.Colspan = 2;
+                cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                table.AddCell(cell);
+                cell = new PdfPCell(new Phrase("Total H.T", new Font(Font.NORMAL, 9, Font.BOLD)));
+                cell.BackgroundColor = BaseColor.LIGHT_GRAY;
+
+                cell.Colspan = 1;
+                cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                table.AddCell(cell);
+                cell = new PdfPCell(new Phrase("Taux TVA", new Font(Font.NORMAL, 9, Font.BOLD)));
+                cell.BackgroundColor = BaseColor.LIGHT_GRAY;
+
+                cell.Colspan = 1;
+                cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                table.AddCell(cell);
+                cell = new PdfPCell(new Phrase("Montant TVA", new Font(Font.NORMAL, 9, Font.BOLD)));
+                cell.BackgroundColor = BaseColor.LIGHT_GRAY;
+
+                cell.Colspan = 1;
+                cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                table.AddCell(cell);
+                cell = new PdfPCell(new Phrase("TOTAL T.T.C", new Font(Font.NORMAL, 9, Font.BOLD)));
+                cell.BackgroundColor = BaseColor.LIGHT_GRAY;
+
+                cell.Colspan = 1;
+                cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                table.AddCell(cell);
+
+                //
+
+                if (facture.parentID < 0)
+                {
+                    foreach (var item in db.Factures.ToList())
+                    {
+                        if (item.parentID == facture.FactureID)
+                        {
+                            float total = item.NombredUO * item.TJ;
+                            float mtva = total * item.TVA;
+                            float totalTTC = total + mtva;
+                            float tva = 100 * item.TVA;
+                            cell = new PdfPCell(new Phrase(item.DesignationFacturation, new Font(Font.NORMAL, 9, Font.BOLD)));
+                            cell.Colspan = 1;
+                            cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                            table.AddCell(cell);
+                            cell = new PdfPCell(new Phrase(item.NombredUO.ToString(), new Font(Font.NORMAL, 9, Font.BOLD)));
+                            cell.Colspan = 1;
+                            cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                            table.AddCell(cell);
+                            cell = new PdfPCell(new Phrase(item.TJ.ToString(), new Font(Font.NORMAL, 9, Font.BOLD)));
+                            cell.Colspan = 2;
+                            cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                            table.AddCell(cell);
+                            cell = new PdfPCell(new Phrase(total.ToString(), new Font(Font.NORMAL, 9, Font.BOLD)));
+                            cell.Colspan = 1;
+                            cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                            table.AddCell(cell);
+                            cell = new PdfPCell(new Phrase(tva.ToString(), new Font(Font.NORMAL, 9, Font.BOLD)));
+                            cell.Colspan = 1;
+                            cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                            table.AddCell(cell);
+                            cell = new PdfPCell(new Phrase(mtva.ToString(), new Font(Font.NORMAL, 9, Font.BOLD)));
+                            cell.Colspan = 1;
+                            cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                            table.AddCell(cell);
+                            cell = new PdfPCell(new Phrase(totalTTC.ToString(), new Font(Font.NORMAL, 9, Font.BOLD)));
+                            cell.Colspan = 1;
+                            cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                            table.AddCell(cell);
+                        }
+                    }
+                }
+                else
+                {
+                    float total = facture.NombredUO * facture.TJ;
+                    float mtva = total * facture.TVA;
+                    float totalTTC = total + mtva;
+                    float tva = 100 * facture.TVA;
+                    cell = new PdfPCell(new Phrase(facture.DesignationFacturation, new Font(Font.NORMAL, 9, Font.BOLD)));
+                    cell.Colspan = 1;
+                    cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    table.AddCell(cell);
+                    cell = new PdfPCell(new Phrase(facture.NombredUO.ToString(), new Font(Font.NORMAL,9, Font.BOLD)));
+                    cell.Colspan = 1;
+                    cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    table.AddCell(cell);
+                    cell = new PdfPCell(new Phrase(facture.TJ.ToString(), new Font(Font.NORMAL, 9, Font.BOLD)));
+                    cell.Colspan = 2;
+                    cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    table.AddCell(cell);
+                    cell = new PdfPCell(new Phrase(total.ToString(), new Font(Font.NORMAL, 9, Font.BOLD)));
+                    cell.Colspan = 1;
+                    cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    table.AddCell(cell);
+                    cell = new PdfPCell(new Phrase(tva.ToString(), new Font(Font.NORMAL, 9, Font.BOLD)));
+                    cell.Colspan = 1;
+                    cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    table.AddCell(cell);
+                    cell = new PdfPCell(new Phrase(mtva.ToString(), new Font(Font.NORMAL, 9, Font.BOLD)));
+                    cell.Colspan = 1;
+                    cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    table.AddCell(cell);
+                    cell = new PdfPCell(new Phrase(totalTTC.ToString(), new Font(Font.NORMAL, 9, Font.BOLD)));
+                    cell.Colspan = 1;
+                    cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    table.AddCell(cell);
+                }
+
+
+            
+            //
+
+            pdfDoc.Add(table);
+
+                StringReader sr3 = new StringReader(sGrid2[1]);
+
+                XMLWorkerHelper.GetInstance().ParseXHtml(writer, pdfDoc, sr3);
 
 
                 pdfDoc.Close();

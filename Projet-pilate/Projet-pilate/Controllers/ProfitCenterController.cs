@@ -1,5 +1,6 @@
 ﻿using Microsoft.Ajax.Utilities;
 using Projet_pilate.Entities;
+using Projet_pilate.Migrations;
 using Projet_pilate.Models;
 using System;
 using System.Collections.Generic;
@@ -130,58 +131,35 @@ namespace Projet_pilate.Controllers
                 Name = model.Name,
             };
 
-            string ownerFirstName = Request.Form["Owner"].ToString().Split(' ')[0];
-            string ownerLastName = "";
-            int i = 0;
-            foreach(var c in Request.Form["Owner"].ToString().Split(' '))
+            foreach(var item in db.Managers.ToList())
             {
-                if(i==0)
+                if (item.FirstName+" "+item.LastName== Request.Form["Owner"])
                 {
-                    i++;
-                    continue;
+                    profitCenter.Owner = item.ManagerID;
+                    item.ProfitCenters.Add(profitCenter);
+                    break;
                 }
-                if (i == 1)
-                {
-                    ownerLastName = c;
-                    i++;
-                    continue;
-                }
-                ownerLastName = ownerLastName + " " + c;
-                i++;
-
             }
-            Manager owner = db.Managers.SingleOrDefault(m => m.FirstName == ownerFirstName && m.LastName == ownerLastName);
-            profitCenter.Owner = owner.ManagerID;
-            owner.ProfitCenters.Add(profitCenter);
+
+
 
             
             if (Request.Form["PartOwner"].ToString()!= "Aucun")
             {
                 try
                 {
-                    string partOwnerFirstName = Request.Form["PartOwner"].ToString().Split(' ')[0];
-                    string partOwnerLastName = "";
-                    int x = 0;
-                    foreach (var c in Request.Form["PartOwner"].ToString().Split(' '))
+                    foreach (var item in db.Managers.ToList())
                     {
-                        if (x == 0)
+                        if (item.FirstName + " " + item.LastName == Request.Form["PartOwner"])
                         {
-                            x++;
-                            continue;
+                            profitCenter.PartOwner = item.ManagerID;
+                            item.ProfitCenters.Add(profitCenter);
+                            break;
                         }
-                        if (x == 1)
-                        {
-                            partOwnerLastName = c;
-                            x++;
-                            continue;
-                        }
-                        partOwnerLastName = partOwnerLastName + " " + c;
-                        x++;
-
                     }
-                    Manager partOwner = db.Managers.SingleOrDefault(m => m.FirstName == partOwnerFirstName && m.LastName == partOwnerLastName);
-                    profitCenter.PartOwner = partOwner.ManagerID;
-                    partOwner.ProfitCenters.Add(profitCenter);
+
+
+                    
                 }
                 catch (Exception) { }
             }

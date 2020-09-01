@@ -28,29 +28,17 @@
     <div class="form-group">
         <label class="control-label col-md-2">Contact client</label>
         <div class="col-md-10">
-            <!--<select class="form-control" id="contactId" asp-for="ContactId" name="ContactId" required>-->
-            @*<option selected>@ViewData["contact"]</option>*@
-            @*{
+            <select class="form-control" id="contactId" asp-for="contactId" name="contactId" required>
+            <option selected>@ViewData["contact"]</option>
+            @{
                         ApplicationDbContext db = new ApplicationDbContext();
                         foreach (var contact in db.CompanyContacts.ToList())
                         {
-                            string c = contact.FirstName + " " + contact.LastName + " ( " + contact.CompanyName + " ) ";
-                            <option value="@contact.Mail">@c</option>
+                            string c = contact.FirstName + " " + contact.LastName + "(" + contact.CompanyName + ")";
+                            <option value="@c" class="contactId">@c</option>
                         };
-                    }
-                </select>*@
-            <input type="text" list="ContactId" class="form-control" id="contactId" asp-for="contactId" name="contactId" required />
-            <datalist id="ContactId">
-                @*<option selected>@ViewData["contact"]</option>*@
-                @{
-                    ApplicationDbContext db = new ApplicationDbContext();
-                    foreach (var contact in db.CompanyContacts.ToList())
-                    {
-                        string c = contact.FirstName + " " + contact.LastName + "(" + contact.CompanyName + ")";
-                        <option>@c</option>
-                    };
-                }
-            </datalist>
+            }
+            </select>
 
         </div>
     </div>
@@ -60,21 +48,14 @@
         <label class="control-label col-md-2">Consultant</label>
         <div class="col-md-10">
 
-            @*<select class="form-control" id="consultantId" asp-for="ConsultantId" name="ConsultantId" required>
+            <select class="form-control" id="consultantId" asp-for="consultantId" name="consultantId" required>
                     <option selected>@ViewData["consultant"]</option>
                     @foreach (var consultant in Model.ConsultantNames)
                     {
-                        <option value="@consultant">@consultant</option>
+                        <option value="@consultant" class="consultantId">@consultant</option>
                     }
-                </select>*@
-            <input type="text" list="ConsultantIdl" class="form-control" id="consultantId" asp-for="ConsultantId" name="ConsultantId" required />
-            <datalist id="ConsultantIdl">
-                <option selected>@ViewData["consultant"]</option>
-                @foreach (var consultant in Model.ConsultantNames)
-                {
-                    <option value="@consultant">@consultant</option>
-                }
-            </datalist>
+             </select>
+            
 
 
 

@@ -25,26 +25,17 @@
         <input id="test" hidden="hidden" value="@Model.fraisAlloue" />
         <div class="col-md-1" style="padding-top:7px; font-weight:bolder">Manager:  </div>
         <div class="col-md-11">
-            <input type="text" placeholder="Manager Name" list="manager" class="form-control" id="Manager" asp-for="Manager" name="Manager" required />
-            <datalist id="manager">
+            <select class="form-control" id="Manager" name="Manager" required>
+
+                <option selected>@Model.Manager</option>
                 @{ ApplicationDbContext db = new ApplicationDbContext();
                     foreach (var man in db.Managers.ToList())
                     {
                         string m = man.FirstName + " " + man.LastName;
-                        <option value="@m"></option>
-                        @*foreach (var m in db.Missions.ToList())
-                            {
-
-                                if ((man.FirstName + " " + man.LastName).ToUpper() == m.Creator.ToUpper())
-                                {
-                                    string s = m.Name + "Manager";
-                                    <option value="@m.Creator" id="@s"></option>
-                                }
-
-                            };*@
+                        <option class="Manager" value="@m">@m</option>
                     };
                 }
-            </datalist>
+            </select>
         </div>
 
         <div class="col-md-2" style="padding-top:7px; font-weight:bolder; margin-top:10px">
@@ -64,48 +55,23 @@
 
 
 
-        <div class="col-md-1" style="padding-top:7px; font-weight:bolder; margin-top:15px;">Nom:  </div>
+        <div class="col-md-1" style="padding-top:7px; font-weight:bolder; margin-top:15px;">Consultant:  </div>
         <div class="col-md-11" style="margin-top:15px">
-            <input type="text" placeholder="Nom" list="nom" class="form-control" id="nomConsultant" asp-for="nomConsultant" name="nomConsultant" required />
-            <datalist id="nom">
-                @{
-                    foreach (var item in db.Consultants.ToList())
-                    {
-                        @*<option value="@item.LastName"></option>*@
-                        foreach (var m in db.Missions.ToList())
-                            {
-                                if (item.ConsultantID == m.ConsultantID)
-                                {
-                                    string s = m.Name + "Nom";
-                                    <option value="@item.LastName" id="@s"></option>
-                                }
+            <select class="form-control" id="nomConsultant" name="nomConsultant" required>
 
-                            };
-                    };
-                }
-            </datalist>
-        </div>
-        <div class="col-md-1" style="padding-top:7px; font-weight:bolder; margin-top:10px">Prénom:  </div>
-        <div class="col-md-11" style="margin-top:10px;">
-            <input type="text" placeholder="Prenom" list="prenom" class="form-control" id="prenomConsultant" asp-for="prenomConsultant" name="prenomConsultant" required />
-            <datalist id="prenom">
-                @{
-                    foreach (var item in db.Consultants.ToList())
+                <option selected>@Model.nomConsultant</option>
+                @{ foreach (var item in db.Consultants.ToList())
                     {
-@*                        <option value="@item.FirstName"></option>
-*@                        foreach (var m in db.Missions.ToList())
-                            {
-                                if (item.ConsultantID == m.ConsultantID)
-                                {
-                                    string s = m.Name + "Prenom";
-                                    <option value="@item.FirstName" id="s"></option>
-                                }
 
-                            };
-                    };
+                        string s = item.ConsultantID + "Nom" ;
+                        var name = item.FirstName+" "+ item.LastName;
+                                <option value="@name" id="@s" class="nomConsultant">@name</option>
+
+                    }
                 }
-            </datalist>
+            </select>
         </div>
+
 
 
 
@@ -115,24 +81,16 @@
 
         <div class="col-md-2" style="padding-top:7px; font-weight:bolder; margin-top:15px">Nom du client:  </div>
         <div class="col-md-10" style="margin-top:15px;">
-            <input type="text" placeholder="Nom du client" list="nClient" class="form-control" id="nomClient" asp-for="nomClient" name="nomClient" required />
-            <datalist id="nClient">
-                @{
-                    foreach (var item in db.CompanyContacts.ToList())
-                    {
-                        <option value="@item.CompanyName"></option>
-                        @*                        foreach (var m in db.Missions.ToList())
-                            {
-                                if (item.CompanyContactID == m.CompanyContactID)
-                                {
-                                    string s = m.Name + "NomClient";
-                                    <option value="@item.CompanyName" id="s"></option>
-                                }
+            <select class="form-control" id="nomClient" name="nomClient" required>
 
-                            };
-                        *@ };
+                <option selected>@Model.nomClient</option>
+                @{ foreach (var item in db.CompanyContacts.ToList())
+                    {
+                                <option value="@item.CompanyName" class="nomClient">@item.CompanyName</option>
+                    };
                 }
-            </datalist>
+            </select>
+
         </div>
 
         <div class="col-md-2" style="padding-top:7px; font-weight:bolder; margin-top:10px">Nom du projet:  </div>
@@ -151,42 +109,30 @@
 
         <div class="col-md-2" style="padding-top:7px; font-weight:bolder; margin-top:10px">Contact Client:  </div>
         <div class="col-md-10" style="margin-top:10px;">
-            <input type="text" placeholder="Contact Client" list="contactclient" class="form-control" id="contactClient" asp-for="contactClient" name="contactClient" required />
-            <datalist id="contactclient">
-                @{
-                    foreach (var item in db.CompanyContacts.ToList())
+            <select class="form-control" id="contactClient" name="contactClient" required>
+
+                <option selected>@Model.contactClient</option>
+                @{ foreach (var item in db.CompanyContacts.ToList())
                     {
                         string v = item.FirstName + " " + item.LastName;
-                        <option value="@v"></option>
-                        @*foreach (var m in db.Missions.ToList())
-                            {
-                                if (item.CompanyContactID == m.CompanyContactID)
-                                {
-                                    string s = m.Name + "ContactClient";
-                                    string v = item.FirstName + " " + item.LastName;
-                                    <option value="@v" id="s"></option>
-                                }
-
-                            };*@
+                        <option value="@v" class="contactClient">@v</option>
                     };
-
                 }
-            </datalist>
+            </select>
         </div>
 
         <div class="col-md-3" style="padding-top:7px; font-weight:bolder; margin-top:10px; margin-right:0px;padding-right:0px">Adresse d'intervention:  </div>
         <div class="col-md-9" style="margin-top:10px; padding-left:0px;margin-left:0px">
-            <input type="text" placeholder="Adresse d'intervention" list="adresse" class="form-control" id="Adresse" asp-for="Adresse" name="Adresse" required />
-            <datalist id="adresse">
-                @{
-                    foreach (var m in db.Missions.ToList())
+            <select class="form-control" id="Adresse" name="Adresse" required>
+
+                <option selected>@Model.Adresse</option>
+                @{ foreach (var m in db.Missions.ToList())
                     {
                         string s = m.Name + "Adresse";
-                        <option value="@m.AdresseMission" id="@s"></option>
+                        <option value="@m.AdresseMission" id="@s" class="Adresse">@m.AdresseMission</option>
                     };
-
                 }
-            </datalist>
+            </select>
         </div>
         <div class="col-md-3" style="padding-top:7px; font-weight:bolder; margin-top:10px; margin-right:0px;padding-right:0px">Environnement Projet:  </div>
         <div class="col-md-9 form-group" style="margin-top:10px; padding-left:0px;margin-left:0px">

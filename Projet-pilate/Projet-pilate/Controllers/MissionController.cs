@@ -2,6 +2,7 @@
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.qrcode;
 using iTextSharp.tool.xml;
+using NPOI.SS.Formula.Functions;
 using Projet_pilate.Entities;
 using Projet_pilate.Models;
 using System;
@@ -987,6 +988,7 @@ namespace Projet_pilate.Controllers
             CreationOdmModel model = new CreationOdmModel();
             model.debut = DateTime.Now;
             model.fin = DateTime.Now;
+           
 
             model.fraisAlloue = "Pass Navigo ticket restaurant";
             model.Environnement = "Site client: absence d'environnement et de travaux dangereux";
@@ -1005,7 +1007,7 @@ namespace Projet_pilate.Controllers
             Boolean exist = false;
             foreach(var c in db.Consultants.ToList())
             {
-                if (c.FirstName==model.prenomConsultant&&c.LastName==model.nomConsultant)
+                if (c.FirstName+" "+c.LastName==model.nomConsultant)
                 {
                     exist = true;
                     break;
@@ -1013,32 +1015,39 @@ namespace Projet_pilate.Controllers
             }
             if(!exist)
             {
+                /*
                 CreationOdmModel model3 = new CreationOdmModel();
                 model3.debut = DateTime.Now;
                 model3.fin = DateTime.Now;
 
                 model3.fraisAlloue = "Pass Navigo ticket restaurant";
                 model3.Environnement = "Site client: absence d'environnement et de travaux dangereux";
-
+                */
                 string message = "Ce consultant n'existe pas !";
                 ModelState.AddModelError(string.Empty, message);
 
-                return View(model3);
+                return View(model);
             }
 
             if (DateTime.Compare(model.debut,model.fin)>=0)
             {
-                CreationOdmModel model3 = new CreationOdmModel();
-                model3.debut = DateTime.Now;
-                model3.fin = DateTime.Now;
-
-                model3.fraisAlloue = "Pass Navigo ticket restaurant";
-                model3.Environnement = "Site client: absence d'environnement et de travaux dangereux";
-
+                
                 string message = "Le date du fin doit être après le date du debut !";
                 ModelState.AddModelError(string.Empty, message);
 
-                return View(model3);
+                return View(model);
+            }
+
+            string nomCon = "";
+            string prenomCon = "";
+            foreach (var item in db.Consultants.ToList())
+            {
+                if (item.FirstName+" "+item.LastName == model.nomConsultant)
+                {
+                    nomCon = item.LastName;
+                    prenomCon = item.FirstName;
+                    break;
+                }
             }
 
             OrdreDeMission odm = new OrdreDeMission()
@@ -1047,14 +1056,14 @@ namespace Projet_pilate.Controllers
                 ValidationDeAdv = false,
                 fraisAlloue = Request.Form["frais"],
                 Mission = Request.Form["Mission"],
-                manager = Request.Form["Manager"],
+                manager = model.Manager,
                 dateDebut = model.debut,
                 dataFin = model.fin,
-                nomConsultant = Request.Form["nomConsultant"],
-                prenomConsultant = Request.Form["prenomConsultant"],
-                nomClient = Request.Form["nomClient"],
-                contactClient = Request.Form["contactClient"],
-                missionAdresse = Request.Form["Adresse"],
+                nomConsultant = nomCon,
+                prenomConsultant = prenomCon,
+                nomClient = model.nomClient,
+                contactClient = model.contactClient,
+                missionAdresse = model.Adresse,
                 signature = "",
                 environnement =model.Environnement,
             };
@@ -1091,9 +1100,14 @@ namespace Projet_pilate.Controllers
             odm.ValidationConsultant = true;
             odm.signature = "Lu et approuvé le "+DateTime.Now.ToString("dd MMMM yyyy", System.Globalization.CultureInfo.CurrentCulture)+",  " + odm.prenomConsultant+" "+odm.nomConsultant;
 
-            var mission = db.Missions.Single(m => m.Name == odm.Mission);
-            mission.avoirOdm = false;
-            mission.DateFinOdm = mission.End;
+            try
+            {
+                var mission = db.Missions.Single(m => m.Name == odm.Mission);
+                mission.avoirOdm = false;
+                mission.DateFinOdm = mission.End;
+            }
+            catch (Exception) { }
+            
 
             db.SaveChanges();
 
