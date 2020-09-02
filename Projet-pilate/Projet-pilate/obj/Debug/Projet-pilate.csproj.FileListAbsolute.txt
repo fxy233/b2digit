@@ -1211,3 +1211,8 @@ C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Proj
 C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\obj\Debug\Projet_pilate.Migrations.quitDate.resources
 C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\obj\Debug\Projet_pilate.Migrations.supauit.resources
 C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\obj\Debug\Projet_pilate.Migrations.supmonth.resources
+C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\obj\Debug\Projet_pilate.Migrations.updatehistorique.resources
+C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\obj\Debug\Projet_pilate.Migrations.updatehistorique5.resources
+C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\obj\Debug\Projet_pilate.Migrations.updatehistorique6.resources
+C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\obj\Debug\Projet_pilate.Migrations.updatehistorique7.resources
+C:\Users\Feng\Desktop\pilate.version initiale du 28 juin 2020\Projet-pilate\Projet-pilate\obj\Debug\Projet_pilate.Migrations.updatehistorique8.resources

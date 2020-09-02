@@ -301,14 +301,15 @@
         <label class="col-md-9" style="margin-top:10px">
             @Model.TVAIntra
         </label>
-        <label class="col-md-12 editor-field" style="margin-top:90px; margin-bottom:50px">@Model.Mention</label>
+        <textarea class="col-md-12 editor-field" style="margin-top: 90px; margin-bottom: 50px；border:none">@Model.Mention</textarea>
+
 
 
     </div>
 </div>
 
 
-    <div id="Grid" style="visibility:hidden">
+<div id="Grid" style="visibility:hidden">
 
 
     <strong><p style="background-color:white;border-color:white;margin-bottom:0px;padding-bottom:0px; font-family:Calibri">@ViewBag.NomEmettrice</p></strong>
@@ -316,17 +317,17 @@
     <p style="background-color: white; border-color: white; margin-bottom: 0px; padding-bottom: 0px; font-family: Calibri">@ViewBag.VilleEmettrice</p>
     <p style="color:blue;margin-top:0px;padding-top:0px;font-size:small;padding-bottom:0px;margin-bottom:0px; font-family: Calibri">@ViewBag.MailEmettrice</p>
     <p style="margin-top:4px;padding-top:0px; color:green;font-family:Calibri">N°SIREN : @Model.Siren</p>
-    <p style="padding-left: 530px; margin-bottom:0px;font-family:Calibri"><strong>@Model.ClientName</strong></p>
-    <div style=" margin-top: 0px; margin-bottom: 0px; padding-left: 530px;font-family:Calibri">
-        <pre style="background-color:white;border-color:white; margin-top:0px; margin-bottom:0px;margin-left: 530px;font-family:Calibri">@Model.ClientInfo</pre>
+    <p style="padding-left: 480px; margin-bottom:0px;font-family:Calibri"><strong>@Model.ClientName</strong></p>
+    <div style=" margin-top: 0px;padding-bottom:0px; margin-bottom: 0px; padding-left: 480px;font-family:Calibri">
+        <pre style="background-color:white;border-color:white; margin-top:0px;padding-bottom:0px; margin-bottom:0px;font-family:Calibri;font-size:medium;">@Model.ClientInfo</pre>
     </div>
-    <p style="font-size:smaller; color:blue;padding-left:530px;margin-top:0px;font-family:Calibri">@Model.ClientContact</p>
+        <p style="font-size:smaller; color:blue;padding-left:480px;margin-top:0px;padding-top:0px;font-family:Calibri">@Model.ClientContact</p>
     <pre>
 
     </pre>
     @{
         string s = Model.type == null ? "Facture" : Model.type;
-        <p style="text-align:center;background-color:lightgray; font-weight:bolder; margin-top:30px; font-size:30px;font-family:Calibri">@s</p>
+        <p>Facture</p>
     }
 
 
@@ -339,98 +340,37 @@
         <p style="font-family:Calibri"><strong style="font-family:Calibri">@NomFacture</strong></p>
     }
 
-<U><pre style="width:150px;font-size:small; color:darkblue; border-color:black;font-family:Calibri">@Model.FactInfo</pre></U>
+    <U><pre style="width:150px;font-size:small; color:darkblue; border-color:black;font-family:Calibri">@Model.FactInfo</pre></U>
     <pre>
 
 </pre>
     <U><pre style="width:150px; color:darkblue;font-size:small; border-color:black;font-family:Calibri">@Model.Reference</pre></U>
-    <pre style="float:right; font-family:Calibri">                                                                                                                                                                              Date:              @ViewBag.date</pre>
+    <pre style="float:right; font-family:Calibri">                                                                                                                                                                                  Date:              @ViewBag.date</pre>
 
-    <table style="margin-top:15px;border:medium; border-color:black;font-family:Calibri">
-        <tr>
-            <td style="border:medium;border-color:black; background-color:lightslategray; text-align:center; padding:5px;font-family:Calibri"> Désignation </td>
-            <td style="border: medium; border-color: black; background-color: lightslategray; text-align: center; padding: 5px; font-family: Calibri"> Unité d'oeuvre </td>
-            <td style="border: medium; border-color: black; background-color: lightslategray; text-align: center; padding: 5px; font-family: Calibri"> Prix unitaire H.T </td>
-            <td style="border: medium; border-color: black; background-color: lightslategray; text-align: center; padding: 5px; font-family: Calibri"> Total H.T </td>
-            <td style="background-color:lightslategray;border:medium;border-color:black; text-align:center; padding:5px;font-family:Calibri"> Taux TVA </td>
-            <td style="background-color:lightslategray;border:medium;border-color:black; text-align:center; padding:5px;font-family:Calibri"> Montant TVA </td>
-            <td style="background-color:lightslategray;border:medium;border-color:black; text-align:center; padding:5px;font-family:Calibri"> TOTAL T.T.C </td>
-        </tr>
-        @{
-
-            pid = Model.ID;
-
-            if (db.Factures.Single(fa => fa.FactureID == pid).parentID < 0)
-            {
-                foreach (var item in db.Factures.ToList())
-                {
-                    if (item.parentID == pid)
-                    {
-                        float total = item.NombredUO * item.TJ;
-                        float mtva = total * item.TVA;
-                        float totalTTC = total + mtva;
-                        float tva = 100 * item.TVA;
-                        <tr>
-
-                            <td style="text-align:center; padding:5px;font-family:Calibri"> <pre>@item.DesignationFacturation</pre> </td>
-                            <td style="text-align:center; padding:5px;font-family:Calibri"> @item.NombredUO </td>
-                            <td style="text-align:center; padding:5px;font-family:Calibri"> @item.TJ </td>
-                            <td style="text-align:center; padding:5px;font-family:Calibri"> @total </td>
-                            <td style="text-align:center; padding:5px;font-family:Calibri"> @tva </td>
-                            <td style="text-align:center; padding:5px;font-family:Calibri"> @mtva </td>
-                            <td style="text-align:center; padding:5px;font-family:Calibri"> @totalTTC </td>
-                        </tr>
-                    }
-                }
-            }
-            else
-            {
-                <tr>
-                    @{
-                        float total = Model.Quantite * Model.HTunitaire;
-                        float mtva = total * Model.TVA;
-                        float totalTTC = total + mtva;
-                        ViewBag.montantHT = total.ToString();
-                        ViewBag.montantTVA = mtva.ToString();
-                        ViewBag.montantTTC = totalTTC.ToString();
-                        float tva = 100 * Model.TVA;
-                        <td style="text-align:center; padding:5px;font-family:Calibri"> <pre>@Model.Designation</pre> </td>
-                        <td style="text-align:center; padding:5px;font-family:Calibri"> @Model.Quantite </td>
-                        <td style="text-align:center; padding:5px;font-family:Calibri"> @Model.HTunitaire </td>
-                        <td style="text-align:center; padding:5px;font-family:Calibri"> @total </td>
-                        <td style="text-align:center; padding:5px;font-family:Calibri"> @tva</td>
-                        <td style="text-align:center; padding:5px;font-family:Calibri"> @mtva </td>
-                        <td style="text-align:center; padding:5px;font-family:Calibri"> @totalTTC </td>
-                    }
-                </tr>
-                        }
-
-
-        }
-    </table>
+    <p>table</p>
     <pre>
 
 
     </pre>
     @{ float mtvaC = Model.TVA * 100;
-    <pre style="font-family: Calibri">
-                                                                                                                          Montant H.T en Euros                                               @ViewBag.montantHT €
+        <pre style="font-family: Calibri">
+                                                                                                                          Montant H.T en Euros                                                @ViewBag.montantHT €
 
 
-                                                                                                                                     Montant TVA @mtvaC en Euros                                        @ViewBag.montantTVA €
+                                                                                                                                     Montant TVA @mtvaC% en Euros                                      @ViewBag.montantTVA €
 
 
                                                                                                                                      <strong>Net à payer T.T.C en Euros</strong>                                                                                                                                                                                
     </pre>
-   }
-    <pre style="font-family: Calibri">                                     <strong>@ViewBag.montantTTC €</strong></pre>
+    }
+    <pre style="font-family: Calibri">                                      <strong>@ViewBag.montantTTC €</strong></pre>
     <pre>
 
 
 </pre>
     <pre style="font-family: Calibri">
 
-                                                                                                                                              Date de règlement:        <strong>@Model.dateReglement</strong>
+                                                                                                                                     Date de règlement:        <strong>@Model.dateReglement</strong>
 
 
 
@@ -454,10 +394,10 @@
 TVA intracommunautaire : @Model.TVAIntra
 </pre>
 
-  
 
 
-    
+
+
 
 
 </div>

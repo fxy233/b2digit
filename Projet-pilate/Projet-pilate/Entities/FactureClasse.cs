@@ -48,5 +48,47 @@ namespace Projet_pilate.Entities
 
     }
 
-    
+    public class FactureHistorique
+    {
+        // Primary Key
+        public int FactureHistoriqueID { get; set; }
+
+        public int FactureID { get; set; }
+
+        public DateTime DernierEnregistrer { get; set; }
+        public DateTime MoisDeFacturation { get; set; }
+
+        public DateTime DateRegelement { get; set; }
+
+
+        [MaxLength(50)]
+        public string NomFacture { get; set; }
+
+        public string mission { get; set; }
+        public string InfoFacturation { get; set; }
+        public string PrincipalBC { get; set; }
+        public string AdresseBC { get; set; }
+        public string Client { get; set; }
+        public string AdresseFacturation { get; set; }
+
+        public float NombredUO { get; set; }
+        public float TJ { get; set; }
+        public float TVA { get; set; }
+        public float MontantHT { get; set; }
+        public string Delai { get; set; }
+        public string DesignationFacturation { get; set; }
+        public string type { get; set; }
+        public int parentID { get; set; }
+        public string reference { get; set; }
+        public string referenceBancaire { get; set; }
+        public bool FAE { get; set; }
+        public bool Emise { get; set; }
+        public bool payee { get; set; }
+        public bool annulee { get; set; }
+        public string mention { get; set; }
+        public int CraId { get; set; }
+
+    }
+
+
 }

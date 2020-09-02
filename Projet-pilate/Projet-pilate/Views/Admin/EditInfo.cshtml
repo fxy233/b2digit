@@ -15,18 +15,40 @@
     <div class="form-group">
         @Html.LabelFor(model => model.TVA, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.TVA, new { htmlAttributes = new { @class = "form-control", @type = "number", @min = 0, @step = 1, @max = 100, @value=@Model.TVA } })
+            @Html.EditorFor(model => model.TVA, new { htmlAttributes = new { @class = "form-control", @type = "number", @min = 0, @step = 1, @max = 100, @value = @Model.TVA } })
             @Html.ValidationMessageFor(model => model.TVA, "", new { @class = "text-danger" })
         </div>
     </div>
 
     <div class="form-group">
         @Html.LabelFor(model => model.mention, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.mention, new { htmlAttributes = new { @class = "form-control" } })
+        <div class="col-md-10 editor-field">
+            @Html.TextAreaFor(model => model.mention, new { htmlAttributes = new { @class = "form-control" } })
             @Html.ValidationMessageFor(model => model.mention, "", new { @class = "text-danger" })
         </div>
     </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.historique, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10 editor-field">
+            <select class="form-control" id="historique" asp-for="historique" name="historique" required>
+
+                @{
+                    string str = Model.historique.ToString() + " mois";
+                    <option selected>@str</option>
+                    for (int i = 1; i <= 8; ++i)
+                    {
+                        int x = i * 3;
+                        str = x.ToString() + " mois";
+                        <option value="@x" class="historique">@str</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+
+
+    
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <input type="submit" value="valider" class="btn btn-primary btn-large" />

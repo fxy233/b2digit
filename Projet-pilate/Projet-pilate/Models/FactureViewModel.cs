@@ -37,7 +37,7 @@ namespace Projet_pilate.Models
 
         [Display(Name = "Mois de saisie")]
         public string MoisSaisie { get; set; }
-
+        public DateTime date { get; set; }
     }
 
     public class FacturePDFViewModel
@@ -74,6 +74,9 @@ namespace Projet_pilate.Models
 
         [Display(Name = "Mention obligatoire")]
         public string mention { get; set; }
+        
+        [Display(Name = "Temps pour passer au historique")]
+        public int historique { get; set; }
     }
 
     public class OngletViewModel

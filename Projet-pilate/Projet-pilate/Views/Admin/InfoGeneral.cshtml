@@ -11,14 +11,17 @@
     ApplicationDbContext db = new ApplicationDbContext();
     var tva = "rien";
     var mention = "rien";
+    var historique = 12;
     if (db.Infos.ToList().Count != 0)
     {
-        tva = (100*db.Infos.Single().TVA).ToString();
+        tva = (100 * db.Infos.Single().TVA).ToString();
         mention = db.Infos.Single().Mention;
+        historique = db.Infos.Single().Historique;
     }
 
     <h4>TVA actuelle:  <strong style="color:blue">@tva</strong> %</h4>
     <h4>Mention obligatoire actuelle: <strong style="color:blue">@mention</strong></h4>
+    <h4>Temps pour passer au historique: <strong style="color:blue">@historique mois</strong></h4>
     <br />
     <br />
     @Html.ActionLink("Modifier", "EditInfo", null, new { @class = "btn btn-primary btn-large" })

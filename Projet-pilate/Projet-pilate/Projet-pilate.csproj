@@ -583,6 +583,26 @@
     <Compile Include="Migrations\202008280946229_supmonth.designer.cs">
       <DependentUpon>202008280946229_supmonth.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202009020818501_updatehistorique.cs" />
+    <Compile Include="Migrations\202009020818501_updatehistorique.designer.cs">
+      <DependentUpon>202009020818501_updatehistorique.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009020837564_updatehistorique5.cs" />
+    <Compile Include="Migrations\202009020837564_updatehistorique5.designer.cs">
+      <DependentUpon>202009020837564_updatehistorique5.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009021105442_updatehistorique6.cs" />
+    <Compile Include="Migrations\202009021105442_updatehistorique6.designer.cs">
+      <DependentUpon>202009021105442_updatehistorique6.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009021122032_updatehistorique7.cs" />
+    <Compile Include="Migrations\202009021122032_updatehistorique7.designer.cs">
+      <DependentUpon>202009021122032_updatehistorique7.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009021205518_updatehistorique8.cs" />
+    <Compile Include="Migrations\202009021205518_updatehistorique8.designer.cs">
+      <DependentUpon>202009021205518_updatehistorique8.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityViewModels.cs" />
@@ -749,6 +769,8 @@
     <Content Include="Views\Suivi\PCView.cshtml" />
     <Content Include="Views\Suivi\TotalPC.cshtml" />
     <Content Include="Views\Consultant\test2.cshtml" />
+    <Content Include="Views\Facture\FacturesHistorique.cshtml" />
+    <Content Include="Views\Facture\apercuHistorique.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -962,6 +984,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202008280946229_supmonth.resx">
       <DependentUpon>202008280946229_supmonth.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009020818501_updatehistorique.resx">
+      <DependentUpon>202009020818501_updatehistorique.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009020837564_updatehistorique5.resx">
+      <DependentUpon>202009020837564_updatehistorique5.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009021105442_updatehistorique6.resx">
+      <DependentUpon>202009021105442_updatehistorique6.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009021122032_updatehistorique7.resx">
+      <DependentUpon>202009021122032_updatehistorique7.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009021205518_updatehistorique8.resx">
+      <DependentUpon>202009021205518_updatehistorique8.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

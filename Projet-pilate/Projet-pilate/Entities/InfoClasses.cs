@@ -10,5 +10,6 @@ namespace Projet_pilate.Entities
         public int InfoID { get; set; }
         public double TVA { get; set; }
         public string Mention { get; set; }
+        public int Historique { get; set; }
     }
 }

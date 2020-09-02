@@ -1693,22 +1693,7 @@ namespace Projet_pilate.Controllers
                     weekdays[i]=Day[(index+i-1)%7];
                     
                 }
-                /*
-                DataTable dt5 = new DataTable(exp.consultant+"-CRA");
-                dt5.Columns.AddRange(daterow2);
-                //dt2.Rows.Add(daterow);
-                //dt5.Rows.Add(weekdays);
-                foreach(var obj in item.Value)
-                {
-                    string[] output = new string[days + 1];
-                    output[0] = obj.Key;
-                    for(int t=1; t<=days; ++t)
-                    {
-                        output[t] = obj.Value[t - 1].ToString();
-                    }
-                    dt5.Rows.Add(output);
-                }
-                */
+
                     DataColumn[] daterow3 = new DataColumn[days + 1];
                     daterow3[0] = new DataColumn("Activité");
                     weekdays[0] = "Activité";

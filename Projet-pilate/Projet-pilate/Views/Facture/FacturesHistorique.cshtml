@@ -1,0 +1,154 @@
+﻿@model IEnumerable<Projet_pilate.Models.FactureSimpleViewModel>
+@{
+
+    Layout = "~/Views/Shared/_particular.cshtml";
+}
+<link href="~/Scripts/jquery.dataTables.min.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.dataTables.min.js"></script>
+
+ 
+<script>
+    $(document).ready(function () {
+        $('#mytable2').DataTable({
+            stateSave: true,
+            initComplete: function () {
+                this.api().columns().every(function () {
+                    var column = this;
+                    var select = $('<select><option value=""></option></select>')
+                        .appendTo($(column.footer()).empty())
+                        .on('change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex(
+                                $(this).val()
+                            );
+
+                            column
+                                .search(val ? '^' + val + '$' : '', true, false)
+                                .draw();
+                        });
+
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>')
+                    });
+                });
+            }
+            
+        });
+
+
+    });
+
+</script>
+
+
+<h2>Historique des factures</h2>
+<br />
+<label class="col-md-3" style="padding-top:7px;padding-left:2px;margin-left:0px;">Historiser les factures payés avant</label>
+<div class="col-md-7">
+    @Html.TextBoxFor(model => ViewData["date"], "{0:dd/MM/yyyy}", new { @readonly = "readonly", @class = "form-control" })
+
+</div>
+    <div class="col-md-2" style=" margin-bottom:20px;padding-left:0px">
+        @Html.ActionLink("Valider", "Historiser", "Facture", new { date = ViewData["date"] }, new { @class = "btn btn-primary btn-large" })
+    </div>
+
+
+
+<table class="display" id="mytable2" style="width:90%">
+
+    <thead>
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.NomFacture)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Emettrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Client)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MontantHT)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Mission)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Consultant)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MoisSaisie)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NomFacture)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Emettrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Client)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MontantHT)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Mission)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Consultant)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MoisSaisie)
+                </td>
+
+                <td>
+                    @Html.ActionLink("Aperçu", "apercuHistorique", new { id = item.ID }, new { @class = "btn btn-primary" })
+                </td>
+
+
+            </tr>
+
+        }
+    </tbody>
+
+    <tfoot>
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.NomFacture)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Emettrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Client)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MontantHT)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Mission)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Consultant)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MoisSaisie)
+            </th>
+            <th></th>
+        </tr>
+    </tfoot>
+
+</table>
+    
+
