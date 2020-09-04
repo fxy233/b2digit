@@ -13,7 +13,9 @@
     <input type="hidden" name="id" value="@Model.ID" />
     <input type="hidden" name="GridHtml" />
     <input type="submit" id="btnSubmit" value="Télécharger" class="btn btn-primary col-md-offset-11" style="margin-bottom:10px" />
-
+    <div class="col-md-offset-11" style="margin-top:10px">
+        @Html.ActionLink("Export to Excel", "Export", new { id = Model.ID }, new { @class = "btn btn-primary" })
+    </div>
 }
 
 @{
@@ -141,11 +143,11 @@
 
                                 }
                             </tr>
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
+                        }
+                    }
+                }
+                else
+                {
                     <tr>
                         <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.Designation, new { htmlAttributes = new { @class = "form-control", @placeholder = "Désignation", @readonly = "readonly" } })</td>
                         <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.Quantite, new { htmlAttributes = new { @class = "form-control", @placeholder = "Quantité", @readonly = "readonly" } })</td>
@@ -166,7 +168,7 @@
                         }
                     </tr>
 
-                            }
+                }
             }
         </table>
     </div>
@@ -235,7 +237,7 @@
         <p style="font-family:Calibri"><strong style="font-family:Calibri">@NomFacture</strong></p>
     }
 
-<U><pre style="width:150px;font-size:small; color:darkblue; border-color:black;font-family:Calibri">@Model.FactInfo</pre></U>
+    <U><pre style="width:150px;font-size:small; color:darkblue; border-color:black;font-family:Calibri">@Model.FactInfo</pre></U>
     <pre>
 
 </pre>
@@ -248,16 +250,16 @@
 
     </pre>
     @{ float mtvaC = Model.TVA * 100;
-    <pre style="font-family: Calibri">
+        <pre style="font-family: Calibri">
                                                                                                                           Montant H.T en Euros                                                @ViewBag.montantHT €
 
 
                                                                                                                                      Montant TVA @mtvaC% en Euros                                      @ViewBag.montantTVA €
 
 
-                                                                                                                                     <strong>Net à payer T.T.C en Euros</strong>                                                                                                                                                                                
+        <strong>Net à payer T.T.C en Euros</strong>                                                                                                                                                                                
     </pre>
-   }
+    }
     <pre style="font-family: Calibri">                                      <strong>@ViewBag.montantTTC €</strong></pre>
     <pre>
 
@@ -289,10 +291,10 @@
 TVA intracommunautaire : @Model.TVAIntra
 </pre>
 
-  
 
 
-    
+
+
 
 
 </div>

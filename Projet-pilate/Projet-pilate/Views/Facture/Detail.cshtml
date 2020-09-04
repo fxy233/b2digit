@@ -8,7 +8,7 @@
 
 <h2 style="text-align:center; margin-bottom:30px;">Détail</h2>
 
-@using (Html.BeginForm("Export", "Facture", FormMethod.Post, new { onsubmit = "redirect()" }))
+@using (Html.BeginForm("Export", "Facture", FormMethod.Post))
 {
     <input type="hidden" name="id" value="@Model.ID" />
     <input type="hidden" name="GridHtml" />
@@ -131,6 +131,10 @@
 </div>
 
 <div class="col-md-offset-11" style="margin-bottom:20px">
+    @Html.ActionLink("Export to Excel", "Export", new { id = Model.ID }, new { @class = "btn btn-primary" })
+</div>
+
+<div class="col-md-12" style="margin-left: 30px; margin-bottom: 20px">
     @Html.ActionLink("  Retour  ", "Factures", null, new { @class = "btn btn-primary" })
 </div>
 

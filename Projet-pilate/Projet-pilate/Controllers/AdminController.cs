@@ -1338,13 +1338,11 @@ namespace Projet_pilate.Controllers
             {
                 model.TVA = 0;
                 model.mention = "Rien";
-                model.historique = 12;
             }
             else
             {
                 model.TVA = Infolist[0].TVA*100;
                 model.mention = Infolist[0].Mention;
-                model.historique = Infolist[0].Historique;
             }
             return View(model);
         }
@@ -1365,7 +1363,6 @@ namespace Projet_pilate.Controllers
                 {
                     TVA = model.TVA/100,
                     Mention = model.mention,
-                    Historique = model.historique,
                 };
                 db.Infos.Add(info);
                 db.SaveChanges();
@@ -1375,7 +1372,6 @@ namespace Projet_pilate.Controllers
                 var info = db.Infos.Single();
                 info.TVA = model.TVA/100; 
                 info.Mention = model.mention;
-                info.Historique = model.historique;
                 db.SaveChanges();
             }
 

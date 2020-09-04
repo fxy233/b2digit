@@ -1661,7 +1661,7 @@ namespace Projet_pilate.Controllers
             {
             ActivityExportModel exp = this.GetData(id); ;
 
-                List<int> grays = new List<int>();
+            List<int> grays = new List<int>();
             string[] Day = new string[] { "D", "L", "M", "M", "J", "V", "S" };
             int week = Convert.ToInt32(exp.date.DayOfWeek.ToString("d"));
             int jour = Int32.Parse(exp.date.Day.ToString());

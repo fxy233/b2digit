@@ -7,7 +7,7 @@
 <script type="text/javascript" src="~/Scripts/jquery-3.5.1.js"></script>
 <script type="text/javascript" src="~/Scripts/jquery.dataTables.min.js"></script>
 
- 
+
 <script>
     $(document).ready(function () {
         $('#mytable2').DataTable({
@@ -32,7 +32,7 @@
                     });
                 });
             }
-            
+
         });
 
 
@@ -43,112 +43,113 @@
 
 <h2>Historique des factures</h2>
 <br />
-<label class="col-md-3" style="padding-top:7px;padding-left:2px;margin-left:0px;">Historiser les factures payés avant</label>
-<div class="col-md-7">
-    @Html.TextBoxFor(model => ViewData["date"], "{0:dd/MM/yyyy}", new { @readonly = "readonly", @class = "form-control" })
-
-</div>
+@using (Html.BeginForm("Historiser", "Facture", null, FormMethod.Post))
+{
+    <label class="col-md-3" style="padding-top:7px;padding-left:2px;margin-left:0px;">Historiser les factures payés et émises avant</label>
+    <div class="col-md-7">
+        <input class="form-control" type="date" value="@ViewData["date"]" id="date" asp-for="date" name="date" required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
+    </div>
     <div class="col-md-2" style=" margin-bottom:20px;padding-left:0px">
-        @Html.ActionLink("Valider", "Historiser", "Facture", new { date = ViewData["date"] }, new { @class = "btn btn-primary btn-large" })
+        <input type="submit" value="Valider" class="btn btn-primary btn-large" />
     </div>
 
+}
 
+    <table class="display" id="mytable2" style="width:90%">
 
-<table class="display" id="mytable2" style="width:90%">
-
-    <thead>
-        <tr>
-
-            <th>
-                @Html.DisplayNameFor(model => model.NomFacture)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Emettrice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Client)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MontantHT)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Mission)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Consultant)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MoisSaisie)
-            </th>
-
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NomFacture)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Emettrice)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Client)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MontantHT)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Mission)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Consultant)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MoisSaisie)
-                </td>
 
-                <td>
-                    @Html.ActionLink("Aperçu", "apercuHistorique", new { id = item.ID }, new { @class = "btn btn-primary" })
-                </td>
+                <th>
+                    @Html.DisplayNameFor(model => model.NomFacture)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Emettrice)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Client)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MontantHT)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Mission)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Consultant)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MoisSaisie)
+                </th>
 
-
+                <th></th>
             </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
 
-        }
-    </tbody>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NomFacture)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Emettrice)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Client)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MontantHT)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Mission)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Consultant)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MoisSaisie)
+                    </td>
 
-    <tfoot>
-        <tr>
+                    <td>
+                        @Html.ActionLink("Aperçu", "apercuHistorique", new { id = item.ID }, new { @class = "btn btn-primary" })
+                    </td>
 
-            <th>
-                @Html.DisplayNameFor(model => model.NomFacture)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Emettrice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Client)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MontantHT)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Mission)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Consultant)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MoisSaisie)
-            </th>
-            <th></th>
-        </tr>
-    </tfoot>
 
-</table>
-    
+                </tr>
+
+            }
+        </tbody>
+
+        <tfoot>
+            <tr>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.NomFacture)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Emettrice)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Client)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MontantHT)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Mission)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Consultant)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MoisSaisie)
+                </th>
+                <th></th>
+            </tr>
+        </tfoot>
+
+    </table>
+
 
