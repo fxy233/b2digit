@@ -362,21 +362,21 @@ else
 
 
 
-    //var DayOfWeek = new Array("Wednesday", "Thursday", "Friday", "Monday", "Tuesday");
+    var DayOfWeek = new Array("Wednesday", "Thursday", "Friday", "Monday", "Tuesday");
 
-    //DayOfWeek.forEach(elements => {
+    DayOfWeek.forEach(elements => {
 
-    //    var elements = document.getElementsByClassName(`${elements}`);
+       var elements = document.getElementsByClassName(`${elements}`);
 
-    //    var tableau = Array.from(elements);
+       var tableau = Array.from(elements);
 
-    //    tableau.forEach(item => {
+       tableau.forEach(item => {
 
-    //        item.childNodes[11].childNodes[1].checked = true;
-    //        item.childNodes[11].childNodes[3].checked = true;
+           item.childNodes[3].childNodes[1].checked = true;
+           item.childNodes[3].childNodes[3].checked = true;
 
-    //    });
-    //});
+      });
+    });
 
     tabColonne.forEach(element => {
 

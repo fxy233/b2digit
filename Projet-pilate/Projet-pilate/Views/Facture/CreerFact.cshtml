@@ -3,7 +3,31 @@
 @{
     ViewBag.Title = "creer";
 }
+<script type="text/javascript" src="~/Scripts/jquery-3.5.1.js"></script>
 
+<script>
+    $(document).ready(function () {
+        $('input[type="checkbox"]').on('change', function () {
+            $("input[name='type2']").not(this).prop("checked", false);
+            if (!this.checked) {
+                $("input[name='type2']").not(this).prop("checked", true);
+            }
+            if (this.checked && this.value == "auto" || (!this.checked && this.value == "bis")) {
+                $("select[name='FactureName']").value = ""
+                $("select[name='FactureName']").prop("disabled", true);
+            } else {
+                $("select[name='FactureName']").prop("disabled", false);
+            }
+        });
+
+    });
+
+
+
+</script>
+<h2>Création du facture</h2>
+<hr />
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
 @using (Html.BeginForm())
 {
@@ -11,34 +35,32 @@
     <div class="form-group col-md-12">
 
         <div class="col-md-12" style="margin-top:40px; margin-bottom:40px;padding-left:400px">
-            <input type="text" placeholder="Mission Name" list="mission" class="form-control" id="Mission" asp-for="Mission" name="Mission" required />
-            <datalist id="mission">
+            <select class="form-control" id="Mission" name="Mission" required>
+
+                <option selected>@Model.mission</option>
                 @{ ApplicationDbContext db = new ApplicationDbContext();
                     foreach (var m in db.Missions.ToList())
                     {
-                        <option value="@m.Name"></option>
+                        <option class="Mission" value="@m.Name">@m.Name</option>
                     };
                 }
-            </datalist>
+            </select>
         </div>
 
         <div class="col-md-12">
             <div class="col-md-8">
-                @*                @Html.EditorFor(model => model.NomEmettrice, new { htmlAttributes = new { @class = "form-control", @placeholder = "Nom société émettrice" } })
-                *@
-                <input type="text" onchange="auto()" placeholder="Nom société émettrice" list="principalBCID" class="form-control" id="NomEmettrice" asp-for="NomEmettrice" name="NomEmettrice" required />
-                <datalist id="principalBCID">
+                <select class="form-control" onchange="auto()" id="NomEmettrice" name="NomEmettrice" required>
+
+                    <option selected>@Model.NomEmettrice</option>
                     @{
                         foreach (var s in db.Subsidiaries.ToList())
                         {
-                            <option value="@s.Name"></option>
+                            <option class="NomEmettrice" value="@s.Name">@s.Name</option>
                         };
                     }
-                </datalist>
+                </select>
             </div>
             <div class="col-md-8">
-                @*                @Html.EditorFor(model => model.AdresseEmettrice, new { htmlAttributes = new { @class = "form-control", @placeholder = "Adresse" } })
-                *@
                 <input type="text" placeholder="Adresse" readonly="readonly" list="adresseEmettrice" class="form-control" id="AdresseEmettrice" asp-for="AdresseEmettrice" name="AdresseEmettrice" required />
                 <datalist id="adresseEmettrice">
                     @{
@@ -52,8 +74,6 @@
 
             </div>
             <div class="col-md-8">
-                @*                @Html.EditorFor(model => model.VilleEmettrice, new { htmlAttributes = new { @class = "form-control", @placeholder = "Code postal, ville" } })
-                *@
                 <input type="text" placeholder="Code postal, Ville" readonly="readonly" list="villeEmettrice" class="form-control" id="VilleEmettrice" asp-for="VilleEmettrice" name="VilleEmettrice" required />
                 <datalist id="villeEmettrice">
                     @{
@@ -67,8 +87,6 @@
                 </datalist>
             </div>
             <div class="col-md-12">
-                @*                @Html.EditorFor(model => model.MailEmettrice, new { htmlAttributes = new { @class = "form-control", @placeholder = "Mail de la société" } })
-                *@
                 <input type="text" placeholder="Mail de la société" readonly="readonly" list="mailEmettrice" class="form-control" id="MailEmettrice" asp-for="MailEmettrice" name="MailEmettrice" required />
                 <datalist id="mailEmettrice">
                     @{
@@ -84,8 +102,6 @@
                 SIREN :
             </div>
             <div class="col-md-offset-1 col-md-8" style="margin-left:0px; padding-left:0px;">
-                @*                @Html.EditorFor(model => model.Siren, new { htmlAttributes = new { @class = "form-control", @placeholder = "SIREN" } })
-                *@
                 <input type="text" placeholder="SIREN" readonly="readonly" list="siren" class="form-control" id="Siren" asp-for="Siren" name="Siren" required />
                 <datalist id="siren">
                     @{
@@ -103,27 +119,22 @@
 
         <div class="col-md-offset-7 col-md-5">
             <div class="col-md-8">
-                @*                @Html.EditorFor(model => model.ClientName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Nom société facturée" } })
-                *@
+                <select class="form-control" onchange="auto2()" id="ClientName" name="ClientName" required>
 
-                <input type="text" onchange="auto2()" placeholder="Nom société facturée" list="clientName" class="form-control" id="ClientName" asp-for="ClientName" name="ClientName" required />
-                <datalist id="clientName">
+                    <option selected>@Model.ClientName</option>
                     @{
                         foreach (var s in db.Subsidiaries.ToList())
                         {
-
-                            <option value="@s.Name"></option>
+                            <option class="ClientName" value="@s.Name">@s.Name</option>
                         };
                         foreach (var c in db.Companies.ToList())
                         {
-                            <option value="@c.Name"></option>
+                            <option class="ClientName" value="@c.Name">@c.Name</option>
                         };
                     }
-                </datalist>
+                </select>
             </div>
             <div class="col-md-8">
-                @*                @Html.EditorFor(model => model.ClientAdresse, new { htmlAttributes = new { @class = "form-control", @placeholder = "Adresse" } })
-                *@
                 <input type="text" placeholder="Adresse" readonly="readonly" list="clientAdresse" class="form-control" id="ClientAdresse" asp-for="ClientAdresse" name="ClientAdresse" required />
                 <datalist id="clientAdresse">
                     @{
@@ -142,8 +153,6 @@
 
             </div>
             <div class="col-md-8">
-                @*                @Html.EditorFor(model => model.ClientVille, new { htmlAttributes = new { @class = "form-control", @placeholder = "Code postal, ville" } })
-                *@
                 <input type="text" placeholder="Code postal, ville" readonly="readonly" list="clientVille" class="form-control" id="ClientVille" asp-for="ClientVille" name="ClientVille" required />
                 <datalist id="clientVille">
                     @{
@@ -164,8 +173,6 @@
 
             </div>
             <div class="col-md-8">
-                @*                @Html.EditorFor(model => model.ClientContact, new { htmlAttributes = new { @class = "form-control", @placeholder = "Mail de la société" } })
-                *@
                 <input type="text" placeholder="Mail de la société" readonly="readonly" list="clientContact" class="form-control" id="ClientContact" asp-for="ClientContact" name="ClientContact" required />
                 <datalist id="clientContact">
                     @{
@@ -186,25 +193,34 @@
         </div>
 
         <div class="col-md-12" style="text-align:center; font-size:25px; margin-top:40px; margin-bottom:40px; padding-left:400px">
-            @*@Html.EditorFor(model => model.type, new { htmlAttributes = new { @class = "form-control", @placeholder = "Intitulé du document ( facture ou avoir )" } })
-            *@
-            <input type="text" placeholder="Intitulé du document ( facture ou avoir )" list="type" class="form-control" id="Type" asp-for="Type" name="Type" required />
-            <datalist id="type">
+            <select class="form-control" id="Type" name="Type" required>
+
+                <option selected>@Model.type</option>
                 @{
-
-                    <option value="Facture"></option>
-                    <option value="Avoir"></option>
-
+                    <option class="Type" value="Facture">Facture</option>
+                    <option class="Type" value="Avoir">Avoir</option>
                 }
-            </datalist>
+            </select>
         </div>
 
         <div class="col-md-12">
             Facture n°:
         </div>
-        <div class="col-md-12">
-            @Html.EditorFor(model => model.FactureName, new { htmlAttributes = new { @class = "form-control", @placeholder = "nom facture", @id = "nomFacture" } })
+        <div class="col-md-4">
+            <select class="form-control" id="FactureName" name="FactureName" disabled="disabled" required>
+                <option selected>@Model.FactureName</option>
+                @{
+                    foreach (var m in db.Factures.ToList())
+                    {
+                        <option class="FactureName" value="@m.NomFacture">@m.NomFacture-bis (@m.PrincipalBC)</option>
+                    };
+                }
+            </select>
         </div>
+        <div class="col-md-2" style="margin-top:7px ;margin-bottom:30px; padding-left:0px;">Automatiquement</div>
+        <div class="col-md-2" style="margin-top:7px ;margin-bottom:30px;"><input type="checkbox" name="type2" value="auto" checked="checked"></div>
+        <div class="col-md-2" style="margin-top: 7px; margin-bottom: 30px;">Bis</div>
+        <div class="col-md-2" style="margin-top: 7px; margin-bottom: 23px;"><input type="checkbox" name="type2" value="bis"></div>
         <div class="col-md-6">
             @Html.EditorFor(model => model.FactInfo, new { htmlAttributes = new { @class = "form-control", @placeholder = "Information Facturation" } })
         </div>
@@ -242,7 +258,8 @@
 
         <div class="col-md-offset-5 col-md-3" style="margin-top:40px;padding-top:7px; padding-left:20px;">Montant H.T en Euros</div>
         <div class="col-md-4" style="margin-top:40px">@Html.EditorFor(model => model.totalHT, new { htmlAttributes = new { @class = "form-control", @placeholder = "calculer automatiquement", @readonly = "readonly", @id = "totalHT" } })</div>
-        <div class="col-md-offset-5 col-md-3" style="margin-top:20px;padding-top:7px; padding-left:20px">Montant T.V.A @ViewBag.TVA% en Euros</div>
+
+        <div class="col-md-offset-5 col-md-3" style="margin-top:20px;padding-top:7px; padding-left:20px">Montant T.V.A @Model.TVA% en Euros</div>
         <div class="col-md-4" style="margin-top:20px">@Html.EditorFor(model => model.montantTVA, new { htmlAttributes = new { @class = "form-control", @placeholder = "calculer automatiquement", @readonly = "readonly", @id = "montantTVA" } })</div>
         <div class="col-md-offset-5 col-md-3" style="margin-top:20px;padding-top:7px; padding-left:20px">Net à payer T.T.C en Euros</div>
         <div class="col-md-4" style="margin-top:20px">@Html.EditorFor(model => model.totalTTC, new { htmlAttributes = new { @class = "form-control", @placeholder = "calculer automatiquement", @readonly = "readonly", @id = "totalTTC" } })</div>
@@ -302,9 +319,9 @@
 
 
     </div>
-@*    <div class="col-md-offset-4 col-md-4" style="margin-top:40px; margin-bottom:50px">
-        <input type="button" id="btnValider" value="Valider" class="btn btn-default btn-large" />
-    </div>*@
+    @*    <div class="col-md-offset-4 col-md-4" style="margin-top:40px; margin-bottom:50px">
+            <input type="button" id="btnValider" value="Valider" class="btn btn-default btn-large" />
+        </div>*@
     <div class="col-md-offset-5 col-md-7" style="margin-top:40px; margin-bottom:50px; padding-left:50px">
         <input type="submit" class="btn btn-primary btn-large" value="Valider" id="validation">
     </div>

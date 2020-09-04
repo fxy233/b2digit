@@ -12,9 +12,9 @@
 {
     <input type="hidden" name="id" value="@Model.ID" />
     <input type="hidden" name="GridHtml" />
-    <input type="submit" id="btnSubmit" value="Télécharger" class="btn btn-primary col-md-offset-11" style="margin-bottom:10px" />
+    <input type="submit" id="btnSubmit" value="Télécharger" class="btn btn-primary col-md-offset-11"  />
     <div class="col-md-offset-11" style="margin-top:10px">
-        @Html.ActionLink("Export to Excel", "Export", new { id = Model.ID }, new { @class = "btn btn-primary" })
+        @Html.ActionLink("Export to Excel", "ExportXLS", new { id = Model.ID }, new { @class = "btn btn-primary" })
     </div>
 }
 

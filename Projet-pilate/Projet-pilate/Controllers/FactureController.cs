@@ -395,11 +395,11 @@ namespace Projet_pilate.Controllers
         public ActionResult CreerFact()
         {
             ApplicationDbContext db = new ApplicationDbContext();
-            ViewBag.TVA = db.Infos.ToList().Count == 0 ? 0 : db.Infos.Single().TVA;
 
             FactureCreationViewModel model = new FactureCreationViewModel()
             {
                 Mention = db.Infos.ToList().Count==0 ? " " : db.Infos.Single().Mention,
+                TVA = db.Infos.ToList().Count == 0 ? 0 : db.Infos.Single().TVA*100,
             };
 
             return View(model);
@@ -410,6 +410,35 @@ namespace Projet_pilate.Controllers
         public ActionResult CreerFact(FactureCreationViewModel model)
         {
             ApplicationDbContext db = new ApplicationDbContext();
+
+            string typeNom = Request["type2"];
+            string nomFacture = "";
+            if (typeNom == "auto")
+            {
+                var sub = db.Subsidiaries.Single(s => s.Name == model.NomEmettrice);
+
+                nomFacture = "FA-" + DateTime.Now.ToString("yyyy-MM") + "-" + sub.FactureID;
+                sub.FactureID++;
+            }
+            else
+            {
+                Boolean valide = false;
+                foreach(var item in db.Factures.ToList())
+                {
+                    if (item.PrincipalBC == model.NomEmettrice && item.NomFacture == model.FactureName)
+                    {
+                        valide = true;
+                        break;
+                    }
+                }
+                if (!valide)
+                {
+                    string message = "Vérifier que nom du facture est lié bien le nom du émettrice !";
+                    ModelState.AddModelError(string.Empty, message);
+                    return View(model);
+                }
+                nomFacture = model.FactureName + "-bis";
+            }
 
             var fl = db.Factures.ToList();
             int id = 0;
@@ -422,19 +451,11 @@ namespace Projet_pilate.Controllers
             }
             id++;
 
-            string type = Request.Form["Type"] == "Facture" ? "Fact" : "FactAvoir";
-            var namefacture = Request.Form["ClientName"];
+            string type = model.type;
+            var namefacture = model.ClientName;
 
-            foreach (var item in db.Subsidiaries.ToList())
-            {
-                if (item.Name == namefacture)
-                {
-                    type = type + "Int";
-                    break;
-                }
-            }
 
-            string nomMission = Request.Form["Mission"];
+            string nomMission = model.mission;
             var missionItem = db.Missions.Single(m => m.Name == nomMission);
 
 
@@ -468,20 +489,20 @@ namespace Projet_pilate.Controllers
 
             Facture facture = new Facture()
             {
-                mission = Request.Form["Mission"],
+                mission = nomMission,
                 FactureID = id,
-                NomFacture = model.FactureName==null? "FAE-" + id : model.FactureName,
+                NomFacture = nomFacture,
                 MoisDeFacturation = db.MonthActivations.Single().Periode,
                 InfoFacturation = model.FactInfo,
-                PrincipalBC = Request.Form["NomEmettrice"],
+                PrincipalBC = model.NomEmettrice,
                 AdresseBC = Request.Form["AdresseEmettrice"],
-                Client = Request.Form["ClientName"],
+                Client = model.ClientName,
                 AdresseFacturation = Request.Form["ClientAdresse"],
                 NombredUO = model.Quantite,
                 TJ = model.HTunitaire,
                 TVA = (float)model.TVA/100,
                 MontantHT = model.HTunitaire* model.Quantite,
-                type = Request.Form["Type"],
+                type = model.type,
                 FAE = true,
                 Emise = false,
                 payee = false,
@@ -690,13 +711,14 @@ namespace Projet_pilate.Controllers
 
             if(facture.CraId>0 || facture.CraId==-999)
             {
-                    facture.NomFacture = "FA-" + DateTime.Now.ToString("yyyy-MM") + "-" + sub.FactureID;
+                facture.NomFacture = "FA-" + DateTime.Now.ToString("yyyy-MM") + "-" + sub.FactureID;
+                sub.FactureID++;
+                db.SaveChanges();
 
             }
             
 
-            sub.FactureID++;
-            db.SaveChanges();
+            
 
 
             //
@@ -2298,7 +2320,7 @@ namespace Projet_pilate.Controllers
 
         
         [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
-        public FileResult Export(int id)
+        public FileResult ExportXLS(int id)
         {
             ApplicationDbContext db = new ApplicationDbContext();
             Facture facture = db.Factures.Single(f => f.FactureID == id);
@@ -2529,7 +2551,241 @@ namespace Projet_pilate.Controllers
                 }
             }
         }
-        
+
+
+        [Authorize(Roles = "Administrateur, Super-Administrateur,Administrateur-ventes")]
+        public FileResult ExportXLS2(int id)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            FactureHistorique facture = db.FactureHistoriques.Single(f => f.FactureHistoriqueID == id);
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                var imagepath = HostingEnvironment.MapPath("~/Images/B2DIGIT_Facture.png");
+                if (facture.PrincipalBC == "DMO Conseil")
+                {
+                    string[] strs = facture.PrincipalBC.Split(' ');
+                    if (strs.Length > 1)
+                    {
+                        int index = 0;
+                        foreach (var s in strs)
+                        {
+                            if (index != 0)
+                            {
+                                strs[0] = strs[0] + "_" + s;
+                            }
+                            index++;
+                        }
+                    }
+
+                    imagepath = HostingEnvironment.MapPath("~/Images/" + strs[0] + "_Facture.png");
+                }
+
+
+
+                var ws = wb.Worksheets.Add(1);
+                if (facture.PrincipalBC == "DMO Conseil")
+                {
+                    var image = ws.AddPicture(imagepath).MoveTo(ws.Cell("C3")).Scale(.1);
+                }
+                else
+                {
+
+                    var image = ws.AddPicture(imagepath).MoveTo(ws.Cell("B2")).Scale(.2);
+                }
+
+                //
+                var sub = db.Subsidiaries.Single(s => s.Name == facture.PrincipalBC);
+                var slist = db.Subsidiaries.ToList();
+                var clist = db.Companies.ToList();
+
+                //
+
+
+                ws.Cell("B8").Value = sub.Name;
+                ws.Cell("B9").Value = sub.Address;
+                ws.Cell("B10").Value = sub.PostaleCode + " " + sub.City;
+                ws.Cell("B11").Value = sub.email;
+                ws.Cell("B12").Value = "SIREN :" + sub.Siren;
+
+                ws.Cell("K12").Value = facture.Client;
+                foreach (var s in slist)
+                {
+                    if (s.Name == facture.Client)
+                    {
+                        ws.Cell("K13").Value = s.Address;
+                        ws.Cell("K14").Value = s.PostaleCode + " " + s.City;
+                        ws.Cell("K15").Value = s.email;
+                    }
+                }
+                foreach (var c in clist)
+                {
+                    if (c.Name == facture.Client)
+                    {
+                        ws.Cell("K13").Value = c.Address;
+                        ws.Cell("K14").Value = c.PostalCode + " " + c.City;
+                        ws.Cell("K15").Value = c.MailFacturation;
+                    }
+                }
+
+
+                ws.Cell("B20").Value = "Facture N°:";
+                ws.Cell("B21").Value = facture.NomFacture;
+
+                ws.Cell("B23").Value = facture.InfoFacturation;
+                ws.Cell("B26").Value = facture.reference;
+
+                ws.Cell("K28").Value = "Date :      " + facture.MoisDeFacturation.ToString("dd MMMM yyyy", System.Globalization.CultureInfo.CurrentCulture);
+
+                ws.Cell("B31").Value = "Désignation";
+                ws.Cell("F31").Value = "Unité d'oeuvre";
+                ws.Cell("G31").Value = "Prix unitaire H.T";
+                ws.Cell("H31").Value = "Total H.T";
+                ws.Cell("I31").Value = "Taux TVA";
+                ws.Cell("J31").Value = "Montant TVA";
+                ws.Cell("L31").Value = "TOTAL T.T.C";
+
+                ws.Range("B8:E8").Merge();
+                ws.Range("B9:E9").Merge();
+                ws.Range("B10:E10").Merge();
+                ws.Range("B11:E11").Merge();
+                ws.Range("B12:E12").Merge();
+                ws.Range("K13:N13").Merge();
+                ws.Range("K14:N14").Merge();
+                ws.Range("K15:N15").Merge();
+                ws.Range("K12:N12").Merge();
+                ws.Range("B20:E20").Merge();
+                ws.Range("B21:E21").Merge();
+                ws.Range("B23:E25").Merge();
+                ws.Range("B26:E28").Merge();
+                ws.Range("K28:N28").Merge();
+                ws.Range("B31:E31").Merge();
+                ws.Columns("F").Width = 20;
+                ws.Columns("G").Width = 30;
+                ws.Range("J31:K31").Merge();
+                ws.Range("L31:N31").Merge();
+
+                int i = 32;
+                float montantHTT = 0f;
+                float montantTVAT = 0f;
+                float montantTTCT = 0f;
+                if (facture.parentID < 0)
+                {
+
+                    foreach (var item in db.FactureHistoriques.ToList())
+                    {
+                        if (item.parentID == facture.FactureID)
+                        {
+
+                            float total = item.NombredUO * item.TJ;
+                            float mtva = total * item.TVA;
+                            float totalTTC = total + mtva;
+                            float tva = 100 * item.TVA;
+                            montantHTT += total;
+                            montantTVAT += mtva;
+                            montantTTCT += totalTTC;
+                            ws.Cell("B" + i.ToString()).Value = item.DesignationFacturation;
+                            ws.Cell("F" + i.ToString()).Value = item.NombredUO;
+                            ws.Cell("G" + i.ToString()).Value = item.TJ;
+                            ws.Cell("H" + i.ToString()).Value = total;
+                            ws.Cell("I" + i.ToString()).Value = tva;
+                            ws.Cell("J" + i.ToString()).Value = mtva;
+                            ws.Cell("L" + i.ToString()).Value = totalTTC;
+
+                            ws.Range("B" + i.ToString() + ":E" + (i + 4).ToString()).Merge();
+                            ws.Range("F" + i.ToString() + ":F" + (i + 4).ToString()).Merge();
+                            ws.Range("G" + i.ToString() + ":G" + (i + 4).ToString()).Merge();
+                            ws.Range("H" + i.ToString() + ":H" + (i + 4).ToString()).Merge();
+                            ws.Range("I" + i.ToString() + ":I" + (i + 4).ToString()).Merge();
+                            ws.Range("J" + i.ToString() + ":K" + (i + 4).ToString()).Merge();
+                            ws.Range("L" + i.ToString() + ":N" + (i + 4).ToString()).Merge();
+                            i += 5;
+                        }
+                    }
+                }
+                else
+                {
+
+                    float total = facture.NombredUO * facture.TJ;
+                    float mtva = total * facture.TVA;
+                    float totalTTC = total + mtva;
+                    float tva = 100 * facture.TVA;
+                    montantHTT += total;
+                    montantTVAT += mtva;
+                    montantTTCT += totalTTC;
+                    ws.Cell("B" + i.ToString()).Value = facture.DesignationFacturation;
+                    ws.Cell("F" + i.ToString()).Value = facture.NombredUO;
+                    ws.Cell("G" + i.ToString()).Value = facture.TJ;
+                    ws.Cell("H" + i.ToString()).Value = total;
+                    ws.Cell("I" + i.ToString()).Value = tva;
+                    ws.Cell("J" + i.ToString()).Value = mtva;
+                    ws.Cell("L" + i.ToString()).Value = totalTTC;
+
+                    ws.Range("B" + i.ToString() + ":E" + (i + 4).ToString()).Merge();
+                    ws.Range("F" + i.ToString() + ":F" + (i + 4).ToString()).Merge();
+                    ws.Range("G" + i.ToString() + ":G" + (i + 4).ToString()).Merge();
+                    ws.Range("H" + i.ToString() + ":H" + (i + 4).ToString()).Merge();
+                    ws.Range("I" + i.ToString() + ":I" + (i + 4).ToString()).Merge();
+                    ws.Range("J" + i.ToString() + ":K" + (i + 4).ToString()).Merge();
+                    ws.Range("L" + i.ToString() + ":N" + (i + 4).ToString()).Merge();
+                    i += 5;
+
+                }
+
+                var rngTable = ws.Range("B31:N" + (i - 1).ToString());
+                rngTable.Style.Border.InsideBorder = XLBorderStyleValues.Thick; ;
+                rngTable.Style.Border.OutsideBorder = XLBorderStyleValues.Thick;
+                rngTable.Style.Alignment.Vertical = XLAlignmentVerticalValues.Justify;
+                rngTable.Row(1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                i += 3;
+                ws.Cell("G" + i.ToString()).Value = "Montant H.T en Euros";
+                ws.Cell("L" + i.ToString()).Value = montantHTT;
+                ws.Range("L" + i.ToString() + ":N" + i.ToString()).Merge();
+
+                i += 3;
+                ws.Cell("G" + i.ToString()).Value = "Montant TVA " + (facture.TVA * 100).ToString() + "% en Euros";
+                ws.Cell("L" + i.ToString()).Value = montantTVAT;
+                ws.Range("L" + i.ToString() + ":N" + i.ToString()).Merge();
+
+                i += 3;
+                ws.Cell("G" + i.ToString()).Value = "Net à payer T.T.C en Euros";
+                ws.Cell("L" + i.ToString()).Value = montantTTCT;
+                ws.Range("L" + i.ToString() + ":N" + i.ToString()).Merge();
+
+                i += 3;
+                ws.Cell("G" + i.ToString()).Value = "Date de règlement:                                                                                                                 " + facture.DateRegelement.ToString("dd MMMM yyyy", System.Globalization.CultureInfo.CurrentCulture);
+                ws.Range("G" + i.ToString() + ":N" + i.ToString()).Merge();
+
+                i += 3;
+                ws.Cell("B" + i.ToString()).Value = "Référence Bancaires:   " + facture.referenceBancaire;
+                ws.Range("B" + i.ToString() + ":G" + i.ToString()).Merge();
+
+                i += 3;
+                ws.Cell("B" + i.ToString()).Value = "IBAN :   " + sub.IBAN;
+                ws.Range("B" + i.ToString() + ":G" + i.ToString()).Merge();
+
+                i += 3;
+                ws.Cell("B" + i.ToString()).Value = "BIC :   " + sub.BIC;
+                ws.Range("B" + i.ToString() + ":G" + i.ToString()).Merge();
+
+                i += 3;
+                ws.Cell("B" + i.ToString()).Value = "TVA intracommunautaire :   " + sub.TVAIntra;
+                ws.Range("B" + i.ToString() + ":G" + i.ToString()).Merge();
+
+                i += 8;
+                ws.Cell("B" + i.ToString()).Value = facture.mention;
+                ws.Range("B" + i.ToString() + ":N" + (i + 4).ToString()).Merge();
+                var rngTable2 = ws.Range("B" + i.ToString() + ":N" + (i + 4).ToString());
+                rngTable2.Style.Alignment.Vertical = XLAlignmentVerticalValues.Distributed;
+
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    wb.SaveAs(stream);
+                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", facture.NomFacture + ".xlsx");
+                }
+            }
+        }
+
 
     }
 

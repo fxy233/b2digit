@@ -131,7 +131,7 @@
 </div>
 
 <div class="col-md-offset-11" style="margin-bottom:20px">
-    @Html.ActionLink("Export to Excel", "Export", new { id = Model.ID }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Export to Excel", "ExportXLS", new { id = Model.ID }, new { @class = "btn btn-primary" })
 </div>
 
 <div class="col-md-12" style="margin-left: 30px; margin-bottom: 20px">
@@ -289,28 +289,36 @@
         <label class="col-md-offset-5 col-md-3" style="margin-top:20px; padding-left:20px">Date de règlement :</label>
         <label class="col-md-4" style="margin-top:20px">@Model.dateReglement</label>
 
-        <label class="col-md-3" style="margin-top:50px;">Référence Bancaires :</label>
-        <label class="col-md-9" style="margin-top:50px">
-            @Model.ReferenceBancaires
-        </label>
-        <label class="col-md-2" style="margin-top:10px">IBAN :</label>
-        <label class="col-md-10" style="margin-top:10px">
-            @Model.IBAN
-        </label>
-        <label class="col-md-2" style="margin-top:10px">BIC :</label>
-        <label class="col-md-10" style="margin-top:10px">
-            @Model.BIC
-        </label>
-        <label class="col-md-3" style="margin-top:10px">TVA  intracommunautaire:</label>
-        <label class="col-md-9" style="margin-top:10px">
-            @Model.TVAIntra
-        </label>
-        <textarea class="col-md-12 editor-field" style="margin-top: 90px; margin-bottom: 50px；border:none">@Model.Mention</textarea>
+        <div class="col-md-12">
+            <label class="col-md-3" style="margin-top:50px;">Référence Bancaires :</label>
+            <label class="col-md-9" style="margin-top:50px">
+                @Model.ReferenceBancaires
+            </label>
+        </div>
+        <div class="col-md-12">
+            <label class="col-md-2" style="margin-top:10px">IBAN :</label>
+            <label class="col-md-10" style="margin-top:10px">
+                @Model.IBAN
+            </label>
+        </div>
+        <div class="col-md-12">
+            <label class="col-md-2" style="margin-top:10px">BIC :</label>
+            <label class="col-md-10" style="margin-top:10px">
+                @Model.BIC
+            </label>
+        </div>
+        <div class="col-md-12">
+            <label class="col-md-3" style="margin-top:10px">TVA  intracommunautaire:</label>
+            <label class="col-md-9" style="margin-top:10px">
+                @Model.TVAIntra
+            </label>
+        </div>
+        <textarea class="col-md-12 editor-field" style="margin-top: 90px; margin-bottom: 50px;border:none">@Model.Mention</textarea>
 
 
 
+        </div>
     </div>
-</div>
 
 
 <div id="Grid" style="visibility:hidden">
