@@ -20,6 +20,68 @@
             }
         });
 
+        $('input[name="Quantite"]').on('change', function () {
+            $('input[name="totalHT"]').prop("readonly", false);
+            $('input[name="totalTTC"]').prop("readonly", false);
+            $('input[name="montantTVA"]').prop("readonly", false);
+
+            var result = parseFloat($('input[name="Quantite"]').val()) * parseFloat($('input[name="HTunitaire"]').val());
+
+            var result2 = result * parseFloat($('input[name="TVA"]').val())/100;
+            $('input[name="montantTVA"]').val(result2);
+
+            var ttc = parseFloat($('input[name="montantTVA"]').val()) + result;
+
+            $('input[name="totalHT"]').val(result);
+            $('input[name="totalTTC"]').val(ttc);
+
+            $('input[name="totalHT"]').prop("readonly", true);
+            $('input[name="totalTTC"]').prop("readonly", true);
+            $('input[name="montantTVA"]').prop("readonly", true);
+
+
+        });
+
+        $('input[name="HTunitaire"]').on('change', function () {
+            $('input[name="totalHT"]').prop("readonly", false);
+            $('input[name="totalTTC"]').prop("readonly", false);
+            $('input[name="montantTVA"]').prop("readonly", false);
+
+            var result = parseFloat($('input[name="Quantite"]').val()) * parseFloat($('input[name="HTunitaire"]').val());
+            var result2 = result * parseFloat($('input[name="TVA"]').val())/100;
+            $('input[name="montantTVA"]').val(result2);
+
+            var ttc = parseFloat($('input[name="montantTVA"]').val()) + result;
+
+            $('input[name="totalHT"]').val(result);
+            $('input[name="totalTTC"]').val(ttc);
+
+            $('input[name="totalHT"]').prop("readonly", true);
+            $('input[name="totalTTC"]').prop("readonly", true);
+            $('input[name="montantTVA"]').prop("readonly", true);
+
+        });
+
+        $('input[name="TVA"]').on('change', function () {
+            $('input[name="montantTVA"]').prop("readonly", false);
+            $('input[name="totalTTC"]').prop("readonly", false);
+
+            var result = parseFloat($('input[name="totalHT"]').val()) * parseFloat($('input[name="TVA"]').val())/100;
+            var ttc = parseFloat($('input[name="totalHT"]').val()) + result;
+
+            $('input[name="montantTVA"]').val(result);
+            $('input[name="totalTTC"]').val(ttc);
+
+            $('input[name="montantTVA"]').prop("readonly", true);
+            $('input[name="totalTTC"]').prop("readonly", true);
+
+            var ph = "Montant T.V.A " + $('input[name="TVA"]').val() + "% en Euros";
+            $('div[name="montTVA"]').text(ph);
+
+
+
+        });
+
     });
 
 
@@ -259,7 +321,7 @@
         <div class="col-md-offset-5 col-md-3" style="margin-top:40px;padding-top:7px; padding-left:20px;">Montant H.T en Euros</div>
         <div class="col-md-4" style="margin-top:40px">@Html.EditorFor(model => model.totalHT, new { htmlAttributes = new { @class = "form-control", @placeholder = "calculer automatiquement", @readonly = "readonly", @id = "totalHT" } })</div>
 
-        <div class="col-md-offset-5 col-md-3" style="margin-top:20px;padding-top:7px; padding-left:20px">Montant T.V.A @Model.TVA% en Euros</div>
+        <div class="col-md-offset-5 col-md-3" style="margin-top:20px;padding-top:7px; padding-left:20px" name="montTVA">Montant T.V.A @Model.TVA% en Euros</div>
         <div class="col-md-4" style="margin-top:20px">@Html.EditorFor(model => model.montantTVA, new { htmlAttributes = new { @class = "form-control", @placeholder = "calculer automatiquement", @readonly = "readonly", @id = "montantTVA" } })</div>
         <div class="col-md-offset-5 col-md-3" style="margin-top:20px;padding-top:7px; padding-left:20px">Net à payer T.T.C en Euros</div>
         <div class="col-md-4" style="margin-top:20px">@Html.EditorFor(model => model.totalTTC, new { htmlAttributes = new { @class = "form-control", @placeholder = "calculer automatiquement", @readonly = "readonly", @id = "totalTTC" } })</div>

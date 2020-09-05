@@ -4,6 +4,111 @@
     ViewBag.Title = "Modifier";
 }
 
+<script type="text/javascript" src="~/Scripts/jquery-3.5.1.js"></script>
+<script>
+    $(document).ready(function () {
+
+        var rowCount = $('#mytable tr').length;
+
+        function update() {
+            
+            var a = parseInt(this.id.split("_")[1])
+
+            var strNombredUO2 = "#factures_" + a.toString() + "__NombredUO";
+            var strFactureTJ2 = "#factures_" + a.toString() + "__TJ";
+            var strTVA2 = "#tva_" + a.toString();
+            var strMontantHT2 = "#montant" + a.toString();
+            var strMTVA2 = "#mtva" + a.toString();
+            var strTTC2 = "#ttc" + a.toString();
+
+            var result = parseFloat($(strNombredUO2).val()) * parseFloat($(strFactureTJ2).val());
+            var resultTVA = result * parseFloat($(strTVA2).val()) / 100;
+            var ttc = resultTVA + result;
+
+            $(strMontantHT2).text(result);
+            $(strMTVA2).text(resultTVA);
+            $(strTTC2).text(ttc);
+
+            var totalHT = 0;
+            var totalTVA = 0;
+            var totalTTC = 0;
+
+            for (var i = 0; i <= rowCount - 2; ++i) {
+                var strMontantHT = "#montant" + i.toString();
+                var strMTVA = "#mtva" + i.toString();
+                var strTTC = "#ttc" + i.toString();
+
+                totalHT += parseFloat($(strMontantHT).text());
+                totalTVA += parseFloat($(strMTVA).text());
+                totalTTC += parseFloat($(strTTC).text());
+
+            }
+
+            var str = "Montant T.V.A " + $('#tva_0').val() + "% en Euros";
+
+            $('#montantTotal').text(totalHT);
+            $('#mtvaTotal').text(totalTVA);
+            $('#ttcTotal').text(totalTTC);
+            $('#tvaLabel').text(str);
+
+        }
+
+        function update2() {
+
+
+            var strMontantHT2 = "#montant0";
+            var strMTVA2 = "#mtva0" ;
+            var strTTC2 = "#ttc0" ;
+
+            var result = parseFloat($('#Quantite').val()) * parseFloat($('#HTunitaire').val());
+            var resultTVA = result * parseFloat($('#tva_0').val()) / 100;
+            var ttc = resultTVA + result;
+
+            $(strMontantHT2).text(result);
+            $(strMTVA2).text(resultTVA);
+            $(strTTC2).text(ttc);
+
+
+            var str = "Montant T.V.A " + $('#tva_0').val() + "% en Euros";
+
+            $('#montantTotal').text(result);
+            $('#mtvaTotal').text(resultTVA);
+            $('#ttcTotal').text(ttc);
+            $('#tvaLabel').text(str);
+
+        }
+
+        if (rowCount > 2) {
+            for (var i = 0; i <= rowCount - 2; ++i) {
+                var strNombredUO = "#factures_" + i.toString() + "__NombredUO";
+                var strFactureTJ = "#factures_" + i.toString() + "__TJ";
+                var strTVA = "#tva_" + i.toString();
+
+
+
+
+                $(strNombredUO).on('change', update);
+
+                $(strFactureTJ).on('change', update);
+
+                $(strTVA).on('change', update);
+
+            }
+        } else {
+
+            $("#Quantite").on('change', update2);
+            $("#HTunitaire").on('change', update2);
+            $("#tva_0").on('change', update2);
+
+            
+        }
+        
+
+
+    });
+</script>
+
+
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 @using (Html.BeginForm())
 {
@@ -218,7 +323,7 @@
 
 
         <div class="col-md-12" style="margin-top:40px;">
-            <table style="border-color:white">
+            <table style="border-color:white" id="mytable">
                 <tr>
                     <th class="col-md-2" style="background-color:cornflowerblue; text-align:center;border-color:white">Désignation</th>
                     <th class="col-md-1" style="background-color:cornflowerblue; text-align:center;border-color:white">Unité d'oeuvre</th>
@@ -239,6 +344,10 @@
                             if (item.parentID == pid)
                             {
 
+                                string idmont = "montant" + i.ToString();
+                                string idmtva = "mtva" + i.ToString();
+                                string idttc = "ttc" + i.ToString();
+                                string idtva = "tva_" + i.ToString();
                                 float mtva = Model.factures[i].TVA * Model.factures[i].MontantHT;
                                 float totalTTC = (1 + Model.factures[i].TVA) * Model.factures[i].MontantHT;
                                 string name = "TVA" + i.ToString();
@@ -246,10 +355,10 @@
                                     <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.factures[i].DesignationFacturation, new { htmlAttributes = new { @class = "form-control", @placeholder = "Désignation" } })</td>
                                     <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.factures[i].NombredUO, new { htmlAttributes = new { @class = "form-control", @placeholder = "Quantité" } })</td>
                                     <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.factures[i].TJ, new { htmlAttributes = new { @class = "form-control", @placeholder = "Prix unitaire" } })</td>
-                                    <td style="background-color:lightsteelblue;border-color:white">@Model.factures[i].MontantHT</td>
-                                    <td style="background-color:lightsteelblue;border-color:white"><input type="number" value=@ViewBag.TVA placeholder="TVA(%)" class="form-control" id="TVA" asp-for="TVA" name="@name" required /></td>
-                                    <td style="background-color:lightsteelblue;border-color:white">@mtva</td>
-                                    <td style="background-color:lightsteelblue;border-color:white">@totalTTC</td>
+                                    <td style="background-color:lightsteelblue;border-color:white" id="@idmont">@Model.factures[i].MontantHT</td>
+                                    <td style="background-color:lightsteelblue;border-color:white"><input type="number" value=@ViewBag.TVA placeholder="TVA(%)" class="form-control" id="@idtva" asp-for="TVA" name="@name" required /></td>
+                                    <td style="background-color:lightsteelblue;border-color:white" id="@idmtva">@mtva</td>
+                                    <td style="background-color:lightsteelblue;border-color:white" id="@idttc">@totalTTC</td>
 
                                 </tr>
                                 i++;
@@ -258,14 +367,18 @@
                     }
                     else
                     {
+                        string idmont = "montant0" ;
+                        string idmtva = "mtva0" ;
+                        string idttc = "ttc0" ;
+                        string idtva = "tva_0" ;
                         <tr>
                             <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.designation, new { htmlAttributes = new { @class = "form-control", @placeholder = "Désignation" } })</td>
                             <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.Quantite, new { htmlAttributes = new { @class = "form-control", @placeholder = "Quantité" } })</td>
                             <td style="background-color:lightsteelblue;border-color:white">@Html.EditorFor(model => model.HTunitaire, new { htmlAttributes = new { @class = "form-control", @placeholder = "Prix unitaire" } })</td>
-                            <td style="background-color:lightsteelblue;border-color:white">@Model.totalHT</td>
-                            <td style="background-color:lightsteelblue;border-color:white"><input type="number" value=@ViewBag.TVA placeholder="TVA(%)" class="form-control" id="TVA" asp-for="TVA" name="TVA" required /></td>
-                            <td style="background-color:lightsteelblue;border-color:white">@Model.montantTVA</td>
-                            <td style="background-color:lightsteelblue;border-color:white">@Model.totalTTC</td>
+                            <td style="background-color:lightsteelblue;border-color:white" id="@idmont">@Model.totalHT</td>
+                            <td style="background-color:lightsteelblue;border-color:white"><input id="@idtva" type="number" value=@ViewBag.TVA placeholder="TVA(%)" class="form-control" id="TVA" asp-for="TVA" name="TVA" required /></td>
+                            <td style="background-color:lightsteelblue;border-color:white" id="@idmtva">@Model.montantTVA</td>
+                            <td style="background-color:lightsteelblue;border-color:white" id="@idttc">@Model.totalTTC</td>
 
                         </tr>
                     }
@@ -277,11 +390,11 @@
         </div>
 
         <label class="col-md-offset-5 col-md-3" style="margin-top:40px; padding-left:20px;">Montant H.T en Euros</label>
-        <label class="col-md-4" style="margin-top:40px">@Model.totalHT</label>
-        <label class="col-md-offset-5 col-md-3" style="margin-top:20px; padding-left:20px">Montant T.V.A @ViewBag.TVA% en Euros</label>
-        <label class="col-md-4" style="margin-top:20px">@Model.montantTVA</label>
+        <label class="col-md-4" style="margin-top:40px" id="montantTotal">@Model.totalHT</label>
+        <label class="col-md-offset-5 col-md-3" style="margin-top:20px; padding-left:20px" id="tvaLabel">Montant T.V.A @ViewBag.TVA% en Euros</label>
+        <label class="col-md-4" style="margin-top:20px" id="mtvaTotal">@Model.montantTVA</label>
         <label class="col-md-offset-5 col-md-3" style="margin-top:20px; padding-left:20px">Net à payer T.T.C en Euros</label>
-        <label class="col-md-4" style="margin-top:20px">@Model.totalTTC</label>
+        <label class="col-md-4" style="margin-top:20px" id="ttcTotal">@Model.totalTTC</label>
 
         <div class="col-md-offset-6 col-md-2" style="margin-top:40px;padding-top:7px">Date de règlement :</div>
         <div class="col-md-4" style="margin-top:40px">@Html.EditorFor(model => model.dateReglement, new { htmlAttributes = new { @class = "form-control" } })</div>
