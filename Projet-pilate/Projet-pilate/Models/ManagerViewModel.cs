@@ -110,6 +110,11 @@ namespace Projet_pilate.Models
         [Display(Name = "Date d'entrée")]
         public DateTime EntryDate { get; set; }
 
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Date de sortie")]
+        public DateTime DateSortie { get; set; }
+
         [Required]
         [DataType(DataType.Currency)]
         [Display(Name = "Salaire mensuel (fixe + variable)")]

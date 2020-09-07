@@ -67,11 +67,7 @@ namespace Projet_pilate.Controllers
             
 
             ViewBag.listPC = listPC;
-            /*            if(debut == new DateTime()&&fin == new DateTime())
-                        {
-                            fin = db.MonthActivations.Single().Periode.AddMonths(1);
-                            debut = new DateTime(fin.Year, 1, 1);
-                        }*/
+            
             if (DateTime.Compare(end,start)<0)
             {
                 DateTime fin2 = db.MonthActivations.Single().Periode;
@@ -191,9 +187,7 @@ namespace Projet_pilate.Controllers
             List<SuiviDetailViewModel> models = new List<SuiviDetailViewModel>();
 
             List<string> clist = new List<string>();
-/*            float catotal = 0f;
-            float cmtotal = 0f;
-            float fraistotal = 0f;*/
+
 
 
             var user = db.Users.Single(u => u.UserName == User.Identity.Name);
@@ -239,191 +233,83 @@ namespace Projet_pilate.Controllers
                 }
                 else
                 {
-                    var mission = db.Missions.Single(m => m.Name == s.NomMission);
-                    var companycontact = db.CompanyContacts.Single(c => c.CompanyContactID == mission.CompanyContactID);
+                    if(s.NomMission == "Manager")
+                    {
+                        model.ID = s.SuiviID;
+                        model.Consultant = s.Consultant;
+                        model.Mission = "Aucun";
+                        model.Client = "Aucun";
+                        model.Nbj = 0;
+                        model.Tj = 0;
+                        model.CA = 0;
+                        model.mois = s.date.ToString("yyyy-MM");
+                    }
+                    else
+                    {
+                        var mission = db.Missions.Single(m => m.Name == s.NomMission);
+                        var companycontact = db.CompanyContacts.Single(c => c.CompanyContactID == mission.CompanyContactID);
 
 
 
-                    model.ID = s.SuiviID;
-                    model.Consultant = s.Consultant;
-                    model.Mission = s.NomMission;
-                    model.Client = companycontact.CompanyName;
-                    model.Nbj = s.NombredUO;
-                    model.Tj = s.TJ;
-                    model.CA = (int)(s.NombredUO * s.TJ);
-                    model.mois = s.date.ToString("yyyy-MM");
-                    
+                        model.ID = s.SuiviID;
+                        model.Consultant = s.Consultant;
+                        model.Mission = s.NomMission;
+                        model.Client = companycontact.CompanyName;
+                        model.Nbj = s.NombredUO;
+                        model.Tj = s.TJ;
+                        model.CA = (int)(s.NombredUO * s.TJ);
+                        model.mois = s.date.ToString("yyyy-MM");
+                    }
+  
                 }
                 
 
                 if (manager == null)
                 {
-                    model.Cout = (int)(model.CA - s.mensuelConsultant * 1.5 - s.fraisConsultant);
+                    if (s.NomMission != "Manager")
+                    {
+                        model.Cout = (int)(model.CA - s.mensuelConsultant * 1.5 - s.fraisConsultant);
+                        models.Add(model);
+                    }
+                    else
+                    {
+                        model.Cout = -(int)((s.mensuelManager*1.5+s.fraisManager)*s.NombredUO);
+                        models.Add(model);
+                    }
                 }
                 else
                 {
                     if (manager.role == "BM")
                     {
-                        model.Cout = (int)(model.CA * 0.9 - s.mensuelConsultant * 1.7 - s.fraisConsultant);
-
-                    }
-                    else
-                    {
-                        model.Cout = (int)(model.CA * 0.93 - s.mensuelConsultant * 1.6 - s.fraisConsultant);
-                    }
-                }
-
-
-
-
-                models.Add(model);
-            }
-
-            int mid = db.profitCenters.Single(p => p.ProfitCenterID == id).Owner;
-            var managerPC = db.Managers.Single(m => m.ManagerID == mid);
-            int pid = db.profitCenters.Single(p => p.ProfitCenterID == id).PartOwner;
-            Manager managerPC2 = null;
-            try
-            {
-                managerPC2 = db.Managers.Single(m => m.ManagerID == pid);
-            }
-            catch (Exception)
-            {
-
-            }
-
-            DateTime a = new DateTime(debut.Year, debut.Month, 1);
-            while (DateTime.Compare(a,fin)<=0 )
-            {
-                
-                if (manager == null )
-                {
-                    if (a.Year == managerPC.EntryDate.Year && a.Month == managerPC.EntryDate.Month)
-                    {
-                        SuiviDetailViewModel m = new SuiviDetailViewModel();
-                        m.Consultant = managerPC.FirstName + " " + managerPC.LastName;
-                        m.Mission = "Aucun";
-                        m.Client = "Aucun";
-                        m.Nbj = 0;
-                        m.Tj = 0;
-                        m.CA = 0;
-                        m.mois = a.ToString("yyyy-MM");
-                        m.Cout = (int)(-managerPC.MonthlyCost  * 1.5 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost)*(DateTime.DaysInMonth(a.Year, a.Month)-managerPC.EntryDate.Day+1)/DateTime.DaysInMonth(a.Year,a.Month);
-                        models.Add(m);
-                    }
-                    if (DateTime.Compare(a, managerPC.EntryDate) > 0)
-                    {
-                        SuiviDetailViewModel m = new SuiviDetailViewModel();
-                        m.Consultant = managerPC.FirstName + " " + managerPC.LastName;
-                        m.Mission = "Aucun";
-                        m.Client = "Aucun";
-                        m.Nbj = 0;
-                        m.Tj = 0;
-                        m.CA = 0;
-                        m.mois = a.ToString("yyyy-MM");
-                        m.Cout = (int)(-managerPC.MonthlyCost * 1.5 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost);
-                        models.Add(m);
-                    }
-                    
-                    if (managerPC2 != null)
-                    {
-                        if (a.Year == managerPC2.EntryDate.Year && a.Month == managerPC2.EntryDate.Month)
+                        if (s.NomMission != "Manager")
                         {
-                            SuiviDetailViewModel m = new SuiviDetailViewModel();
-                            m.Consultant = managerPC2.FirstName + " " + managerPC2.LastName;
-                            m.Mission = "Aucun";
-                            m.Client = "Aucun";
-                            m.Nbj = 0;
-                            m.Tj = 0;
-                            m.CA = 0;
-                            m.mois = a.ToString("yyyy-MM");
-                            m.Cout = (int)(-managerPC2.MonthlyCost * 1.5 - managerPC2.MealCost - managerPC2.TravelPackage - managerPC2.ExceptionalCost) * (DateTime.DaysInMonth(a.Year, a.Month) - managerPC2.EntryDate.Day + 1) / DateTime.DaysInMonth(a.Year, a.Month);
-                            models.Add(m);
-                        }
-                        if (DateTime.Compare(a, managerPC2.EntryDate) > 0)
-                        {
-                            SuiviDetailViewModel m2 = new SuiviDetailViewModel();
-                            m2.Consultant = managerPC2.FirstName + " " + managerPC2.LastName;
-                            m2.Mission = "Aucun";
-                            m2.Client = "Aucun";
-                            m2.Nbj = 0;
-                            m2.Tj = 0;
-                            m2.CA = 0;
-                            m2.mois = a.ToString("yyyy-MM");
-                            m2.Cout = (int)(-managerPC2.MonthlyCost * 1.5 - managerPC2.MealCost - managerPC2.TravelPackage - managerPC2.ExceptionalCost);
-                            models.Add(m2);
+                            model.Cout = (int)(model.CA * 0.9 - s.mensuelConsultant * 1.7 - s.fraisConsultant);
+                            models.Add(model);
                         }
                         
-                    }
-                }
-                else
-                {
-                    if (manager.role == "BM")
-                    {
 
                     }
                     else
                     {
-                        if (a.Year == managerPC.EntryDate.Year && a.Month == managerPC.EntryDate.Month)
+                        if (s.NomMission != "Manager")
                         {
-                            SuiviDetailViewModel m = new SuiviDetailViewModel();
-                            m.Consultant = managerPC.FirstName + " " + managerPC.LastName;
-                            m.Mission = "Aucun";
-                            m.Client = "Aucun";
-                            m.Nbj = 0;
-                            m.Tj = 0;
-                            m.CA = 0;
-                            m.mois = a.ToString("yyyy-MM");
-                            m.Cout = (int)(-managerPC.MonthlyCost * 1.55 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost) * (DateTime.DaysInMonth(a.Year, a.Month) - managerPC.EntryDate.Day + 1) / DateTime.DaysInMonth(a.Year, a.Month);
-                            models.Add(m);
+                            model.Cout = (int)(model.CA - s.mensuelConsultant * 1.5 - s.fraisConsultant);
+                            models.Add(model);
                         }
-                        if (DateTime.Compare(a, managerPC.EntryDate) > 0)
+                        else
                         {
-                            SuiviDetailViewModel m = new SuiviDetailViewModel();
-                            m.Consultant = managerPC.FirstName + " " + managerPC.LastName;
-                            m.Mission = "Aucun";
-                            m.Client = "Aucun";
-                            m.Nbj = 0;
-                            m.Tj = 0;
-                            m.CA = 0;
-                            m.mois = a.ToString("yyyy-MM");
-                            m.Cout = (int)(-managerPC.MonthlyCost * 1.55 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost);
-                            models.Add(m);
-                        }
-                        if (managerPC2 != null)
-                        {
-                            if (a.Year == managerPC2.EntryDate.Year && a.Month == managerPC2.EntryDate.Month)
-                            {
-                                SuiviDetailViewModel m = new SuiviDetailViewModel();
-                                m.Consultant = managerPC2.FirstName + " " + managerPC2.LastName;
-                                m.Mission = "Aucun";
-                                m.Client = "Aucun";
-                                m.Nbj = 0;
-                                m.Tj = 0;
-                                m.CA = 0;
-                                m.mois = a.ToString("yyyy-MM");
-                                m.Cout = (int)(-managerPC2.MonthlyCost * 1.55 - managerPC2.MealCost - managerPC2.TravelPackage - managerPC2.ExceptionalCost) * (DateTime.DaysInMonth(a.Year, a.Month) - managerPC2.EntryDate.Day + 1) / DateTime.DaysInMonth(a.Year, a.Month);
-                                models.Add(m);
-                            }
-                            if (DateTime.Compare(a, managerPC2.EntryDate) > 0)
-                            {
-                                SuiviDetailViewModel m2 = new SuiviDetailViewModel();
-                                m2.Consultant = managerPC2.FirstName + " " + managerPC2.LastName;
-                                m2.Mission = "Aucun";
-                                m2.Client = "Aucun";
-                                m2.Nbj = 0;
-                                m2.Tj = 0;
-                                m2.CA = 0;
-                                m2.mois = a.ToString("yyyy-MM");
-                                m2.Cout = (int)(-managerPC2.MonthlyCost * 1.55 - managerPC2.MealCost - managerPC2.TravelPackage - managerPC2.ExceptionalCost);
-                                models.Add(m2);
-                            }
-
+                            model.Cout = -(int)((s.mensuelManager * 1.55 + s.fraisManager) * s.NombredUO);
+                            models.Add(model);
                         }
                     }
                 }
-                a = a.AddMonths(1);
+
+
+
+
             }
+
+            
             
 
 
@@ -527,111 +413,54 @@ namespace Projet_pilate.Controllers
                 }
                 else
                 {
-                    if (manager == null)
+                    if (s.NomMission == "Manager")
                     {
-                        dicts[s.date.ToString("yyyy-MM")].couttheorie += (float)(s.NombredUO * s.TJ - s.mensuelConsultant * 1.5 - s.fraisConsultant);
+                        if (manager == null)
+                        {
+                            dicts[s.date.ToString("yyyy-MM")].coutreel -= (float)(s.mensuelManager * 1.5 + s.fraisManager) * s.NombredUO;
+                            dicts[s.date.ToString("yyyy-MM")].couttheorie -= (float)(s.mensuelManager * 1.5 + s.fraisManager) * s.NombredUO;
+                            
+                        }
+                        else
+                        {
+                            if (manager.role == "BM")
+                            {
 
+                            }
+                            else
+                            {
+                                dicts[s.date.ToString("yyyy-MM")].coutreel -= (float)(s.mensuelManager * 1.55 + s.fraisManager) * s.NombredUO;
+                                dicts[s.date.ToString("yyyy-MM")].couttheorie -= (float)(s.mensuelManager * 1.55 + s.fraisManager) * s.NombredUO;
+
+                            }
+                        }
                     }
                     else
                     {
-                        if (manager.role == "BM")
+                        if (manager == null)
                         {
-                            dicts[s.date.ToString("yyyy-MM")].couttheorie += (float)(s.NombredUO * s.TJ * 0.9 - s.mensuelConsultant * 1.7 - s.fraisConsultant);
+                            dicts[s.date.ToString("yyyy-MM")].couttheorie += (float)(s.NombredUO * s.TJ - s.mensuelConsultant * 1.5 - s.fraisConsultant);
 
                         }
                         else
                         {
-                            dicts[s.date.ToString("yyyy-MM")].couttheorie += (float)(s.NombredUO * s.TJ * 0.93 - s.mensuelConsultant * 1.6 - s.fraisConsultant);
-
-                        }
-                    }
-                }
-            }
-
-            int mid = db.profitCenters.Single(p => p.ProfitCenterID == id).Owner;
-            var managerPC = db.Managers.Single(m => m.ManagerID == mid);
-            int pid = db.profitCenters.Single(p => p.ProfitCenterID == id).PartOwner;
-            Manager managerPC2 = null;
-            try
-            {
-                managerPC2 = db.Managers.Single(m => m.ManagerID == pid);
-            }
-            catch (Exception)
-            {
-
-            }
-
-            DateTime b = new DateTime(debut.Year, debut.Month, 1);
-            while (DateTime.Compare(b, fin) <= 0)
-            {
-                
-                if (manager == null)
-                {
-                    if (b.Year == managerPC.EntryDate.Year && b.Month == managerPC.EntryDate.Month)
-                    {
-                        dicts[b.ToString("yyyy-MM")].coutreel += (float)(-managerPC.MonthlyCost * 1.5 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost) * (DateTime.DaysInMonth(b.Year, b.Month) - managerPC.EntryDate.Day + 1) / DateTime.DaysInMonth(b.Year, b.Month);
-                        dicts[b.ToString("yyyy-MM")].couttheorie += (float)(-managerPC.MonthlyCost * 1.5 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost) * (DateTime.DaysInMonth(b.Year, b.Month) - managerPC.EntryDate.Day + 1) / DateTime.DaysInMonth(b.Year, b.Month);
-
-                    }
-                    if (DateTime.Compare(b, managerPC.EntryDate) > 0)
-                    {
-                        dicts[b.ToString("yyyy-MM")].coutreel += (float)(-managerPC.MonthlyCost * 1.5 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost);
-                        dicts[b.ToString("yyyy-MM")].couttheorie += (float)(-managerPC.MonthlyCost * 1.5 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost);
-                    }
-                    if (managerPC2 != null)
-                    {
-                        if (b.Year == managerPC2.EntryDate.Year && b.Month == managerPC2.EntryDate.Month)
-                        {
-                            dicts[b.ToString("yyyy-MM")].coutreel += (float)(-managerPC2.MonthlyCost * 1.5 - managerPC2.MealCost - managerPC2.TravelPackage - managerPC2.ExceptionalCost) * (DateTime.DaysInMonth(b.Year, b.Month) - managerPC2.EntryDate.Day + 1) / DateTime.DaysInMonth(b.Year, b.Month);
-                            dicts[b.ToString("yyyy-MM")].couttheorie += (float)(-managerPC2.MonthlyCost * 1.5 - managerPC2.MealCost - managerPC2.TravelPackage - managerPC2.ExceptionalCost) * (DateTime.DaysInMonth(b.Year, b.Month) - managerPC2.EntryDate.Day + 1) / DateTime.DaysInMonth(b.Year, b.Month);
-
-                        }
-                        if (DateTime.Compare(b, managerPC2.EntryDate) > 0)
-                        {
-                            dicts[b.ToString("yyyy-MM")].coutreel += (float)(-managerPC2.MonthlyCost * 1.5 - managerPC2.MealCost - managerPC2.TravelPackage - managerPC2.ExceptionalCost);
-                            dicts[b.ToString("yyyy-MM")].couttheorie += (float)(-managerPC2.MonthlyCost * 1.5 - managerPC2.MealCost - managerPC2.TravelPackage - managerPC2.ExceptionalCost);
-                        }
-
-                    }
-                }
-                else
-                {
-                    if (manager.role == "BM")
-                    {
-
-                    }
-                    else
-                    {
-                        if (b.Year == managerPC.EntryDate.Year && b.Month == managerPC.EntryDate.Month)
-                        {
-                            dicts[b.ToString("yyyy-MM")].coutreel += (float)(-managerPC.MonthlyCost * 1.55 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost) * (DateTime.DaysInMonth(b.Year, b.Month) - managerPC.EntryDate.Day + 1) / DateTime.DaysInMonth(b.Year, b.Month);
-                            dicts[b.ToString("yyyy-MM")].couttheorie += (float)(-managerPC.MonthlyCost * 1.55 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost) * (DateTime.DaysInMonth(b.Year, b.Month) - managerPC.EntryDate.Day + 1) / DateTime.DaysInMonth(b.Year, b.Month);
-
-                        }
-                        if (DateTime.Compare(b, managerPC.EntryDate) > 0)
-                        {
-                            dicts[b.ToString("yyyy-MM")].coutreel += (float)(-managerPC.MonthlyCost * 1.55 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost);
-                            dicts[b.ToString("yyyy-MM")].couttheorie += (float)(-managerPC.MonthlyCost * 1.55 - managerPC.MealCost - managerPC.TravelPackage - managerPC.ExceptionalCost);
-                        }
-                        if (managerPC2 != null)
-                        {
-                            if (b.Year == managerPC2.EntryDate.Year && b.Month == managerPC2.EntryDate.Month)
+                            if (manager.role == "BM")
                             {
-                                dicts[b.ToString("yyyy-MM")].coutreel += (float)(-managerPC2.MonthlyCost * 1.55 - managerPC2.MealCost - managerPC2.TravelPackage - managerPC2.ExceptionalCost) * (DateTime.DaysInMonth(b.Year, b.Month) - managerPC2.EntryDate.Day + 1) / DateTime.DaysInMonth(b.Year, b.Month);
-                                dicts[b.ToString("yyyy-MM")].couttheorie += (float)(-managerPC2.MonthlyCost * 1.55 - managerPC2.MealCost - managerPC2.TravelPackage - managerPC2.ExceptionalCost) * (DateTime.DaysInMonth(b.Year, b.Month) - managerPC2.EntryDate.Day + 1) / DateTime.DaysInMonth(b.Year, b.Month);
+                                dicts[s.date.ToString("yyyy-MM")].couttheorie += (float)(s.NombredUO * s.TJ * 0.9 - s.mensuelConsultant * 1.7 - s.fraisConsultant);
 
                             }
-                            if (DateTime.Compare(b, managerPC2.EntryDate) > 0)
+                            else
                             {
-                                dicts[b.ToString("yyyy-MM")].coutreel += (float)(-managerPC2.MonthlyCost * 1.55 - managerPC2.MealCost - managerPC2.TravelPackage - managerPC2.ExceptionalCost);
-                                dicts[b.ToString("yyyy-MM")].couttheorie += (float)(-managerPC2.MonthlyCost * 1.55 - managerPC2.MealCost - managerPC2.TravelPackage - managerPC2.ExceptionalCost);
-                            }
+                                dicts[s.date.ToString("yyyy-MM")].couttheorie += (float)(s.NombredUO * s.TJ * 0.93 - s.mensuelConsultant * 1.6 - s.fraisConsultant);
 
+                            }
                         }
                     }
+                    
                 }
-                b = b.AddMonths(1);
             }
+
+            
 
 
             foreach(KeyValuePair<string, SuiviTotalViewModel> entry in dicts)

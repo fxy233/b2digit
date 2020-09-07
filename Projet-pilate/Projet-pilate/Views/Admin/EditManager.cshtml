@@ -6,7 +6,21 @@
 
 <h2>Modification d'un Manager </h2>
 
+<script>
+    var a = 1;
+    function ConfirmationDialog() {
+        if (a == 1) {
+            if (confirm("Etes vous certain de changer la date de sortie ?")) {
+                a++;
+                return true;
+            }else
+                return false;
+        } else {
+            return true;
+        }
 
+    }
+</script>
 
 @using (Html.BeginForm())
 {
@@ -46,6 +60,14 @@
         <div class="col-md-10">
             @Html.EditorFor(model => model.EntryDate, new { htmlAttributes = new { @class = "form-control" } })
             @Html.ValidationMessageFor(model => model.EntryDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.DateSortie, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.DateSortie, new { htmlAttributes = new { @class = "form-control", onfocus = "return ConfirmationDialog()" } })
+            @Html.ValidationMessageFor(model => model.DateSortie, "", new { @class = "text-danger" })
         </div>
     </div>
 

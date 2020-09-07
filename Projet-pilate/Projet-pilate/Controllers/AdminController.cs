@@ -41,7 +41,7 @@ namespace Projet_pilate.Controllers
         [HttpPost]
         public ActionResult ActivationCRA(AdminViewModel model)
         {
-
+            
             return View(model);
         }
 
@@ -56,6 +56,224 @@ namespace Projet_pilate.Controllers
             activerMois.Periode = activerMois.Periode.AddMonths(1);
 
             db.SaveChanges();
+
+            foreach (var item in db.profitCenters.ToList())
+            {
+                if(item.Owner != 0)
+                {
+                    var managerPC = db.Managers.Single(m => m.ManagerID == item.Owner);
+                    DateTime entry = (DateTime)managerPC.EntryDate;
+                    DateTime dt2 = activerMois.Periode.AddMonths(-1);
+
+                    if (DateTime.Compare(activerMois.Periode, managerPC.EntryDate)<=0)
+                    {
+
+                    }
+                    else
+                    {
+                        if (entry.Year == dt2.Year && entry.Month == dt2.Month)
+                        {
+                            Suivi suivi = new Suivi()
+                            {
+                                statu = "Produit",
+                                ProfitCenterID = item.ProfitCenterID,
+                                NomMission = "Manager",
+                                Consultant = managerPC.FirstName + " " + managerPC.LastName,
+                                NombredUO = (float)(DateTime.DaysInMonth(dt2.Year, dt2.Month) - managerPC.EntryDate.Day + 1) / (float)DateTime.DaysInMonth(dt2.Year, dt2.Month),
+                                TJ = 0,
+                                mensuelManager = (float)managerPC.MonthlyCost,
+                                fraisManager = (float)(managerPC.MealCost + managerPC.TravelPackage + managerPC.ExceptionalCost),
+                                craID = -1,
+                                date = dt2,
+                            };
+                            db.Suivis.Add(suivi);
+                            db.SaveChanges();
+                        }
+                        else
+                        {
+                            if (managerPC.DateOfDeparture != null)
+                            {
+                                DateTime dt = (DateTime)managerPC.DateOfDeparture;
+                                if (DateTime.Compare(dt,dt2)<0)
+                                {
+
+                                }
+                                else
+                                {
+                                    if (dt.Year == dt2.Year && dt.Month == dt2.Month)
+                                    {
+                                        Suivi suivi = new Suivi()
+                                        {
+                                            statu = "Produit",
+                                            ProfitCenterID = item.ProfitCenterID,
+                                            NomMission = "Manager",
+                                            Consultant = managerPC.FirstName + " " + managerPC.LastName,
+                                            NombredUO = (float)(dt.Day) / (float)DateTime.DaysInMonth(dt2.Year, dt2.Month),
+                                            TJ = 0,
+                                            mensuelManager = (float)managerPC.MonthlyCost,
+                                            fraisManager = (float)(managerPC.MealCost + managerPC.TravelPackage + managerPC.ExceptionalCost),
+                                            craID = -1,
+                                            date = dt2,
+                                        };
+                                        db.Suivis.Add(suivi);
+                                        db.SaveChanges();
+                                    }
+                                    else
+                                    {
+                                        Suivi suivi = new Suivi()
+                                        {
+                                            statu = "Produit",
+                                            ProfitCenterID = item.ProfitCenterID,
+                                            NomMission = "Manager",
+                                            Consultant = managerPC.FirstName + " " + managerPC.LastName,
+                                            NombredUO = 1,
+                                            TJ = 0,
+                                            mensuelManager = (float)managerPC.MonthlyCost,
+                                            fraisManager = (float)(managerPC.MealCost + managerPC.TravelPackage + managerPC.ExceptionalCost),
+                                            craID = -1,
+                                            date = dt2,
+                                        };
+                                        db.Suivis.Add(suivi);
+                                        db.SaveChanges();
+                                    }
+                                }
+
+                                
+                            }
+                            else
+                            {
+                                Suivi suivi = new Suivi()
+                                {
+                                    statu = "Produit",
+                                    ProfitCenterID = item.ProfitCenterID,
+                                    NomMission = "Manager",
+                                    Consultant = managerPC.FirstName + " " + managerPC.LastName,
+                                    NombredUO = 1,
+                                    TJ = 0,
+                                    mensuelManager = (float)managerPC.MonthlyCost,
+                                    fraisManager = (float)(managerPC.MealCost + managerPC.TravelPackage + managerPC.ExceptionalCost),
+                                    craID = -1,
+                                    date = dt2,
+                                };
+                                db.Suivis.Add(suivi);
+                                db.SaveChanges();
+                            }
+                        }
+                    }
+                    
+                    
+
+                    
+                }
+
+                if (item.PartOwner != 0)
+                {
+                    var managerPC = db.Managers.Single(m => m.ManagerID == item.PartOwner);
+                    DateTime entry = (DateTime)managerPC.EntryDate;
+                    DateTime dt2 = activerMois.Periode.AddMonths(-1);
+                    if (DateTime.Compare(activerMois.Periode, managerPC.EntryDate) <= 0 )
+                    {
+
+                    }
+                    else
+                    {
+                        if (entry.Year == dt2.Year && entry.Month == dt2.Month)
+                        {
+                            Suivi suivi = new Suivi()
+                            {
+                                statu = "Produit",
+                                ProfitCenterID = item.ProfitCenterID,
+                                NomMission = "Manager",
+                                Consultant = managerPC.FirstName + " " + managerPC.LastName,
+                                NombredUO = (float)(DateTime.DaysInMonth(dt2.Year, dt2.Month) - managerPC.EntryDate.Day + 1) / (float)DateTime.DaysInMonth(dt2.Year, dt2.Month),
+                                TJ = 0,
+                                mensuelManager = (float)managerPC.MonthlyCost,
+                                fraisManager = (float)(managerPC.MealCost + managerPC.TravelPackage + managerPC.ExceptionalCost),
+                                craID = -1,
+                                date = dt2,
+                            };
+                            db.Suivis.Add(suivi);
+                            db.SaveChanges();
+                        }
+                        else
+                        {
+                            if (managerPC.DateOfDeparture != null)
+                            {
+                                DateTime dt = (DateTime)managerPC.DateOfDeparture;
+                                if (DateTime.Compare(dt, dt2) < 0)
+                                {
+
+                                }
+                                else
+                                {
+                                    if (dt.Year == dt2.Year && dt.Month == dt2.Month)
+                                    {
+                                        Suivi suivi = new Suivi()
+                                        {
+                                            statu = "Produit",
+                                            ProfitCenterID = item.ProfitCenterID,
+                                            NomMission = "Manager",
+                                            Consultant = managerPC.FirstName + " " + managerPC.LastName,
+                                            NombredUO = (float)(dt.Day) / (float)DateTime.DaysInMonth(dt2.Year, dt2.Month),
+                                            TJ = 0,
+                                            mensuelManager = (float)managerPC.MonthlyCost,
+                                            fraisManager = (float)(managerPC.MealCost + managerPC.TravelPackage + managerPC.ExceptionalCost),
+                                            craID = -1,
+                                            date = dt2,
+                                        };
+                                        db.Suivis.Add(suivi);
+                                        db.SaveChanges();
+                                    }
+                                    else
+                                    {
+                                        Suivi suivi = new Suivi()
+                                        {
+                                            statu = "Produit",
+                                            ProfitCenterID = item.ProfitCenterID,
+                                            NomMission = "Manager",
+                                            Consultant = managerPC.FirstName + " " + managerPC.LastName,
+                                            NombredUO = 1,
+                                            TJ = 0,
+                                            mensuelManager = (float)managerPC.MonthlyCost,
+                                            fraisManager = (float)(managerPC.MealCost + managerPC.TravelPackage + managerPC.ExceptionalCost),
+                                            craID = -1,
+                                            date = dt2,
+                                        };
+                                        db.Suivis.Add(suivi);
+                                        db.SaveChanges();
+                                    }
+                                }
+                               
+                            }
+                            else
+                            {
+                                Suivi suivi = new Suivi()
+                                {
+                                    statu = "Produit",
+                                    ProfitCenterID = item.ProfitCenterID,
+                                    NomMission = "Manager",
+                                    Consultant = managerPC.FirstName + " " + managerPC.LastName,
+                                    NombredUO = 1,
+                                    TJ = 0,
+                                    mensuelManager = (float)managerPC.MonthlyCost,
+                                    fraisManager = (float)(managerPC.MealCost + managerPC.TravelPackage + managerPC.ExceptionalCost),
+                                    craID = -1,
+                                    date = dt2,
+                                };
+                                db.Suivis.Add(suivi);
+                                db.SaveChanges();
+                            }
+                        }
+                    }
+                    
+
+
+                }
+
+
+            }
+
+            
 
             return View("ActivationSuccess", model);
         }
@@ -204,6 +422,7 @@ namespace Projet_pilate.Controllers
                 ExceptionalCost = manager.ExceptionalCost,
                 Subsidiary = manager.Subsidiary.Name,
                 role = manager.role,
+                DateSortie = manager.DateOfDeparture == null ? new DateTime() : (DateTime)manager.DateOfDeparture,
             };
 
             var subsidiaries = db.Subsidiaries.ToList();
@@ -247,6 +466,7 @@ namespace Projet_pilate.Controllers
 
             }
 
+            DateTime? nullDateTime = null;
 
             manager.FirstName = model.FirstName;
             manager.LastName = model.LastName;
@@ -257,6 +477,8 @@ namespace Projet_pilate.Controllers
             manager.ExceptionalCost = model.ExceptionalCost;
             manager.MonthlyCost = model.Cost;
             manager.role = Request.Form["role"];
+            manager.DateOfDeparture = model.DateSortie == new DateTime() ? nullDateTime : model.DateSortie;
+
 
             var currentSubsidiary = manager.Subsidiary;
             currentSubsidiary.Managers.Remove(manager);
@@ -674,8 +896,12 @@ namespace Projet_pilate.Controllers
                 SubsidiaryName = consultant.Subsidiary.Name,
                 ProfitCenterName = consultant.ProfitCenter.Name,
                 Status = consultant.Status,
-      
-            };
+                DateSortie = consultant.DateOfDeparture==null?new DateTime():(DateTime)consultant.DateOfDeparture,
+
+
+        };
+            
+
 
             if (consultant.DailyCost == 0)
             {
@@ -801,12 +1027,13 @@ namespace Projet_pilate.Controllers
             ProfitCenterName = Request.Form["ProfitCenter"].ToString();
             newProfitCenter = db.profitCenters.Single(s => s.Name == ProfitCenterName);
             newSubsidiary = db.Subsidiaries.Single(s => s.Name == SubsidiaryName);
+            DateTime dt = new DateTime();
 
             consultant.FirstName = model.FirstName;
             consultant.LastName = model.LastName;
             consultant.Email = model.Email;
             consultant.EntryDate = model.EntryDate;
-            consultant.DateOfDeparture = nullDateTime;
+            consultant.DateOfDeparture = model.DateSortie==dt?nullDateTime:model.DateSortie;
             consultant.Status = Request.Form["Status"].ToString();
             consultant.MealCost = model.MealCost;
             consultant.TravelPackage = model.TravelPackage;

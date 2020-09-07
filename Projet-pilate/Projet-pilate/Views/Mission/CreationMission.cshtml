@@ -29,15 +29,17 @@
         <label class="control-label col-md-2">Contact client</label>
         <div class="col-md-10">
             <select class="form-control" id="contactId" asp-for="contactId" name="contactId" required>
-            <option selected>@ViewData["contact"]</option>
-            @{
-                        ApplicationDbContext db = new ApplicationDbContext();
-                        foreach (var contact in db.CompanyContacts.ToList())
-                        {
-                            string c = contact.FirstName + " " + contact.LastName + "(" + contact.CompanyName + ")";
-                            <option value="@c" class="contactId">@c</option>
-                        };
-            }
+                <option selected>@ViewData["contact"]</option>
+                @{
+                    ApplicationDbContext db = new ApplicationDbContext();
+                    foreach (var contact in db.CompanyContacts.ToList())
+                    {
+                        string c = contact.FirstName + " " + contact.LastName + "(" + contact.CompanyName + ")";
+                        <option value="@c" class="contactId">@c</option>
+                    };
+                    <option value="test" class="contactId">test</option>
+
+                }
             </select>
 
         </div>

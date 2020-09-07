@@ -95,7 +95,7 @@ namespace Projet_pilate.Controllers
                     model.ContactMail = db.CompanyContacts.Select(c => c.Mail).ToList();
                     model.ConsultantNames = consultantsNames;
 
-                    ViewData["contact"] = nomContact;
+                    ViewData["contact"] = Request.Form["ContactId"];
                     ViewData["consultant"] = SelectedConsultant;
                     ViewData["periodicite"] = periodicite;
 
@@ -130,7 +130,7 @@ namespace Projet_pilate.Controllers
                 model.ContactMail = db.CompanyContacts.Select(c => c.Mail).ToList();
                 model.ConsultantNames = consultantsNames;
 
-                ViewData["contact"] = nomContact;
+                ViewData["contact"] = Request.Form["ContactId"];
                 ViewData["consultant"] = SelectedConsultant;
                 ViewData["periodicite"] = periodicite;
 
@@ -187,7 +187,7 @@ namespace Projet_pilate.Controllers
                 model.ContactMail = db.CompanyContacts.Select(c => c.Mail).ToList();
                 model.ConsultantNames = consultantsNames;
 
-                ViewData["contact"] = nomContact;
+                ViewData["contact"] = Request.Form["ContactId"];
                 ViewData["consultant"] = SelectedConsultant;
                 ViewData["periodicite"] = periodicite;
 
@@ -218,40 +218,7 @@ namespace Projet_pilate.Controllers
 
             model.MissionEncours = missionEncours;
 
-            /*
-            if (model.MissionEncours.Count > 0)
-            {
-                array = Request.Form["ContactId"].ToString().Split('(');
-                array2 = array[0].Split(' ');
-                foreach (var item in list)
-                {
-                    if (item.FirstName == array2[0] && item.LastName == array2[1] && item.CompanyName == array[1].Split(')')[0])
-                    {
-                        nomContact = item.Mail;
-                        
-                    }
-                }
-                SelectedConsultant = Request.Form["ConsultantId"].ToString();
-                periodicite = Request.Form["PeriodeId"].ToString();
-
-                List<Consultant> consultants = db.Consultants.ToList();
-                List<string> consultantsNames = new List<string>();
-                foreach (var consult in consultants)
-                {
-                    consultantsNames.Add(consult.FirstName + " " + consult.LastName);
-                }
-
-                model.ContactMail = db.CompanyContacts.Select(c => c.Mail).ToList();
-                model.ConsultantNames = consultantsNames;
-
-                ViewData["contact"] = nomContact;
-                ViewData["consultant"] = SelectedConsultant;
-                ViewData["periodicite"] = periodicite;
-
-                return View(model);
-            }
-            */
-
+            
             employees.Add(consultant);
 
             string cmpname = array[1].Split(')')[0];
