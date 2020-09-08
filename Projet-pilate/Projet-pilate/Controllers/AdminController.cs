@@ -477,8 +477,11 @@ namespace Projet_pilate.Controllers
             manager.ExceptionalCost = model.ExceptionalCost;
             manager.MonthlyCost = model.Cost;
             manager.role = Request.Form["role"];
-            manager.DateOfDeparture = model.DateSortie == new DateTime() ? nullDateTime : model.DateSortie;
+            if (Request["sortie"] == "sortie")
+            {
+                manager.DateOfDeparture = model.DateSortie == new DateTime() ? nullDateTime : model.DateSortie;
 
+            }
 
             var currentSubsidiary = manager.Subsidiary;
             currentSubsidiary.Managers.Remove(manager);
@@ -1033,7 +1036,12 @@ namespace Projet_pilate.Controllers
             consultant.LastName = model.LastName;
             consultant.Email = model.Email;
             consultant.EntryDate = model.EntryDate;
-            consultant.DateOfDeparture = model.DateSortie==dt?nullDateTime:model.DateSortie;
+            if (Request["sortie"]=="sortie")
+            {
+                consultant.DateOfDeparture = model.DateSortie == dt ? nullDateTime : model.DateSortie;
+
+            }
+            
             consultant.Status = Request.Form["Status"].ToString();
             consultant.MealCost = model.MealCost;
             consultant.TravelPackage = model.TravelPackage;
@@ -1112,11 +1120,26 @@ namespace Projet_pilate.Controllers
                 List<int> pIdlist = new List<int>();
                 foreach (var item in db.profitCenters.ToList())
                 {
-                    var manager = db.Managers.Single(m => m.ManagerID == item.Owner);
-                    if (manager.FirstName + " " + manager.LastName == name)
+                    try
                     {
-                        pIdlist.Add(item.ProfitCenterID);
+                        Manager manager = db.Managers.Single(m => m.ManagerID == item.Owner);
+                        if (manager.FirstName + " " + manager.LastName == name)
+                        {
+                            pIdlist.Add(item.ProfitCenterID);
+                        }
+                    }catch(Exception)
+                    { }
+
+                    try
+                    {
+                        Manager manager = db.Managers.Single(m => m.ManagerID == item.PartOwner);
+                        if (manager.FirstName + " " + manager.LastName == name)
+                        {
+                            pIdlist.Add(item.ProfitCenterID);
+                        }
                     }
+                    catch (Exception)
+                    { }
                 }
                 var pc = db.profitCenters.Single(p => p.ProfitCenterID == consultantToDelete.ProfitCenterID);
                 Boolean ability = false;
@@ -1136,11 +1159,7 @@ namespace Projet_pilate.Controllers
                         
                     }
                 }
-                var partowner = db.Managers.Single(m => m.ManagerID == pc.PartOwner);
-                if (name == partowner.FirstName + " " + partowner.LastName)
-                {
-                    ability = true;
-                }
+
 
                 if (!ability)
                 {
@@ -1178,10 +1197,34 @@ namespace Projet_pilate.Controllers
             }
             catch (Exception)
             {
-                foreach (var consultant in consultants)
-                {
-                    var subsidiary = db.Subsidiaries.Single(s => s.SubsidiaryID == consultant.SubsidiaryID);
 
+                foreach (var consultant in db.Consultants.ToList())
+                {
+                    double cost = 0;
+                    if (consultant.Status == "Consultant" || consultant.Status == "Salarié")
+                    {
+                        if (consultant.DailyCost == 0)
+                        {
+                            cost = consultant.MonthlyCost * 1.5 + consultant.MealCost + consultant.ExceptionalCost + consultant.TravelPackage;
+                            cost = cost * 12 / 218;
+                        }
+                        else
+                        {
+                            cost = consultant.DailyCost * 1.5 + consultant.MealCost + consultant.ExceptionalCost + consultant.TravelPackage;
+                        }
+                    }
+                    if (consultant.Status == "Sous-Traitant")
+                    {
+                        if (consultant.DailyCost == 0)
+                        {
+                            cost = consultant.MonthlyCost + consultant.MealCost + consultant.ExceptionalCost + consultant.TravelPackage;
+                            cost = cost * 12 / 218;
+                        }
+                        else
+                        {
+                            cost = consultant.DailyCost + consultant.MealCost + consultant.ExceptionalCost + consultant.TravelPackage;
+                        }
+                    }
                     DetailConsultantViewModel model = new DetailConsultantViewModel()
                     {
                         ID = consultant.ConsultantID,
@@ -1190,11 +1233,12 @@ namespace Projet_pilate.Controllers
                         Email = consultant.Email,
                         EntryDate = consultant.EntryDate,
                         Status = consultant.Status,
-                        DailyCost = consultant.DailyCost,
-                        MonthlyCost = consultant.MonthlyCost,
+                        DailyCost = cost,
+                        //MonthlyCost = consultant.MonthlyCost,
                         ProfitCenter = db.profitCenters.Single(p => p.ProfitCenterID == consultant.ProfitCenterID).Name,
                         Subsidiary = db.Subsidiaries.Single(s => s.SubsidiaryID == consultant.SubsidiaryID).Name,
                     };
+
                     models.Add(model);
                 }
 

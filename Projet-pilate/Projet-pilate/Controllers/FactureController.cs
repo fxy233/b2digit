@@ -50,8 +50,7 @@ namespace Projet_pilate.Controllers
                     continue;
                 }
 
-                var M = db.Missions.Single(m => m.Name == f.mission);
-                var C = db.Consultants.Single(c => c.ConsultantID == M.ConsultantID);
+                Consultant C = db.Consultants.Single(c => c.ConsultantID == f.ConsultantId);
 
                 FactureSimpleViewModel model = new FactureSimpleViewModel()
                 {
@@ -143,8 +142,8 @@ namespace Projet_pilate.Controllers
                 {
                     continue;
                 }
-                var M = db.Missions.Single(m => m.Name == f.mission);
-                var C = db.Consultants.Single(c => c.ConsultantID == M.ConsultantID);
+                Consultant C = db.Consultants.Single(c => c.ConsultantID == f.ConsultantId);
+
                 FactureSimpleViewModel model = new FactureSimpleViewModel()
                 {
                     ID = f.FactureID,
@@ -324,7 +323,7 @@ namespace Projet_pilate.Controllers
 
 
             string nomMission = Request.Form["Mission"];
-            var missionItem = db.Missions.Single(m => m.Name == nomMission);
+            //var missionItem = db.Missions.Single(m => m.Name == nomMission);
       
            
             sub.FactureID++;
@@ -340,8 +339,8 @@ namespace Projet_pilate.Controllers
             facture.AdresseFacturation = Request.Form["ClientAdresse"];
             facture.type = Request.Form["Type"];
             facture.DernierEnregistrer = DateTime.Now;
-            facture.Delai = missionItem.Delai;
-            facture.DesignationFacturation = missionItem.DesignationFacturation;
+            //facture.Delai = missionItem.Delai;
+            facture.DesignationFacturation = model.designation;
             facture.DateRegelement = model.dateReglement;
             facture.reference = model.Reference;
             facture.referenceBancaire = model.ReferenceBancaire;
@@ -487,6 +486,9 @@ namespace Projet_pilate.Controllers
                     break;
             }
 
+            Mission M = db.Missions.Single(m => m.Name == nomMission);
+            
+
             Facture facture = new Facture()
             {
                 mission = nomMission,
@@ -512,6 +514,7 @@ namespace Projet_pilate.Controllers
                 DesignationFacturation = missionItem.DesignationFacturation,
                 DateRegelement = reglement,
                 CraId=-1,
+                ConsultantId = M.ConsultantID,
             };
 
             db.Factures.Add(facture);
@@ -564,8 +567,7 @@ namespace Projet_pilate.Controllers
 
             ViewBag.date = facture.MoisDeFacturation.ToString("dd MMMM yyyy", System.Globalization.CultureInfo.CurrentCulture);
 
-            var mission = db.Missions.Single(m => m.Name == facture.mission);
-            FacturePDFViewModel model = new FacturePDFViewModel() {
+                FacturePDFViewModel model = new FacturePDFViewModel() {
                 ID = id,
                 EmetInfo = emetInfo,
                 Siren = sub.Siren,
@@ -583,7 +585,7 @@ namespace Projet_pilate.Controllers
                 BIC = sub.BIC,
                 TVAIntra = sub.TVAIntra,
                 Mention = facture.mention,
-                Designation = mission.DesignationFacturation,
+                Designation = facture.DesignationFacturation,
                 Reference = facture.reference,
                 ReferenceBancaires = facture.referenceBancaire,
 
@@ -638,7 +640,6 @@ namespace Projet_pilate.Controllers
 
             ViewBag.date = facture.MoisDeFacturation.ToString("dd MMMM yyyy", System.Globalization.CultureInfo.CurrentCulture);
 
-            var mission = db.Missions.Single(m => m.Name == facture.mission);
             FacturePDFViewModel model = new FacturePDFViewModel()
             {
                 ID = id,
@@ -658,7 +659,7 @@ namespace Projet_pilate.Controllers
                 BIC = sub.BIC,
                 TVAIntra = sub.TVAIntra,
                 Mention = db.Infos.ToList().Count == 0 ? "" : db.Infos.Single().Mention,
-                Designation = mission.DesignationFacturation,
+                Designation = facture.DesignationFacturation,
                 Reference = facture.reference,
                 ReferenceBancaires = facture.referenceBancaire,
 
@@ -1955,6 +1956,7 @@ namespace Projet_pilate.Controllers
                     DateRegelement = reglement,
                     CraId = -999,
                     mention = facturefusionner.mention,
+                    ConsultantId = facturefusionner.ConsultantId,
                 };
 
                 foreach(var item in selectionlist)
@@ -2008,6 +2010,7 @@ namespace Projet_pilate.Controllers
                     DateRegelement = reglement,
                     CraId = -999,
                     mention = facturefusionner.mention,
+                    ConsultantId = facturefusionner.ConsultantId,
 
                 };
 
@@ -2058,8 +2061,8 @@ namespace Projet_pilate.Controllers
                 {
                     continue;
                 }
-                var M = db.Missions.Single(m => m.Name == f.mission);
-                var C = db.Consultants.Single(c => c.ConsultantID == M.ConsultantID);
+                
+                var C = db.Consultants.Single(c => c.ConsultantID == f.ConsultantId);
                 FactureSimpleViewModel model = new FactureSimpleViewModel()
                 {
                     ID = f.FactureID,
@@ -2087,8 +2090,15 @@ namespace Projet_pilate.Controllers
         {
             ApplicationDbContext db = new ApplicationDbContext();
             var facture = db.Factures.Single(f => f.FactureID == id);
-
-            var mission = db.Missions.Single(m => m.Name == facture.mission);
+            Mission mission = null;
+            try
+            {
+                mission = db.Missions.Single(m => m.Name == facture.mission);
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Detail", "Facture", new { @id = id });
+            }
             var BC = db.Subsidiaries.Single(s => s.SubsidiaryID == mission.PrincipalBCID);
             var contact = db.CompanyContacts.Single(c => c.CompanyContactID == mission.CompanyContactID);
             var company = db.Companies.Single(c => c.CompanyID == contact.CompanyID);
@@ -2169,8 +2179,7 @@ namespace Projet_pilate.Controllers
                 {
                     continue;
                 }
-                var M = db.Missions.Single(m => m.Name == f.mission);
-                var C = db.Consultants.Single(c => c.ConsultantID == M.ConsultantID);
+                var C = db.Consultants.Single(c => c.ConsultantID == f.ConsultantId);
                 FactureSimpleViewModel model = new FactureSimpleViewModel()
                 {
                     ID = f.FactureHistoriqueID,
@@ -2235,7 +2244,6 @@ namespace Projet_pilate.Controllers
 
             ViewBag.date = facture.MoisDeFacturation.ToString("dd MMMM yyyy", System.Globalization.CultureInfo.CurrentCulture);
 
-            var mission = db.Missions.Single(m => m.Name == facture.mission);
             FacturePDFViewModel model = new FacturePDFViewModel()
             {
                 ID = id,
@@ -2255,7 +2263,7 @@ namespace Projet_pilate.Controllers
                 BIC = sub.BIC,
                 TVAIntra = sub.TVAIntra,
                 Mention = db.Infos.ToList().Count == 0 ? "" : db.Infos.Single().Mention,
-                Designation = mission.DesignationFacturation,
+                Designation = facture.DesignationFacturation,
                 Reference = facture.reference,
                 ReferenceBancaires = facture.referenceBancaire,
 
@@ -2306,7 +2314,7 @@ namespace Projet_pilate.Controllers
                             Emise = item.Emise,
                             payee = item.payee,
                             annulee = item.annulee,
-
+                            ConsultantId = item.ConsultantId,
                         };
                         db.FactureHistoriques.Add(fh);
                         db.Factures.Remove(item);

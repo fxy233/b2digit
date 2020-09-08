@@ -535,21 +535,7 @@ namespace Projet_pilate.Controllers
             var missionDelete = db.Missions.Single(m => m.MissionID == id);
             var monthCurrent = Int32.Parse(DateTime.Now.Month.ToString());
             var yearCurrent = Int32.Parse(DateTime.Now.Year.ToString());
-            //var monthTermine = Int32.Parse(missionDelete.End.Month.ToString());
-            //var yearTermine = Int32.Parse(missionDelete.End.Year.ToString());
-            /*
-            if (yearCurrent > yearTermine || (yearCurrent == yearTermine && monthCurrent-1 > monthTermine))
-            {
-                //db.Missions.Remove(missionDelete);
-                //missionDelete.exist = false;
-
-
-
-                missionDelete.inexist = true;
-                db.SaveChanges();
-                return RedirectToAction("ListeMissions", "Mission");
-            }else
-            {*/
+            
                 
                 var actlist = db.Activities.ToList();
                 Boolean recent = false;
@@ -564,12 +550,12 @@ namespace Projet_pilate.Controllers
                         }
                     }
                 }
-
+                /*
                 if (DateTime.Compare(missionDelete.End.AddMonths(1), DateTime.Now) >= 0)
-            {
-                recent = true;
-            }
-
+                {
+                    recent = true;
+                }
+                */
                 if(!recent)
                 {
                     missionDelete.inexist = true;

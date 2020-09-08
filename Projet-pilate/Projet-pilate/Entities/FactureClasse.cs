@@ -45,6 +45,7 @@ namespace Projet_pilate.Entities
 
         public string mention { get; set; }
         public int CraId { get; set; }
+        public int ConsultantId { get; set; }
 
     }
 
@@ -87,6 +88,8 @@ namespace Projet_pilate.Entities
         public bool annulee { get; set; }
         public string mention { get; set; }
         public int CraId { get; set; }
+        public int ConsultantId { get; set; }
+
 
     }
 

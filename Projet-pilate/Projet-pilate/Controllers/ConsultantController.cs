@@ -466,7 +466,7 @@ namespace Projet_pilate.Controllers
                 {
                     mission = mission.Name,
                     FactureID = Id,
-                    NomFacture = "FAE"+ Id,
+                    NomFacture = "FAE" + Id,
                     MoisDeFacturation = time,
                     InfoFacturation = mission.InfoFacturation,
                     PrincipalBC = BC.Name,
@@ -489,7 +489,8 @@ namespace Projet_pilate.Controllers
                     reference = mission.Reference,
                     referenceBancaire = BC.Name,
                     CraId = CraID,
-                    mention = db.Infos.ToList().Count==0? "" : db.Infos.Single().Mention,
+                    mention = db.Infos.ToList().Count == 0 ? "" : db.Infos.Single().Mention,
+                    ConsultantId = mission.ConsultantID,
                 };
 
                 db.Factures.Add(facture);
@@ -529,7 +530,7 @@ namespace Projet_pilate.Controllers
                         referenceBancaire = BC.Name,
                         CraId = CraID,
                         mention = db.Infos.ToList().Count == 0 ? "" : db.Infos.Single().Mention,
-
+                        ConsultantId = mission.ConsultantID,
                     };
                     db.Factures.Add(factureInt);
                     
@@ -568,6 +569,7 @@ namespace Projet_pilate.Controllers
                         referenceBancaire = BC.Name,
                         CraId = CraID,
                         mention = db.Infos.ToList().Count == 0 ? "" : db.Infos.Single().Mention,
+                        ConsultantId = mission.ConsultantID,
 
                     };
                     db.Factures.Add(factureInt);

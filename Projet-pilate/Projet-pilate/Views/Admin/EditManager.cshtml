@@ -6,31 +6,36 @@
 
 <h2>Modification d'un Manager </h2>
 
-<script>
-    var a = 1;
-    function ConfirmationDialog() {
-        if (a == 1) {
-            if (confirm("Etes vous certain de changer la date de sortie ?")) {
-                a++;
-                return true;
-            }else
-                return false;
-        } else {
-            return true;
-        }
+<script type="text/javascript" src="~/Scripts/jquery-3.5.1.js"></script>
 
-    }
+<script>
+
+    $(document).ready(function () {
+        $("input[name='DateSortie']").removeAttr("data-val");
+        $("input[name='DateSortie']").removeAttr("data-val-required");
+
+        $('input[name="sortie"]').on('change', function () {
+            if (this.checked) {
+                $("input[name='DateSortie']").prop("readonly", false);
+            } else {
+                $("input[name='DateSortie']").prop("readonly", true);
+
+            }
+        });
+        $("footer p").text("");
+    })
 </script>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
-<div class="form-horizontal">
+<div >
     <hr />
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     @Html.HiddenFor(model => model.ID)
 
+<div class="col-md-6 form-horizontal">
     <div class="form-group">
         @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
@@ -64,11 +69,17 @@
     </div>
 
     <div class="form-group">
+        <label class="col-md-offset-1 col-md-2" style="margin-right:0px; margin-left:0px;padding-left:40px;">Sortie</label>
+        <div class="col-md-2" style="margin-left:0px;"><input type="checkbox" name="sortie" value="sortie"></div>
+    </div>
+    <div class="form-group">
         @Html.LabelFor(model => model.DateSortie, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.DateSortie, new { htmlAttributes = new { @class = "form-control", onfocus = "return ConfirmationDialog()" } })
-            @Html.ValidationMessageFor(model => model.DateSortie, "", new { @class = "text-danger" })
+            @Html.EditorFor(model => model.DateSortie, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+
         </div>
+
     </div>
 
     <div class="form-group">
@@ -84,7 +95,9 @@
             </select>
         </div>
     </div>
-
+</div>
+    
+<div class="col-md-6 form-horizontal">
     <div class="form-group">
         <label class="col-md-2 control-label" for="role">Rôle</label>
         <div class="col-md-10">
@@ -130,15 +143,17 @@
     </div>
 
     <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
+        <div class="col-md-2">
             <input type="submit" value="Valider" class="btn btn-primary btn-large" />
         </div>
+        <div class="col-md-2">
+            @Html.ActionLink("Retour à la liste", "ManagerList", "Manager", new { @class = "btn btn-primary btn-large" })
+        </div>
     </div>
+</div>
+    
 </div>
 
 
 }
 
-<div>
-    @Html.ActionLink("Retour à la liste", "ManagerList", "Manager", new { @class = "btn btn-primary btn-large" })
-</div>

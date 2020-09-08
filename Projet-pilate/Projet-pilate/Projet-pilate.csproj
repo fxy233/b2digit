@@ -603,6 +603,14 @@
     <Compile Include="Migrations\202009021205518_updatehistorique8.designer.cs">
       <DependentUpon>202009021205518_updatehistorique8.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202009080828436_factureCon.cs" />
+    <Compile Include="Migrations\202009080828436_factureCon.designer.cs">
+      <DependentUpon>202009080828436_factureCon.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009081018010_factureCon2.cs" />
+    <Compile Include="Migrations\202009081018010_factureCon2.designer.cs">
+      <DependentUpon>202009081018010_factureCon2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityViewModels.cs" />
@@ -999,6 +1007,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202009021205518_updatehistorique8.resx">
       <DependentUpon>202009021205518_updatehistorique8.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009080828436_factureCon.resx">
+      <DependentUpon>202009080828436_factureCon.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009081018010_factureCon2.resx">
+      <DependentUpon>202009081018010_factureCon2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
