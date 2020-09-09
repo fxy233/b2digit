@@ -706,6 +706,40 @@ namespace Projet_pilate.Controllers
 
                 return View(model);
             }
+            foreach(var item in db.Consultants.ToList())
+            {
+                if (item.FirstName+" "+item.LastName == model.FirstName+" "+model.LastName)
+                {
+                    selectedTypeCost = Request.Form["CostType"].ToString();
+                    SubsidiaryName = Request.Form["Subsidiary"].ToString();
+                    ProfitCenterName = Request.Form["ProfitCenter"].ToString();
+                    var profitCenters = db.profitCenters.ToList();
+                    var subsidiaries = db.Subsidiaries.ToList();
+                    List<string> profitCenterNames = new List<string>();
+                    List<string> subsidiariesNames = new List<string>();
+
+                    foreach (var profit in profitCenters)
+                    {
+                        profitCenterNames.Add(profit.Name);
+                    }
+                    model.ProfitCenters = profitCenterNames;
+
+                    foreach (var sub in subsidiaries)
+                    {
+                        subsidiariesNames.Add(sub.Name);
+                    }
+                    model.Subsidiaries = subsidiariesNames;
+
+                    ViewData["Subsidiary"] = SubsidiaryName;
+                    ViewData["ProfitCenter"] = ProfitCenterName;
+                    ViewData["CostType"] = selectedTypeCost;
+
+
+                    string message = "Un consultant avec le même nom et prénom exite déjà";
+                    ModelState.AddModelError(string.Empty, message);
+                    return View(model);
+                }
+            }
 
                 selectedTypeCost = Request.Form["CostType"].ToString();
                 SubsidiaryName = Request.Form["Subsidiary"].ToString();

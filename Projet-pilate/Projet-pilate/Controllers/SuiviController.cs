@@ -246,15 +246,13 @@ namespace Projet_pilate.Controllers
                     }
                     else
                     {
-                        var mission = db.Missions.Single(m => m.Name == s.NomMission);
-                        var companycontact = db.CompanyContacts.Single(c => c.CompanyContactID == mission.CompanyContactID);
 
 
 
                         model.ID = s.SuiviID;
                         model.Consultant = s.Consultant;
                         model.Mission = s.NomMission;
-                        model.Client = companycontact.CompanyName;
+                        model.Client = s.client;
                         model.Nbj = s.NombredUO;
                         model.Tj = s.TJ;
                         model.CA = (int)(s.NombredUO * s.TJ);

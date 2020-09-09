@@ -149,13 +149,18 @@ namespace Projet_pilate.Controllers
                 }
             }
             SelectedConsultant = Request.Form["ConsultantId"].ToString();
-            var tabPrenomNom = SelectedConsultant.Split(' ');
-            nomConsultant = tabPrenomNom[0];
             periodicite = Request.Form["PeriodeId"].ToString();
 
             List<Consultant> employees = new List<Consultant>();
 
-            Consultant consultant = db.Consultants.SingleOrDefault(u => u.FirstName == nomConsultant);
+            Consultant consultant = null;
+            foreach(var item in db.Consultants.ToList())
+            {
+                if (item.FirstName+" "+item.LastName == SelectedConsultant)
+                {
+                    consultant = item;
+                }
+            }
             ApplicationUser sessionUser = db.Users.SingleOrDefault(b => b.UserName == User.Identity.Name);
 
             List<Mission> missionsConsutant = consultant.Missions.ToList();

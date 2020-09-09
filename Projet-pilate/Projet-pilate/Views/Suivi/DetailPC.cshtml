@@ -140,7 +140,7 @@
     <tbody>
         @foreach (var item in Model)
         {
-            if (item.Mission == "IC"||item.Mission=="Aucun")
+            if (item.Mission == "IC" || item.Mission == "Aucun")
             {
                 <tr>
 
@@ -173,7 +173,7 @@
                 continue;
             }
 
-
+            @*
             var mission = db.Missions.Single(m => m.Name == item.Mission);
             if (mission.ProfitCenterID != ViewBag.id2)
             {
@@ -236,8 +236,36 @@
                     </td>
 
                 </tr>
-            }
+            }*@
 
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Consultant)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Mission)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Client)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nbj)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Tj)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CA)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.mois)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cout)
+                </td>
+
+            </tr>
 
 
 

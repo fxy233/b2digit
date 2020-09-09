@@ -1761,7 +1761,7 @@ namespace Projet_pilate.Controllers
                 DesignationFacturation = facture.DesignationFacturation,
                 DateRegelement = facture.DateRegelement,
                 type = "Avoir",
-                
+                ConsultantId = facture.ConsultantId,
 
             };
             db.Factures.Add(factureAvoir);
@@ -1957,6 +1957,8 @@ namespace Projet_pilate.Controllers
                     CraId = -999,
                     mention = facturefusionner.mention,
                     ConsultantId = facturefusionner.ConsultantId,
+                    reference = facturefusionner.reference,
+                    referenceBancaire = facturefusionner.referenceBancaire,
                 };
 
                 foreach(var item in selectionlist)
@@ -2011,7 +2013,8 @@ namespace Projet_pilate.Controllers
                     CraId = -999,
                     mention = facturefusionner.mention,
                     ConsultantId = facturefusionner.ConsultantId,
-
+                    reference = facturefusionner.reference,
+                    referenceBancaire = facturefusionner.referenceBancaire,
                 };
 
                 foreach (var item in selectionlist)

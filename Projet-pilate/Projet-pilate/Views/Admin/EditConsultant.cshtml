@@ -13,7 +13,6 @@
     $(document).ready(function () {
         $("input[name='DateSortie']").removeAttr("data-val");
         $("input[name='DateSortie']").removeAttr("data-val-required");
-
         $('input[name="sortie"]').on('change', function () {
             if (this.checked) {
                 $("input[name='DateSortie']").prop("readonly", false);
@@ -36,81 +35,104 @@
 <div>
     <hr />
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <div class="col-md-6 form-horizontal">
-        <div class="form-group">
-            @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
-            </div>
+<div class="col-md-6 form-horizontal">
+    <div class="form-group">
+        @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
         </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.EntryDate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-6">
-                @Html.EditorFor(model => model.EntryDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.EntryDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-md-offset-1 col-md-2" style="margin-right:0px; margin-left:0px;padding-left:40px;">Sortie</label>
-            <div class="col-md-2" style="margin-left:0px;"><input type="checkbox" name="sortie" value="sortie"></div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.DateSortie, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.DateSortie, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
-
-            </div>
-
-        </div>
-
-
-        <div class="form-group">
-            <label class="col-md-2 control-label" for="Subsidiary">Filiale</label>
-            <div class="col-md-10">
-                <select class="form-control" id="Subsidiary" name="Subsidiary" required>
-                    <option selected>@Model.SubsidiaryName</option>
-                    @foreach (var subsidiary in Model.Subsidiaries)
-                    {
-                        <option value="@subsidiary">@subsidiary</option>
-                    }
-                </select>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-md-2 control-label" for="ProfitCenter">Centre de profit</label>
-            <div class="col-md-10">
-                <select class="form-control" id="ProfitCenter" name="ProfitCenter" required>
-                    <option selected>@Model.ProfitCenterName</option>
-                    @foreach (var profitCenter in Model.ProfitCenters)
-                    {
-                        <option value="@profitCenter">@profitCenter</option>
-                    }
-                </select>
-            </div>
-        </div>
-
-
     </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.EntryDate, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-6">
+            @Html.EditorFor(model => model.EntryDate, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.EntryDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    @{
+        if (Model.DateSortie == new DateTime())
+        {
+            <div class="form-group">
+                <label class="col-md-offset-1 col-md-2" style="margin-right:0px; margin-left:0px;padding-left:40px;">Sortie</label>
+                <div class="col-md-2" style="margin-left:0px;"><input type="checkbox" name="sortie" value="sortie"></div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.DateSortie, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.DateSortie, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+
+                </div>
+
+            </div>
+        }
+        else
+        {
+            <div class="form-group">
+                <label class="col-md-offset-1 col-md-2" style="margin-right:0px; margin-left:0px;padding-left:40px;">Sortie</label>
+                <div class="col-md-2" style="margin-left:0px;"><input type="checkbox" name="sortie" value="sortie" checked="checked"></div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.DateSortie, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.DateSortie, new { htmlAttributes = new { @class = "form-control"} })
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+
+                </div>
+
+            </div>
+        }
+    }
+
+
+
+
+    <div class="form-group">
+        <label class="col-md-2 control-label" for="Subsidiary">Filiale</label>
+        <div class="col-md-10">
+            <select class="form-control" id="Subsidiary" name="Subsidiary" required>
+                <option selected>@Model.SubsidiaryName</option>
+                @foreach (var subsidiary in Model.Subsidiaries)
+                {
+                    <option value="@subsidiary">@subsidiary</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label" for="ProfitCenter">Centre de profit</label>
+        <div class="col-md-10">
+            <select class="form-control" id="ProfitCenter" name="ProfitCenter" required>
+                <option selected>@Model.ProfitCenterName</option>
+                @foreach (var profitCenter in Model.ProfitCenters)
+                {
+                    <option value="@profitCenter">@profitCenter</option>
+                }
+            </select>
+        </div>
+    </div>
+
+
+</div>
 
     <div class="col-md-6 form-horizontal">
         <div class="form-group">

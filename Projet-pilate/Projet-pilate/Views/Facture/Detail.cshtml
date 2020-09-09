@@ -6,6 +6,25 @@
     Layout = "~/Views/Shared/_particular.cshtml";
 }
 
+<script type="text/javascript" src="~/Scripts/jquery-3.5.1.js"></script>
+
+<script>
+    var nb = 1;
+
+    $(document).ready(function () {
+        $("input[type='submit']").on('click', function () {
+            if (nb > 1) {
+                $("input[type='submit']").attr('disabled', 'disabled');
+            }
+            $("#mail").attr('disabled', 'disabled');
+            $("#modifier").attr('disabled', 'disabled');
+            $("#excel").removeAttr('disabled');
+
+            nb++;
+        });
+    })
+</script>
+
 <h2 style="text-align:center; margin-bottom:30px;">Détail</h2>
 
 @using (Html.BeginForm("Export", "Facture", FormMethod.Post))
@@ -13,7 +32,7 @@
     <input type="hidden" name="id" value="@Model.ID" />
     <input type="hidden" name="GridHtml" />
     <div class="col-md-1" style="margin-bottom:10px; padding-left:0px">
-        <button type="button" class="btn btn-primary col-md-offset-11" data-toggle="modal" data-target="#exampleModal" style="margin-bottom:10px; margin-left:45px">
+        <button type="button" id="mail" class="btn btn-primary col-md-offset-11" data-toggle="modal" data-target="#exampleModal" style="margin-bottom:10px; margin-left:45px">
             Edit le mail
         </button>
     </div>
@@ -76,7 +95,7 @@
                             <label>Password:</label>
                         </div>
                         <div class="col-md-7" style="padding-left:0px;margin-left:7px;">
-                            <input type="text" name="mdp" id="mdp"  class="form-control " placeholder="mot de passe du mail"  />
+                            <input type="text" name="mdp" id="mdp" class="form-control " placeholder="mot de passe du mail" />
                         </div>
                         <div class="col-md-offset-2 col-md-1" style="padding-top:7px;padding-left:0px">
                             <label>To:</label>
@@ -127,11 +146,11 @@
 
 
 <div class="col-md-6" style="margin-left:30px;margin-bottom:20px">
-    @Html.ActionLink("Modifier", "Modifier", new { id = Model.ID }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Modifier", "Modifier", new { id = Model.ID }, new { @class = "btn btn-primary", @id="modifier" })
 </div>
 
 <div class="col-md-offset-11" style="margin-bottom:20px">
-    @Html.ActionLink("Export to Excel", "ExportXLS", new { id = Model.ID }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Export to Excel", "ExportXLS", new { id = Model.ID }, new { @class = "btn btn-primary", @id="excel", @disabled="disabled" })
 </div>
 
 <div class="col-md-12" style="margin-left: 30px; margin-bottom: 20px">
@@ -317,8 +336,8 @@
 
 
 
-        </div>
     </div>
+</div>
 
 
 <div id="Grid" style="visibility:hidden">
@@ -333,7 +352,7 @@
     <div style=" margin-top: 0px;padding-bottom:0px; margin-bottom: 0px; padding-left: 480px;font-family:Calibri">
         <pre style="background-color:white;border-color:white; margin-top:0px;padding-bottom:0px; margin-bottom:0px;font-family:Calibri;font-size:medium;">@Model.ClientInfo</pre>
     </div>
-        <p style="font-size:smaller; color:blue;padding-left:480px;margin-top:0px;padding-top:0px;font-family:Calibri">@Model.ClientContact</p>
+    <p style="font-size:smaller; color:blue;padding-left:480px;margin-top:0px;padding-top:0px;font-family:Calibri">@Model.ClientContact</p>
     <pre>
 
     </pre>
@@ -353,11 +372,13 @@
     }
 
     <U><pre style="width:150px;font-size:small; color:darkblue; border-color:black;font-family:Calibri">@Model.FactInfo</pre></U>
-    <pre>
+    <U>
+        <pre style="width:150px; color:darkblue;font-size:small; border-color:black;font-family:Calibri">
 
-</pre>
-    <U><pre style="width:150px; color:darkblue;font-size:small; border-color:black;font-family:Calibri">@Model.Reference</pre></U>
-    <pre style="float:right; font-family:Calibri">                                                                                                                                                                                  Date:              @ViewBag.date</pre>
+
+@Model.Reference</pre>
+    </U>
+    <p style="float:right; font-family:Calibri; font-size:small;padding-left:480px; padding-bottom:5px;">    Date:              @ViewBag.date</p>
 
     <p>table</p>
     <pre>
@@ -372,7 +393,7 @@
                                                                                                                                      Montant TVA @mtvaC% en Euros                                      @ViewBag.montantTVA €
 
 
-                                                                                                                                     <strong>Net à payer T.T.C en Euros</strong>                                                                                                                                                                                
+        <strong>Net à payer T.T.C en Euros</strong>                                                                                                                                                                                
     </pre>
     }
     <pre style="font-family: Calibri">                                      <strong>@ViewBag.montantTTC €</strong></pre>
@@ -419,8 +440,8 @@ TVA intracommunautaire : @Model.TVAIntra
 
 
 
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script type="text/javascript">
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript">
     var turn = false;
             $(function () {
                 document.getElementById("content").innerHTML = "Bonjour," + "Nous vous envoyons votre facture." + '\r\n'+ "Cordialement.";
@@ -448,8 +469,5 @@ TVA intracommunautaire : @Model.TVAIntra
     function verifier() {
         document.getElementById("status").value = "true";
     }
-    </script>
-    @*
-        </body>
-        </html>
-    *@
+</script>
+

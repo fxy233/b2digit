@@ -23,5 +23,6 @@ namespace Projet_pilate.Entities
         public float fraisManager { get; set; }
         public DateTime date { get; set; }
         public int craID { get; set; }
+        public string client { get; set; }
     }
 }

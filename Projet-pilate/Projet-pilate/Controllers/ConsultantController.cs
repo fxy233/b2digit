@@ -618,6 +618,7 @@ namespace Projet_pilate.Controllers
                     fraisManager = (float)(manager.MealCost + manager.TravelPackage + manager.ExceptionalCost),
                     craID = CraID,
                     date = db.MonthActivations.Single().Periode,
+                    client = "Aucun",
                 };
                 db.Suivis.Add(suivi);
                 db.SaveChanges();
@@ -668,7 +669,8 @@ namespace Projet_pilate.Controllers
                             craID = CraID,
                             date = db.MonthActivations.Single().Periode,
                         };
-
+                        CompanyContact cc = db.Missions.Single(m => m.Name == suivi.NomMission).CompanyContact;
+                        suivi.client = cc.CompanyName;
                         db.Suivis.Add(suivi);
                         db.SaveChanges();
                     }
@@ -719,6 +721,8 @@ namespace Projet_pilate.Controllers
                                 craID = CraID,
                                 date = db.MonthActivations.Single().Periode,
                             };
+                            CompanyContact cc = db.Missions.Single(m => m.Name == suivi.NomMission).CompanyContact;
+                            suivi.client = cc.CompanyName;
                             Entities.Suivi suivi2 = new Entities.Suivi()
                             {
                                 statu = "FAE",
@@ -734,7 +738,8 @@ namespace Projet_pilate.Controllers
                                 craID = CraID,
                                 date = db.MonthActivations.Single().Periode,
                             };
-
+                            CompanyContact cc2 = db.Missions.Single(m => m.Name == suivi2.NomMission).CompanyContact;
+                            suivi2.client = cc2.CompanyName;
 
                             db.Suivis.Add(suivi);
                             db.Suivis.Add(suivi2);
@@ -757,6 +762,8 @@ namespace Projet_pilate.Controllers
                                 craID = CraID,
                                 date = db.MonthActivations.Single().Periode,
                             };
+                            CompanyContact cc = db.Missions.Single(m => m.Name == suivi.NomMission).CompanyContact;
+                            suivi.client = cc.CompanyName;
                             db.Suivis.Add(suivi);
                             db.SaveChanges();
                         }
