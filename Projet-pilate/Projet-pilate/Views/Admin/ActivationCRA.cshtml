@@ -6,6 +6,15 @@
 
 <h2 style="text-align:center; padding-top:40px">Mois en cours : @Model.MoisActif</h2>
 
+<style>
+    .btn-xl {
+        padding: 5px 10px;
+        font-size: 10px;
+        border-radius: 10px;
+        width: 70%;
+
+    }
+</style>
 
 @using (Html.BeginForm("ActiverCra", "Admin", FormMethod.Post))
 {
@@ -26,8 +35,8 @@
 
 
     <div class="form-group">
-        <div class="col-md-offset-4 col-md-10" style="padding-left:40px">
-            <input type="button" value="Clôturer @Model.MoisActif et activer @Model.MoisProchain " class="btn btn-primary btn-large"  data-toggle="modal" data-target="#myModal" />
+        <div class="col-md-offset-4 col-md-8" style="padding-left:40px">
+            <input type="button" value="Clôturer @Model.MoisActif et activer @Model.MoisProchain " class="btn-xl btn btn-primary "  data-toggle="modal" data-target="#myModal" />
         </div>
     </div>
 

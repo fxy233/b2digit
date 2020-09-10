@@ -32,12 +32,32 @@
     <input type="hidden" name="id" value="@Model.ID" />
     <input type="hidden" name="GridHtml" />
     <div class="col-md-1" style="margin-bottom:10px; padding-left:0px">
-        <button type="button" id="mail" class="btn btn-primary col-md-offset-11" data-toggle="modal" data-target="#exampleModal" style="margin-bottom:10px; margin-left:45px">
-            Edit le mail
-        </button>
+        @{
+            ApplicationDbContext dB = new ApplicationDbContext();
+            if (dB.Factures.Single(f => f.FactureID == Model.ID).Emise == true)
+            {
+                <button type="button" disabled="disabled" id="mail" class="btn btn-primary col-md-offset-11" data-toggle="modal" data-target="#exampleModal" style="margin-bottom:10px; margin-left:45px">
+                    Edit le mail
+                </button> }
+            else
+            {
+                <button type="button" id="mail" class="btn btn-primary col-md-offset-11" data-toggle="modal" data-target="#exampleModal" style="margin-bottom:10px; margin-left:45px">
+                    Edit le mail
+                </button> }
+        }
+
     </div>
     <div class="col-md-offset-10" style="margin-bottom:10px;">
-        <input type="submit" onmouseout="test()" id="btnSubmit" value=" Facturer " class="btn btn-primary col-md-offset-11" style="margin-bottom:10px;margin-left:108px " />
+        @{
+            if (dB.Factures.Single(f => f.FactureID == Model.ID).Emise == true)
+            {
+                <input type="submit" onmouseout="test()" disabled="disabled" id="btnSubmit" value=" Facturer " class="btn btn-primary col-md-offset-11" style="margin-bottom:10px;margin-left:108px " />
+            }
+            else
+            {
+                <input type="submit" onmouseout="test()" id="btnSubmit" value=" Facturer " class="btn btn-primary col-md-offset-11" style="margin-bottom:10px;margin-left:108px " />
+            }
+        }
     </div>
 
 
@@ -53,7 +73,6 @@
                 </div>
                 <div class="modal-body container-fluid">
                     @{
-                        ApplicationDbContext dB = new ApplicationDbContext();
                         var Facture = dB.Factures.Single(f => f.FactureID == Model.ID);
                         string clientName = Facture.Client;
                         string mail = "destinataire";
@@ -143,15 +162,30 @@
 }
 
 
+@{
+    ApplicationDbContext db = new ApplicationDbContext();
+
+    if (db.Factures.Single(f => f.FactureID == Model.ID).Emise == true)
+    {
+        <div class="col-md-6" style="margin-left:30px;margin-bottom:20px">
+            @Html.ActionLink("Modifier", "Modifier", new { id = Model.ID }, new { @class = "btn btn-primary", @id = "modifier",@disabled="disabled" })
+        </div>
+
+        <div class="col-md-offset-11" style="margin-bottom:20px">
+            @Html.ActionLink("Export to Excel", "ExportXLS", new { id = Model.ID }, new { @class = "btn btn-primary", @id = "excel" })
+        </div> }
+    else
+    {
+        <div class="col-md-6" style="margin-left:30px;margin-bottom:20px">
+            @Html.ActionLink("Modifier", "Modifier", new { id = Model.ID }, new { @class = "btn btn-primary", @id = "modifier" })
+        </div>
+
+        <div class="col-md-offset-11" style="margin-bottom:20px">
+            @Html.ActionLink("Export to Excel", "ExportXLS", new { id = Model.ID }, new { @class = "btn btn-primary", @id = "excel", @disabled = "disabled" })
+        </div> }
+}
 
 
-<div class="col-md-6" style="margin-left:30px;margin-bottom:20px">
-    @Html.ActionLink("Modifier", "Modifier", new { id = Model.ID }, new { @class = "btn btn-primary", @id="modifier" })
-</div>
-
-<div class="col-md-offset-11" style="margin-bottom:20px">
-    @Html.ActionLink("Export to Excel", "ExportXLS", new { id = Model.ID }, new { @class = "btn btn-primary", @id="excel", @disabled="disabled" })
-</div>
 
 <div class="col-md-12" style="margin-left: 30px; margin-bottom: 20px">
     @Html.ActionLink("  Retour  ", "Factures", null, new { @class = "btn btn-primary" })
@@ -237,7 +271,6 @@
                     <th class="col-md-2" style="background-color:cornflowerblue; text-align:center;border-color:white">TOTAL T.T.C</th>
                 </tr>
                 @{
-                    ApplicationDbContext db = new ApplicationDbContext();
                     int pid = Model.ID;
                     if (db.Factures.Single(f => f.FactureID == Model.ID).parentID < 0)
                     {
@@ -393,7 +426,7 @@
                                                                                                                                      Montant TVA @mtvaC% en Euros                                      @ViewBag.montantTVA €
 
 
-        <strong>Net à payer T.T.C en Euros</strong>                                                                                                                                                                                
+                                                                                                                                     <strong>Net à payer T.T.C en Euros</strong>                                                                                                                                                                                
     </pre>
     }
     <pre style="font-family: Calibri">                                      <strong>@ViewBag.montantTTC €</strong></pre>

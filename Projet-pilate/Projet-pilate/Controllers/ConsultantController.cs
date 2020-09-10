@@ -381,7 +381,7 @@ namespace Projet_pilate.Controllers
 
             db.SaveChanges();
 
-            int CraID = db.Cras.Single(c => c.ConsultantID == consultant.ConsultantID && c.Month == moisConcerne).CraID;
+            int CraID = db.Cras.Single(c => c.ConsultantID == consultant.ConsultantID && c.Month == moisConcerne && c.year == yearStr).CraID;
             //
             var time = DateTime.Parse( db.MonthActivations.Single().Periode.ToString("yyyy-MM-01") ).AddMonths(1).AddDays(-1);
             var missionNames = db.Missions.Select(m => m.Name).ToList();

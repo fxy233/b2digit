@@ -732,7 +732,6 @@ namespace Projet_pilate.Controllers
                 }
             }
 
-            facture.MoisDeFacturation = DateTime.Now;
 
             db.SaveChanges();
 
@@ -1814,7 +1813,7 @@ namespace Projet_pilate.Controllers
         [HttpPost]
         public ActionResult fusionner()
         {
-
+            Boolean same = true;
             string selection = Request["select"]==null?"": Request["select"].ToString();
             string type = Request["type"]==null?"":Request["type"].ToString();
 
@@ -1965,6 +1964,10 @@ namespace Projet_pilate.Controllers
                 {
                     int itemid = Int32.Parse(item);
                     var f = db.Factures.Single(fa => fa.FactureID == itemid);
+                    if (f.reference != facturefusionner.reference || f.InfoFacturation!= facturefusionner.InfoFacturation)
+                    {
+                        same = false;
+                    }
                     if (f.FactureID == facturefusionner.FactureID)
                     {
                         db.Factures.Remove(facturefusionner);
@@ -2021,6 +2024,10 @@ namespace Projet_pilate.Controllers
                 {
                     int itemid = Int32.Parse(item);
                     var f = db.Factures.Single(fa => fa.FactureID == itemid);
+                    if (f.reference != facturefusionner.reference || f.InfoFacturation != facturefusionner.InfoFacturation)
+                    {
+                        same = false;
+                    }
                     if (f.FactureID == facturefusionner.FactureID)
                     {
                         facturefusionner.parentID = facture.FactureID;
@@ -2039,6 +2046,19 @@ namespace Projet_pilate.Controllers
                 facture.parentID = -1;
                 db.Factures.Add(facture);
                 db.SaveChanges();
+            }
+
+            if (!same)
+            {
+                string message = "Les references et informations du facturations de ces factures sont pas identique. Pensez à les modifier dans le détail !";
+                ModelState.AddModelError(string.Empty, message);
+                OngletViewModel model = new OngletViewModel()
+                {
+                    first = "active",
+                    seconde = "",
+                    third = "",
+                };
+                return View("Factures", model);
             }
 
 
